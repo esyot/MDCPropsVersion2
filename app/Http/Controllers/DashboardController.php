@@ -40,7 +40,7 @@ class DashboardController extends Controller
             ->map(fn($group) => $group->first())
             ->values();
 
-        
+
         $daysWithRecords = $transactions->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))
             ->unique()
             ->values()
@@ -171,6 +171,6 @@ class DashboardController extends Controller
 
         $setting = Setting::find(1);
 
-        return view('pages.dashboard', compact('setting', 'contacts', 'current_user_name', 'unreadMessages', 'page_title', 'notifications', 'unreadNotifications', 'items', 'currentCategory', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
+        return view('pages.partials.calendar', compact('setting', 'contacts', 'current_user_name', 'unreadMessages', 'page_title', 'notifications', 'unreadNotifications', 'items', 'currentCategory', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
     }
 }

@@ -203,11 +203,16 @@
         .slider input:checked+.slider-track .slider-thumb {
             transform: translateX(26px);
         }
+        body{
+
+           
+
+        }
     </style>
 
 </head>
 
-<body class="flex h-screen overflow-hidden bg-gray-100 text-gray-800">
+<body class="font-verdana flex h-screen overflow-hidden bg-gray-100 text-gray-800">
 
     <!-- Sidebar -->
     <div id="sidebar-right"
@@ -314,7 +319,7 @@
                     </a>
                     <a href="{{ route('categories')}}"
                         class="w-full p-3 flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
-                        title="Pending requests">
+                        title="Categories">
                         <i
                             class="fa-solid fa-list fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
                         <span class="ml-4 text-sm hidden">Categories</span>
@@ -328,14 +333,14 @@
                     </a>
                     <a href="{{ route('transactions')}}"
                         class="w-full p-3 flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
-                        title="Pending requests">
+                        title="Manage Users">
                         <i
                             class="fa-solid fa-users-gear fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
                         <span class="ml-4 text-sm hidden">Manage Users</span>
                     </a>
                     <a href="{{ route('transactions')}}"
                         class="w-full p-3 flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
-                        title="Pending requests">
+                        title="Manage Roles">
                         <i
                             class="fa-solid fa-user-pen fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
                         <span class="ml-4 text-sm hidden">Manage Roles</span>
@@ -660,4 +665,4 @@
                     });
 
                 });
-                </script>
+</script>

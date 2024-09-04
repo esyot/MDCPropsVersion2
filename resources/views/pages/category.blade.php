@@ -78,8 +78,11 @@
 
             <div class="px-4">
 
-                <div class="mt-2">
+                <div class="mt-2 flex flex-col">
                     <input type="file" name="files[]" class="file-upload-input" accept="image/*" multiple>
+                    <small class="font-bold">Note:
+                        <i class="font-normal">Make sure the selected files are in "jpg", "png", or "jpeg" format.</i>
+                    </small>
                 </div>
                 <div class="mt-2">
                     <label for="title">Title:</label>

@@ -22,6 +22,10 @@ use App\Http\Controllers\SampleController;
 |
 */
 
+Route::get('/test', function () {
+    return view('test');
+});
+
 Route::get('/', [DashboardController::class, 'index']);
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -43,3 +47,5 @@ Route::get('categories', [CategoryController::class, 'index'])->name('categories
 Route::get('items', [ItemController::class, 'index'])->name('items');
 
 Route::get('/items-filter', [ItemController::class, 'itemsFilter'])->name('itemsFilter');
+
+Route::get('/transactions-filter', [TransactionController::class, 'index'])->name('transactionsFilter');

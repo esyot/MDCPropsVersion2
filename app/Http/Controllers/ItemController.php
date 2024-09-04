@@ -78,7 +78,7 @@ class ItemController extends Controller
             $imageFileName = Str::random(10) . '.' . $image->getClientOriginalExtension();
 
             // Define the path for storing the image
-            $filePath = 'images/categories/' . $category->folder_name . '/' . $imageFileName;
+            $filePath = 'images/categories/' . $category->folder_name;
 
             // Store the image file
             $image->storeAs($filePath, $imageFileName, 'public');

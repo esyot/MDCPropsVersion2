@@ -11,8 +11,8 @@ use App\Models\Message;
 
 class TransactionController extends Controller
 {
-    public function index(){
-
+    public function index(Request $request)
+    {
         $current_user_name = "Reinhard Esteban";
 
         $transactions = Transaction::where('category_id', 1)->get();
@@ -21,7 +21,7 @@ class TransactionController extends Controller
         $notifications = Notification::orderBy('created_at', 'DESC')->get();
 
         $categories = Category::all();
-        $currentCategory = Category::where('id', 1)->get();
+
 
         $page_title = 'Pending Transactions';
 
@@ -32,25 +32,37 @@ class TransactionController extends Controller
         $unreadMessages = $messages->count();
 
         $contacts = Message::where('receiver_name', $current_user_name)
-        ->latest()
-        ->get()
-        ->groupBy('sender_name')
-        ->map(function ($group) {
-            return $group->first(); 
-        })
-        ->values();
+            ->latest()
+            ->get()
+            ->groupBy('sender_name')
+            ->map(function ($group) {
+                return $group->first();
+            })
+            ->values();
+
+
+
+
+
+        $currentCategory = Category::find(1);
+
+
+
+
+
 
         return view('pages.transactions', compact('contacts', 'unreadMessages', 'setting', 'page_title', 'currentCategory', 'categories', 'transactions', 'unreadNotifications', 'notifications'));
 
     }
 
-    public function decline($id){
+    public function decline($id)
+    {
 
         $transaction = Transaction::findOrFail($id);
 
         $transaction->delete();
 
-        if($transaction){
+        if ($transaction) {
 
             return redirect()->back()->with('success', 'Transaction has been successfully declined!');
         }
