@@ -66,7 +66,7 @@
             }
 
             #calendar-grid {
-                background-color: #4b5563;
+                background-color: #000;
             }
         </style>
 

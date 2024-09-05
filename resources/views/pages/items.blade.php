@@ -1,7 +1,7 @@
 @extends('layouts.header')
 @section('content')
 
-<div class="flex p-4 bg-gray-300 text-white">
+<div id="content" class="flex p-4 text-white">
     <div class="bg-white p-2 rounded-xl border border-gray-400">
         <form action="{{ route('itemsFilter') }}">
             @csrf
@@ -89,11 +89,11 @@
     </div>
 </div>
 
-<div class="relative m-4 overflow-y-auto">
-    <div class="flex flex-wrap gap-6">
+<div id="main-content" class="w-full h-full relative p-4 overflow-y-auto">
+    <div class="flex flex-wrap gap-2">
         <!-- Add Category Button -->
         <div title="Add a new category"
-            class="flex flex-col bg-gray-200 rounded-lg  hover:bg-gray-300  hover:shadow-inner w-64 h-64 overflow-hidden">
+            class="flex flex-col bg-gray-200 rounded-lg mx-2 hover:bg-gray-300  hover:shadow-inner w-64 h-64 overflow-hidden">
             <div class="flex justify-center items-center bg-gray-200 h-3/4 cursor-pointer hover:text-gray-800 text-gray-400 "
                 onclick="document.getElementById('item-add-modal').classList.remove('hidden')">
                 <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
@@ -105,8 +105,6 @@
 
         <!--  Items -->
         @foreach ($items as $item)
-
-
 
             <div title="Click to preview" onclick="document.getElementById('item-{{$item->id}}').classList.remove('hidden')"
                 class="flex flex-col text-white rounded-lg w-64 h-64 overflow-hidden cursor-pointer">

@@ -1,7 +1,7 @@
 @extends('layouts.header')
 @section('content')
-<div id="content" class="flex items-center justify-between bg-gradient-to-r from-cyan-500 to-cyan-800 p-4 shadow-md">
-    <div class="flex items-center space-x-2">
+<div id="content" class="flex items-center justify-between p-4 shadow-md">
+    <div class="flex items-center space-x-2 ">
         <form onchange="this.submit()" action="{{ route('transactionsFilter') }}" class="flex justify-around space-x-4"
             method="GET">
             @csrf
@@ -26,14 +26,13 @@
     </div>
 </div>
 
-<div id="main-content" class="p-6 flex-1 overflow-auto w-full h-full">
+<div id="main-content" class="flex-1 overflow-y-auto custom-scrollbar w-full h-full">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
         @foreach($transactions as $transaction)
-            <div class="max-w-sm mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="max-w-sm mx-1 bg-white rounded-lg shadow-md overflow-hidden">
                 <img src="{{ asset('storage/images/categories/' . $currentCategory->folder_name . '/' . $transaction->item->img) }}"
                     alt="{{ $transaction->item->name }}" class="w-80 h-48 object-cover">
-                <div
-                    class="flex flex-col flex-wrap w-full h-full p-4 bg-gradient-to-r from-teal-500 to-teal-800 text-white">
+                <div class="flex flex-col flex-wrap w-full h-full p-4 bg-blue-500 text-white">
                     <div class="flex flex-col justify-center">
                         <div class="flex justify-center text-xl font-semibold">{{ $transaction->item->name }}</div>
                         <div class="mt-2">
@@ -69,15 +68,24 @@
                                     {{ \Carbon\Carbon::parse($transaction->rent_return_time)->format('h:i A') }}
                                 </span>
                             </div>
+                            <div class="flex items-center mt-1">
+                                <span class="font-medium">Status:</span>
+                                <span class="ml-2 text-yellow-300">
+                                    {{ $transaction->status }}
+                                </span>
+                            </div>
                         </div>
 
                     </div>
                     <div class="flex justify-center space-x-2 mt-2">
-                        <button type=" button"
-                            onclick="document.getElementById('transaction-confirm-{{ $transaction->id }}').classList.remove('hidden')"
-                            class="shadow px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center">
-                            <i class="fas fa-check mr-2"></i> Approve
-                        </button>
+
+                        @if($transaction->status == 'pending')
+                            <button type=" button"
+                                onclick="document.getElementById('transaction-confirm-{{ $transaction->id }}').classList.remove('hidden')"
+                                class="shadow px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center">
+                                <i class="fas fa-check mr-2"></i> Approve
+                            </button>
+                        @endif
                         <button
                             onclick="document.getElementById('delete-confirmation-{{$transaction->id}}').classList.remove('hidden')"
                             class="shadow px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 flex items-center">
@@ -153,11 +161,6 @@
         </div>
     </div>
 
-
-
 @endforeach
-
-
-
 
 @endsection

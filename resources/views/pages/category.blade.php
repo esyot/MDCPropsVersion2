@@ -113,7 +113,8 @@
         </div>
     </div>
 </form>
-<div class="relative m-4">
+
+<div id="main-content" class="p-2 w-full h-full">
     <div class="flex flex-wrap gap-6">
         <!-- Add Category Button -->
         <div title="Add a new category"
