@@ -136,7 +136,72 @@ class ItemController extends Controller
         // Return the view with the filtered data
         return view('pages.items', compact('contacts', 'notifications', 'unreadMessages', 'unreadNotifications', 'page_title', 'setting', 'categories', 'currentCategory', 'items'));
     }
+    public function update(Request $request, $id)
+    {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'update_name' => 'string',
+            'update_qty' => 'string',
+            'update_category' => 'required|integer|exists:categories,id',
+            'update_img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
 
+        // Find the item by ID
+        $item = Item::find($id);
+
+        if (!$item) {
+            return redirect()->back()->with('error', 'Item not found!');
+        }
+
+        // Get the current category folder name
+        $currentCategoryFolder = $item->category->folder_name;
+        // Define the new category folder name
+        $newCategoryFolder = Category::find($validatedData['update_category'])->folder_name;
+
+        // Handle the uploaded file
+        $imageFileName = $item->img; // Use existing image if no new image is uploaded
+        if ($request->hasFile('update_img')) {
+            $image = $request->file('update_img');
+
+            // Generate a unique filename for the image
+            $imageFileName = Str::random(10) . '.' . $image->getClientOriginalExtension();
+
+            // Define the path for storing the image
+            $filePath = 'images/categories/' . $newCategoryFolder;
+
+            // Store the image file
+            $image->storeAs($filePath, $imageFileName, 'public');
+
+            // Remove the old image if it exists
+            if ($item->img) {
+                $oldFilePath = 'images/categories/' . $currentCategoryFolder . '/' . $item->img;
+                if (Storage::disk('public')->exists($oldFilePath)) {
+                    Storage::disk('public')->delete($oldFilePath);
+                }
+            }
+        } else {
+            // Move the old image to the new category folder if no new image is uploaded
+            if ($item->img && $currentCategoryFolder !== $newCategoryFolder) {
+                $oldFilePath = 'images/categories/' . $currentCategoryFolder . '/' . $item->img;
+                $newFilePath = 'images/categories/' . $newCategoryFolder . '/' . $item->img;
+
+                if (Storage::disk('public')->exists($oldFilePath)) {
+                    Storage::disk('public')->move($oldFilePath, $newFilePath);
+                }
+            }
+        }
+
+        // Update item data
+        $item->update([
+            'name' => $validatedData['update_name'],
+            'qty' => $validatedData['update_qty'],
+            'img' => $imageFileName,
+            'category_id' => $validatedData['update_category'],
+        ]);
+
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Item has been successfully updated!');
+    }
 
 }
 

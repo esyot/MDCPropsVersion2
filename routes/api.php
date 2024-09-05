@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ItemController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
@@ -9,6 +9,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,3 +52,7 @@ Route::post('/transitions', [SettingController::class, 'transitions'])->name('tr
 Route::post('/category-add', [CategoryController::class, 'create'])->name('category-add');
 
 Route::post('/item-add', [ItemController::class, 'create'])->name('itemAdd');
+
+Route::put('/item-update/{id}', [ItemController::class, 'update'])->name('itemUpdate');
+
+Route::get('pending-approve/{id}', [TransactionController::class, 'approve'])->name('transactionApprove');

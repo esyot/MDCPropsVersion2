@@ -15,7 +15,7 @@ class TransactionController extends Controller
     {
         $current_user_name = "Reinhard Esteban";
 
-        $transactions = Transaction::where('category_id', 1)->get();
+        $transactions = Transaction::where('category_id', 1)->where('status', 'pending')->get();
 
         $unreadNotifications = Notification::where('isRead', false)->get()->count();
         $notifications = Notification::orderBy('created_at', 'DESC')->get();
@@ -23,7 +23,7 @@ class TransactionController extends Controller
         $categories = Category::all();
 
 
-        $page_title = 'Pending Transactions';
+        $page_title = 'Transactions';
 
         $setting = Setting::findOrFail(1);
 
@@ -41,17 +41,10 @@ class TransactionController extends Controller
             ->values();
 
 
-
-
-
         $currentCategory = Category::find(1);
+        $currentStatus = 'pending';
 
-
-
-
-
-
-        return view('pages.transactions', compact('contacts', 'unreadMessages', 'setting', 'page_title', 'currentCategory', 'categories', 'transactions', 'unreadNotifications', 'notifications'));
+        return view('pages.transactions', compact('currentStatus', 'contacts', 'unreadMessages', 'setting', 'page_title', 'currentCategory', 'categories', 'transactions', 'unreadNotifications', 'notifications'));
 
     }
 
@@ -66,6 +59,61 @@ class TransactionController extends Controller
 
             return redirect()->back()->with('success', 'Transaction has been successfully declined!');
         }
+
+
+    }
+
+    public function approve($id)
+    {
+
+        $transaction = Transaction::find($id);
+
+        $transaction->update([
+            'status' => 'approved',
+        ]);
+
+        if ($transaction) {
+            return redirect()->back()->with('success', 'Transaction has been successfuly approved!');
+        }
+
+    }
+
+    public function filter(Request $request)
+    {
+
+        $transactions = Transaction::where('status', $request->status)->where('category_id', $request->category)->get();
+        $current_user_name = "Reinhard Esteban";
+
+
+        $unreadNotifications = Notification::where('isRead', false)->get()->count();
+        $notifications = Notification::orderBy('created_at', 'DESC')->get();
+
+        $categories = Category::all();
+
+
+        $page_title = 'Transactions';
+
+        $setting = Setting::findOrFail(1);
+
+        $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
+
+        $unreadMessages = $messages->count();
+
+        $contacts = Message::where('receiver_name', $current_user_name)
+            ->latest()
+            ->get()
+            ->groupBy('sender_name')
+            ->map(function ($group) {
+                return $group->first();
+            })
+            ->values();
+
+
+        $currentCategory = Category::find($request->category);
+
+        $currentStatus = $request->status;
+
+        return view('pages.transactions', compact('currentStatus', 'contacts', 'unreadMessages', 'setting', 'page_title', 'currentCategory', 'categories', 'transactions', 'unreadNotifications', 'notifications'));
 
 
     }

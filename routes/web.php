@@ -48,4 +48,4 @@ Route::get('items', [ItemController::class, 'index'])->name('items');
 
 Route::get('/items-filter', [ItemController::class, 'itemsFilter'])->name('itemsFilter');
 
-Route::get('/transactions-filter', [TransactionController::class, 'index'])->name('transactionsFilter');
+Route::get('/transactions-filter', [TransactionController::class, 'filter'])->name('transactionsFilter');

@@ -321,15 +321,15 @@
                         class="w-full p-3 flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
                         title="Categories">
                         <i
-                            class="fa-solid fa-list fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                            class="fas fa-th-large fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
                         <span class="ml-4 text-sm hidden">Categories</span>
                     </a>
                     <a href="{{ route('transactions')}}"
                         class="w-full p-3 flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
-                        title="Pending requests">
+                        title="Transactions">
                         <i
-                            class="fa-solid fa-layer-group fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
-                        <span class="ml-4 text-sm hidden">Pending Requests</span>
+                            class="fa-solid fa-business-time fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                        <span class="ml-4 text-sm hidden">Transactions</span>
                     </a>
                     <a href="{{ route('transactions')}}"
                         class="w-full p-3 flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
@@ -373,7 +373,7 @@
             <!-- Right-side icons -->
             <div class="flex items-center space-x-6 relative">
                 <!-- Notification Icon -->
-                <div class="relative" id="inside-notification">
+                <div class="relative" id="inside-notification" title="Notifications">
                     <!-- Notification Button -->
                     <button id="notification-icon" class="hover:text-gray-300">
                         <i class="fa-solid fa-bell fa-lg text-blue-600"></i>
@@ -387,7 +387,7 @@
                     </button>
 
                     <!-- Notification Dropdown -->
-                    <div id="notification-dropdown"
+                    <div id="notification-dropdown" 
                         class="rounded absolute right-0 mt-2 hidden w-[30rem] bg-white p-2 shadow-lg border border-gray-200 z-50">
                         <div>
                             <h1 class="text-2xl font-bold">Notifications</h1>
@@ -399,7 +399,7 @@
                                     onclick="document.getElementById('all').classList.add('bg-gray-300'); document.getElementById('unread').classList.remove('bg-gray-300')"
                                     hx-get="{{ route('notificationList', ['filter' => 'all'])}}" hx-swap="innerHTML"
                                     hx-trigger="click" hx-indicator="#loader" hx-target="#notification-list"
-                                    class="px-2 rounded-full  bg-gray-300 hover:bg-gray-200">
+                                    class="px-2 rounded-full bg-gray-300 hover:bg-gray-200">
                                     All
                                 </button>
 
@@ -455,10 +455,10 @@
 
                     <!-- Messages Icon -->
                     @if($page_title != 'Messages')
-                        <div class="relative" id="inside-messages">
+                        <div class="relative" id="inside-messages" title="Messages">
                             <button id="messages-icon" class="flex items-center focus:outline-none">
                                 <i class="fa-solid fa-envelope fa-lg text-blue-600"></i>
-                                <span class="ml-2">Messages</span>
+                                <span class="ml-2 hover:text-gray-300">Messages</span>
 
                                 @if($unreadMessages > 0)
                                     <span id="notification-count"
@@ -496,7 +496,7 @@
                     @endif
 
                     <!-- User Icon -->
-                    <div id="inside-user" class="relative">
+                    <div id="inside-user" class="relative" title="Profile">
                         <button id="user-icon">
                             <div class="flex items-center space-x-2">
                                 <i class="fa-solid fa-user fa-lg text-blue-600 cursor-pointer"></i>

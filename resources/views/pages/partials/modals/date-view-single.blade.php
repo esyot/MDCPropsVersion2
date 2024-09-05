@@ -9,13 +9,14 @@
         <div class="flex flex-col">
             <!-- Image Section -->
             <div class="w-full">
-                <img src="{{$transaction->item->img}}" alt="Product Image"
-                    class="w-full h-60 object-cover rounded-t-lg">
+                <img src="{{ asset('storage/images/categories/' . $transaction->item->category->folder_name . '/' . $transaction->item->img) }}"
+                    alt="Product Image" class="w-full h-64 object-cover rounded-t-lg">
             </div>
+            <h1></h1>
 
             <!-- Details Section -->
             <div class="w-full p-4">
-                <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 pb-2">Item Details</h2>
+                <h2 class="text-2xl font-semibold mb-4 border-b-2 border-gray-200 pb-2">Transaction Details</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <span class="font-medium text-gray-700 text-sm">Item Name:</span>

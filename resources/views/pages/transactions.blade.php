@@ -2,17 +2,24 @@
 @section('content')
 <div id="content" class="flex items-center justify-between bg-gradient-to-r from-cyan-500 to-cyan-800 p-4 shadow-md">
     <div class="flex items-center space-x-2">
-        <form id="filter-form" class="flex justify-around space-x-4" action="{{ route('transactionsFilter') }}"
+        <form onchange="this.submit()" action="{{ route('transactionsFilter') }}" class="flex justify-around space-x-4"
             method="GET">
             @csrf
 
-            <select name="category" class="shadow-inner block px-4 py-2 border border-gray-500 rounded">
+            <select title="Category" name="category"
+                class="shadow-inner block px-4 py-2 border border-gray-500 rounded cursor-pointer">
 
                 <option value="{{ $currentCategory->id }}">{{$currentCategory->title }}</option>
 
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}">{{ $category->title }}</option>
                 @endforeach
+            </select>
+
+            <select title="Status" name="status" id="" class="block p-2 border border-gray-500 rounded cursor-pointer">
+                <option value="{{ $currentStatus }}" class="text-red-500">{{ $currentStatus }}</option>
+                <option value="approved">approved</option>
+                <option value="pending">pending</option>
             </select>
 
         </form>
@@ -67,7 +74,7 @@
                     </div>
                     <div class="flex justify-center space-x-2 mt-2">
                         <button type=" button"
-                            onclick="document.getElementById('approveConfirm').classList.remove('hidden')"
+                            onclick="document.getElementById('transaction-confirm-{{ $transaction->id }}').classList.remove('hidden')"
                             class="shadow px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center">
                             <i class="fas fa-check mr-2"></i> Approve
                         </button>
@@ -79,6 +86,7 @@
                     </div>
                 </div>
             </div>
+            @include('pages.partials.modals.approve-confirm')
         @endforeach
     </div>
 </div>
@@ -145,44 +153,11 @@
         </div>
     </div>
 
+
+
 @endforeach
 
 
-
-<div id="approveConfirm" class="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 hidden">
-    <div class="bg-white shadow-md max-w-md rounded-lg px-4 py-1">
-
-        <div class="flex space-x-6 justify-center font-semibold items-start">
-
-            <div class="shadow-md border border-gray-300 p-2 m-2 rounded-full px-3 py-1">
-                <i class="p-3 py-4 font-bold text-red-500 fa-solid fa-question"></i>
-            </div>
-
-
-
-        </div>
-
-
-        <div class="flex flex-col justify-center items-center mt-2">
-            Are you sure to confirm this?
-            <small class="text-[10px] font-semibold text-red-500">Note: this action cannot be undone.</small>
-        </div>
-
-
-
-
-        <div class="flex justify-around space-x-2 my-2">
-            <button class="font-medium px-4 py-2 bg-green-300 hover:bg-green-400 text-green-800 rounded-lg">
-                Yes, sure.
-            </button>
-            <button onclick="document.getElementById('approveConfirm').classList.add('hidden')"
-                class="font-medium px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg">
-                No, cancel.
-            </button>
-        </div>
-    </div>
-
-</div>
 
 
 @endsection
