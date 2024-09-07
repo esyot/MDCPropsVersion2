@@ -90,7 +90,7 @@ class MessageController extends Controller
             'sender_name' => 'required|string|max:255',
             'receiver_name' => 'required|string|max:255',
             'content' => 'nullable',
-            'image-data' => 'nullable',
+            'image-data' => '',
         ]);
 
         $repliedMessage = null;
@@ -109,11 +109,31 @@ class MessageController extends Controller
 
         $imageFileName = null;
         if ($validatedData['image-data']) {
-            // Extract base64 image data
-            $imageData = str_replace(['data:image/png;base64,', ' '], ['', '+'], $request->input('image-data'));
-            $imageFileName = \Str::random(10) . '.png';
-            $filePath = 'images/' . $imageFileName;
-            Storage::disk('public')->put($filePath, base64_decode($imageData));
+            // Extract base64 image data and format
+            $imageData = $request->input('image-data');
+
+            // Extract image format and data
+            if (preg_match('/data:image\/(.*?);base64,(.*)/', $imageData, $matches)) {
+                $imageFormat = $matches[1]; // e.g., 'png', 'jpeg', etc.
+                $base64Data = str_replace(' ', '+', $matches[2]); // Base64 encoded image data
+
+                // Validate the format
+                $validFormats = ['jpeg', 'jpg', 'png', 'gif'];
+                if (!in_array($imageFormat, $validFormats)) {
+                    // Handle unsupported formats
+                    return response()->json(['error' => 'Unsupported image format.'], 400);
+                }
+
+                // Generate a random file name with the correct extension
+                $imageFileName = \Str::random(10) . '.' . $imageFormat;
+                $filePath = 'images/' . $imageFileName;
+
+                // Decode and save the image
+                Storage::disk('public')->put($filePath, base64_decode($base64Data));
+            } else {
+                // Handle invalid image data
+                return response()->json(['error' => 'Invalid image data.'], 400);
+            }
         }
 
         if (!is_null($validatedData['content'])) {

@@ -329,7 +329,7 @@
             <form id="myForm" action="{{ route('messageSend') }}" method="POST" class=" flex items-end w-full space-x-4">
 
                     
-                     <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="previewImage(event)">
+                    <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="previewImage(event)">
                     <button type="button" title="Image"
                     class="rounded-full hover:bg-blue-300 transition-transform duration-300 ease-in-out transform hover:scale-110 drop-shadow text-xl px-2 py-1 hover:text-white text-gray-100" onclick="document.getElementById('fileInput').click();">
                         <i class="fa-solid fa-image"></i>
@@ -497,9 +497,7 @@
                 };
                 
                 reader.readAsDataURL(file);
-            } else {
-                alert('Please select an image file.');
-            }
+            } 
         }
 
         // Function to generate a unique identifier

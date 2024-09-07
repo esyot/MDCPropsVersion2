@@ -201,7 +201,7 @@
                             </div>
 
                             <div id="notification-list"
-                                class="z-10 flex flex-col max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-100">
+                                class="z-10 flex flex-col max-h-64 overflow-y-auto custom-scrollbar">
                                 @include('pages.partials.notification-list')
 
                                 <!-- "See More" Button -->
