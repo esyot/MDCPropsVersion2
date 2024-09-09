@@ -17,9 +17,10 @@
             </select>
 
             <select title="Status" name="status" id="" class="block p-2 border border-gray-500 rounded cursor-pointer">
-                <option value="{{ $currentStatus }}" class="text-red-500">{{ $currentStatus }}</option>
-                <option value="approved">approved</option>
-                <option value="pending">pending</option>
+                <option value="{{ $currentStatus }}" class="text-red-500">{{ ucfirst($currentStatus) }}</option>
+                <option value="approved">Approved</option>
+                <option value="pending">Pending</option>
+                <option value="declined">Declined</option>
             </select>
 
         </form>

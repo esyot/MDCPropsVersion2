@@ -224,7 +224,7 @@
             <form action="{{ route('darkMode') }}" method="POST">
                 @csrf
                 <div class="flex items-start mt-4">
-                    <div class="px-2.5 py-1 m-2 text-4xl bg-gray-500 rounded-full">
+                    <div class="px-2.5 py-1 m-2 text-4xl {{ $setting->darkMode == true ? 'bg-gray-500' : 'bg-blue-500' }} rounded-full">
                         <div class="fa-solid fa-moon text-white"></div>
                     </div>
                     <div class="flex flex-col flex-wrap">
@@ -247,7 +247,7 @@
             <form action="{{ route('transitions') }}" method="POST">
                 @csrf
                 <div class="flex items-start mt-4">
-                    <div class="px-1.5 py-1 m-2 text-4xl bg-gray-500 rounded-full">
+                    <div class="px-1.5 py-1 m-2 text-4xl {{ $setting->darkMode == true ? 'bg-gray-500' : 'bg-blue-500' }} rounded-full">
                         <div class="text-white fa-solid fa-arrows-left-right"></div>
                     </div>
                     <div class="flex flex-col flex-wrap">
@@ -270,8 +270,8 @@
     <!-- Toggle Button -->
     <div id="toggle-container" class="fixed right-1 bottom-[45%] z-50">
         <button id="open-btn" title="Display Settings"
-            class="{{ $setting->transition == true ? 'transition-transform duration-300 ease-in-out transform hover:scale-110' : '' }} border border-gray-300 shadow-xl toggle-button px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-lg shadow-lg">
-            <i class="fa-solid fa-bars"></i>
+            class="{{ $setting->transition == true ? 'transition-transform duration-300 ease-in-out transform hover:scale-110' : '' }}  {{ $setting->darkMode == true ? 'bg-gray-500 hover:bg-gray-600' : 'bg-blue-500 hover:bg-blue-600' }} shadow-xl toggle-button px-[13px] py-2  text-white font-bold rounded-full shadow-lg">
+            <i id="btn" class="fa-solid fa-arrow-left"></i>
         </button>
     </div>
 
@@ -282,6 +282,8 @@
         document.getElementById('open-btn').addEventListener('click', function () {
             document.getElementById('sidebar-right').classList.toggle('translate-x-full');
             document.getElementById('open-btn').classList.toggle('mr-[260px]');
+            document.getElementById('btn').classList.toggle('fa-arrow-left');
+            document.getElementById('btn').classList.toggle('fa-arrow-right');
 
         });
 
