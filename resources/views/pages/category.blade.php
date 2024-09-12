@@ -114,11 +114,11 @@
     </div>
 </form>
 
-<div id="main-content" class="p-2 w-full h-full">
+<div id="main-content" class="p-2 w-full h-full overflow-y-auto">
     <div class="flex flex-wrap gap-6">
         <!-- Add Category Button -->
         <div title="Add a new category"
-            class="flex flex-col bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-64 h-64 overflow-hidden">
+            class="flex flex-col bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden">
             <div class="flex items-center justify-center cursor-pointer hover:text-gray-800 text-gray-400 "
                 onclick="document.getElementById('category-add-modal').classList.remove('hidden')">
                 <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
@@ -130,7 +130,7 @@
 
         <!-- Category Items -->
         @foreach ($categories as $category)
-                <div class="flex flex-col text-white rounded-lg w-64 h-64 overflow-hidden">
+                <div class="flex flex-col text-white rounded-lg w-52 h-52 overflow-hidden">
                     <div class="relative w-full max-w-3xl overflow-hidden slide-container">
                         <div class="slide-wrapper shadow-inner">
                             @php
