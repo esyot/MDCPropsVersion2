@@ -10,6 +10,7 @@ use App\Models\Notification;
 use App\Models\Message;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -19,7 +20,7 @@ class ItemController extends Controller
 
     public function index()
     {
-        $current_user_name = "Reinhard Esteban";
+        $current_user_name = Auth::user()->name;
         $defaultCategoryId = 1;  // Default category ID
         $page_title = "Items";
 

@@ -10,13 +10,13 @@ use App\Models\Notification;
 use App\Models\Message;
 use App\Models\Setting;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $current_user_name = "Reinhard Esteban";
-        $receiver_name = "Francis Reserva";
+        $current_user_name = Auth::user()->name;
         $currentDate = now();
         $default = 1;
 
@@ -48,7 +48,7 @@ class DashboardController extends Controller
 
         $setting = Setting::find(1);
 
-        return view('pages.dashboard', compact('setting', 'current_user_name', 'receiver_name', 'contacts', 'unreadMessages', 'page_title', 'unreadNotifications', 'notifications', 'items', 'currentCategory', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
+        return view('pages.dashboard', compact('setting', 'current_user_name', 'contacts', 'unreadMessages', 'page_title', 'unreadNotifications', 'notifications', 'items', 'currentCategory', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
     }
 
     public function dateView($date)
@@ -63,7 +63,7 @@ class DashboardController extends Controller
     public function dateCustom(Request $request)
     {
         $page_title = "Dashboard";
-        $current_user_name = "Reinhard Esteban";
+        $current_user_name = Auth::user()->name;
 
         $year = $request->year;
         $month = $request->month;
@@ -102,6 +102,8 @@ class DashboardController extends Controller
 
     public function transactionAdd(Request $request)
     {
+        $current_user_name = Auth::user()->name;
+
         $validatedData = $request->validate([
             'item_id' => 'required',
             'category_id' => 'required',
@@ -120,7 +122,7 @@ class DashboardController extends Controller
             Notification::create([
                 'icon' => "https://cdn-icons-png.flaticon.com/512/9187/9187604.png",
                 'title' => "New Transaction",
-                'description' => "Reinhard Esteban added a new transaction, check it now.",
+                'description' => $current_user_name . " added a new transaction, check it now.",
                 'redirect_link' => "transactions"
             ]);
 
@@ -133,7 +135,7 @@ class DashboardController extends Controller
     public function calendarMove($action, $category, $year, $month)
     {
         $page_title = 'Dashboard';
-        $current_user_name = 'Reinhard Esteban';
+        $current_user_name = Auth::user()->name;
 
         $contacts = Message::where('receiver_name', $current_user_name)
             ->latest()

@@ -7,6 +7,7 @@ use App\Models\Message;
 use App\Models\Notification;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
@@ -14,8 +15,8 @@ class MessageController extends Controller
     {
 
         $page_title = "Messages";
-        $current_user_name = "Reinhard Esteban";
-        $sender_name = "Reinhard Esteban";
+        $current_user_name = Auth::user()->name;
+        $sender_name = Auth::user()->name;
 
 
         $latestMessage = Message::where('receiver_name', $current_user_name)->latest()->first();
@@ -201,8 +202,8 @@ class MessageController extends Controller
 
     public function chatSelected($contact)
     {
-
-        $current_user_name = 'Reinhard Esteban';
+        $user = Auth::user();
+        $current_user_name = $user->name;
 
         $messageNotRead = Message::where('sender_name', $contact)->where('receiver_name', $current_user_name);
 

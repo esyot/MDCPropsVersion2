@@ -9,13 +9,14 @@ use App\Models\Message;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
     public function index()
     {
-        $current_user_name = "Reinhard Esteban";
+        $current_user_name = Auth::user()->name;
 
         $categories = Category::all();
 

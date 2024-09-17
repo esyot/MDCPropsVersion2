@@ -518,7 +518,9 @@
                         <button id="user-icon">
                             <div class="flex items-center space-x-2">
                                 <i class="fa-solid fa-user fa-lg text-blue-600 cursor-pointer"></i>
-                                <h1 class="hover:text-gray-200">Juan Dela Cruz</h1>
+                                <h1 class="hover:text-gray-200">
+                                {{ Auth::user()->name }}
+                                </h1>
 
                             </div>
 
@@ -527,7 +529,7 @@
 
                         <!-- User Dropdown Menu -->
                         <div id="user-dropdown"
-                            class="absolute right-0 hidden mt-2 border p-2 border-gray-300 bg-white rounded-lg   shadow-xl z-10">
+                            class="absolute right-0 hidden mt-2 border p-2 border-gray-300 bg-white rounded-lg  shadow-xl z-10">
                             <div class="flex flex-col space-y-2">
 
 
@@ -538,11 +540,37 @@
                                     <i class="text-blue-500 fas fa-cog mr-2"></i> Settings
                                 </div>
                                 <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-lg">
+                           
+                                    <button type="button" onclick="document.getElementById('logoutConfirm').classList.remove('hidden')">
                                     <i class="text-blue-500 fas fa-sign-out-alt mr-2"></i> Logout
+                                        </button>
+                                 
                                 </div>
                             </div>
                         </div>
 
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="logoutConfirm" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
+
+                <div class="flex flex-col bg-white p-4 rounded space-y-2 items-center">
+                    <div class="bg-red-500 px-3 rounded-full py-1">
+                        <i class="fa-solid fa-question text-red-100"></i>
+
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-medium">Are you sure to log-out?</h1>
+
+
+                    </div>
+                    <div clas="flex justify-center">
+                        
+                        <a href="{{ route('logout') }}" type="button" class="px-4 py-2 bg-green-100 text-green-500 rounded hover:bg-green-800">Yes, sure</a>
+                        <button onclick="document.getElementById('logoutConfirm').classList.add('hidden')" type="button" class="px-4 py-2 bg-gray-100 text-gray-500 rounded hover:bg-gray-800">No, cancel</button>
                     </div>
 
                 </div>

@@ -8,12 +8,14 @@ use App\Models\Notification;
 use App\Models\Setting;
 use App\Models\Category;
 use App\Models\Message;
+use Illuminate\Support\Facades\Auth;
+
 
 class TransactionController extends Controller
 {
     public function index(Request $request)
     {
-        $current_user_name = "Reinhard Esteban";
+        $current_user_name = Auth::user()->name;
 
         $transactions = Transaction::where('category_id', 1)->where('status', 'pending')->get();
 
@@ -82,8 +84,7 @@ class TransactionController extends Controller
     {
 
         $transactions = Transaction::where('status', $request->status)->where('category_id', $request->category)->get();
-        $current_user_name = "Reinhard Esteban";
-
+        $current_user_name = Auth::user()->name;
 
         $unreadNotifications = Notification::where('isRead', false)->get()->count();
         $notifications = Notification::orderBy('created_at', 'DESC')->get();
