@@ -9,6 +9,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -59,4 +60,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/item-update/{id}', [ItemController::class, 'update'])->name('itemUpdate');
     Route::get('pending-approve/{id}', [TransactionController::class, 'approve'])->name('transactionApprove');
     Route::post('/transaction-create', [DashboardController::class, 'transactionAdd'])->name('transaction-create');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+
+    Route::post('/profile/update/{id}', [ProfileController::class, 'profileUpdate'])->name('profileUpdate');
+    Route::post('/password/update/{id}', [ProfileController::class, 'passwordUpdate'])->name('passwordUpdate');
+
 });

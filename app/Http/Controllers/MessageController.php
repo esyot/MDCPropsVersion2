@@ -26,6 +26,10 @@ class MessageController extends Controller
             $receiver_name = $latestMessage->sender_name;
         }
 
+        $latestContact = Message::where('receiver_name', Auth::user()->name)->first();
+
+        $receiver_name = $latestContact ? $latestContact->sender_name : null;
+
 
 
         $messagesByCurrentUser = Message::where('sender_name', $current_user_name)->where('receiver_name', $receiver_name)->orderBy('created_at', 'ASC')->get();
@@ -39,6 +43,7 @@ class MessageController extends Controller
                 ->latest()
                 ->first();
         });
+
 
 
         $allMessages = $messagesByCurrentUser->concat($messagesFromOtherUser)->sortBy('created_at');

@@ -294,7 +294,7 @@
 <div id="sidebar"
     class="flex flex-col text-white w-20 {{ $setting->transition == true ? 'transition-all duration-[300ms] ease-in-out' : '' }}">
 
-    <div class="first:mt-8 last:mb-12 flex flex-col flex-grow justify-between relative">
+    <div class="first:mt-3 last:mb-12 flex flex-col flex-grow justify-between relative">
             <!-- Logo and Label -->
             <div class="flex flex-col items-center relative drop-shadow-lg">
                 <img class="w-12 h-12" src="{{asset('asset/photos/logo.png')}}" alt="Logo">
@@ -318,7 +318,7 @@
 
                 <a href="{{ route('items') }}"
                         class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
-                        title="Dashboard">
+                        title="Items">
                         <section class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Items' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
                         <i
                             class="fa-solid fa-boxes-stacked fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
@@ -329,7 +329,7 @@
 
                 <a href="{{ route('categories') }}"
                         class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
-                        title="Dashboard">
+                        title="Categories">
                         <section class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Categories' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
                         <i
                             class="fa-solid fa-th-large fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
@@ -339,7 +339,7 @@
 
                 <a href="{{ route('transactions') }}"
                         class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
-                        title="Dashboard">
+                        title="Transactions">
                         <section class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Transactions' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
                         <i
                             class="fa-solid fa-business-time fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
@@ -508,37 +508,41 @@
                                         @include('pages.partials.contact-list')
                                     </ul>
 
+                                    
+
                                 </div>
+                                <div class="flex justify-center bg-gray-200 w-full rounded-b-lg">
+                                        <a href="{{ route('messages') }}" class="text-blue-500 font-medium  hover:underline py-2">See all in Messages</a>
+                                    </div>
                             </div>
                         </div>
                     @endif
 
                     <!-- User Icon -->
                     <div id="inside-user" class="relative" title="Profile">
-                        <button id="user-icon">
-                            <div class="flex items-center space-x-2">
-                                <i class="fa-solid fa-user fa-lg text-blue-600 cursor-pointer"></i>
-                                <h1 class="hover:text-gray-200">
-                                {{ Auth::user()->name }}
-                                </h1>
-
+                    <button id="user-icon" class="relative flex items-center focus:outline-none">
+                        <div class="flex items-center space-x-2">
+                            <div class="relative">
+                                <img class="border-2 border-gray-600 h-[40px] w-[40px] rounded-full" src="{{ asset('storage/images/users/' . Auth::user()->img) }}" alt="User Image">
+                                <i class="fas fa-chevron-circle-down absolute bottom-0 right-0 transform translate-x-1 translate-y-1 text-gray-600"></i>
                             </div>
+                        </div>
+                    </button>
 
-                        </button>
 
 
                         <!-- User Dropdown Menu -->
                         <div id="user-dropdown"
-                            class="absolute right-0 hidden mt-2 border p-2 border-gray-300 bg-white rounded-lg  shadow-xl z-10">
+                            class="absolute right-0 hidden mt-2 border p-2 border-gray-300 bg-white rounded-lg w-[150px] shadow-xl z-10">
                             <div class="flex flex-col space-y-2">
 
 
                                 <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-lg">
+                                    <a href="{{ route('profile') }}">
                                     <i class="text-blue-500 fas fa-user mr-2"></i> Profile
+                                    </a>
                                 </div>
-                                <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-lg">
-                                    <i class="text-blue-500 fas fa-cog mr-2"></i> Settings
-                                </div>
+                               
                                 <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-lg">
                            
                                     <button type="button" onclick="document.getElementById('logoutConfirm').classList.remove('hidden')">
