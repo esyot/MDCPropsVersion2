@@ -10,6 +10,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -64,5 +65,10 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/profile/update/{id}', [ProfileController::class, 'profileUpdate'])->name('profileUpdate');
     Route::post('/password/update/{id}', [ProfileController::class, 'passwordUpdate'])->name('passwordUpdate');
+
+
+    Route::get('users/manage', [UserController::class, 'index'])->name('users');
+    Route::post('users/role/update', [UserController::class, 'roleUpdate'])->name('roleUpdate');
+
 
 });

@@ -347,7 +347,7 @@
                         </section>
                 </a>
 
-                <a href="{{ route('transactions') }}"
+                <a href="{{ route('users') }}"
                     class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
                     title="Manage Users">
                     <section class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Manage Users' ? 'bg-gray-100 text-blue-500' : '' }}">
@@ -368,7 +368,7 @@
             </div>
 
             <div class="flex justify-center">
-                <button title="Expand | Shrink" id="toggle-button" onclick="toggleSidebar()"
+                <button title="Expand | Shrink" id="toggle-button" 
                     class="px-2 py-2 flex items-center justify-center bg-white hover:bg-gray-400 rounded-full transition duration-200 transform hover:scale-110">
                     <i class="fa-solid fa-arrow-right text-black"></i>
                 </button>
