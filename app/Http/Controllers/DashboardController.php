@@ -22,7 +22,7 @@ class DashboardController extends Controller
 
         $page_title = 'Dashboard';
 
-        $currentCategory = Category::where('id', $default)->get();
+
         $transactions = Transaction::where('category_id', $default)->get();
         $categories = Category::orderBy('id')->get();
         $items = Item::where('category_id', $default)->get();
@@ -48,7 +48,23 @@ class DashboardController extends Controller
 
         $setting = Setting::find(1);
 
-        return view('pages.dashboard', compact('setting', 'current_user_name', 'contacts', 'unreadMessages', 'page_title', 'unreadNotifications', 'notifications', 'items', 'currentCategory', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
+        $categories_admin = Category::where('approval_level', 1)->get();
+        $categories_staff = Category::where('approval_level', 2)->get();
+
+        $roles = Auth::user()->getRoleNames();
+
+        $currentCategory = null;
+
+        if ($roles->contains('admin')) {
+            $currentCategory = Category::where('approval_level', 1)->first();
+        } elseif ($roles->contains('staff')) {
+            $currentCategory = Category::where('approval_level', 2)->first();
+        }
+
+        return view('pages.dashboard', compact('currentCategory', 'roles', 'categories_admin', 'categories_staff', 'setting', 'current_user_name', 'contacts', 'unreadMessages', 'page_title', 'unreadNotifications', 'notifications', 'items', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
+
+
+
     }
 
     public function dateView($date)
@@ -73,7 +89,7 @@ class DashboardController extends Controller
 
         $transactions = Transaction::where('category_id', $category)->get();
         $categories = Category::orderBy('id')->get();
-        $currentCategory = Category::where('id', $category)->get();
+        $currentCategory = Category::find($category);
 
         $notifications = Notification::orderBy('created_at', 'DESC')->get();
         $unreadNotifications = Notification::where('isRead', false)->count();
@@ -97,7 +113,14 @@ class DashboardController extends Controller
 
         $setting = Setting::find(1);
 
-        return view('pages.dashboard', compact('setting', 'contacts', 'unreadMessages', 'page_title', 'notifications', 'unreadNotifications', 'items', 'currentCategory', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
+        $categories_admin = Category::where('approval_level', 1)->get();
+        $categories_staff = Category::where('approval_level', 2)->get();
+
+        $roles = Auth::user()->getRoleNames();
+
+
+
+        return view('pages.dashboard', compact('roles', 'categories_admin', 'categories_staff', 'setting', 'contacts', 'unreadMessages', 'page_title', 'notifications', 'unreadNotifications', 'items', 'currentCategory', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
     }
 
     public function transactionAdd(Request $request)
@@ -156,7 +179,7 @@ class DashboardController extends Controller
 
         $transactions = Transaction::where('category_id', $category)->get();
         $categories = Category::orderBy('id')->get();
-        $currentCategory = Category::where('id', $category)->get();
+        $currentCategory = Category::find($category);
 
         $notifications = Notification::orderBy('created_at', 'DESC')->get();
         $unreadNotifications = Notification::where('isRead', false)->count();
@@ -173,6 +196,11 @@ class DashboardController extends Controller
 
         $setting = Setting::find(1);
 
-        return view('pages.partials.calendar', compact('setting', 'contacts', 'current_user_name', 'unreadMessages', 'page_title', 'notifications', 'unreadNotifications', 'items', 'currentCategory', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
+        $categories_admin = Category::where('approval_level', 1)->get();
+        $categories_staff = Category::where('approval_level', 2)->get();
+
+        $roles = Auth::user()->getRoleNames();
+
+        return view('pages.partials.calendar', compact('roles', 'categories_admin', 'categories_staff', 'setting', 'contacts', 'current_user_name', 'unreadMessages', 'page_title', 'notifications', 'unreadNotifications', 'items', 'currentCategory', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
     }
 }

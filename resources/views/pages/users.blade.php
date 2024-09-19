@@ -4,6 +4,34 @@
 
 <div id="main-content" class="w-full h-full relative p-4 overflow-y-auto custom-scrollbar">
     <div class="flex flex-wrap flex-grow gap-2">
+
+        @hasrole('admin')
+        <div onclick="document.getElementById('userAddModal').classList.remove('hidden')" class=" flex flex-col items-center bg-blue-500 m-2 rounded-lg shadow-lg transition-transform transform
+            hover:scale-105 flex-1 min-w-[200px] max-w-[300px]">
+
+            <div class="bg-gray-100 hover:bg-gray-300 hover:text-gray-400 w-full rounded-t-lg">
+
+                <div class="flex space-x-1 justify-center">
+                    <div class="p-6">
+                        <i class="fas fa-plus text-8xl "></i>
+
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2">
+                <h1 class="text-xl text-white">
+                    Add new user
+                </h1>
+
+            </div>
+
+            <div>
+
+            </div>
+
+        </div>
+        @endhasrole
+
         @foreach ($users as $user)
             <div
                 class="flex flex-col items-center bg-blue-500 p-6 m-2 rounded-lg shadow-lg transition-transform transform hover:scale-105 flex-1 min-w-[200px] max-w-[300px]">
@@ -12,34 +40,152 @@
                 <div>
                     <h1 class="text-white text-md font-semibold">Name: {{$user->name}}</h1>
                     <h1 class="text-white text-md font-semibold">Email: {{$user->email}}</h1>
-                    @if($user->getRoleNames()->isNotEmpty())
-                        <div class="flex space-x-1">
+
+                    <div class="flex space-x-1">
+                        @if($user->getRoleNames()->isNotEmpty())
                             <h2 class="text-white font-medium">Role: </h2>
                             <ul>
                                 @foreach($user->getRoleNames() as $role)
                                     <li class="text-white font-medium"> {{ $role }} </li>
                                 @endforeach
                             </ul>
-                    @else
-                        <p>This user has no assigned roles.</p>
-                    @endif
+                        @else
+                            <p class="text-white">This user has no assigned roles.</p>
 
+                        @endif
                     </div>
-                    <div class="mt-2">
+
+                    <div class="flex justify-center space-x-1 mt-2">
                         <button onclick="openModal('{{ $user->id }}', '{{ $user->getRoleNames()->first() }}')"
-                            class="px-4 py-2 space-x-1 bg-green-100 text-green-800 hover:bg-green-500 rounded">
+                            class="px-4 py-2 space-x-1 bg-blue-300 hover:text-blue-100 hover:bg-blue-800 rounded">
                             <i class="fas fa-edit fa-fw"></i><span>Edit</span>
                         </button>
-
-                        <button class="px-4 py-2 space-x-1 bg-red-100 text-red-800 hover:bg-red-500 rounded">
-                            <i class="fa-solid fa-trash fa-w"></i><span>Delete</span>
-                        </button>
+                        <form action="{{ route('userDelete', ['id' => $user->id]) }}" method="POST">
+                            @csrf
+                            <button type="button"
+                                onclick="document.getElementById('userDeleteConfirm-{{$user->id}}').classList.remove('hidden')"
+                                class="px-4 py-2 space-x-1 bg-red-300 hover:text-red-100 hover:bg-red-500 rounded">
+                                <i class="fa-solid fa-trash fa-w"></i><span>Delete</span>
+                            </button>
                     </div>
 
                 </div>
 
+
             </div>
+            <!-- Modal for user delete confirmation -->
+            <div id="userDeleteConfirm-{{$user->id}}"
+                class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
+                <div class="bg-white p-6 flex justify-center items-center flex-col rounded drop-shadow-lg">
+                    <div>
+                        <i class="fa-solid fa-question text-white px-4 py-3 bg-yellow-500 rounded-full drop-shadow-lg"></i>
+                    </div>
+
+                    <div class="mt-2">
+                        <h1>Are you sure to delete this user?</h1>
+                    </div>
+
+                    <div class="space-x-1 mt-3">
+                        <button type="submit" class="text-lg hover:underline text-green-300 hover:text-green-500">Yes,
+                            proceed.</button>
+                        <button type="button"
+                            onclick="document.getElementById('userDeleteConfirm-{{$user->id}}').classList.add('hidden')"
+                            class="text-lg hover:underline text-red-300 hover:text-red-500">No,
+                            cancel.</button>
+                    </div>
+
+
+
+                </div>
+            </div>
+            </form>
         @endforeach
+    </div>
+</div>
+
+<!-- Success pop up message -->
+@if(session('success'))
+    <div id="success" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50">
+        <div class="bg-white px-6 py-4 rounded">
+            <div>
+                <h1 class="text-lg">{{ session('success') }}</h1>
+            </div>
+            <div class="flex justify-end mt-2">
+                <button onclick="document.getElementById('success').classList.toggle('hidden')"
+                    class="px-4 py-2 bg-gray-100 hover:bg-gray-500 rounded">OK</button>
+            </div>
+        </div>
+    </div>
+@endif
+
+<!-- Modal for adding new user -->
+<div id="userAddModal" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
+    <div class="bg-white px-4 pb-2 w-64 rounded">
+        <form action="{{ route('userAdd') }}" method="POST">
+            @csrf
+            @method('POST')
+            <div class="flex justify-between items-center">
+                <h1 class="text-xl font-medium">Add new user</h1>
+                <button type="button" onclick="document.getElementById('userAddModal').classList.add('hidden')"
+                    class="text-6xl font-thin hover:text-gray-300 focus:outline-none">&times;</button>
+            </div>
+            <section class="space-y-2">
+                <div>
+                    <label for="name">Name:</label>
+                    <input type="text" name="name" placeholder="Input name"
+                        class="block p-2 border border border-gray-300 w-full rounded">
+                </div>
+
+                <div>
+                    <label for="name">Email:</label>
+                    <input type="email" name="email" placeholder="Input email"
+                        class="block p-2 border border border-gray-300 w-full rounded">
+
+                </div>
+                <div>
+                    <label for="name">Password:</label>
+                    <div class="flex p-2 border border border-gray-300 w-full rounded">
+
+                        <input type="password" id="password" name="password" class="focus:outline-none"
+                            placeholder="Input password">
+
+                        <div onclick="iconEye()" class="flex justify-end items-center">
+                            <i id="eye-icon" class="fa-solid fa-eye-slash text-gray-300 hover:text-gray-500"></i>
+
+                        </div>
+                    </div>
+
+                    <script>
+
+                        function iconEye() {
+
+                            const password = document.getElementById('password');
+                            const type = password.type === 'password' ? 'text' : 'password';
+
+                            password.type = type;
+
+                            document.getElementById('eye-icon').classList.toggle('fa-eye-slash');
+                            document.getElementById('eye-icon').classList.toggle('fa-eye');
+
+                        }
+
+                    </script>
+
+
+                </div>
+                <div class="flex justify-end space-x-1">
+                    <button type="submit" class="px-4 py-2 bg-blue-500 text-blue-100 hover:bg-blue-800 rounded">
+                        Save
+                    </button>
+                    <button type="button" class="px-4 py-2 bg-gray-500 text-gray-100 hover:bg-gray-800 rounded">
+                        Cancel
+                    </button>
+                </div>
+
+            </section>
+        </form>
+
+
     </div>
 </div>
 <!-- Modal -->
@@ -74,6 +220,8 @@
         </form>
     </div>
 </div>
+
+
 
 <script>
     function openModal(userId, currentRole) {

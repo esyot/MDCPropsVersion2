@@ -22,7 +22,7 @@
 </div>
 
 <div id="item-add-modal" class="fixed flex inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
-    <div id="item-add-content" class="bg-white shadow-md max-w-full rounded">
+    <div id="item-add-content" class="bg-white shadow-md max-w-full rounded ">
         <div class="flex justify-between p-1 items-center space-x-6 border-b border-gray-300">
             <h1 class="p-2 text-xl font-bold">Add Item</h1>
             <button onclick="document.getElementById('item-add-modal').classList.add('hidden')"
@@ -93,7 +93,7 @@
     <div class="flex flex-wrap flex-grow gap-2">
         <!-- Add Category Button -->
         <div title="Add a new category"
-            class="flex flex-col relative bg-gray-200 mr-2 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden">
+            class="flex flex-col relative bg-gray-200 mr-2 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden  transition-transform transform hover:scale-105">
             <div class="flex justify-center items-center bg-gray-200 h-3/4 cursor-pointer hover:text-gray-800 text-gray-400 "
                 onclick="document.getElementById('item-add-modal').classList.remove('hidden')">
                 <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
@@ -107,7 +107,7 @@
         @foreach ($items as $item)
 
             <div title="Click to preview" onclick="document.getElementById('item-{{$item->id}}').classList.remove('hidden')"
-                class="flex flex-col text-white relative bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden">
+                class="flex flex-col text-white relative bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden  transition-transform transform hover:scale-105">
                 <!-- Image Container -->
                 <div class="flex justify-center items-center bg-gray-200 h-3/4 shadow-inner">
                     <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"

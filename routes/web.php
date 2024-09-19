@@ -67,8 +67,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/password/update/{id}', [ProfileController::class, 'passwordUpdate'])->name('passwordUpdate');
 
 
-    Route::get('users/manage', [UserController::class, 'index'])->name('users');
-    Route::post('users/role/update', [UserController::class, 'roleUpdate'])->name('roleUpdate');
+    Route::get('users-manage', [UserController::class, 'index'])->name('users');
+    Route::post('users-role-update', [UserController::class, 'roleUpdate'])->name('roleUpdate');
+    Route::post('/user-add', [UserController::class, 'create'])->name('userAdd');
+    Route::post('/user-delete/{id}', [UserController::class, 'delete'])->name('userDelete');
 
 
 });

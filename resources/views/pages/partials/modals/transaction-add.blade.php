@@ -28,9 +28,9 @@
                 </div>
 
                 <!-- Hidden Category ID -->
-                @foreach($currentCategory as $category)                  
-                    <input type="hidden" name="category_id" value="{{ $category->id }}">
-                @endforeach
+
+                <input type="hidden" name="category_id" value="{{ $currentCategory->id }}">
+
 
                 <!-- Rentee Contact No -->
                 <div>

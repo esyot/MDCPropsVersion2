@@ -7,6 +7,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,7 +33,9 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/message-send', [MessageController::class, 'messageSend'])->name('api.messageSend');
     Route::post('/dark-mode', [SettingController::class, 'darkMode'])->name('api.darkMode');
     Route::post('/category-add', [CategoryController::class, 'create'])->name('api.categoryAdd');
+    Route::post('/user-add', [UserController::class, 'create'])->name('api.userAdd');
     Route::post('/item-add', [ItemController::class, 'create'])->name('api.itemAdd');
     Route::put('/item-update/{id}', [ItemController::class, 'update'])->name('api.itemUpdate');
     Route::get('/pending-approve/{id}', [TransactionController::class, 'approve'])->name('api.transactionApprove');
+    Route::post('/user-delete/{id}', [UserController::class, 'delete'])->name('api.userDelete');
 });
