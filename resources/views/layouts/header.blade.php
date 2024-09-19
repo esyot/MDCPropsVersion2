@@ -533,20 +533,23 @@
 
                         <!-- User Dropdown Menu -->
                         <div id="user-dropdown"
-                            class="absolute right-0 hidden mt-2 border p-2 border-gray-300 bg-white rounded-lg w-[150px] shadow-xl z-10">
+                            class="absolute right-0 hidden mt-2 border p-2 border-gray-300 bg-white rounded-lg w-[200px] shadow-xl z-10">
                             <div class="flex flex-col space-y-2">
 
 
                                 <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-lg">
                                     <a href="{{ route('profile') }}">
-                                    <i class="text-blue-500 fas fa-user mr-2"></i> Profile
+                                    <i class="text-blue-500 fas fa-user mr-2"></i>
+                                    <span>{{ Auth::user()->name }}</span>
                                     </a>
                                 </div>
                                
                                 <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-lg">
                            
                                     <button type="button" onclick="document.getElementById('logoutConfirm').classList.remove('hidden')">
-                                    <i class="text-blue-500 fas fa-sign-out-alt mr-2"></i> Logout
+                                    <i class="text-blue-500 fas fa-sign-out-alt mr-2"></i>
+                                    <span>Logout</span>
+                                  
                                         </button>
                                  
                                 </div>

@@ -42,14 +42,21 @@
     </div>
 </div>
 <!-- Modal -->
-<div id="roleModal" class="fixed inset-0 flex items-center justify-center hidden bg-gray-800 bg-opacity-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-[200px]">
-        <h2 class="text-xl font-semibold mb-4">Edit User Role</h2>
+<div id="roleModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden z-50">
+    <div class="bg-white px-3 py-2 rounded-lg shadow-md w-[200px]">
+        <div class="flex justify-center">
+            <i class="bg-orange-500 px-2 rounded-full py-2.5 fas fa-user-cog text-white"></i>
+        </div>
+        <div class="flex justify-center">
+            <h2 class="text-xl font-semibold mb-4">Edit User Role</h2>
+
+        </div>
+
         <form id="roleForm" action="{{ route('roleUpdate') }}" method="POST">
             @csrf
             <input type="hidden" name="user_id" id="user_id">
 
-            <div class="mb-4 flex flex-col justify-center flex">
+            <div class="ml-12 mb-4 flex flex-col justify-center flex">
                 @foreach ($roles as $role)
                     <label class="flex items-center mb-2">
                         <input type="radio" name="role" value="{{ $role->name }}" class="mr-2">
