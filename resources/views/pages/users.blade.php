@@ -25,18 +25,19 @@
                     @endif
 
                     </div>
+                    <div class="mt-2">
+                        <button onclick="openModal('{{ $user->id }}', '{{ $user->getRoleNames()->first() }}')"
+                            class="px-4 py-2 space-x-1 bg-green-100 text-green-800 hover:bg-green-500 rounded">
+                            <i class="fas fa-edit fa-fw"></i><span>Edit</span>
+                        </button>
+
+                        <button class="px-4 py-2 space-x-1 bg-red-100 text-red-800 hover:bg-red-500 rounded">
+                            <i class="fa-solid fa-trash fa-w"></i><span>Delete</span>
+                        </button>
+                    </div>
 
                 </div>
-                <div class="mt-2">
-                    <button onclick="openModal('{{ $user->id }}', '{{ $user->getRoleNames()->first() }}')"
-                        class="px-4 py-2 space-x-1 bg-green-100 text-green-800 hover:bg-green-500 rounded">
-                        <i class="fas fa-edit fa-fw"></i><span>Edit</span>
-                    </button>
 
-                    <button class="px-4 py-2 space-x-1 bg-red-100 text-red-800 hover:bg-red-500 rounded">
-                        <i class="fa-solid fa-trash fa-w"></i><span>Delete</span>
-                    </button>
-                </div>
             </div>
         @endforeach
     </div>
