@@ -52,16 +52,21 @@ class DashboardController extends Controller
         $categories_staff = Category::where('approval_level', 2)->get();
 
         $roles = Auth::user()->getRoleNames();
-
         $currentCategory = null;
 
-        if ($roles->contains('admin')) {
+        if ($roles->contains('admin') && $categories != null) {
             $currentCategory = Category::where('approval_level', 1)->first();
         } elseif ($roles->contains('staff')) {
             $currentCategory = Category::where('approval_level', 2)->first();
         }
 
-        return view('pages.dashboard', compact('currentCategory', 'roles', 'categories_admin', 'categories_staff', 'setting', 'current_user_name', 'contacts', 'unreadMessages', 'page_title', 'unreadNotifications', 'notifications', 'items', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
+        $categoriesIsNull = true;
+        if (count($categories) > 0) {
+            $categoriesIsNull = false;
+
+        }
+
+        return view('pages.dashboard', compact('categoriesIsNull', 'currentCategory', 'roles', 'categories_admin', 'categories_staff', 'setting', 'current_user_name', 'contacts', 'unreadMessages', 'page_title', 'unreadNotifications', 'notifications', 'items', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
 
 
 
@@ -118,9 +123,15 @@ class DashboardController extends Controller
 
         $roles = Auth::user()->getRoleNames();
 
+        $categoriesIsNull = true;
+        if (count($categories) > 0) {
+            $categoriesIsNull = false;
+
+        }
 
 
-        return view('pages.dashboard', compact('roles', 'categories_admin', 'categories_staff', 'setting', 'contacts', 'unreadMessages', 'page_title', 'notifications', 'unreadNotifications', 'items', 'currentCategory', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
+
+        return view('pages.dashboard', compact('categoriesIsNull', 'roles', 'categories_admin', 'categories_staff', 'setting', 'contacts', 'unreadMessages', 'page_title', 'notifications', 'unreadNotifications', 'items', 'currentCategory', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
     }
 
     public function transactionAdd(Request $request)

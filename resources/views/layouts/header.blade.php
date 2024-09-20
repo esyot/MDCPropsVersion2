@@ -481,6 +481,30 @@
                             <div id="messages-dropdown"
                                 class="absolute right-0 hidden mt-2 w-64 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
                                 <div class="p-2">
+                                <div class="flex justify-between items-center">
+                                <div class="py-2">
+                                    <h1 class="text-2xl font-bold">Chats</h1>
+                                </div>
+
+
+                                <div class=" flex">
+                                    <div title="Options">
+                                    <i class="fa-solid fa-ellipsis hover:bg-gray-300 px-[10px] py-[9px] rounded-full"></i>
+                                    </div>
+                                <div title="See all in messages">
+                                <i class="fas fa-expand-arrows-alt hover:bg-gray-300 px-[10px] py-[9px] rounded-full"></i>
+
+
+                                </div>
+                                <div title="New message">
+                                <i class="fa-solid fa-edit hover:bg-gray-300 px-[10px] py-[9px] rounded-full"></i>
+
+                                </div>  
+                            </div>
+                                    
+                                </div>
+                               
+
                                     <form hx-get="{{ route('contacts') }}" hx-trigger="input" hx-swap="innerHTML"
                                         hx-target="#contact-list"
                                         class="flex justiify-around px-2 items-center bg-gray-200 rounded-full">
@@ -526,22 +550,23 @@
                         <div id="user-dropdown"
                             class="absolute right-0 hidden mt-2 border p-2 border-gray-300 bg-white rounded-lg w-[200px] shadow-xl z-10">
                             <div class="flex flex-col space-y-2">
-
+                            <a href="{{ route('profile') }}">
 
                                 <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-lg">
-                                    <a href="{{ route('profile') }}">
+                                    
                                     <i class="text-blue-500 fas fa-user mr-2"></i>
                                     <span>{{ Auth::user()->name }}</span>
-                                    </a>
+                                  
                                 </div>
+                                </a>
                                
-                                <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-lg">
+                                <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-lg" onclick="document.getElementById('logoutConfirm').classList.remove('hidden')">
                            
-                                    <button type="button" onclick="document.getElementById('logoutConfirm').classList.remove('hidden')">
+                                   
                                     <i class="text-blue-500 fas fa-sign-out-alt mr-2"></i>
                                     <span>Logout</span>
                                   
-                                        </button>
+                                     
                                  
                                 </div>
                             </div>

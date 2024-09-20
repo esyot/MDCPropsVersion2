@@ -43,10 +43,28 @@ class TransactionController extends Controller
             ->values();
 
 
-        $currentCategory = Category::find(1);
         $currentStatus = 'pending';
 
-        return view('pages.transactions', compact('currentStatus', 'contacts', 'unreadMessages', 'setting', 'page_title', 'currentCategory', 'categories', 'transactions', 'unreadNotifications', 'notifications'));
+
+        $categories_admin = Category::where('approval_level', 1)->get();
+        $categories_staff = Category::where('approval_level', 2)->get();
+
+        $roles = Auth::user()->getRoleNames();
+
+        $currentCategory = null;
+
+        if ($roles->contains('admin') && $categories != null) {
+            $currentCategory = Category::where('approval_level', 1)->first();
+        } elseif ($roles->contains('staff')) {
+            $currentCategory = Category::where('approval_level', 2)->first();
+        }
+
+        $categoriesIsNull = true;
+        if (count($categories) > 0) {
+            $categoriesIsNull = false;
+
+        }
+        return view('pages.transactions', compact('categoriesIsNull', 'currentStatus', 'contacts', 'unreadMessages', 'setting', 'page_title', 'currentCategory', 'categories', 'transactions', 'unreadNotifications', 'notifications'));
 
     }
 

@@ -97,10 +97,11 @@ class UserController extends Controller
         $user->assignRole($role);
 
         Notification::create([
+            'user_id' => Auth::user()->id,
             'icon' => "https://cdn-icons-png.flaticon.com/512/9187/9187604.png",
             'title' => "New User",
             'description' => Auth::user()->name . " added a new user, you can   check it now.",
-            'redirect_link' => "manage-users"
+            'redirect_link' => "users-manage"
         ]);
 
         return redirect()->back()->with('success', 'A new user has been added successfully!');

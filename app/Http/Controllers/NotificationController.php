@@ -8,7 +8,7 @@ use App\Models\Notification;
 class NotificationController extends Controller
 {
     public function isRead($id, $redirect_link)
-{
+    {
         // Find the notification by ID and update its 'isRead' status
         $update = Notification::where('id', $id)->update(['isRead' => true]);
 
@@ -33,34 +33,37 @@ class NotificationController extends Controller
             $notifications = Notification::orderBy('created_at', 'DESC')->get();
             return view('pages.partials.notification-list', compact('notifications'));
         }
-    
+
         return view('pages.partials.notification-list', ['notifications' => collect()]);
     }
 
-    public function readAll(){
+    public function readAll()
+    {
 
         $notifications = Notification::where('isRead', false)->update(['isRead' => true]);
 
-        if($notifications){
+        if ($notifications) {
 
-            return redirect()->back()->with('success', 'All notifications marked as read.');
+            return redirect()->back();
         }
 
         return redirect()->back()->with('info', 'There were no unread notifications to be marked as read.');
     }
 
-    public function deleteAll() {
+    public function deleteAll()
+    {
         // Delete all notifications where 'isRead' is false
         $deletedCount = Notification::where('isRead', true)->delete();
-    
+
         // Check if any records were deleted
         if ($deletedCount > 0) {
-            return redirect()->back()->with('success', 'All unread notifications have been deleted.');
+            return redirect()->back();
+
         }
-    
+
         // If no records were deleted, you might want to handle that case
         return redirect()->back()->with('info', 'There were no unread notifications to delete.');
     }
-    
-    
+
+
 }

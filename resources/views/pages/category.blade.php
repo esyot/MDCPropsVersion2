@@ -79,7 +79,7 @@
             <div class="px-4">
 
                 <div class="mt-2 flex flex-col">
-                    <input type="file" name="files[]" class="file-upload-input" accept="image/*" multiple>
+                    <input type="file" name="files[]" class="file-upload-input" accept="image/*" multiple required>
                     <small class="font-bold">Note:
                         <i class="font-normal">Make sure the selected files are in "jpg", "png", or "jpeg" format.</i>
                     </small>
@@ -87,13 +87,13 @@
                 <div class="mt-2">
                     <label for="title">Title:</label>
                     <input type="text" name="title" placeholder="Title" title="Title"
-                        class="block p-2 border border-gray-300 rounded w-full">
+                        class="block p-2 border border-gray-300 rounded w-full" required>
                 </div>
 
 
                 <div class="flex flex-col mt-2">
-                    <label for="approval">Can Approved by:</label>
-                    <select name="approval_level" id="" class="block p-2 border border-gray-300 rounded">
+                    <label for="approval">Approval level:</label>
+                    <select name="approval_level" id="" class="block p-2 border border-gray-300 rounded" required>
                         <option value="1"
                             title="Only the administrator can approve items that belong to this category.">
                             Admin only</option>
@@ -128,13 +128,12 @@
             </div>
         </div>
 
-        <!-- Category Items -->
-        @foreach ($categories as $category)
+        <!-- Category Items -->@foreach ($categories as $category)
                 <div class="flex flex-col text-white rounded-lg w-52 h-52 overflow-hidden">
                     <div class="relative w-full max-w-3xl overflow-hidden slide-container">
                         <div class="slide-wrapper shadow-inner">
                             @php
-                                $directory = storage_path('app/public/images/categories/' . $category->folder_name); // Folder where your images are stored
+                                $directory = storage_path('app/public/images/categories/' . $category->folder_name);
                                 $images = array_diff(scandir($directory), array('..', '.'));
                             @endphp
 
@@ -145,70 +144,35 @@
                                 </div>
                             @endforeach
                         </div>
-                        <button class="prev-slide" onclick="moveSlide(event, -1)"
-                            onmouseover="moveSlide(event, -1);">&#10094;</button>
-                        <button class="next-slide" onclick="moveSlide(event, 1)"
-                            onmouseover="moveSlide(event, 1);">&#10095;</button>
+                        <button class="prev-slide">&#10094;</button>
+                        <button class="next-slide">&#10095;</button>
                     </div>
                     <div class="bg-blue-500 w-full h-full shadow-md text-center p-2 flex items-center justify-center">
                         <h1 class="text-lg font-semibold drop-shadow">{{ $category->title }}</h1>
                     </div>
                 </div>
         @endforeach
+
     </div>
 </div>
 <script>
-    let currentIndex = 0;
+    document.querySelectorAll('.slide-container').forEach(slideContainer => {
+        let currentIndex = 0; // Each container has its own currentIndex
 
-    setInterval(moveSlide(event, 1), 100);// Add this line to initialize currentIndex
-
-    function moveSlide(event, step) {
-        event.stopPropagation();
-        const slideContainer = event.target.closest('.slide-container');
         const slideWrapper = slideContainer.querySelector('.slide-wrapper');
         const slides = slideWrapper.querySelectorAll('.slide');
         const totalSlides = slides.length;
 
-        currentIndex = (currentIndex + step + totalSlides) % totalSlides;
-        const offset = -currentIndex * 100;
-        slideWrapper.style.transform = `translateX(${offset}%)`;
-    }
+        function moveSlide(step) {
+            currentIndex = (currentIndex + step + totalSlides) % totalSlides;
+            const offset = -currentIndex * 100;
+            slideWrapper.style.transform = `translateX(${offset}%)`;
+        }
 
-    function startAutoSlide(slideContainer) {
-        const slideWrapper = slideContainer.querySelector('.slide-wrapper');
-        const totalSlides = slideWrapper.querySelectorAll('.slide').length;
-
-        // Automatically move slides every 2 seconds
-        return setInterval(() => {
-            moveSlide({ stopPropagation: () => { } }, 1);
-        }, 100);
-    }
-
-    function resetAutoSlide(interval, slideContainer) {
-        clearInterval(interval);
-        return startAutoSlide(slideContainer);
-    }
-
-    // Initialize auto-slide for each container and handle hover events
-    document.querySelectorAll('.slide-container').forEach(slideContainer => {
-        let autoSlideInterval = startAutoSlide(slideContainer);
-
-        // Restart the auto-slide on hover
-        slideContainer.addEventListener('mouseenter', () => {
-            autoSlideInterval = resetAutoSlide(autoSlideInterval, slideContainer);
-        });
-
-        // Stop the auto-slide when not hovering
-        slideContainer.addEventListener('mouseleave', () => {
-            clearInterval(autoSlideInterval);
-        });
+        // Attach event listeners to the buttons
+        slideContainer.querySelector('.prev-slide').addEventListener('click', () => moveSlide(-1));
+        slideContainer.querySelector('.next-slide').addEventListener('click', () => moveSlide(1));
     });
-
-
 </script>
-
-</body>
-
-</html>
 
 @endsection

@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('title');    
+            $table->string('title');
             $table->string('approval_level');
             $table->string('folder_name');
             $table->timestamps();
@@ -46,6 +46,7 @@ return new class extends Migration {
 
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('icon');
             $table->string('title');
             $table->string('description');
@@ -82,6 +83,13 @@ return new class extends Migration {
             $table->string('name')->nullable(false);
             $table->foreignId('items_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
+        });
+
+        Schema::create('destinations', function (Blueprint $table) {
+            $table->id();
+            $table->string('municipality')->nullable(false);
+            $table->decimal('kilometers', 8, 2)->nullable(false);
             $table->timestamps();
         });
     }

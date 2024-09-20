@@ -21,14 +21,10 @@ class ItemController extends Controller
     public function index()
     {
         $current_user_name = Auth::user()->name;
-        $defaultCategoryId = 1;  // Default category ID
+        // Default category ID
         $page_title = "Items";
 
-        // Fetch the default category
-        $currentCategory = Category::find($defaultCategoryId);
 
-        // Fetch items based on the default category
-        $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : Item::all();
 
         // Fetch all categories
         $categories = Category::all();
@@ -54,8 +50,28 @@ class ItemController extends Controller
             })
             ->values();
 
-        // Return the view with the filtered data
-        return view('pages.items', compact('contacts', 'notifications', 'unreadMessages', 'unreadNotifications', 'page_title', 'setting', 'categories', 'currentCategory', 'items'));
+        $categories_admin = Category::where('approval_level', 1)->get();
+        $categories_staff = Category::where('approval_level', 2)->get();
+
+        $roles = Auth::user()->getRoleNames();
+
+        $currentCategory = null;
+        if ($roles->contains('admin') && $categories != null) {
+            $currentCategory = Category::where('approval_level', 1)->first();
+        } elseif ($roles->contains('staff')) {
+            $currentCategory = Category::where('approval_level', 2)->first();
+        }
+
+        $categoriesIsNull = true;
+        if (count($categories) > 0) {
+            $categoriesIsNull = false;
+
+        }
+
+        // Fetch items based on the default category
+        $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : Item::all();
+
+        return view('pages.items', compact('categories_admin', 'categories_staff', 'categoriesIsNull', 'contacts', 'notifications', 'unreadMessages', 'unreadNotifications', 'page_title', 'setting', 'categories', 'currentCategory', 'items'));
     }
 
     public function create(Request $request)
@@ -134,8 +150,25 @@ class ItemController extends Controller
             })
             ->values();
 
-        // Return the view with the filtered data
-        return view('pages.items', compact('contacts', 'notifications', 'unreadMessages', 'unreadNotifications', 'page_title', 'setting', 'categories', 'currentCategory', 'items'));
+        $categories_admin = Category::where('approval_level', 1)->get();
+        $categories_staff = Category::where('approval_level', 2)->get();
+
+        $roles = Auth::user()->getRoleNames();
+
+
+        if ($roles->contains('admin') && $categories != null) {
+            $currentCategory = Category::where('approval_level', 1)->first();
+        } elseif ($roles->contains('staff')) {
+            $currentCategory = Category::where('approval_level', 2)->first();
+        }
+
+        $categoriesIsNull = true;
+        if (count($categories) > 0) {
+            $categoriesIsNull = false;
+
+        }
+
+        return view('pages.items', compact('categories_admin', 'categories_staff', 'categoriesIsNull', 'contacts', 'notifications', 'unreadMessages', 'unreadNotifications', 'page_title', 'setting', 'categories', 'currentCategory', 'items'));
     }
     public function update(Request $request, $id)
     {
