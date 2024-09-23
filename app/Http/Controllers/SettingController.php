@@ -7,43 +7,45 @@ use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
-    public function darkMode(Request $request){
+    public function darkMode(Request $request)
+    {
 
         $setting = Setting::findOrFail(1);
-        
-        if($request->action == null){
+
+        if ($request->action == null) {
 
             $setting->update([
-                'darkMode'=>false
+                'darkMode' => false
             ]);
 
-        }else{
+        } else {
 
             $setting->update([
-                'darkMode'=>true
+                'darkMode' => true
             ]);
         }
-        
+
 
         return redirect()->back();
     }
-    public function transitions(Request $request){
+    public function transitions(Request $request)
+    {
 
         $setting = Setting::findOrFail(1);
-        
-        if($request->action == null){
+
+        if ($request->action == null) {
 
             $setting->update([
-                'transition'=>false
+                'transition' => false
             ]);
 
-        }else{
+        } else {
 
             $setting->update([
-                'transition'=>true
+                'transition' => true
             ]);
         }
-        
+
 
         return redirect()->back();
     }

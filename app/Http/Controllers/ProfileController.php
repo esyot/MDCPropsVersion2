@@ -25,7 +25,6 @@ class ProfileController extends Controller
         $unreadMessages = $messages->count();
 
         $contacts = Message::where('receiver_name', $current_user_name)
-            ->orWhere('sender_name', $current_user_name)
             ->latest()
             ->get()
             ->groupBy('sender_name')

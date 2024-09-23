@@ -28,7 +28,6 @@ class ItemController extends Controller
         $unreadMessages = $messages->count();
 
         $contacts = Message::where('receiver_name', $current_user_name)
-            ->orWhere('sender_name', $current_user_name)
             ->latest()
             ->get()
             ->groupBy('sender_name')
@@ -99,9 +98,7 @@ class ItemController extends Controller
         $unreadNotifications = Notification::where('isRead', false)->count();
         $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
         $unreadMessages = $messages->count();
-
         $contacts = Message::where('receiver_name', $current_user_name)
-            ->orWhere('sender_name', $current_user_name)
             ->latest()
             ->get()
             ->groupBy('sender_name')

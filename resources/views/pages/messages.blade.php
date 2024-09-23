@@ -65,7 +65,7 @@
             @if(count($allMessages) == 0)
                 <div class="flex flex-wrap w-full h-full items-center justify-center">
 
-                    <p class="p-4 text-center">No chat selected. Please choose a contact.</p>
+                    <p class="p-4 text-center bg-white">No conversation is made!</p>
 
                 </div>
             @endif
@@ -78,7 +78,7 @@
                 @foreach($allMessages as $message)
                     @if(count($allMessages) < 0)
                         <div>
-                            <p class="p-4 bg-red-500"> no chat selected!</p>
+                            <p class="p-4 bg-red-500"> no conversation is made</p>
                         </div>
                     @endif
                     @include('pages.partials.modals.image-preview')

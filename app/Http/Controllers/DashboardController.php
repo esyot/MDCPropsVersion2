@@ -30,7 +30,6 @@ class DashboardController extends Controller
         $unreadMessages = $messages->count();
 
         $contacts = Message::where('receiver_name', $current_user_name)
-            ->orWhere('sender_name', $current_user_name)
             ->latest()
             ->get()
             ->groupBy('sender_name')
@@ -122,7 +121,6 @@ class DashboardController extends Controller
         $items = Item::where('category_id', $category)->orderBy('name', 'ASC')->get();
 
         $contacts = Message::where('receiver_name', $current_user_name)
-            ->orWhere('sender_name', $current_user_name)
             ->latest()
             ->get()
             ->groupBy('sender_name')
@@ -197,7 +195,6 @@ class DashboardController extends Controller
         $current_user_name = Auth::user()->name;
 
         $contacts = Message::where('receiver_name', $current_user_name)
-            ->orWhere('sender_name', $current_user_name)
             ->latest()
             ->get()
             ->groupBy('sender_name')

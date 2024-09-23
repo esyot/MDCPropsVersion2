@@ -39,12 +39,12 @@ class UserController extends Controller
         $unreadMessagesCount = $messages->count();
 
         $contacts = Message::where('receiver_name', $currentUserName)
-            ->orWhere('sender_name', $currentUserName)
             ->latest()
             ->get()
             ->groupBy('sender_name')
             ->map(fn($group) => $group->first())
             ->values();
+
 
         return view('pages.users', [
             'roles' => $roles,

@@ -56,7 +56,6 @@ class MessageController extends Controller
         $unreadMessages = $messages->count();
 
         $contacts = Message::where('receiver_name', $current_user_name)
-            ->orWhere('sender_name', $current_user_name)
             ->latest()
             ->get()
             ->groupBy('sender_name')
@@ -235,10 +234,6 @@ class MessageController extends Controller
         ]);
 
 
-
-
-
-
         $messagesByCurrentUser = Message::where('sender_name', $current_user_name)->where('receiver_name', $contact)->orderBy('created_at', 'ASC')->get();
         $messagesFromOtherUser = Message::where('sender_name', $contact)->where('receiver_name', $current_user_name)->orderBy('created_at', 'ASC')->get();
 
@@ -247,13 +242,20 @@ class MessageController extends Controller
         $notifications = Notification::orderBy('created_at', 'DESC')->get();
         $unreadNotifications = Notification::where('isRead', false)->count();
 
-        $contacts = Message::where('receiver_name', $current_user_name)
+        $messages = Message::where('receiver_name', $current_user_name)
             ->orWhere('sender_name', $current_user_name)
             ->latest()
-            ->get()
-            ->groupBy('sender_name')
-            ->map(fn($group) => $group->first())
-            ->values();
+            ->get();
+
+        if ($messages->isEmpty()) {
+            // Handle the case where no messages are found
+            dd('No messages found.');
+        }
+
+        // Group by sender or receiver based on the presence of the current user
+        $contacts = $messages->groupBy(function ($message) use ($current_user_name) {
+            return $message->receiver_name === $current_user_name ? $message->sender_name : $message->receiver_name;
+        })->map(fn($group) => $group->first())->values();
 
         $receiver_name = $contact;
         $sender_name = $current_user_name;
@@ -284,7 +286,6 @@ class MessageController extends Controller
         if ($request->searchValue == null) {
 
             $contacts = Message::where('receiver_name', $current_user_name)
-                ->orWhere('sender_name', $current_user_name)
                 ->latest()
                 ->get()
                 ->groupBy('sender_name')
