@@ -46,7 +46,7 @@ class UserController extends Controller
             ->values();
 
 
-        return view('pages.users', [
+        return view('admin.pages.users', [
             'roles' => $roles,
             'users' => $users,
             'setting' => $setting,

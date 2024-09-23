@@ -16,6 +16,6 @@ class LoginController extends Controller
         }
 
         // Return the login view if not authenticated
-        return view('login.login');
+        return view('admin.login.login');
     }
 }

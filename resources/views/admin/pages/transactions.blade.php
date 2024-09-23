@@ -1,4 +1,4 @@
-@extends('layouts.header')
+@extends('admin.layouts.header')
 @section('content')
 
 @if ($categoriesIsNull == false)
@@ -31,55 +31,30 @@
     </div>
 
     <div id="main-content" class="flex-1 overflow-y-auto custom-scrollbar w-full h-full">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+        <div class="flex p-4">
             @foreach($transactions as $transaction)
-                <div class="max-w-sm mx-1 bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="{{ asset('storage/images/categories/' . $currentCategory->folder_name . '/' . $transaction->item->img) }}"
-                        alt="{{ $transaction->item->name }}" class="w-80 h-48 object-cover">
-                    <div class="flex flex-col flex-wrap w-full h-full p-4 bg-blue-500 text-white">
+                @include('admin.pages.partials.modals.transaction')
+                <div class="mx-2 w-64 bg-white rounded-lg shadow-md overflow-hidden">
+                    <div onclick="document.getElementById('transaction-{{$transaction->id}}').classList.remove('hidden')">
+
+
+                        <img src="{{ asset('storage/images/categories/' . $currentCategory->folder_name . '/' . $transaction->item->img) }}"
+                            alt="{{ $transaction->item->name }}" class="w-80 h-48 object-cover">
+
+                    </div>
+                    <div class="flex flex-col flex-wrap p-4 bg-blue-500 text-white">
                         <div class="flex flex-col justify-center">
                             <div class="flex justify-center text-xl font-semibold">{{ $transaction->item->name }}</div>
-                            <div class="mt-2">
-                                <div class="flex items-center">
-                                    <span class="font-medium">Rentee:</span>
-                                    <span class="ml-2 text-yellow-300">{{ $transaction->rentee_name }}</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <span class="font-medium">Contact #:</span>
-                                    <span class="ml-2 text-yellow-300">{{ $transaction->rentee_contact_no }}</span>
-                                </div>
-                                <div class="flex items-center mt-1">
-                                    <span class="font-medium">Date Pick-up:</span>
-                                    <span class="ml-2 text-yellow-300">
-                                        {{ \Carbon\Carbon::parse($transaction->rent_date)->format('F j, Y') }}
-                                    </span>
-                                </div>
-                                <div class="flex items-center mt-1">
-                                    <span class="font-medium">Time Pick-up:</span>
-                                    <span class="ml-2 text-yellow-300">
-                                        {{ \Carbon\Carbon::parse($transaction->rent_time)->format('h:i A') }}
-                                    </span>
-                                </div>
-                                <div class="flex items-center mt-1">
-                                    <span class="font-medium">Date Return:</span>
-                                    <span class="ml-2 text-yellow-300">
-                                        {{ \Carbon\Carbon::parse($transaction->rent_return)->format('F j, Y') }}
-                                    </span>
-                                </div>
-                                <div class="flex items-center mt-1">
-                                    <span class="font-medium">Time Return:</span>
-                                    <span class="ml-2 text-yellow-300">
-                                        {{ \Carbon\Carbon::parse($transaction->rent_return_time)->format('h:i A') }}
-                                    </span>
-                                </div>
-                                <div class="flex items-center mt-1">
-                                    <span class="font-medium">Status:</span>
-                                    <span class="ml-2 text-yellow-300">
-                                        {{ $transaction->status }}
-                                    </span>
-                                </div>
+                            <div class="flex items-center">
+                                <span class="font-medium">Rentee:</span>
+                                <span class="ml-2 text-yellow-300">{{ $transaction->rentee_name }}</span>
                             </div>
-
+                            <div class="flex items-center mt-1">
+                                <span class="font-medium">Status:</span>
+                                <span class="ml-2 text-yellow-300">
+                                    {{ $transaction->status }}
+                                </span>
+                            </div>
                         </div>
                         <div class="flex justify-center space-x-2 mt-2">
 
@@ -98,7 +73,7 @@
                         </div>
                     </div>
                 </div>
-                @include('pages.partials.modals.approve-confirm')
+                @include('admin.pages.partials.modals.approve-confirm')
             @endforeach
         </div>
     </div>
@@ -169,7 +144,7 @@
 
 @else
 
-    @include('pages.partials.errors.category-null-error')
+    @include('admin.pages.partials.errors.category-null-error')
 
 @endif
 

@@ -1,4 +1,4 @@
-@extends('layouts.header')
+@extends('admin.layouts.header')
 @section('content')
 @if ($categoriesIsNull == false)
 
@@ -131,7 +131,7 @@
                         <h1 class="text-lg font-semibold truncate">{{ $item->name }}</h1>
                     </div>
                 </div>
-                @include('pages.partials.modals.item-preview')
+                @include('admin.pages.partials.modals.item-preview')
             @endforeach
 
         </div>

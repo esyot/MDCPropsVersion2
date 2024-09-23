@@ -64,7 +64,7 @@ class MessageController extends Controller
 
         $setting = Setting::findOrFail(1);
 
-        return view('pages.messages', compact('setting', 'unreadMessages', 'contacts', 'current_user_name', 'receiver_name', 'sender_name', 'notifications', 'unreadNotifications', 'page_title', 'allMessages'));
+        return view('admin.pages.messages', compact('setting', 'unreadMessages', 'contacts', 'current_user_name', 'receiver_name', 'sender_name', 'notifications', 'unreadNotifications', 'page_title', 'allMessages'));
     }
     public function messageReacted($id)
     {
@@ -272,7 +272,7 @@ class MessageController extends Controller
 
 
 
-        return view('pages.messages', compact('unreadMessages', 'contacts', 'current_user_name', 'receiver_name', 'sender_name', 'notifications', 'unreadNotifications', 'page_title', 'allMessages'));
+        return view('admin.pages.messages', compact('unreadMessages', 'contacts', 'current_user_name', 'receiver_name', 'sender_name', 'notifications', 'unreadNotifications', 'page_title', 'allMessages'));
 
 
 
@@ -293,7 +293,7 @@ class MessageController extends Controller
                 ->values();
 
 
-            return view('pages.partials.contact-list', compact('receiver_name', 'contacts'));
+            return view('admin.pages.partials.contact-list', compact('receiver_name', 'contacts'));
 
 
 
@@ -310,7 +310,7 @@ class MessageController extends Controller
                 ->values();
 
 
-            return view('pages.partials.contact-list', compact('receiver_name', 'contacts'));
+            return view('admin.pages.partials.contact-list', compact('receiver_name', 'contacts'));
 
 
         }

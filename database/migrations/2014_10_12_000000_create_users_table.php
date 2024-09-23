@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('img')->default('user.png');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('isActive')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

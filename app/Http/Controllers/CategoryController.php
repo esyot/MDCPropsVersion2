@@ -19,8 +19,6 @@ class CategoryController extends Controller
     {
         $current_user_name = Auth::user()->name;
 
-        $categories = Category::all();
-
         $default = 1;
 
         $page_title = "Categories";
@@ -40,9 +38,38 @@ class CategoryController extends Controller
             ->map(fn($group) => $group->first())
             ->values();
 
-        $currentCategory = Category::where('id', $default)->get();
         $users = User::all();
-        return view('pages.category', compact('users', 'currentCategory', 'contacts', 'unreadMessages', 'notifications', 'unreadNotifications', 'page_title', 'setting', 'categories'));
+
+        $roles = Auth::user()->getRoleNames();
+
+        $categories_admin = Category::where('approval_level', 1)
+            ->orWhere('approval_level', 3)
+            ->orderBy('id')
+            ->get();
+
+        $categories_staff = Category::where('approval_level', 2)
+            ->orWhere('approval_level', 3)
+            ->orderBy('id')
+            ->get();
+
+        $currentCategory = null;
+        $categoriesIsNull = true;
+        $categories = [];
+
+        if ($roles->contains('admin') && $categories_admin->isNotEmpty()) {
+            $categories = $categories_admin;
+            $categoriesIsNull = false;
+        } elseif ($roles->contains('staff') && $categories_staff->isNotEmpty()) {
+            $categories = $categories_staff;
+            $categoriesIsNull = false;
+        }
+
+        $transactions = [];
+        $items = [];
+        $daysWithRecords = [];
+
+
+        return view('admin.pages.category', compact('categoriesIsNull', 'users', 'currentCategory', 'contacts', 'unreadMessages', 'notifications', 'unreadNotifications', 'page_title', 'setting', 'categories'));
 
     }
 

@@ -203,11 +203,6 @@
         .slider input:checked+.slider-track .slider-thumb {
             transform: translateX(26px);
         }
-        body{
-
-           
-
-        }
     </style>
 
 </head>
@@ -335,7 +330,7 @@
                         <span class="pl-2 pr-[100px] text-sm hidden">Transactions</span>
                         </section>
                 </a>
-
+                @hasrole('admin')
                 <a href="{{ route('users') }}"
                     class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
                     title="Manage Users">
@@ -344,6 +339,7 @@
                         <span class="pl-2 pr-4 text-sm hidden">Manage Users</span>
                     </section>
                 </a>
+                @endhasrole
 
             </div>
 
@@ -438,7 +434,7 @@
                         <div id="notification-list"
                             class="z-10 flex flex-col max-h-64 overflow-y-auto custom-scrollbar">
 
-                            @include('pages.partials.notification-list')
+                            @include('admin.pages.partials.notification-list')
 
                             <!-- "See More" Button -->
                             @if(count($notifications) > 5)
@@ -457,7 +453,7 @@
                     @if($page_title != 'Messages')
                         <div class="relative" id="inside-messages" title="Messages">
                             <button id="messages-icon" class="flex items-center focus:outline-none">
-                                <i class="fa-solid fa-envelope fa-lg text-blue-600"></i>
+                                <i class="fa-solid fa-envelope fa-lg mt-1 text-blue-600"></i>
                                 <span class="ml-2 hover:text-gray-300">Messages</span>
 
                                 @if($unreadMessages > 0)
@@ -470,7 +466,7 @@
 
                             <!-- Messages Dropdown Menu -->
                             <div id="messages-dropdown"
-                                class="absolute right-0 hidden mt-2 w-64 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                                class="absolute right-0 hidden mt-2 w-[400px] bg-white border border-gray-300 rounded-lg shadow-lg z-10">
                                 <div class="p-2">
                                 <div class="flex justify-between items-center">
                                 <div class="py-2">
@@ -505,13 +501,13 @@
                                         </div>
 
                                         <input type="text" name="searchValue" placeholder="Search contact"
-                                            class="placeholder-center mr-8 focus:outline-none bg-transparent">
+                                            class="mr-8 focus:outline-none bg-transparent">
                                     </form>
                                 </div>
                                 <div class="p-2 max-h-80 overflow-y-auto custom-scrollbar">
 
                                     <ul id="contact-list" class="list-none">
-                                        @include('pages.partials.contact-list')
+                                        @include('admin.pages.partials.contact-list')
                                     </ul>
 
                                     
@@ -590,7 +586,7 @@
                 </div>
 
             </div>
-            @include('pages.partials.modals.message-new')
+            @include('admin.pages.partials.modals.message-new')
 
             @yield('content')
 

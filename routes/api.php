@@ -21,25 +21,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Public API Routes
-Route::post('/login', [AuthController::class, 'login'])->name('api.login');
+// // Public API Routes
+// Route::post('/login', [AuthController::class, 'login'])->name('api.login');
 
-// Authenticated API Routes
-Route::middleware('auth:api')->group(function () {
-    Route::get('/user', [AuthController::class, 'user']); // Example route for fetching the authenticated user
+// // Authenticated API Routes
+// Route::middleware('auth:api')->group(function () {
+//     Route::get('/admin/user', [AuthController::class, 'user']); // Example route for fetching the authenticated user
 
-    Route::get('/transactions', [TransactionController::class, 'index'])->name('api.transactions');
-    Route::get('/date-view/{date}', [DashboardController::class, 'dateView'])->name('api.dateView');
-    Route::post('/message-send-new', [MessageController::class, 'messageSendNew'])->name('api.messageSendNew');
-    Route::post('/message-send', [MessageController::class, 'messageSend'])->name('api.messageSend');
-    Route::post('/dark-mode', [SettingController::class, 'darkMode'])->name('api.darkMode');
-    Route::post('/category-add', [CategoryController::class, 'create'])->name('api.categoryAdd');
-    Route::post('/user-add', [UserController::class, 'create'])->name('api.userAdd');
-    Route::post('/item-add', [ItemController::class, 'create'])->name('api.itemAdd');
-    Route::put('/item-update/{id}', [ItemController::class, 'update'])->name('api.itemUpdate');
-    Route::get('/pending-approve/{id}', [TransactionController::class, 'approve'])->name('api.transactionApprove');
-    Route::post('/user-delete/{id}', [UserController::class, 'delete'])->name('api.userDelete');
+//     Route::get('/admin/transactions', [TransactionController::class, 'index'])->name('api.transactions');
+//     Route::get('/admin/date-view/{date}', [DashboardController::class, 'dateView'])->name('api.dateView');
+//     Route::post('/admin/message-send-new', [MessageController::class, 'messageSendNew'])->name('api.messageSendNew');
+//     Route::post('/admin/message-send', [MessageController::class, 'messageSend'])->name('api.messageSend');
+//     Route::post('/admin/dark-mode', [SettingController::class, 'darkMode'])->name('api.darkMode');
+//     Route::post('/admin/category-add', [CategoryController::class, 'create'])->name('api.categoryAdd');
+//     Route::post('/admin/user-add', [UserController::class, 'create'])->name('api.userAdd');
+//     Route::post('/admin/item-add', [ItemController::class, 'create'])->name('api.itemAdd');
+//     Route::put('/admin/item-update/{id}', [ItemController::class, 'update'])->name('api.itemUpdate');
+//     Route::get('/admin/pending-approve/{id}', [TransactionController::class, 'approve'])->name('api.transactionApprove');
+//     Route::post('/admin/user-delete/{id}', [UserController::class, 'delete'])->name('api.userDelete');
 
-    route::get('/item-search/{day}', [ItemController::class, 'search'])->name('api.itemSearch');
+//     route::get('/admin/item-search/{day}', [ItemController::class, 'search'])->name('api.itemSearch');
 
-});
+// });

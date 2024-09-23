@@ -53,7 +53,7 @@ class ItemController extends Controller
             ? Item::where('category_id', $currentCategory->id)->orderBy('name', 'ASC')->get()
             : Item::orderBy('name', 'ASC')->get();
 
-        return view('pages.items', compact('users', 'categories_admin', 'categories_staff', 'categoriesIsNull', 'contacts', 'notifications', 'unreadMessages', 'unreadNotifications', 'page_title', 'setting', 'categories', 'currentCategory', 'items'));
+        return view('admin.pages.items', compact('users', 'categories_admin', 'categories_staff', 'categoriesIsNull', 'contacts', 'notifications', 'unreadMessages', 'unreadNotifications', 'page_title', 'setting', 'categories', 'currentCategory', 'items'));
     }
 
     public function create(Request $request)
@@ -117,7 +117,7 @@ class ItemController extends Controller
 
         $categoriesIsNull = count($categories) === 0;
 
-        return view('pages.items', compact('categories_admin', 'categories_staff', 'categoriesIsNull', 'contacts', 'notifications', 'unreadMessages', 'unreadNotifications', 'page_title', 'setting', 'categories', 'currentCategory', 'items'));
+        return view('admin.pages.items', compact('categories_admin', 'categories_staff', 'categoriesIsNull', 'contacts', 'notifications', 'unreadMessages', 'unreadNotifications', 'page_title', 'setting', 'categories', 'currentCategory', 'items'));
     }
 
     public function update(Request $request, $id)
@@ -175,6 +175,6 @@ class ItemController extends Controller
     public function search(Request $request, $day)
     {
         $items = Item::where('name', 'LIKE', '%' . $request->input . '%')->get();
-        return view('pages.partials.inclusions.item', compact('items', 'day'));
+        return view('admin.pages.partials.inclusions.item', compact('items', 'day'));
     }
 }

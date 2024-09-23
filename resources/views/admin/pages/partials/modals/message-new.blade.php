@@ -7,7 +7,7 @@
                     Send Message
                 </h1>
 
-                <button onclick="document.getElementById('message-new').classList.add('hidden')"
+                <button type="button" onclick="document.getElementById('message-new').classList.add('hidden')"
                     class="text-6xl flex font-thin">&times;</button>
             </div>
 

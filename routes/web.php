@@ -25,55 +25,55 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Public Routes
-Route::get('/login', [LoginController::class, 'index'])->name('loginPage');
-Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::get('/test', function () {
-    return view('test');
+Route::get('/admin/login', [LoginController::class, 'index'])->name('loginPage');
+Route::post('/admin.login', [AuthController::class, 'login'])->name('login');
+Route::get('admin/test', function () {
+    return view('admin/test');
 });
 
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index']); // Home route
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');
-    Route::get('calendar-move/{action}/{category}/{year}/{month}', [DashboardController::class, 'calendarMove'])->name('calendarMove');
-    Route::get('notification-list/{filter}', [NotificationController::class, 'notificationList'])->name('notificationList');
-    Route::get('messages', [MessageController::class, 'index'])->name('messages');
-    Route::get('chat-selected/{contact}', [MessageController::class, 'chatSelected'])->name('chatSelected');
-    Route::get('categories', [CategoryController::class, 'index'])->name('categories');
-    Route::get('items', [ItemController::class, 'index'])->name('items');
-    Route::get('/items-filter', [ItemController::class, 'itemsFilter'])->name('itemsFilter');
-    Route::get('/transactions-filter', [TransactionController::class, 'filter'])->name('transactionsFilter');
-    Route::get('/date-view/{date}', [DashboardController::class, 'dateView'])->name('dateView');
-    Route::get('/date-custom', [DashboardController::class, 'dateCustom'])->name('dateCustom');
-    Route::get('/isRead/{id}/{redirect_link}', [NotificationController::class, 'isRead'])->name('isRead');
-    Route::get('/transaction-decline/{id}', [TransactionController::class, 'decline'])->name('transactionDecline');
-    Route::get('/notification/read/all', [NotificationController::class, 'readAll'])->name('readAll');
-    Route::get('/notification/delete/all', [NotificationController::class, 'deleteAll'])->name('deleteAll');
-    Route::get('/message-is-reacted/{id}', [MessageController::class, 'messageReacted'])->name('messageReacted');
-    Route::post('/message-send', [MessageController::class, 'messageSend'])->name('messageSend');
-    Route::get('/contacts', [MessageController::class, 'contacts'])->name('contacts');
-    Route::post('/dark-mode', [SettingController::class, 'darkMode'])->name('darkMode');
-    Route::post('/transitions', [SettingController::class, 'transitions'])->name('transitions');
-    Route::post('/category-add', [CategoryController::class, 'create'])->name('category-add');
-    Route::post('/item-add', [ItemController::class, 'create'])->name('itemAdd');
-    Route::put('/item-update/{id}', [ItemController::class, 'update'])->name('itemUpdate');
-    Route::get('pending-approve/{id}', [TransactionController::class, 'approve'])->name('transactionApprove');
-    Route::post('/transaction-create', [DashboardController::class, 'transactionAdd'])->name('transaction-create');
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/admin/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/admin/transactions', [TransactionController::class, 'index'])->name('transactions');
+    Route::get('/admin/calendar-move/{action}/{category}/{year}/{month}', [DashboardController::class, 'calendarMove'])->name('calendarMove');
+    Route::get('/admin/notification-list/{filter}', [NotificationController::class, 'notificationList'])->name('notificationList');
+    Route::get('/admin/messages', [MessageController::class, 'index'])->name('messages');
+    Route::get('/admin/chat-selected/{contact}', [MessageController::class, 'chatSelected'])->name('chatSelected');
+    Route::get('/admin/categories', [CategoryController::class, 'index'])->name('categories');
+    Route::get('/admin/items', [ItemController::class, 'index'])->name('items');
+    Route::get('/admin/items-filter', [ItemController::class, 'itemsFilter'])->name('itemsFilter');
+    Route::get('/admin/transactions-filter', [TransactionController::class, 'filter'])->name('transactionsFilter');
+    Route::get('/admin/date-view/{date}', [DashboardController::class, 'dateView'])->name('dateView');
+    Route::get('/admin/date-custom', [DashboardController::class, 'dateCustom'])->name('dateCustom');
+    Route::get('/admin/isRead/{id}/{redirect_link}', [NotificationController::class, 'isRead'])->name('isRead');
+    Route::get('/admin/-decline/{id}', [TransactionController::class, 'decline'])->name('transactionDecline');
+    Route::get('/admin/notification/read/all', [NotificationController::class, 'readAll'])->name('readAll');
+    Route::get('/admin/notification/delete/all', [NotificationController::class, 'deleteAll'])->name('deleteAll');
+    Route::get('/admin/message-is-reacted/{id}', [MessageController::class, 'messageReacted'])->name('messageReacted');
+    Route::post('/admin/message-send', [MessageController::class, 'messageSend'])->name('messageSend');
+    Route::get('/admin/contacts', [MessageController::class, 'contacts'])->name('contacts');
+    Route::post('/admin/dark-mode', [SettingController::class, 'darkMode'])->name('darkMode');
+    Route::post('/admin/transitions', [SettingController::class, 'transitions'])->name('transitions');
+    Route::post('/admin/category-add', [CategoryController::class, 'create'])->name('category-add');
+    Route::post('/admin/item-add', [ItemController::class, 'create'])->name('itemAdd');
+    Route::put('/admin/item-update/{id}', [ItemController::class, 'update'])->name('itemUpdate');
+    Route::get('admin/pending-approve/{id}', [TransactionController::class, 'approve'])->name('transactionApprove');
+    Route::post('/admin/transaction-create', [DashboardController::class, 'transactionAdd'])->name('transaction-create');
+    Route::get('/admin/profile', [ProfileController::class, 'index'])->name('profile');
 
-    Route::post('/profile/update/{id}', [ProfileController::class, 'profileUpdate'])->name('profileUpdate');
-    Route::post('/password/update/{id}', [ProfileController::class, 'passwordUpdate'])->name('passwordUpdate');
+    Route::post('/admin/profile/update/{id}', [ProfileController::class, 'profileUpdate'])->name('profileUpdate');
+    Route::post('/admin/password/update/{id}', [ProfileController::class, 'passwordUpdate'])->name('passwordUpdate');
 
 
-    Route::get('users-manage', [UserController::class, 'index'])->name('users');
-    Route::post('users-role-update', [UserController::class, 'roleUpdate'])->name('roleUpdate');
-    Route::post('/user-add', [UserController::class, 'create'])->name('userAdd');
-    Route::post('/user-delete/{id}', [UserController::class, 'delete'])->name('userDelete');
+    Route::get('/admin/-manage', [UserController::class, 'index'])->name('users');
+    Route::post('/admin/users-role-update', [UserController::class, 'roleUpdate'])->name('roleUpdate');
+    Route::post('/admin/user-add', [UserController::class, 'create'])->name('userAdd');
+    Route::post('/admin/user-delete/{id}', [UserController::class, 'delete'])->name('userDelete');
 
-    Route::post('/message-new-send', [MessageController::class, 'messageNewSend'])->name('messageNewSend');
+    Route::post('/admin/message-new-send', [MessageController::class, 'messageNewSend'])->name('messageNewSend');
 
-    Route::get('/item-search/{day}', [ItemController::class, 'search'])->name('itemSearch');
+    Route::get('/admin/item-search/{day}', [ItemController::class, 'search'])->name('itemSearch');
 
 });

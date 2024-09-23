@@ -26,15 +26,15 @@ class NotificationController extends Controller
     {
         if ($filter === 'unread') {
             $notifications = Notification::where('isRead', false)->get();
-            return view('pages.partials.notification-list', compact('notifications'));
+            return view('admin.pages.partials.notification-list', compact('notifications'));
         }
 
         if ($filter === 'all') {
             $notifications = Notification::orderBy('created_at', 'DESC')->get();
-            return view('pages.partials.notification-list', compact('notifications'));
+            return view('admin.pages.partials.notification-list', compact('notifications'));
         }
 
-        return view('pages.partials.notification-list', ['notifications' => collect()]);
+        return view('admin.pages.partials.notification-list', ['notifications' => collect()]);
     }
 
     public function readAll()

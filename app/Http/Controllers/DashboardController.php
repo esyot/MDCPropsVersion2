@@ -79,7 +79,7 @@ class DashboardController extends Controller
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
 
 
-        return view('pages.dashboard', compact('destinations', 'users', 'categoriesIsNull', 'currentCategory', 'roles', 'categories_admin', 'categories_staff', 'setting', 'current_user_name', 'contacts', 'unreadMessages', 'page_title', 'unreadNotifications', 'notifications', 'items', 'categories_admin', 'currentDate', 'transactions', 'daysWithRecords'));
+        return view('admin.pages.dashboard', compact('destinations', 'users', 'categoriesIsNull', 'currentCategory', 'roles', 'categories_admin', 'categories_staff', 'setting', 'current_user_name', 'contacts', 'unreadMessages', 'page_title', 'unreadNotifications', 'notifications', 'items', 'categories_admin', 'currentDate', 'transactions', 'daysWithRecords'));
     }
 
 
@@ -89,7 +89,7 @@ class DashboardController extends Controller
 
         $setting = Setting::find(1);
 
-        return view('pages.partials.date-view', compact('setting', 'transactions', 'date'));
+        return view('admin.pages.partials.date-view', compact('setting', 'transactions', 'date'));
     }
 
     public function dateCustom(Request $request)
@@ -143,7 +143,7 @@ class DashboardController extends Controller
         $users = User::whereNot('name', Auth::user()->name)->get();
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
 
-        return view('pages.dashboard', compact('destinations', 'users', 'categoriesIsNull', 'roles', 'categories_admin', 'categories_staff', 'setting', 'contacts', 'unreadMessages', 'page_title', 'notifications', 'unreadNotifications', 'items', 'currentCategory', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
+        return view('admin.pages.dashboard', compact('destinations', 'users', 'categoriesIsNull', 'roles', 'categories_admin', 'categories_staff', 'setting', 'contacts', 'unreadMessages', 'page_title', 'notifications', 'unreadNotifications', 'items', 'currentCategory', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
     }
 
     public function transactionAdd(Request $request)
@@ -235,6 +235,6 @@ class DashboardController extends Controller
 
         $roles = Auth::user()->getRoleNames();
 
-        return view('pages.partials.calendar', compact('roles', 'categories_admin', 'categories_staff', 'setting', 'contacts', 'current_user_name', 'unreadMessages', 'page_title', 'notifications', 'unreadNotifications', 'items', 'currentCategory', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
+        return view('admin.pages.partials.calendar', compact('roles', 'categories_admin', 'categories_staff', 'setting', 'contacts', 'current_user_name', 'unreadMessages', 'page_title', 'notifications', 'unreadNotifications', 'items', 'currentCategory', 'categories', 'currentDate', 'transactions', 'daysWithRecords'));
     }
 }

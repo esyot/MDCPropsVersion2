@@ -10,7 +10,7 @@ class AuthController extends Controller
 {
     public function index()
     {
-        return view('login.login');
+        return view('admin.login.login');
     }
 
     public function logout(Request $request)

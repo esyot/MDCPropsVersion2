@@ -32,7 +32,7 @@ class ProfileController extends Controller
             ->values();
 
         $users = User::all();
-        return view('pages.profile', compact('users', 'unreadMessages', 'contacts', 'notifications', 'unreadNotifications', 'setting', 'page_title'));
+        return view('admin.pages.profile', compact('users', 'unreadMessages', 'contacts', 'notifications', 'unreadNotifications', 'setting', 'page_title'));
 
     }
 
