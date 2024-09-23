@@ -56,13 +56,13 @@ class MessageController extends Controller
         $unreadMessages = $messages->count();
 
         $contacts = Message::where('receiver_name', $current_user_name)
+            ->orWhere('sender_name', $current_user_name)
             ->latest()
             ->get()
             ->groupBy('sender_name')
-            ->map(function ($group) {
-                return $group->first();
-            })
+            ->map(fn($group) => $group->first())
             ->values();
+
         $setting = Setting::findOrFail(1);
 
         return view('pages.messages', compact('setting', 'unreadMessages', 'contacts', 'current_user_name', 'receiver_name', 'sender_name', 'notifications', 'unreadNotifications', 'page_title', 'allMessages'));
@@ -85,7 +85,25 @@ class MessageController extends Controller
         return redirect()->back()->with('success', 'added reaction');
     }
 
+    public function messageNewSend(Request $request)
+    {
+        $validatedData = $request->validate([
 
+            'sender_name' => ['string', 'required'],
+            'receiver_name' => ['string', 'required'],
+            'content' => ['string', 'required']
+        ]);
+
+        Message::create([
+            'sender_name' => $validatedData['sender_name'],
+            'receiver_name' => $validatedData['receiver_name'],
+            'content' => $validatedData['content'],
+            'type' => 'text',
+        ]);
+
+        return redirect()->back()->with('success', 'Message sent successfully!');
+
+    }
 
     public function messageSend(Request $request)
     {
@@ -230,12 +248,11 @@ class MessageController extends Controller
         $unreadNotifications = Notification::where('isRead', false)->count();
 
         $contacts = Message::where('receiver_name', $current_user_name)
+            ->orWhere('sender_name', $current_user_name)
             ->latest()
             ->get()
             ->groupBy('sender_name')
-            ->map(function ($group) {
-                return $group->first();
-            })
+            ->map(fn($group) => $group->first())
             ->values();
 
         $receiver_name = $contact;
@@ -262,18 +279,16 @@ class MessageController extends Controller
     public function contacts(Request $request)
     {
 
-        $current_user_name = 'Reinhard Esteban';
-        $receiver_name = 'Reinhard Esteban';
-
+        $current_user_name = Auth::user()->name;
+        $receiver_name = Auth::user()->name;
         if ($request->searchValue == null) {
 
             $contacts = Message::where('receiver_name', $current_user_name)
+                ->orWhere('sender_name', $current_user_name)
                 ->latest()
                 ->get()
                 ->groupBy('sender_name')
-                ->map(function ($group) {
-                    return $group->first();
-                })
+                ->map(fn($group) => $group->first())
                 ->values();
 
 

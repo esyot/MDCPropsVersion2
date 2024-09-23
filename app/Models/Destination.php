@@ -10,4 +10,5 @@ class Destination extends Model
     use HasFactory;
 
     protected $guarded = [];
+
 }

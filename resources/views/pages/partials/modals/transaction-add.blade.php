@@ -1,6 +1,44 @@
 <div id="transaction-add-{{$day}}"
     class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 hidden">
     <div id="transaction-form-{{$day}}" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl relative">
+
+
+        <!-- Modal Items  -->
+        <div id="itemListModal-{{$day}}"
+            class="flex fixed inset-0 bg-gray-800 justify-center items-center bg-opacity-50 z-50 hidden">
+            <div class="bg-white px-4 rounded">
+                <div class="flex items-center justify-between py-2">
+                    <h1 class="text-xl font-medium">Select an Item</h1>
+                    <button type="button" class="text-4xl"
+                        onclick="document.getElementById('itemListModal-{{$day}}').classList.add('hidden')">&times;</button>
+
+                </div>
+
+                <div>
+
+
+
+                    <div class="flex items-center space-x-1 p-2 border border-gray-300 rounded-full">
+                        <form hx-get="{{ route('itemSearch', ['day' => $day]) }}" hx-trigger="input" hx-swap="innerHTML"
+                            hx-target="#item-list-{{$day}}">
+                            <i class="fas fa-search"></i>
+                            <input type="text" class="focus:outline-none" name="input" placeholder="Search Item...">
+                        </form>
+                    </div>
+
+                    <div class="border border-gray-200 my-2 bg-gray-100">
+                        <div>
+                            <ul id="item-list-{{$day}}">
+                                @include('pages.partials.inclusions.item')
+                            </ul>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
         <form action="{{ route('transaction-create') }}" method="POST">
             @csrf <!-- CSRF token for security -->
 
@@ -11,7 +49,9 @@
             </button>
 
             <!-- Form Title -->
-            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Add New Transaction</h2>
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Add a New Transaction in
+                <span class="text-red-500 font-bold">{{ $currentCategory->title }}</span>
+            </h2>
 
             <!-- Form Inputs -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -19,18 +59,15 @@
                 <!-- Item Selection -->
                 <div>
                     <label for="item_id" class="block text-gray-700 font-semibold mb-1">Item</label>
-                    <select name="item_id" id="item_id" class="block py-2 px-2 border border-gray-300 rounded" required>
-                        <option value="">Select an Item</option> <!-- Placeholder option -->
-                        @foreach($items as $item)
-                            <option value="{{ $item->id }}">{{ $item->name }}</option>
-                        @endforeach
-                    </select>
+                    <input type="text" title="Items" id="item-{{$day}}"
+                        onclick="document.getElementById('itemListModal-{{$day}}').classList.remove('hidden')"
+                        class="block p-2 border border-gray-300 cursor-pointer rounded" placeholder="Select an item"
+                        readonly required>
                 </div>
 
-                <!-- Hidden Category ID -->
-
+                <!-- Hidden Item ID -->
+                <input type="hidden" name="item_id" id="item-id-{{$day}}">
                 <input type="hidden" name="category_id" value="{{ $currentCategory->id }}">
-
 
                 <!-- Rentee Contact No -->
                 <div>
@@ -89,50 +126,17 @@
                         class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
+
+                <!-- Destination -->
                 <div>
-                    <label for="destination">Destination</label>
-                    <select name="" id="" class="block p-2 border border-gray-300 w-full custom-scrollbar rounded">
-                        <option value="antequera">Antequera</option>
-                        <option value="baclayon">Baclayon</option>
-                        <option value="balilihan">Balilihan</option>
-                        <option value="batuan">Batuan</option>
-                        <option value="bilar">Bilar</option>
-                        <option value="buenavista">Buenavista</option>
-                        <option value="calape">Calape</option>
-                        <option value="candijay">Candijay</option>
-                        <option value="carmen">Carmen</option>
-                        <option value="catigbian">Catigbian</option>
-                        <option value="clarin">Clarin</option>
-                        <option value="danao">Danao</option>
-                        <option value="dauis">Dauis</option>
-                        <option value="dimiao">Dimiao</option>
-                        <option value="duero">Duero</option>
-                        <option value="garcia-hernandez">Garcia Hernandez</option>
-                        <option value="jagna">Jagna</option>
-                        <option value="lila">Lila</option>
-                        <option value="loboc">Loboc</option>
-                        <option value="loon">Loon</option>
-                        <option value="mabini">Mabini</option>
-                        <option value="maribojoc">Maribojoc</option>
-                        <option value="panglao">Panglao</option>
-                        <option value="pilar">Pilar</option>
-                        <option value="president-carlos-p-garcia">President Carlos P. Garcia</option>
-                        <option value="sagbayan">Sagbayan</option>
-                        <option value="san-isidro">San Isidro</option>
-                        <option value="san-miguel">San Miguel</option>
-                        <option value="san-pascual">San Pascual</option>
-                        <option value="sevilla">Sevilla</option>
-                        <option value="sierra-bullones">Sierra Bullones</option>
-                        <option value="talibon">Talibon</option>
-                        <option value="trinidad">Trinidad</option>
-                        <option value="tubigon">Tubigon</option>
-                        <option value="ubay">Ubay</option>
-                        <option value="valencia">Valencia</option>
+                    <label for="destination_id" class="block text-gray-700 font-semibold mb-1">Destination</label>
+                    <select name="destination_id" id="destination_id"
+                        class="block p-2 border border-gray-300 w-full custom-scrollbar rounded">
+                        @foreach ($destinations as $destination)
+                            <option value="{{ $destination->id }}">{{ $destination->municipality }}</option>
+                        @endforeach
                     </select>
-
                 </div>
-
-
 
             </div>
 
@@ -149,6 +153,7 @@
                 </button>
             </div>
         </form>
+
     </div>
 </div>
 
@@ -164,6 +169,7 @@
         </div>
     </div>
 @endif
+
 
 @if($setting->transition == true)
     <script>

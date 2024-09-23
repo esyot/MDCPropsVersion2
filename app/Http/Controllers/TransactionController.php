@@ -8,6 +8,8 @@ use App\Models\Notification;
 use App\Models\Setting;
 use App\Models\Category;
 use App\Models\Message;
+use App\Models\User;
+
 use Illuminate\Support\Facades\Auth;
 
 
@@ -34,37 +36,36 @@ class TransactionController extends Controller
         $unreadMessages = $messages->count();
 
         $contacts = Message::where('receiver_name', $current_user_name)
+            ->orWhere('sender_name', $current_user_name)
             ->latest()
             ->get()
             ->groupBy('sender_name')
-            ->map(function ($group) {
-                return $group->first();
-            })
+            ->map(fn($group) => $group->first())
             ->values();
 
 
         $currentStatus = 'pending';
 
-
-        $categories_admin = Category::where('approval_level', 1)->get();
-        $categories_staff = Category::where('approval_level', 2)->get();
-
         $roles = Auth::user()->getRoleNames();
 
         $currentCategory = null;
 
-        if ($roles->contains('admin') && $categories != null) {
-            $currentCategory = Category::where('approval_level', 1)->first();
-        } elseif ($roles->contains('staff')) {
-            $currentCategory = Category::where('approval_level', 2)->first();
+        $categories_admin = Category::where('approval_level', 1)->get();
+        $categories_staff = Category::where('approval_level', 2)->get();
+
+        $currentCategory = null;
+        $categoriesIsNull = false;
+
+        if ($roles->contains('admin') && $categories_admin->isNotEmpty()) {
+            $currentCategory = $categories_admin->first();
+        } elseif ($roles->contains('staff') && $categories_staff->isNotEmpty()) {
+            $currentCategory = $categories_staff->first();
+        } else {
+            $categoriesIsNull = true;
         }
 
-        $categoriesIsNull = true;
-        if (count($categories) > 0) {
-            $categoriesIsNull = false;
-
-        }
-        return view('pages.transactions', compact('categoriesIsNull', 'currentStatus', 'contacts', 'unreadMessages', 'setting', 'page_title', 'currentCategory', 'categories', 'transactions', 'unreadNotifications', 'notifications'));
+        $users = User::whereNot('name', Auth::user()->name)->get();
+        return view('pages.transactions', compact('users', 'categoriesIsNull', 'currentStatus', 'contacts', 'unreadMessages', 'setting', 'page_title', 'currentCategory', 'categories', 'transactions', 'unreadNotifications', 'notifications'));
 
     }
 
@@ -119,20 +120,37 @@ class TransactionController extends Controller
         $unreadMessages = $messages->count();
 
         $contacts = Message::where('receiver_name', $current_user_name)
+            ->orWhere('sender_name', $current_user_name)
             ->latest()
             ->get()
             ->groupBy('sender_name')
-            ->map(function ($group) {
-                return $group->first();
-            })
+            ->map(fn($group) => $group->first())
             ->values();
-
 
         $currentCategory = Category::find($request->category);
 
         $currentStatus = $request->status;
 
-        return view('pages.transactions', compact('currentStatus', 'contacts', 'unreadMessages', 'setting', 'page_title', 'currentCategory', 'categories', 'transactions', 'unreadNotifications', 'notifications'));
+        $roles = Auth::user()->getRoleNames();
+
+        $categories_admin = Category::where('approval_level', 1)->get();
+        $categories_staff = Category::where('approval_level', 2)->get();
+
+        $currentCategory = null;
+        $categoriesIsNull = false;
+
+        if ($roles->contains('admin') && $categories_admin->isNotEmpty()) {
+            $currentCategory = $categories_admin->first();
+        } elseif ($roles->contains('staff') && $categories_staff->isNotEmpty()) {
+            $currentCategory = $categories_staff->first();
+        } else {
+            $categoriesIsNull = true;
+        }
+
+        $users = User::whereNot('name', Auth::user()->name)->get();
+
+
+        return view('pages.transactions', compact('users', 'categoriesIsNull', 'currentStatus', 'contacts', 'unreadMessages', 'setting', 'page_title', 'currentCategory', 'categories', 'transactions', 'unreadNotifications', 'notifications'));
 
 
     }

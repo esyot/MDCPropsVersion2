@@ -277,18 +277,7 @@
 
 
 
-    <script>
-        // JavaScript to handle sidebar toggle
-        document.getElementById('open-btn').addEventListener('click', function () {
-            document.getElementById('sidebar-right').classList.toggle('translate-x-full');
-            document.getElementById('open-btn').classList.toggle('mr-[260px]');
-            document.getElementById('btn').classList.toggle('fa-arrow-left');
-            document.getElementById('btn').classList.toggle('fa-arrow-right');
-
-        });
-
-
-    </script>
+   
 
    <!-- Sidebar -->
 <div id="sidebar"
@@ -462,6 +451,8 @@
                         </div>
                     </div>
 
+                  
+
                     <!-- Messages Icon -->
                     @if($page_title != 'Messages')
                         <div class="relative" id="inside-messages" title="Messages">
@@ -496,7 +487,7 @@
 
 
                                 </div>
-                                <div title="New message">
+                                <div title="New message" onclick="document.getElementById('message-new').classList.remove('hidden')">
                                 <i class="fa-solid fa-edit hover:bg-gray-300 px-[10px] py-[9px] rounded-full"></i>
 
                                 </div>  
@@ -599,6 +590,7 @@
                 </div>
 
             </div>
+            @include('pages.partials.modals.message-new')
 
             @yield('content')
 
@@ -607,138 +599,135 @@
                 </footer>
 
 
-            <script>
+                <script>
+    (function() {
+        // JavaScript to handle sidebar toggle
+        document.getElementById('open-btn').addEventListener('click', function () {
+            document.getElementById('sidebar-right').classList.toggle('translate-x-full');
+            document.getElementById('open-btn').classList.toggle('mr-[260px]');
+            document.getElementById('btn').classList.toggle('fa-arrow-left');
+            document.getElementById('btn').classList.toggle('fa-arrow-right');
+        });
 
-                document.body.addEventListener('htmx:beforeRequest', function () {
-                    document.getElementById('loader').classList.remove('hidden');
-                });
+        document.body.addEventListener('htmx:beforeRequest', function () {
+            document.getElementById('loader').classList.remove('hidden');
+        });
 
-                document.body.addEventListener('htmx:afterRequest', function () {
-                    document.getElementById('loader').classList.add('hidden');
-                });
+        document.body.addEventListener('htmx:afterRequest', function () {
+            document.getElementById('loader').classList.add('hidden');
+        });
 
-                function showModal(modalId) {
-                    if (modalId) {
-                        document.getElementById(modalId).classList.remove('hidden');
+        function showModal(modalId) {
+            if (modalId) {
+                document.getElementById(modalId).classList.remove('hidden');
+            }
+        }
+
+        function hideModal(modalId) {
+            if (modalId) {
+                document.getElementById(modalId).classList.add('hidden');
+            }
+        }
+
+        const sidebar = document.getElementById('sidebar');
+        const menuItems = document.getElementById('menu-items');
+        const toggleButton = document.getElementById('toggle-button');
+
+        const notificationIcon = document.getElementById('notification-icon');
+        const notificationDropdown = document.getElementById('notification-dropdown');
+
+        const userIcon = document.getElementById('user-icon');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        const messageIcon = document.getElementById('messages-icon');
+        const messageDropdown = document.getElementById('messages-dropdown');
+
+        const logoLabel = document.getElementById('logoLabel');
+
+        toggleButton.addEventListener('click', () => {
+            sidebar.classList.toggle('w-64');
+            sidebar.classList.toggle('w-20');
+            toggleButton.querySelector('i').classList.toggle('fa-arrow-left');
+            toggleButton.querySelector('i').classList.toggle('fa-arrow-right');
+            logoLabel.classList.toggle('hidden');
+            menuItems.classList.toggle('ml-12');
+
+            const isExpanded = sidebar.classList.contains('w-64');
+            [...menuItems.children].forEach(item => {
+                item.classList.toggle('justify-center', !isExpanded);
+                item.classList.toggle('pl-4', isExpanded);
+                item.querySelector('span').classList.toggle('hidden', !isExpanded);
+            });
+        });
+
+        notificationIcon.addEventListener('click', () => {
+            notificationDropdown.classList.toggle('hidden');
+        });
+
+        userIcon.addEventListener('click', () => {
+            userDropdown.classList.toggle('hidden');
+        });
+
+        messageIcon.addEventListener('click', () => {
+            messageDropdown.classList.toggle('hidden');
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const seeMoreBtn = document.getElementById('see-more-btn');
+            const notificationList = document.getElementById('notification-list');
+            const notificationDropdown = document.getElementById('notification-dropdown');
+            const messagesDropdown = document.getElementById('messages-dropdown');
+            const userDropdown = document.getElementById('user-dropdown');
+            const insideUser = document.getElementById('inside-user');
+            const insideNotification = document.getElementById('inside-notification');
+            const insideMessages = document.getElementById('inside-messages');
+
+            if (seeMoreBtn) {
+                seeMoreBtn.addEventListener('click', function () {
+                    if (notificationList.classList.contains('max-h-64')) {
+                        notificationList.classList.remove('max-h-64');
+                        notificationList.classList.add('max-h-[calc(100vh-8rem)]');
+                        seeMoreBtn.textContent = 'See Less';
+                    } else {
+                        notificationList.classList.remove('max-h-[calc(100vh-8rem)]');
+                        notificationList.classList.add('max-h-64');
+                        seeMoreBtn.textContent = 'See More';
                     }
+                });
+            }
+
+            document.addEventListener('click', function (event) {
+                const clickedElement = event.target;
+
+                // Hide user dropdown if click is outside of it
+                if (!userDropdown.contains(clickedElement) && !insideUser.contains(clickedElement)) {
+                    userDropdown.classList.add('hidden');
                 }
 
-                function hideModal(modalId) {
-                    if (modalId) {
-                        document.getElementById(modalId).classList.add('hidden');
-                    }
+                // Hide notification dropdown if click is outside of it
+                if (!notificationDropdown.contains(clickedElement) && !insideNotification.contains(clickedElement)) {
+                    notificationDropdown.classList.add('hidden');
                 }
 
-                const sidebar = document.getElementById('sidebar');
-                const menuItems = document.getElementById('menu-items');
-                const toggleButton = document.getElementById('toggle-button');
+                // Hide message dropdown if click is outside of it
+                if (!messagesDropdown.contains(clickedElement) && !insideMessages.contains(clickedElement)) {
+                    messagesDropdown.classList.add('hidden');
+                }
+            });
 
-                const notificationIcon = document.getElementById('notification-icon');
-                const notificationDropdown = document.getElementById('notification-dropdown');
+            const button = document.getElementById('dropdownButton');
+            const menu = document.getElementById('dropdownMenu');
+            const messagesButton = document.getElementById('dropdownMessages');
 
-                const userIcon = document.getElementById('user-icon');
-                const userDropdown = document.getElementById('user-dropdown');
+            button.addEventListener('click', function () {
+                menu.classList.toggle('hidden');
+            });
 
-                const messageIcon = document.getElementById('messages-icon');
-                const messageDropdown = document.getElementById('messages-dropdown');
-
-                const logoLabel = document.getElementById('logoLabel');
-
-                toggleButton.addEventListener('click', () => {
-                    sidebar.classList.toggle('w-64');
-                    sidebar.classList.toggle('w-20');
-                    toggleButton.querySelector('i').classList.toggle('fa-arrow-left');
-                    toggleButton.querySelector('i').classList.toggle('fa-arrow-right');
-                    logoLabel.classList.toggle('hidden');
-                    menuItems.classList.toggle('ml-12');
-
-                    const isExpanded = sidebar.classList.contains('w-64');
-                    [...menuItems.children].forEach(item => {
-                        item.classList.toggle('justify-center', !isExpanded);
-                        item.classList.toggle('pl-4', isExpanded);
-                        item.querySelector('span').classList.toggle('hidden', !isExpanded);
-                        
-                       
-                    });
-                });
-
-                notificationIcon.addEventListener('click', () => {
-                    notificationDropdown.classList.toggle('hidden');
-                });
-
-                userIcon.addEventListener('click', () => {
-                    userDropdown.classList.toggle('hidden');
-                });
-
-                messageIcon.addEventListener('click', () => {
-                    messageDropdown.classList.toggle('hidden');
-                });
-
-                document.addEventListener('DOMContentLoaded', function () {
-
-                    const seeMoreBtn = document.getElementById('see-more-btn');
-                    const notificationList = document.getElementById('notification-list');
-                    const notificationDropdown = document.getElementById('notification-dropdown');
-                    const messagesDropdown = document.getElementById('messages-dropdown');
-                    const userDropdown = document.getElementById('user-dropdown');
-                    const insideUser = document.getElementById('inside-user');
-                    const insideNotification = document.getElementById('inside-notification');
-                    const insideMessages = document.getElementById('inside-messages');
-
-                    if (seeMoreBtn) {
-                        seeMoreBtn.addEventListener('click', function () {
-                            if (notificationList.classList.contains('max-h-64')) {
-                                notificationList.classList.remove('max-h-64');
-                                notificationList.classList.add('max-h-[calc(100vh-8rem)]');
-                                seeMoreBtn.textContent = 'See Less';
-
-                                const rect = dropdown.getBoundingClientRect();
-                                const viewportHeight = window.innerHeight;
-
-                                if (rect.bottom > viewportHeight) {
-                                    dropdown.style.top = `-${rect.bottom - viewportHeight}px`;
-                                }
-                            } else {
-                                notificationList.classList.remove('max-h-[calc(100vh-8rem)]');
-                                notificationList.classList.add('max-h-64');
-                                seeMoreBtn.textContent = 'See More';
-                            }
-                        });
-                    }
-
-                    document.addEventListener('click', function (event) {
-                        const clickedElement = event.target;
-
-                        // Hide user dropdown if click is outside of it
-                        if (!userDropdown.contains(clickedElement) && !insideUser.contains(clickedElement)) {
-                            userDropdown.classList.add('hidden');
-                        }
-
-                        // Hide notification dropdown if click is outside of it
-                        if (!notificationDropdown.contains(clickedElement) && !insideNotification.contains(clickedElement)) {
-                            notificationDropdown.classList.add('hidden');
-                        }
-
-                        // Hide notification dropdown if click is outside of it
-                        if (!messagesDropdown.contains(clickedElement) && !insideMessages.contains(clickedElement)) {
-                            messagesDropdown.classList.add('hidden');
-                        }
-                    });
-
-                    const button = document.getElementById('dropdownButton');
-                    const menu = document.getElementById('dropdownMenu');
-                    const messagesButton = document.getElementById('dropdownMessages');
-
-                    button.addEventListener('click', function () {
-                        menu.classList.toggle('hidden');
-                    });
-
-
-                    document.addEventListener('click', function (event) {
-                        if (!button.contains(event.target) && !menu.contains(event.target)) {
-                            menu.classList.add('hidden');
-                        }
-                    });
-
-                });
+            document.addEventListener('click', function (event) {
+                if (!button.contains(event.target) && !menu.contains(event.target)) {
+                    menu.classList.add('hidden');
+                }
+            });
+        });
+    })();
 </script>

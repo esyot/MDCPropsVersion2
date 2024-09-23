@@ -28,6 +28,12 @@ return new class extends Migration {
             $table->integer('qty');
             $table->timestamps();
         });
+        Schema::create('destinations', function (Blueprint $table) {
+            $table->id();
+            $table->string('municipality')->nullable(false);
+            $table->decimal('kilometers', 8, 2)->nullable(false);
+            $table->timestamps();
+        });
 
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
@@ -36,6 +42,7 @@ return new class extends Migration {
             $table->string('rentee_name')->nullable(false);
             $table->string('rentee_contact_no')->nullable(false);
             $table->string('rentee_email')->nullable(false);
+            $table->foreignId('destination_id')->constrained()->onDelete('cascade');
             $table->date('rent_date');
             $table->time('rent_time');
             $table->date('rent_return');
@@ -86,12 +93,7 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('destinations', function (Blueprint $table) {
-            $table->id();
-            $table->string('municipality')->nullable(false);
-            $table->decimal('kilometers', 8, 2)->nullable(false);
-            $table->timestamps();
-        });
+
     }
 
     /**

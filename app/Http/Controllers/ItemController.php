@@ -8,110 +8,82 @@ use App\Models\Item;
 use App\Models\Setting;
 use App\Models\Notification;
 use App\Models\Message;
-
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class ItemController extends Controller
 {
-
     public function index()
     {
         $current_user_name = Auth::user()->name;
-        // Default category ID
         $page_title = "Items";
-
-
-
-        // Fetch all categories
         $categories = Category::all();
-
-        // Fetch settings, assuming there's only one setting with ID 1
         $setting = Setting::findOrFail(1);
-
-        // Fetch notifications and unread notifications count
         $notifications = Notification::orderBy('created_at', 'DESC')->get();
         $unreadNotifications = Notification::where('isRead', false)->count();
-
-        // Fetch messages for the current user and unread messages count
         $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
         $unreadMessages = $messages->count();
 
-        // Group messages by sender and get the most recent message from each sender
         $contacts = Message::where('receiver_name', $current_user_name)
+            ->orWhere('sender_name', $current_user_name)
             ->latest()
             ->get()
             ->groupBy('sender_name')
-            ->map(function ($group) {
-                return $group->first();
-            })
+            ->map(fn($group) => $group->first())
             ->values();
 
+        $roles = Auth::user()->getRoleNames();
         $categories_admin = Category::where('approval_level', 1)->get();
         $categories_staff = Category::where('approval_level', 2)->get();
-
-        $roles = Auth::user()->getRoleNames();
-
         $currentCategory = null;
-        if ($roles->contains('admin') && $categories != null) {
-            $currentCategory = Category::where('approval_level', 1)->first();
-        } elseif ($roles->contains('staff')) {
-            $currentCategory = Category::where('approval_level', 2)->first();
+        $categoriesIsNull = false;
+
+        if ($roles->contains('admin') && $categories_admin->isNotEmpty()) {
+            $currentCategory = $categories_admin->first();
+        } elseif ($roles->contains('staff') && $categories_staff->isNotEmpty()) {
+            $currentCategory = $categories_staff->first();
+        } else {
+            $categoriesIsNull = true;
         }
 
-        $categoriesIsNull = true;
-        if (count($categories) > 0) {
-            $categoriesIsNull = false;
+        $users = User::whereNot('name', Auth::user()->name)->get();
+        $items = $currentCategory
+            ? Item::where('category_id', $currentCategory->id)->orderBy('name', 'ASC')->get()
+            : Item::orderBy('name', 'ASC')->get();
 
-        }
-
-        // Fetch items based on the default category
-        $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : Item::all();
-
-        return view('pages.items', compact('categories_admin', 'categories_staff', 'categoriesIsNull', 'contacts', 'notifications', 'unreadMessages', 'unreadNotifications', 'page_title', 'setting', 'categories', 'currentCategory', 'items'));
+        return view('pages.items', compact('users', 'categories_admin', 'categories_staff', 'categoriesIsNull', 'contacts', 'notifications', 'unreadMessages', 'unreadNotifications', 'page_title', 'setting', 'categories', 'currentCategory', 'items'));
     }
 
     public function create(Request $request)
     {
-        // Validate the request data
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'qty' => 'required|integer|min:1',
-            'category' => 'required|exists:categories,id', // Ensure category exists
-            'img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048' // Validate image file
+            'category' => 'required|exists:categories,id',
+            'img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        // Find the category or fail if not found
         $category = Category::findOrFail($validatedData['category']);
 
-        // Handle the uploaded file
         if ($request->hasFile('img')) {
             $image = $request->file('img');
-
-            // Generate a unique filename for the image
             $imageFileName = Str::random(10) . '.' . $image->getClientOriginalExtension();
-
-            // Define the path for storing the image
             $filePath = 'images/categories/' . $category->folder_name;
-
-            // Store the image file
             $image->storeAs($filePath, $imageFileName, 'public');
         } else {
             return redirect()->back()->withErrors(['img' => 'Image file is required.']);
         }
 
-        // Create the new item
         $item = new Item();
         $item->name = $validatedData['name'];
         $item->category_id = $validatedData['category'];
-        $item->img = $imageFileName; // Store the image file name
+        $item->img = $imageFileName;
         $item->qty = $validatedData['qty'];
-        $item->save(); // Save the item to the database
+        $item->save();
 
-        // Redirect back with success message
         return redirect()->back()->with('success', 'A new item has been added successfully!');
     }
 
@@ -119,42 +91,26 @@ class ItemController extends Controller
     {
         $current_user_name = "Reinhard Esteban";
         $page_title = "Items";
-
-        // Fetch the current category. Use find instead of where + get for a single record.
         $currentCategory = Category::find($request->category);
-
-        // Filter items based on the selected category
         $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : Item::all();
-
-        // Fetch all categories
         $categories = Category::all();
-
-        // Fetch the settings, assuming there is only one setting with ID 1
         $setting = Setting::findOrFail(1);
-
-        // Fetch notifications and unread notifications count
         $notifications = Notification::orderBy('created_at', 'DESC')->get();
         $unreadNotifications = Notification::where('isRead', false)->count();
-
-        // Fetch messages for the current user and unread messages count
         $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
         $unreadMessages = $messages->count();
 
-        // Group messages by sender and get the most recent message from each sender
         $contacts = Message::where('receiver_name', $current_user_name)
+            ->orWhere('sender_name', $current_user_name)
             ->latest()
             ->get()
             ->groupBy('sender_name')
-            ->map(function ($group) {
-                return $group->first();
-            })
+            ->map(fn($group) => $group->first())
             ->values();
 
         $categories_admin = Category::where('approval_level', 1)->get();
         $categories_staff = Category::where('approval_level', 2)->get();
-
         $roles = Auth::user()->getRoleNames();
-
 
         if ($roles->contains('admin') && $categories != null) {
             $currentCategory = Category::where('approval_level', 1)->first();
@@ -162,17 +118,13 @@ class ItemController extends Controller
             $currentCategory = Category::where('approval_level', 2)->first();
         }
 
-        $categoriesIsNull = true;
-        if (count($categories) > 0) {
-            $categoriesIsNull = false;
-
-        }
+        $categoriesIsNull = count($categories) === 0;
 
         return view('pages.items', compact('categories_admin', 'categories_staff', 'categoriesIsNull', 'contacts', 'notifications', 'unreadMessages', 'unreadNotifications', 'page_title', 'setting', 'categories', 'currentCategory', 'items'));
     }
+
     public function update(Request $request, $id)
     {
-        // Validate the request data
         $validatedData = $request->validate([
             'update_name' => 'string',
             'update_qty' => 'string',
@@ -180,33 +132,22 @@ class ItemController extends Controller
             'update_img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        // Find the item by ID
         $item = Item::find($id);
 
         if (!$item) {
             return redirect()->back()->with('error', 'Item not found!');
         }
 
-        // Get the current category folder name
         $currentCategoryFolder = $item->category->folder_name;
-        // Define the new category folder name
         $newCategoryFolder = Category::find($validatedData['update_category'])->folder_name;
+        $imageFileName = $item->img;
 
-        // Handle the uploaded file
-        $imageFileName = $item->img; // Use existing image if no new image is uploaded
         if ($request->hasFile('update_img')) {
             $image = $request->file('update_img');
-
-            // Generate a unique filename for the image
             $imageFileName = Str::random(10) . '.' . $image->getClientOriginalExtension();
-
-            // Define the path for storing the image
             $filePath = 'images/categories/' . $newCategoryFolder;
-
-            // Store the image file
             $image->storeAs($filePath, $imageFileName, 'public');
 
-            // Remove the old image if it exists
             if ($item->img) {
                 $oldFilePath = 'images/categories/' . $currentCategoryFolder . '/' . $item->img;
                 if (Storage::disk('public')->exists($oldFilePath)) {
@@ -214,7 +155,6 @@ class ItemController extends Controller
                 }
             }
         } else {
-            // Move the old image to the new category folder if no new image is uploaded
             if ($item->img && $currentCategoryFolder !== $newCategoryFolder) {
                 $oldFilePath = 'images/categories/' . $currentCategoryFolder . '/' . $item->img;
                 $newFilePath = 'images/categories/' . $newCategoryFolder . '/' . $item->img;
@@ -225,7 +165,6 @@ class ItemController extends Controller
             }
         }
 
-        // Update item data
         $item->update([
             'name' => $validatedData['update_name'],
             'qty' => $validatedData['update_qty'],
@@ -233,10 +172,12 @@ class ItemController extends Controller
             'category_id' => $validatedData['update_category'],
         ]);
 
-        // Redirect back with a success message
         return redirect()->back()->with('success', 'Item has been successfully updated!');
     }
 
+    public function search(Request $request, $day)
+    {
+        $items = Item::where('name', 'LIKE', '%' . $request->input . '%')->get();
+        return view('pages.partials.inclusions.item', compact('items', 'day'));
+    }
 }
-
-

@@ -20,4 +20,9 @@ class Transaction extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function destination()
+    {
+        return $this->belongsTo(Destination::class);
+    }
 }

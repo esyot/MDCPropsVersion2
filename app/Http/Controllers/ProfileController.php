@@ -25,12 +25,16 @@ class ProfileController extends Controller
         $unreadMessages = $messages->count();
 
         $contacts = Message::where('receiver_name', $current_user_name)
+            ->orWhere('sender_name', $current_user_name)
             ->latest()
             ->get()
             ->groupBy('sender_name')
             ->map(fn($group) => $group->first())
             ->values();
-        return view('pages.profile', compact('unreadMessages', 'contacts', 'notifications', 'unreadNotifications', 'setting', 'page_title'));
+
+        $users = User::all();
+        return view('pages.profile', compact('users', 'unreadMessages', 'contacts', 'notifications', 'unreadNotifications', 'setting', 'page_title'));
+
     }
 
     public function profileUpdate(Request $request)

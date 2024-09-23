@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Setting;
 use App\Models\Notification;
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Storage;
@@ -33,17 +34,16 @@ class CategoryController extends Controller
         $unreadMessages = $messages->count();
 
         $contacts = Message::where('receiver_name', $current_user_name)
+            ->orWhere('sender_name', $current_user_name)
             ->latest()
             ->get()
             ->groupBy('sender_name')
-            ->map(function ($group) {
-                return $group->first();
-            })
+            ->map(fn($group) => $group->first())
             ->values();
 
         $currentCategory = Category::where('id', $default)->get();
-
-        return view('pages.category', compact('currentCategory', 'contacts', 'unreadMessages', 'notifications', 'unreadNotifications', 'page_title', 'setting', 'categories'));
+        $users = User::all();
+        return view('pages.category', compact('users', 'currentCategory', 'contacts', 'unreadMessages', 'notifications', 'unreadNotifications', 'page_title', 'setting', 'categories'));
 
     }
 

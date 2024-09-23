@@ -55,11 +55,14 @@
                         @endif
                     </div>
 
+                    @hasrole('admin')
+
                     <div class="flex justify-center space-x-1 mt-2">
                         <button onclick="openModal('{{ $user->id }}', '{{ $user->getRoleNames()->first() }}')"
                             class="px-4 py-2 space-x-1 bg-blue-300 hover:text-blue-100 hover:bg-blue-800 rounded">
                             <i class="fas fa-edit fa-fw"></i><span>Edit</span>
                         </button>
+
                         <form action="{{ route('userDelete', ['id' => $user->id]) }}" method="POST">
                             @csrf
                             <button type="button"
@@ -68,6 +71,7 @@
                                 <i class="fa-solid fa-trash fa-w"></i><span>Delete</span>
                             </button>
                     </div>
+                    @endhasrole
 
                 </div>
 

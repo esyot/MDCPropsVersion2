@@ -46,6 +46,10 @@
                         <span class="font-medium text-gray-700 text-sm">Return Date:</span>
                         <p class="text-gray-900 text-base">{{ $transaction->rent_return }}</p>
                     </div>
+                    <div>
+                        <span class="font-medium text-gray-700 text-sm">Destination:</span>
+                        <p class="text-gray-900 text-base">{{ $transaction->destination->municipality}}</p>
+                    </div>
                 </div>
             </div>
         </div>

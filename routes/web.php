@@ -72,5 +72,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/user-add', [UserController::class, 'create'])->name('userAdd');
     Route::post('/user-delete/{id}', [UserController::class, 'delete'])->name('userDelete');
 
+    Route::post('/message-new-send', [MessageController::class, 'messageNewSend'])->name('messageNewSend');
+
+    Route::get('/item-search/{day}', [ItemController::class, 'search'])->name('itemSearch');
 
 });

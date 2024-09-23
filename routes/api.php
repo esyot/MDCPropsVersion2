@@ -30,6 +30,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/transactions', [TransactionController::class, 'index'])->name('api.transactions');
     Route::get('/date-view/{date}', [DashboardController::class, 'dateView'])->name('api.dateView');
+    Route::post('/message-send-new', [MessageController::class, 'messageSendNew'])->name('api.messageSendNew');
     Route::post('/message-send', [MessageController::class, 'messageSend'])->name('api.messageSend');
     Route::post('/dark-mode', [SettingController::class, 'darkMode'])->name('api.darkMode');
     Route::post('/category-add', [CategoryController::class, 'create'])->name('api.categoryAdd');
@@ -38,4 +39,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/item-update/{id}', [ItemController::class, 'update'])->name('api.itemUpdate');
     Route::get('/pending-approve/{id}', [TransactionController::class, 'approve'])->name('api.transactionApprove');
     Route::post('/user-delete/{id}', [UserController::class, 'delete'])->name('api.userDelete');
+
+    route::get('/item-search/{day}', [ItemController::class, 'search'])->name('api.itemSearch');
+
 });
