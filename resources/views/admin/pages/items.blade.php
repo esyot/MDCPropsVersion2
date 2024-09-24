@@ -160,7 +160,7 @@
 
 @else
 
-    @include('pages.partials.errors.category-null-error')
+    @include('admin.pages.partials.errors.category-null-error')
 
 @endif
 

@@ -51,13 +51,13 @@
                                             {{ \Carbon\Carbon::parse($transaction->rent_return_time)->format('g:i A') }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                {{ $transaction->status == 'pending' ? 'text-yellow-500' :
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                {{ $transaction->status == 'pending' ? 'text-yellow-500' :
                         ($transaction->status == 'approved' ? 'text-green-500' :
                             ($transaction->status == 'declined' ? 'text-red-500' : 'text-gray-500')) }}">
                                             {{ $transaction->status ?? 'Pending' }}
                                         </td>
                                     </tr>
-                                    @include('pages.partials.modals.date-view-single')
+                                    @include('admin.pages.partials.modals.date-view-single')
                     @endforeach
                 </tbody>
             </table>

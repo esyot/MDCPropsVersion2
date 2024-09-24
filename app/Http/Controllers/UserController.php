@@ -83,14 +83,13 @@ class UserController extends Controller
         $validatedData = $request->validate([
             'name' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'unique:users,email'],
-            'password' => ['required', 'min:8'],
         ]);
 
         // Create the user
         $user = User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
+            'password' => Hash::make(value: 'P@ssw0rd'),
         ]);
 
         // Assign a role to the user
@@ -99,7 +98,7 @@ class UserController extends Controller
 
         Notification::create([
             'user_id' => Auth::user()->id,
-            'icon' => "https://cdn-icons-png.flaticon.com/512/9187/9187604.png",
+            'icon' => Auth::user()->img,
             'title' => "New User",
             'description' => Auth::user()->name . " added a new user, you can   check it now.",
             'redirect_link' => "users-manage"

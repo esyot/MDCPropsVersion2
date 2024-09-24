@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/admin/login', [LoginController::class, 'index'])->name('loginPage');
 Route::post('/admin.login', [AuthController::class, 'login'])->name('login');
 Route::get('admin/test', function () {
-    return view('admin/test');
+    return view('admin.test');
 });
 
 // Authenticated Routes

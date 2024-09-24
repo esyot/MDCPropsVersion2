@@ -144,38 +144,6 @@
                     <label for="name">Email:</label>
                     <input type="email" name="email" placeholder="Input email"
                         class="block p-2 border border border-gray-300 w-full rounded">
-
-                </div>
-                <div>
-                    <label for="name">Password:</label>
-                    <div class="flex p-2 border border border-gray-300 w-full rounded">
-
-                        <input type="password" id="password" name="password" class="focus:outline-none"
-                            placeholder="Input password">
-
-                        <div onclick="iconEye()" class="flex justify-end items-center">
-                            <i id="eye-icon" class="fa-solid fa-eye-slash text-gray-300 hover:text-gray-500"></i>
-
-                        </div>
-                    </div>
-
-                    <script>
-
-                        function iconEye() {
-
-                            const password = document.getElementById('password');
-                            const type = password.type === 'password' ? 'text' : 'password';
-
-                            password.type = type;
-
-                            document.getElementById('eye-icon').classList.toggle('fa-eye-slash');
-                            document.getElementById('eye-icon').classList.toggle('fa-eye');
-
-                        }
-
-                    </script>
-
-
                 </div>
                 <div class="flex justify-end space-x-1">
                     <button type="submit" class="px-4 py-2 bg-blue-500 text-blue-100 hover:bg-blue-800 rounded">
@@ -226,8 +194,21 @@
 </div>
 
 
-
 <script>
+
+    function iconEye() {
+
+        const password = document.getElementById('password');
+        const type = password.type === 'password' ? 'text' : 'password';
+
+        password.type = type;
+
+        document.getElementById('eye-icon').classList.toggle('fa-eye-slash');
+        document.getElementById('eye-icon').classList.toggle('fa-eye');
+
+    }
+
+
     function openModal(userId, currentRole) {
         document.getElementById('user_id').value = userId;
 

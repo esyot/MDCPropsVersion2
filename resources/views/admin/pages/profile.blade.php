@@ -1,4 +1,4 @@
-@extends('layouts.header')
+@extends('admin.layouts.header')
 
 @section('content')
 
@@ -21,6 +21,23 @@
             </div>
         </div>
     </div>
+@endif
+
+@if(!Auth::user()->isPasswordChanged)
+    <div id="isPasswordChangedModal" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50">
+        <div class="bg-white p-4 rounded">
+            <div class="space-y-2">
+                <h1>Your password needs to be changed first!</h1>
+                <div class="flex justify-end">
+                    <button type="button"
+                        onclick="document.getElementById('isPasswordChangedModal').classList.add('hidden')"
+                        class="px-4 py-2 bg-gray-200 text-gray-800 hover:bg-gray-500 rounded">OK</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 @endif
 
 @if (session('success'))
@@ -171,20 +188,30 @@
                 @csrf
 
                 <h1 class="text-xl font-medium mb-4">Password & Security</h1>
+                @if(Auth::user()->isPasswordChanged)
+                    <div class="relative mx-4 mb-4">
+                        <input id="password" name="password" type="password" placeholder="Input old password"
+                            class="border border-gray-300 w-full rounded-md py-2 pl-12 outline-none transition-all duration-300 focus:border-dodgerBlue focus:ring-0 focus:ring-dodgerBlue focus:ring-opacity-50"
+                            required>
+                        <i
+                            class="border border-transparent absolute left-0 top-1/2 transform -translate-y-1/2 text-gray-500 rounded-l-md py-3 px-3 transition-colors duration-300 fas fa-lock"></i>
+                        <i id="togglePassword"
+                            class="hover:text-gray-500 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 cursor-pointer fas fa-eye-slash"></i>
+                    </div>
+                    <script>
+                        document.getElementById('togglePassword').addEventListener('click', function () {
+                            const passwordField = document.getElementById('password');
+                            const type = passwordField.type === 'password' ? 'text' : 'password';
+                            passwordField.type = type;
 
+                            this.classList.toggle('fa-eye-slash');
+                            this.classList.toggle('fa-eye');
+                        });
+                    </script>
+
+                @endif
                 <div class="relative mx-4 mb-4">
-                    <input id="password" name="password" type="password" placeholder="Input old password"
-                        class="border border-gray-300 w-full rounded-md py-2 pl-12 outline-none transition-all duration-300 focus:border-dodgerBlue focus:ring-0 focus:ring-dodgerBlue focus:ring-opacity-50"
-                        required>
-                    <i
-                        class="border border-transparent absolute left-0 top-1/2 transform -translate-y-1/2 text-gray-500 rounded-l-md py-3 px-3 transition-colors duration-300 fas fa-lock"></i>
-                    <i id="togglePassword"
-                        class="hover:text-gray-500 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 cursor-pointer fas fa-eye-slash"></i>
-                </div>
-
-
-                <div class="relative mx-4 mb-4">
-                    <input id="password1" name="password1" type="password" placeholder="Input password"
+                    <input id="password1" name="new_password" type="password" placeholder="Input password"
                         class="border border-gray-300 w-full rounded-md py-2 pl-12 outline-none transition-all duration-300 focus:border-dodgerBlue focus:ring-0 focus:ring-dodgerBlue focus:ring-opacity-50"
                         required>
                     <i
@@ -196,7 +223,7 @@
                 <p id="errorMessage1" class="text-red-500 mb-4"></p>
 
                 <div class="relative mx-4 mb-4">
-                    <input id="password2" name="password2" type="password" placeholder="Re-type password"
+                    <input id="password2" name="confirm_password" type="password" placeholder="Re-type password"
                         class="readonly border border-gray-300 w-full rounded-md py-2 pl-12 outline-none transition-all duration-300 focus:border-dodgerBlue focus:ring-0 focus:ring-dodgerBlue focus:ring-opacity-50"
                         required>
                     <i
@@ -216,14 +243,7 @@
 
 
             <script>
-                document.getElementById('togglePassword').addEventListener('click', function () {
-                    const passwordField = document.getElementById('password');
-                    const type = passwordField.type === 'password' ? 'text' : 'password';
-                    passwordField.type = type;
 
-                    this.classList.toggle('fa-eye-slash');
-                    this.classList.toggle('fa-eye');
-                });
                 document.getElementById('togglePassword1').addEventListener('click', function () {
                     const passwordField = document.getElementById('password1');
                     const type = passwordField.type === 'password' ? 'text' : 'password';

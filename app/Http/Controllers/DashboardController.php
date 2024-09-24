@@ -89,6 +89,7 @@ class DashboardController extends Controller
 
         $setting = Setting::find(1);
 
+
         return view('admin.pages.partials.date-view', compact('setting', 'transactions', 'date'));
     }
 

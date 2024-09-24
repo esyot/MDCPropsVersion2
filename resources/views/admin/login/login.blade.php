@@ -8,6 +8,7 @@
     <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
+    <link rel="icon" href="{{ asset('asset/logo/MDC-logo-clipped.png') }}" type="image/png">
     <style>
         @media (max-width: 768px) {
             .container-height {

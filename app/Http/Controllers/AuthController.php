@@ -42,7 +42,7 @@ class AuthController extends Controller
                     'user_id' => $user->id
                 ]);
             }
-            return redirect()->intended('/dashboard');
+            return redirect()->intended('/admin/dashboard');
         } else {
             // Authentication failed
             if ($request->expectsJson()) {

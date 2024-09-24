@@ -57,10 +57,10 @@ class CategoryController extends Controller
         $categories = [];
 
         if ($roles->contains('admin') && $categories_admin->isNotEmpty()) {
-            $categories = $categories_admin;
+            $categories == $categories_admin;
             $categoriesIsNull = false;
         } elseif ($roles->contains('staff') && $categories_staff->isNotEmpty()) {
-            $categories = $categories_staff;
+            $categories == $categories_staff;
             $categoriesIsNull = false;
         }
 

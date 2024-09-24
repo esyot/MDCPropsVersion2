@@ -9,8 +9,18 @@
     <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
     <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
     <link rel="icon" href="{{ asset('asset/logo/MDC-logo-clipped.png') }}" type="image/png">
-
-    @if($setting->darkMode == true)
+    
+       
+        @php
+            if (!Auth::user()->isPasswordChanged && $page_title != 'Profile') {
+                echo "<script>
+                    const redirectUrl = '" . route('profile') . "';
+                    window.location.href = redirectUrl;
+                </script>";
+            }
+        @endphp
+            
+            @if($setting->darkMode == true)
 
         <!-- dark mode -->
 

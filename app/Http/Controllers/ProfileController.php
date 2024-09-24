@@ -81,37 +81,53 @@ class ProfileController extends Controller
 
     public function passwordUpdate(Request $request)
     {
-        $validatedData = $request->validate([
-            'password' => ['required', 'string'],
-            'password1' => ['required', 'string', 'min:8'],
-            'password2' => ['required', 'string', 'min:8', 'same:password1'],
-        ]);
-
         $user = Auth::user();
 
-        // Verify the current password
-        if (Hash::check($validatedData['password'], $user->password)) {
-            $user->update([
-                'password' => Hash::make($validatedData['password2']),
+        // Validate the input based on whether the password has been changed before
+        if ($user->isPasswordChanged) {
+            $validatedData = $request->validate([
+                'current_password' => ['required', 'string'],
+                'new_password' => ['required', 'string', 'min:8'],
+                'confirm_password' => ['required', 'string', 'min:8', 'same:new_password'],
             ]);
 
-            return redirect()->back()->with('success', 'Password has been updated successfully!');
+            // Verify the current password
+            if (Hash::check($validatedData['current_password'], $user->password)) {
+                $user->update([
+                    'password' => Hash::make($validatedData['confirm_password']),
+                ]);
+
+                return redirect()->back()->with('success', 'Password has been updated successfully!');
+            }
+
+            $errorMessage = 'Current password is incorrect';
+        } else {
+            $validatedData = $request->validate([
+                'new_password' => ['required', 'string', 'min:8'],
+                'confirm_password' => ['required', 'string', 'min:8', 'same:new_password'],
+            ]);
+
+            $user->update([
+                'password' => Hash::make($validatedData['confirm_password']),
+                'isPasswordChanged' => 1,
+            ]);
+
+            return redirect()->back()->with('success', 'Password has been set successfully!');
         }
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Current password is incorrect'
-            ], 401);
+        // Handle error responses
+        if (isset($errorMessage)) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $errorMessage
+                ], 401);
+            }
+
+            return redirect()->back()->withErrors(['current_password' => $errorMessage])->withInput();
         }
-
-        return redirect()->back()->withErrors([
-            'password' => 'Current password is incorrect'
-        ])->withInput();
-
-
-
     }
+
 
 
 }

@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             'name' => 'Admin',
             'img' => 'user.png',
             'email' => 'admin@gmail.com',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('P@ssw0rd'),
         ]);
 
         // Assigned admin to this user
