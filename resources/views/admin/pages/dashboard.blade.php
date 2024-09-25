@@ -3,6 +3,7 @@
 
 <!-- Main Container -->
 <div id="dashboard" class="flex flex-col h-full">
+
     @if ($categoriesIsNull == false)
         @include('admin.pages.partials.calendar')
     @else

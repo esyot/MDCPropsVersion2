@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/date-view/{date}', [DashboardController::class, 'dateView'])->name('dateView');
     Route::get('/admin/date-custom', [DashboardController::class, 'dateCustom'])->name('dateCustom');
     Route::get('/admin/isRead/{id}/{redirect_link}', [NotificationController::class, 'isRead'])->name('isRead');
-    Route::get('/admin/-decline/{id}', [TransactionController::class, 'decline'])->name('transactionDecline');
+    Route::get('/admin/transaction-decline/{id}', [TransactionController::class, 'decline'])->name('transactionDecline');
     Route::get('/admin/notification/read/all', [NotificationController::class, 'readAll'])->name('readAll');
     Route::get('/admin/notification/delete/all', [NotificationController::class, 'deleteAll'])->name('deleteAll');
     Route::get('/admin/message-is-reacted/{id}', [MessageController::class, 'messageReacted'])->name('messageReacted');
@@ -67,7 +67,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/password/update/{id}', [ProfileController::class, 'passwordUpdate'])->name('passwordUpdate');
 
 
-    Route::get('/admin/-manage', [UserController::class, 'index'])->name('users');
+    Route::get('/admin/users-manage', [UserController::class, 'index'])->name('users');
     Route::post('/admin/users-role-update', [UserController::class, 'roleUpdate'])->name('roleUpdate');
     Route::post('/admin/user-add', [UserController::class, 'create'])->name('userAdd');
     Route::post('/admin/user-delete/{id}', [UserController::class, 'delete'])->name('userDelete');
@@ -75,5 +75,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/message-new-send', [MessageController::class, 'messageNewSend'])->name('messageNewSend');
 
     Route::get('/admin/item-search/{day}', [ItemController::class, 'search'])->name('itemSearch');
+
+    Route::get('/admin/message-bubble/{receiver_name}', [MessageController::class, 'messageBubble'])->name('messageBubble');
 
 });

@@ -58,377 +58,146 @@
 
 
         </div>
-
+        <!-- <div id="loader"
+            class="rounded bg-gray-400 bg-opacity-50 absolute inset-0 flex items-center justify-center z-50 hidden">
+            <img src="{{ asset('asset/loader/loading.gif') }}" alt="Loading..." class="w-16 h-16">
+        </div> -->
 
 
         <div id="messages-container" class="flex flex-1 overflow-y-auto flex-col bg-blue-300 custom-scrollbar h-64">
-            @if(count($allMessages) == 0)
-                <div class="flex flex-wrap w-full h-full items-center justify-center">
+            @include('admin.pages.partials.inclusions.message-bubble')
+        </div>
 
-                    <p class="p-4 text-center bg-white">No conversation is made!</p>
+        <a hx-get="{{ route('messageBubble', ['receiver_name' => $receiver_name])}}" hx-swap="innerHTML"
+            hx-trigger="every 1s" hx-target="#messages-container"></a>
 
-                </div>
-            @endif
 
+        <div class="bg-blue-500">
+            @foreach($allMessages as $message)
+                <div id="message-to-reply-{{$message->id}}" class="p-2 bg-white shadow-md hidden">
+                    <div class="flex justify-between">
 
 
-            <!-- Messages Bubble Section -->
-            <div class="flex flex-col bg-blue-300">
-
-                @foreach($allMessages as $message)
-                    @if(count($allMessages) < 0)
-                        <div>
-                            <p class="p-4 bg-red-500"> no conversation is made</p>
-                        </div>
-                    @endif
-                    @include('admin.pages.partials.modals.image-preview')
-
-
-                    <div
-                        class="relative space-x-2 flex {{ $message->sender_name == $current_user_name ? 'justify-end' : 'justify-start' }} p-3 rounded-lg group">
-
-                        @if($message->sender_name != $current_user_name)
-                            <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden">
-                                <img src="{{ asset('asset/photos/user.png')}}" alt="Profile Icon"
-                                    class="w-full h-full object-cover">
-                            </div>
-                        @endif
-                        <div class="">
-                            @if($message->sender_name == $current_user_name && $message->replied_message_type != null)
-
-
-                                <div class="flex flex-col">
-
-
-                                    <small
-                                        class="flex items-center space-x-1 {{ $message->sender_name == $current_user_name ? 'justify-end' : 'justify-start' }}">
-                                        <i class="hover:text-gray-500 fa-solid fa-share" style="transform: scaleX(-1);"></i>
-                                        @if($message->replied_message_name == $current_user_name)
-                                            <h1>You replied to yourself</h1>
-                                        @endif
-                                        @if($message->replied_message_name != $current_user_name)
-                                            <h1>You replied to {{ explode(' ', $message->replied_message_name)[0]}}</h1>
-                                        @endif
-
-                                    </small>
-
-                                    <div class="relative w-[400px]">
-
-                                        <div
-                                            class="{{ $message->sender_name == $current_user_name ? 'float-end' : 'float-start' }} text-justify bg-opacity-30 text-blue-500 inline-block max-w-full opacity-50 rounded-2xl shadow-sm relative">
-
-                                            @if($message->replied_message_type == 'text')
-                                                <div class="bg-gray-200 p-2 text-gray-800 rounded-xl">
-                                                    <h1>{{ $message->replied_message }}</h1>
-                                                </div>
-
-
-                                            @endif
-
-                                            @if($message->replied_message == 'like')
-                                                <div
-                                                    class="{{ $message->sender_name == $current_user_name ? 'float-end' : 'float-start' }} text-justify bg-opacity-30 text-blue-500 inline-block max-w-full opacity-50 rounded-2xl relative">
-
-
-                                                    <i class="text-[120px] fa-solid fa-thumbs-up"></i>
-                                                </div>
-
-                                            @endif
-                                            @if($message->replied_message_type == 'image')
-                                                <img width="200" src="{{ asset('storage/images/' . $message->replied_message) }}"
-                                                    alt="">
-
-                                            @endif
-
-                                        </div>
-
-
-
-                                    </div>
-
-                                </div>
-
-
-                            @endif
-
-
-                            <!-- for contacts -->
-
-                            @if($message->sender_name != $current_user_name && $message->replied_message != null)
-
-
-                                <div class="flex flex-col">
-
-
-                                    <small
-                                        class="flex items-center space-x-1 {{ $message->sender_name == $current_user_name ? 'justify-end' : 'justify-start' }}">
-                                        <i class="hover:text-gray-500 fa-solid fa-share" style="transform: scaleX(-1);"></i>
-                                        @if($message->replied_message_name != $current_user_name)
-                                            <h1>{{explode(' ', $message->replied_message_name)[0] }} replied to itself</h1>
-                                        @endif
-                                        @if($message->replied_message_name == $current_user_name)
-                                            <h1>{{ explode(' ', $receiver_name)[0]}} replied to you</h1>
-                                        @endif
-
-                                    </small>
-
-                                    <div class="relative w-[400px]">
-
-
-                                        @if($message->replied_message == 'like')
-                                            <div
-                                                class="{{ $message->sender_name == $current_user_name ? 'float-end' : 'float-start' }} text-blue-500 text-justify bg-opacity-30 inline-block max-w-full shadow-sm relative">
-
-
-                                                <i class="text-[120px] fa-solid fa-thumbs-up"></i>
-
-
-                                        @endif
-
-                                            @if($message->replied_message != 'like')
-                                                <div
-                                                    class="{{ $message->sender_name == $current_user_name ? 'float-end' : 'float-start' }} text-justify bg-opacity-30 bg-gray-200 inline-block max-w-full p-4 rounded-2xl shadow-sm relative">
-
-
-                                                    <h1 class="p-1 text-gray-500 break-words">{{ $message->replied_message }}</h1>
-
-                                            @endif
-
-
-
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-
-                            @endif
-                                <div onmouseover="document.getElementById('icons-{{$message->id}}').classList.remove('hidden')"
-                                    onmouseout="document.getElementById('icons-{{$message->id}}').classList.add('hidden')"
-                                    class="w-[400px] flex {{ $message->sender_name == $current_user_name ? 'justify-end' : '' }} items-center space-x-1">
-
-                                    <!-- icons right side -->
-
-                                    @if($message->sender_name == $current_user_name)
-                                        <div id="icons-{{$message->id}}" class="items-center hidden">
-                                            <form class="flex" action="{{ route('messageReacted', ['id' => $message->id]) }}">
-                                                <button type="submit" title="React"
-                                                    class="px-1 py-1.2 rounded-full hover:bg-blue-300 ">
-                                                    <i class="hover:text-blue-100 fa-regular fa-face-smile"></i>
-                                                </button>
-
-                                                <button title="Reply" class="px-1 py-1.2 rounded-full hover:bg-blue-300"
-                                                    onclick="handleButtonClick('{{ $message->id }}', '{{ $message->sender_name }}', '{{ $message->type }}')"
-                                                    type="button">
-                                                    <i class="hover:text-blue-100 fa-solid fa-share"
-                                                        style="transform: scaleX(-1);"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    @endif
-
-
-
-
-                                    <div
-                                        class="{{ $message->sender_name == $current_user_name ? 'text-blue-500' : 'text-blue-500' }} text-justify inline-block max-w-full rounded-2xl drop-shadow-sm relative">
-
-                                        @if($message->type == 'text')
-
-
-                                            <div
-                                                class="{{ $message->sender_name == $current_user_name ? 'bg-blue-500 text-white' : 'bg-white text-black' }} p-4  rounded-xl">
-                                                <h1 class="break-words">{{ $message->content }}</h1>
-                                            </div>
-                                        @elseif($message->type == 'sticker')
-
-                                            <div
-                                                class="{{ $message->sender_name == $current_user_name ? 'float-end' : 'float-start' }} text-justify bg-opacity-30 text-blue-500 inline-block max-w-full rounded-2xl relative">
-
-
-                                                <i class="text-[120px] fa-solid fa-thumbs-up"></i>
-                                            </div>
-
-                                        @elseif($message->type == 'image')
-                                            <div
-                                                class="flex {{ $message->receiver_name == $current_user_name ? 'items-start' : 'items-end' }} flex-col">
-
-
-                                                <div
-                                                    onclick="document.getElementById('image-preview-{{ $message->id }}').classList.remove('hidden')">
-                                                    <img class="rounded-xl shadow-md" width="300"
-                                                        src="{{ asset('storage/images/' . $message->img) }}" alt="">
-
-                                                </div>
-                                                @if($message->content != null)
-                                                    <div
-                                                        class="{{ $message->sender_name == $current_user_name ? 'bg-blue-500 text-white' : 'bg-white text-black' }} p-4  rounded-xl">
-                                                        <h1 class="break-words">{{ $message->content }}</h1>
-                                                    </div>
-                                                @endif
-
-                                            </div>
-
-                                        @endif
-
-
-                                        @if($message->isReacted == true)
-                                            <div
-                                                class="absolute bottom-[-14px] right-0 mb-1 mr-1 rounded-full w-5 h-5.8 {{ $message->sender_name == $current_user_name ? 'bg-blue-500' : 'bg-white' }} flex items-center justify-center">
-                                                <i class="text-sm fa-solid fa-heart text-red-500"></i>
-                                            </div>
-                                        @endif
-                                    </div>
-
-
-                                    <!-- icons left -->
-
-                                    @if($message->sender_name != $current_user_name)
-                                        <div id="icons-{{$message->id}}" class="items-center hidden">
-                                            <form class="flex" action="{{ route('messageReacted', ['id' => $message->id]) }}">
-                                                <button type="submit" title="React"
-                                                    class="px-1 py-1.2 rounded-full hover:bg-blue-300 ">
-                                                    <i class="hover:text-blue-100 fa-regular fa-face-smile"></i>
-                                                </button>
-
-                                                <button title="Reply" class="px-1 py-1.2 rounded-full hover:bg-blue-300"
-                                                    onclick="handleButtonClick('{{ $message->id }}', '{{ $message->sender_name }}', '{{ $message->type }}')"
-                                                    type="button">
-                                                    <i class="hover:text-blue-100 fa-solid fa-share"
-                                                        style="transform: scaleX(-1);"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    @endif
-                                </div>
-                                <div
-                                    class="flex {{ $message->sender_name == $current_user_name ? 'justify-end mr-4' : 'justify-start ml-4' }} mb-2">
-                                    <small class="text-gray-500">{{ $message->created_at->format('g:i A') }}</small>
-                                </div>
-                            </div>
-                        </div>
-
-                @endforeach
-                </div>
-            </div>
-
-
-
-            <div class="bg-blue-500">
-                @foreach($allMessages as $message)
-                    <div id="message-to-reply-{{$message->id}}" class="p-2 bg-white shadow-md hidden">
-                        <div class="flex justify-between">
-
-
-                            @if($message->sender_name == $current_user_name)
-                                <h1 class="font-semibold">Replying to yourself</h1>
-                            @else
-                                <h1 class="font-semibold">Replying to {{$message->sender_name}}</h1>
-                            @endif
-                            </h1>
-                            <button class="text-2xl hover:text-gray-400"
-                                onclick="messageReplyViewClose('{{ $message->id}}')">
-                                &times;
-                            </button>
-                        </div>
-
-                        @if($message->type == 'sticker')
-                            <p>
-                                sticker
-                            </p>
-                        @elseif($message->type == 'image')
-                            <p>image</p>
-
+                        @if($message->sender_name == $current_user_name)
+                            <h1 class="font-semibold">Replying to yourself</h1>
                         @else
-                            <p>{{ $message->content }}</p>
+                            <h1 class="font-semibold">Replying to {{$message->sender_name}}</h1>
                         @endif
+                        </h1>
+                        <button class="text-2xl hover:text-gray-400" onclick="messageReplyViewClose('{{ $message->id}}')">
+                            &times;
+                        </button>
                     </div>
 
-                @endforeach
+                    @if($message->type == 'sticker')
+                        <p>
+                            sticker
+                        </p>
+                    @elseif($message->type == 'image')
+                        <p>image</p>
+
+                    @else
+                        <p>{{ $message->content }}</p>
+                    @endif
+                </div>
+
+            @endforeach
 
 
-                <div class="flex space-x-2 p-4 bg-blue-400">
+            <div class="flex space-x-2 p-4 bg-blue-400">
 
-                    <form id="myForm" action="{{ route('messageSend') }}" method="POST"
-                        class=" flex items-end w-full space-x-4">
+                <form id="myForm" action="{{ route('messageSend') }}" method="POST"
+                    class=" flex items-end w-full space-x-4">
 
-                        @csrf
+                    @csrf
 
 
-                        <input type="file" id="fileInput" class="hidden" accept="image/*"
-                            onchange="previewImage(event)">
-                        <button type="button" title="Image"
-                            class="rounded-full hover:bg-blue-300 transition-transform duration-300 ease-in-out transform hover:scale-110 drop-shadow text-xl px-2 py-1 hover:text-white text-gray-100"
-                            onclick="document.getElementById('fileInput').click();">
-                            <i class="fa-solid fa-image"></i>
-                        </button>
-
+                    <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="previewImage(event)">
+                    <button type="button" title="Image"
+                        class="rounded-full hover:bg-blue-300 transition-transform duration-300 ease-in-out transform hover:scale-110 drop-shadow text-xl px-2 py-1 hover:text-white text-gray-100"
+                        onclick="document.getElementById('fileInput').click();">
+                        <i class="fa-solid fa-image"></i>
+                    </button>
 
 
 
-                        <input type="hidden" name="replied_message_id" id="replied-message-id">
-                        <input type="hidden" name="replied_message_name" id="replied-message-name">
-                        <input type="hidden" name="replied_message_type" id="replied-message-type">
-                        <input type="hidden" value="{{$sender_name}}" name="sender_name" id="sender_name">
-                        <input type="hidden" value="{{$receiver_name}}" name="receiver_name" id="receiver_name">
-                        <input type="hidden" id="image-data" name="image-data" />
 
-                        <div class="relative w-full">
-                            <div class="flex items-end space-x-2 rounded-lg">
+                    <input type="hidden" name="replied_message_id" id="replied-message-id">
+                    <input type="hidden" name="replied_message_name" id="replied-message-name">
+                    <input type="hidden" name="replied_message_type" id="replied-message-type">
+                    <input type="hidden" value="{{$sender_name}}" name="sender_name" id="sender_name">
+                    <input type="hidden" value="{{$receiver_name}}" name="receiver_name" id="receiver_name">
+                    <input type="hidden" id="image-data" name="image-data" />
 
-                                <div class="flex flex-col flex-1 bg-white rounded-xl">
-                                    <div class="flex flex-wrap items-start">
-                                        <div class="flex flex-wrap">
+                    <div class="relative w-full">
+                        <div class="flex items-end space-x-2 rounded-lg">
 
-                                            <div id="image-container" class="flex justify-between">
+                            <div class="flex flex-col flex-1 bg-white rounded-xl">
+                                <div class="flex flex-wrap items-start">
+                                    <div class="flex flex-wrap">
+
+                                        <div id="image-container" class="flex justify-between">
 
 
-                                            </div>
                                         </div>
-                                        <div id="img-preview-x"
-                                            class="absolute left-[9.5rem] top-1 text-red-800 font-semibold hidden">
-
-                                            <button type="button" onclick="imagePreviewClose()" title="Close"
-                                                class="shadow-md border border-gray-300 w-8 h-8 flex items-center justify-center rounded-full bg-white hover:bg-gray-200 text-gray-600 hover:text-gray-800 focus:outline-none">
-                                                <span class="mb-1 text-2xl font-semibold">&times;</span>
-                                            </button>
-
-
-
-                                        </div>
-
                                     </div>
+                                    <div id="img-preview-x"
+                                        class="absolute left-[9.5rem] top-1 text-red-800 font-semibold hidden">
 
-                                    <div class="flex flex-col p-2 bg-white rounded-full">
+                                        <button type="button" onclick="imagePreviewClose()" title="Close"
+                                            class="shadow-md border border-gray-300 w-8 h-8 flex items-center justify-center rounded-full bg-white hover:bg-gray-200 text-gray-600 hover:text-gray-800 focus:outline-none">
+                                            <span class="mb-1 text-2xl font-semibold">&times;</span>
+                                        </button>
 
-                                        <input autocomplete="off" type="text" id="content" name="content"
-                                            class="w-full px-2 focus:outline-none" placeholder="Aa">
+
 
                                     </div>
 
                                 </div>
-                                <div class="px-2">
 
-                                    <button type="submit" id="sendButton" title="Send"
-                                        class="rounded-full hover:bg-blue-300 transition-transform duration-300 ease-in-out transform hover:scale-110 drop-shadow flex items-center text-xl text-2xl px-2 py-2 hover:text-white text-blue-100 mb-0.5">
-                                        <i id="sendIcon" class="fa-solid fa-thumbs-up"></i>
-                                    </button>
+                                <div class="flex flex-col p-2 bg-white rounded-full">
+
+                                    <input autocomplete="off" type="text" id="content" name="content"
+                                        class="w-full px-2 focus:outline-none" placeholder="Aa">
 
                                 </div>
 
                             </div>
+                            <div class="px-2">
+
+                                <button type="submit" id="sendButton" title="Send"
+                                    class="rounded-full hover:bg-blue-300 transition-transform duration-300 ease-in-out transform hover:scale-110 drop-shadow flex items-center text-xl text-2xl px-2 py-2 hover:text-white text-blue-100 mb-0.5">
+                                    <i id="sendIcon" class="fa-solid fa-thumbs-up"></i>
+                                </button>
+
+                            </div>
+
                         </div>
-                </div>
-
-
-                </form>
-
+                    </div>
             </div>
+
+
+            </form>
+
         </div>
     </div>
 </div>
+</div>
 
 <script>
+    // Scroll messages container to the bottom when the page loads
+
+    function scrollToBottom() {
+        const messagesContainer = document.getElementById('messages-container');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+
+    window.onload = function () {
+        scrollToBottom();
+        document.getElementById('content').focus();
+    }
+
 
     function imagePreviewClose() {
 
@@ -579,18 +348,7 @@
     });
 
 
-    // Scroll messages container to the bottom when the page loads
 
-    function scrollToBottom() {
-        const messagesContainer = document.getElementById('messages-container');
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-
-
-    window.onload = function () {
-        scrollToBottom();
-        document.getElementById('content').focus();
-    }
 
 
 

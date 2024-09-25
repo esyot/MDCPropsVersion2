@@ -156,11 +156,11 @@
                             </div>
 
                             <div class="flex justify-between items-center">
-                                <div class="font-medium p-2">
+                                <div id="form1" class="font-medium p-2">
                                     <button id="all"
                                         onclick="document.getElementById('all').classList.add('bg-blue-300'); document.getElementById('unread').classList.remove('bg-blue-300')"
                                         hx-get="{{ route('notificationList', ['filter' => 'all']) }}"
-                                        hx-swap="innerHTML" hx-trigger="click" hx-indicator="#loader"
+                                        hx-swap="innerHTML" hx-params="#form1" hx-trigger="click"
                                         hx-target="#notification-list"
                                         class="px-2 rounded-full text-blue-500 bg-blue-300 hover:bg-blue-200">
                                         All
@@ -169,7 +169,7 @@
                                     <button id="unread"
                                         onclick="document.getElementById('unread').classList.add('bg-blue-300'); document.getElementById('all').classList.remove('bg-blue-300');"
                                         hx-get="{{ route('notificationList', ['filter' => 'unread']) }}"
-                                        hx-swap="innerHTML" hx-trigger="click" hx-indicator="#loader"
+                                        hx-swap="innerHTML" hx-params="#form1" hx-trigger="click"
                                         hx-target="#notification-list"
                                         class="px-2 text-blue-500 rounded-full hover:bg-blue-200">
                                         Unread
@@ -195,10 +195,6 @@
                                 </div>
                             </div>
 
-                            <div id="loader"
-                                class="rounded bg-gray-400 bg-opacity-50 absolute inset-0 flex items-center justify-center z-50 hidden">
-                                <img src="{{ asset('asset/loader/loading.gif') }}" alt="Loading..." class="w-16 h-16">
-                            </div>
 
                             <div id="notification-list"
                                 class="z-10 flex flex-col max-h-64 overflow-y-auto custom-scrollbar">

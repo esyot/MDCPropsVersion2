@@ -9,6 +9,7 @@ use App\Models\Setting;
 use App\Models\Notification;
 use App\Models\Message;
 use App\Models\User;
+use App\Models\ManagedCategory;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -34,18 +35,30 @@ class ItemController extends Controller
             ->map(fn($group) => $group->first())
             ->values();
 
+        // Settings and roles
+        $setting = Setting::find(1);
         $roles = Auth::user()->getRoleNames();
-        $categories_admin = Category::where('approval_level', 1)->get();
-        $categories_staff = Category::where('approval_level', 2)->get();
-        $currentCategory = null;
-        $categoriesIsNull = false;
 
-        if ($roles->contains('admin') && $categories_admin->isNotEmpty()) {
-            $currentCategory = $categories_admin->first();
-        } elseif ($roles->contains('staff') && $categories_staff->isNotEmpty()) {
-            $currentCategory = $categories_staff->first();
+        if ($roles->contains('staff')) {
+
+            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+            $categoryIds = $managedCategories->pluck('category_id'); // Get the category IDs
+            $categories = Category::whereIn('id', $categoryIds)->get(); // Fetch the categories
+            $currentCategory = $categories->first(); // Set the first category as the current category
+
+
         } else {
-            $categoriesIsNull = true;
+            $categories = Category::all();
+            $currentCategory = $categories->first();
+        }
+
+        if ($currentCategory) {
+            // You can safely access $currentCategory->id here
+            $currentCategoryId = $currentCategory->id;
+            $categoriesIsNull = false;
+        } else {
+            // Handle the case where no categories are found
+            $categoriesIsNull = true; // or set a default value
         }
 
         $users = User::whereNot('name', Auth::user()->name)->get();
@@ -53,7 +66,20 @@ class ItemController extends Controller
             ? Item::where('category_id', $currentCategory->id)->orderBy('name', 'ASC')->get()
             : Item::orderBy('name', 'ASC')->get();
 
-        return view('admin.pages.items', compact('users', 'categories_admin', 'categories_staff', 'categoriesIsNull', 'contacts', 'notifications', 'unreadMessages', 'unreadNotifications', 'page_title', 'setting', 'categories', 'currentCategory', 'items'));
+        return view('admin.pages.items', compact(
+            'users',
+            'categories',
+            'categoriesIsNull',
+            'contacts',
+            'notifications',
+            'unreadMessages',
+            'unreadNotifications',
+            'page_title',
+            'setting',
+            'categories',
+            'currentCategory',
+            'items'
+        ));
     }
 
     public function create(Request $request)
@@ -105,19 +131,49 @@ class ItemController extends Controller
             ->map(fn($group) => $group->first())
             ->values();
 
-        $categories_admin = Category::where('approval_level', 1)->get();
-        $categories_staff = Category::where('approval_level', 2)->get();
+        // Settings and roles
+        $setting = Setting::find(1);
         $roles = Auth::user()->getRoleNames();
 
-        if ($roles->contains('admin') && $categories != null) {
-            $currentCategory = Category::where('approval_level', 1)->first();
-        } elseif ($roles->contains('staff')) {
-            $currentCategory = Category::where('approval_level', 2)->first();
+        if ($roles->contains('staff')) {
+
+            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+            $categoryIds = $managedCategories->pluck('category_id');
+            $categories = Category::whereIn('id', $categoryIds)->get();
+            $currentCategory = Category::find($request->category);
+
+
+        } else {
+            $categories = Category::all();
+            $currentCategory = Category::find($request->category);
         }
 
-        $categoriesIsNull = count($categories) === 0;
+        if ($currentCategory) {
 
-        return view('admin.pages.items', compact('categories_admin', 'categories_staff', 'categoriesIsNull', 'contacts', 'notifications', 'unreadMessages', 'unreadNotifications', 'page_title', 'setting', 'categories', 'currentCategory', 'items'));
+            $categoriesIsNull = false;
+        } else {
+            // Handle the case where no categories are found
+            $categoriesIsNull = true; // or set a default value
+        }
+
+        $roles = Auth::user()->getRoleNames();
+
+        $users = User::all();
+
+        return view('admin.pages.items', compact(
+            'users',
+            'categories',
+            'categoriesIsNull',
+            'contacts',
+            'notifications',
+            'unreadMessages',
+            'unreadNotifications',
+            'page_title',
+            'setting',
+            'categories',
+            'currentCategory',
+            'items'
+        ));
     }
 
     public function update(Request $request, $id)

@@ -66,8 +66,27 @@ class MessageController extends Controller
 
         return view('admin.pages.messages', compact('setting', 'unreadMessages', 'contacts', 'current_user_name', 'receiver_name', 'sender_name', 'notifications', 'unreadNotifications', 'page_title', 'allMessages'));
     }
+
+
+    public function messageBubble($receiver_name)
+    {
+        $current_user_name = Auth::user()->name;
+        $sender_name = Auth::user()->name;
+
+        $messagesByCurrentUser = Message::where('sender_name', $current_user_name)->where('receiver_name', $receiver_name)->orderBy('created_at', 'ASC')->get();
+        $messagesFromOtherUser = Message::where('sender_name', $receiver_name)->where('receiver_name', $sender_name)->orderBy('created_at', 'ASC')->get();
+
+
+        $allMessages = $messagesByCurrentUser->concat($messagesFromOtherUser)->sortBy('created_at');
+
+        return view(
+            'admin.pages.partials.inclusions.message-bubble',
+            compact('allMessages', 'sender_name', 'current_user_name', 'receiver_name')
+        );
+    }
     public function messageReacted($id)
     {
+
         // Find the message by ID
         $message = Message::findOrFail($id);
 
@@ -83,6 +102,8 @@ class MessageController extends Controller
 
         return redirect()->back()->with('success', 'added reaction');
     }
+
+
 
     public function messageNewSend(Request $request)
     {
@@ -316,6 +337,7 @@ class MessageController extends Controller
         }
 
     }
+
 
 
 }

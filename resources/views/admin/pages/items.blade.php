@@ -12,23 +12,14 @@
                     <option class="text-red-500 font-semibold" value="{{ $currentCategory->id }}">
                         {{ $currentCategory->title }}
                     </option>
-                    @hasrole('admin')
-                    @foreach ($categories_admin as $category)
+
+                    @foreach ($categories as $category)
                         <option value="{{ $category->id }}">
                             {{ $category->title }}
                         </option>
 
                     @endforeach
-                    @endhasrole
 
-                    @hasrole('staff')
-                    @foreach ($categories_staff as $category)
-                        <option value="{{ $category->id }}">
-                            {{ $category->title }}
-                        </option>
-
-                    @endforeach
-                    @endhasrole
                 </select>
             </form>
         </div>
