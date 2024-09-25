@@ -15,7 +15,7 @@ class NotificationController extends Controller
         // Optionally, you can check if the update was successful
         if ($update) {
             // Redirect to the provided link if the update was successful
-            return redirect('/admin/'.$redirect_link);
+            return redirect('/admin/' . $redirect_link);
         } else {
             // Handle the case where the update failed
             return redirect()->back()->with('error', 'Failed to mark notification as read.');
@@ -26,15 +26,15 @@ class NotificationController extends Controller
     {
         if ($filter === 'unread') {
             $notifications = Notification::where('isRead', false)->get();
-            return view('admin.pages.partials.notification-list', compact('notifications'));
+            return view('admin.partials.notification-list', compact('notifications'));
         }
 
         if ($filter === 'all') {
             $notifications = Notification::orderBy('created_at', 'DESC')->get();
-            return view('admin.pages.partials.notification-list', compact('notifications'));
+            return view('admin.partials.notification-list', compact('notifications'));
         }
 
-        return view('admin.pages.partials.notification-list', ['notifications' => collect()]);
+        return view('admin.partials.notification-list', ['notifications' => collect()]);
     }
 
     public function readAll()

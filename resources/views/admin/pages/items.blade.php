@@ -2,7 +2,7 @@
 @section('content')
 @if ($categoriesIsNull == false)
 
-    <div id="content" class="flex p-4 text-white">
+    <div id="navbar" class="flex p-4 text-white">
         <div class="bg-white p-2 rounded-xl border border-gray-400">
             <form action="{{ route('itemsFilter') }}">
                 @csrf

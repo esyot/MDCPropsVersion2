@@ -1,7 +1,7 @@
 <!-- Navbar -->
 <div class="flex-1 flex flex-col overflow-hidden">
     <!-- Navbar -->
-    <div id="navbar" class="flex items-center justify-between bg-white p-4 shadow-md relative">
+    <div id="topbar" class="flex items-center justify-between bg-white p-4 shadow-md relative">
         <!-- App Name -->
         <div class="flex items-center space-x-2">
             <span class="text-lg font-semibold"> {{ $page_title }}</span>
@@ -35,27 +35,68 @@
                             <button id="all"
                                 onclick="document.getElementById('all').classList.add('bg-gray-300'); document.getElementById('unread').classList.remove('bg-gray-300')"
                                 hx-get="{{ route('notificationList', ['filter' => 'all'])}}" hx-swap="innerHTML"
-                                hx-trigger="click" hx-indicator="#loader" hx-target="#notification-list"
+                                hx-trigger="click" hx-target="#notification-list"
                                 class="px-2 rounded-full bg-gray-300 hover:bg-gray-200">
                                 All
                             </button>
 
-
                             <button id="unread"
                                 onclick="document.getElementById('unread').classList.add('bg-gray-300'); document.getElementById('all').classList.remove('bg-gray-300');"
                                 hx-get="{{ route('notificationList', ['filter' => 'unread'])}}" hx-swap="innerHTML"
-                                hx-trigger="click" hx-indicator="#loader" hx-target="#notification-list"
+                                hx-trigger="click" hx-target="#notification-list"
                                 class="px-2 rounded-full hover:bg-gray-200">
                                 Unread
                             </button>
                         </div>
+
+                        <div id="loader"
+                            class="rounded bg-gray-400 bg-opacity-50 absolute inset-0 flex items-center justify-center z-50 hidden">
+                            <img src="{{asset('asset/loader/loading.gif')}}" alt="Loading..." class="w-16 h-16">
+                        </div>
+
+
+                        <script>
+                            function showLoader() {
+                                document.getElementById('loader').classList.remove('hidden');
+                            }
+
+                            function hideLoader() {
+                                document.getElementById('loader').classList.add('hidden');
+                            }
+
+                            document.getElementById('all').addEventListener('click', function () {
+                                showLoader();
+
+                                htmx.ajax('GET', '{{ route('notificationList', ['filter' => 'all']) }}', {
+                                    target: '#notification-list',
+                                    swap: 'innerHTML'
+                                });
+                            });
+
+                            document.getElementById('unread').addEventListener('click', function () {
+                                showLoader();
+
+                                htmx.ajax('GET', '{{ route('notificationList', ['filter' => 'unread']) }}', {
+                                    target: '#notification-list',
+                                    swap: 'innerHTML'
+                                });
+                            });
+
+                            // Listen for the htmx:afterRequest event to hide the loader
+                            document.body.addEventListener('htmx:afterRequest', function () {
+                                hideLoader();
+                            });
+                        </script>
+
+
+
 
                         <div class="relative inline-block text-left">
                             <button id="dropdownButton" class="focus:outline-none">
                                 <i class="text-gray-500 hover:bg-gray-200 p-2 fas fa-ellipsis rounded-full"></i>
                             </button>
                             <div id="dropdownMenu"
-                                class="dropdown-content absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg">
+                                class="dropdown-content absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg hidden">
                                 <a href="{{ route('readAll') }}" class="block px-4 py-2 rounded hover:bg-gray-100">
                                     <i class="text-blue-500 fas fa-check-circle mr-2"></i> Mark as all read
                                 </a>
@@ -67,11 +108,7 @@
                         </div>
                     </div>
 
-                    <div id="loader"
-                        class="rounded  bg-gray-400 bg-opacity-50 absolute inset-0 flex items-center justify-center z-50 hidden">
 
-                        <img src="{{asset('asset/loader/loading.gif')}}" alt="Loading..." class="w-16 h-16">
-                    </div>
 
                     <div id="notification-list" class="z-10 flex flex-col max-h-64 overflow-y-auto custom-scrollbar">
 
@@ -163,7 +200,8 @@
                             </div>
                             <div class="flex justify-center bg-gray-200 w-full rounded-b-lg">
                                 <a href="{{ route('messages') }}"
-                                    class="text-blue-500 font-medium  hover:underline py-2">See all in Messages</a>
+                                    class="text-blue-500 font-medium  hover:underline py-2">See
+                                    all in Messages</a>
                             </div>
                         </div>
                     </div>
@@ -243,3 +281,88 @@
         </div>
 
         @include('admin.modals.message-new')
+
+
+        <script>
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const notificationIcon = document.getElementById('notification-icon');
+                const userIcon = document.getElementById('user-icon');
+                const messageIcon = document.getElementById('messages-icon');
+                const notificationDropdown = document.getElementById('notification-dropdown');
+                const messagesDropdown = document.getElementById('messages-dropdown');
+                const userDropdown = document.getElementById('user-dropdown');
+                const seeMoreBtn = document.getElementById('see-more-btn');
+                const notificationList = document.getElementById('notification-list');
+
+                // Toggle notification dropdown
+                notificationIcon.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    notificationDropdown.classList.toggle('hidden');
+                    userDropdown.classList.add('hidden'); // Close other dropdowns
+                    messagesDropdown.classList.add('hidden');
+                });
+
+                // Toggle user dropdown
+                userIcon.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    userDropdown.classList.toggle('hidden');
+                    notificationDropdown.classList.add('hidden');
+                    messagesDropdown.classList.add('hidden');
+                });
+
+                // Toggle messages dropdown
+                messageIcon.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    messagesDropdown.classList.toggle('hidden');
+                    notificationDropdown.classList.add('hidden');
+                    userDropdown.classList.add('hidden');
+                });
+
+                // Prevent dropdown from closing when clicking inside
+                notificationDropdown.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                });
+                messagesDropdown.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                });
+                userDropdown.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                });
+
+                // See more button functionality
+                if (seeMoreBtn) {
+                    seeMoreBtn.addEventListener('click', function () {
+                        notificationList.classList.toggle('max-h-64');
+                        seeMoreBtn.textContent = notificationList.classList.contains('max-h-64') ? 'See More' : 'See Less';
+                    });
+                }
+                dropdownButton.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    console.log('Dropdown button clicked');
+                    dropdownMenu.classList.toggle('hidden');
+                });
+
+                // Click outside to close dropdowns
+                document.addEventListener('click', function (event) {
+                    const clickedElement = event.target;
+                    // Close the dropdown menu
+                    if (!dropdownMenu.contains(clickedElement) && !dropdownButton.contains(clickedElement)) {
+                        dropdownMenu.classList.add('hidden');
+                    }
+
+                    if (!notificationDropdown.contains(clickedElement) && !notificationIcon.contains(clickedElement)) {
+                        notificationDropdown.classList.add('hidden');
+                    }
+                    if (!userDropdown.contains(clickedElement) && !userIcon.contains(clickedElement)) {
+                        userDropdown.classList.add('hidden');
+                    }
+                    if (!messagesDropdown.contains(clickedElement) && !messageIcon.contains(clickedElement)) {
+                        messagesDropdown.classList.add('hidden');
+                    }
+                });
+
+
+            });
+
+        </script>

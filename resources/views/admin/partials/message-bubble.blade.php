@@ -9,7 +9,7 @@
 
 
 <!-- Messages Bubble Section -->
-<div class="flex flex-col bg-blue-300">
+<div class="flex flex-col">
 
     @foreach($allMessages as $message)
         @if(count($allMessages) < 0)
@@ -17,7 +17,7 @@
                 <p class="p-4 bg-red-500"> no conversation is made</p>
             </div>
         @endif
-        @include('admin.pages.partials.modals.image-preview')
+        @include('admin.modals.image-preview')
 
 
         <div
@@ -141,7 +141,6 @@
                         onmouseout="document.getElementById('icons-{{$message->id}}').classList.add('hidden')"
                         class="w-[400px] flex {{ $message->sender_name == $current_user_name ? 'justify-end' : '' }} items-center space-x-1">
 
-                        <!-- icons right side -->
 
                         @if($message->sender_name == $current_user_name)
                             <div id="icons-{{$message->id}}" class="items-center hidden">

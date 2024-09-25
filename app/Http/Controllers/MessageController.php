@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Message;
 use App\Models\Notification;
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
@@ -80,7 +81,7 @@ class MessageController extends Controller
         $allMessages = $messagesByCurrentUser->concat($messagesFromOtherUser)->sortBy('created_at');
 
         return view(
-            'admin.pages.partials.inclusions.message-bubble',
+            'admin.partials.message-bubble',
             compact('allMessages', 'sender_name', 'current_user_name', 'receiver_name')
         );
     }
@@ -274,9 +275,12 @@ class MessageController extends Controller
         }
 
         // Group by sender or receiver based on the presence of the current user
-        $contacts = $messages->groupBy(function ($message) use ($current_user_name) {
-            return $message->receiver_name === $current_user_name ? $message->sender_name : $message->receiver_name;
-        })->map(fn($group) => $group->first())->values();
+        $contacts = Message::where('receiver_name', $current_user_name)
+            ->latest()
+            ->get()
+            ->groupBy('sender_name')
+            ->map(fn($group) => $group->first())
+            ->values();
 
         $receiver_name = $contact;
         $sender_name = $current_user_name;
@@ -289,11 +293,23 @@ class MessageController extends Controller
         $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
 
         $unreadMessages = $messages->count();
+        $setting = Setting::findOrFail(1);
 
+        $users = User::whereNot('name', Auth::user()->id)->get();
 
-
-
-        return view('admin.pages.messages', compact('unreadMessages', 'contacts', 'current_user_name', 'receiver_name', 'sender_name', 'notifications', 'unreadNotifications', 'page_title', 'allMessages'));
+        return view('admin.pages.messages', compact(
+            'setting',
+            'users',
+            'unreadMessages',
+            'contacts',
+            'current_user_name',
+            'receiver_name',
+            'sender_name',
+            'notifications',
+            'unreadNotifications',
+            'page_title',
+            'allMessages'
+        ));
 
 
 
@@ -314,7 +330,7 @@ class MessageController extends Controller
                 ->values();
 
 
-            return view('admin.pages.partials.contact-list', compact('receiver_name', 'contacts'));
+            return view('admin.partials.contact-list', compact('receiver_name', 'contacts'));
 
 
 
@@ -331,7 +347,7 @@ class MessageController extends Controller
                 ->values();
 
 
-            return view('admin.pages.partials.contact-list', compact('receiver_name', 'contacts'));
+            return view('admin.partials.contact-list', compact('receiver_name', 'contacts'));
 
 
         }

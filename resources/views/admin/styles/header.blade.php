@@ -7,17 +7,41 @@
             background-color: #2d2d2d;
         }
 
-        #navbar {
+        #topbar {
             background-color: #6b7280;
             color: white;
         }
 
-        #navbar i {
+        #topbar i {
             color: white;
         }
 
-        #content {
-            background-color: transparent;
+        #navbar {
+            background-color: #1d1d1d;
+        }
+
+        #navbar h1 {
+            color: #000;
+        }
+
+        #contacts {
+            background-color: #1d1d1d;
+        }
+
+        #title {
+            color: #fff;
+        }
+
+        #messages-container {
+            background-color: #000;
+        }
+
+        #footer-messenger {
+            background-color: #2d2d2d;
+        }
+
+        #header-messenger {
+            background-color: #2d2d2d;
         }
 
         #sidebar-right {
@@ -70,10 +94,13 @@
 @else
 
     <style>
-        #content {
-            background: linear-gradient(to right, #00bcd4, #006064);
+        #topbar {}
 
+        #navbar {
+            background: linear-gradient(to right, #00bcd4, #006064);
         }
+
+        #main-content {}
 
         #sidebar {
 

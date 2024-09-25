@@ -55,7 +55,7 @@
 <!-- Toggle Button -->
 <div id="toggle-container" class="fixed right-1 bottom-[45%] z-50">
     <button id="open-btn" title="Display Settings"
-        class="{{ $setting->transition == true ? 'transition-transform duration-300 ease-in-out transform hover:scale-110' : '' }}  {{ $setting->darkMode == true ? 'bg-gray-500 hover:bg-gray-600' : 'bg-blue-500 hover:bg-blue-600' }} shadow-xl toggle-button px-[13px] py-2  text-white font-bold rounded-full shadow-lg">
+        class="{{ $setting->transition == true ? 'transition-transform duration-300 ease-in-out transform hover:scale-110' : '' }}  {{ $setting->darkMode == true ? 'bg-gray-500 hover:bg-gray-600' : 'bg-blue-400 hover:bg-blue-300' }} shadow-xl toggle-button px-[13px] py-2  text-white font-bold rounded-full shadow-lg">
         <i id="btn" class="fa-solid fa-arrow-left"></i>
     </button>
 </div>

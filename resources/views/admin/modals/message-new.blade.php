@@ -37,7 +37,7 @@
                     Send
                 </button>
 
-                <button onclick="document.getElementById('message-new').classList.add('hidden')"
+                <button type="button" onclick="document.getElementById('message-new').classList.add('hidden')"
                     class="px-3 py-2 bg-gray-100 hover:bg-gray-300 rounded-full">
                     Cancel
                 </button>

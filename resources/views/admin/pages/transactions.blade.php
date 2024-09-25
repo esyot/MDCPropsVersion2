@@ -3,7 +3,7 @@
 
 @if ($categoriesIsNull == false)
 
-    <div id="content" class="flex items-center justify-between p-4 shadow-md">
+    <div id="navbar" class="flex items-center justify-between p-4 shadow-md">
         <div class="flex items-center space-x-2 ">
             <form onchange="this.submit()" action="{{ route('transactionsFilter') }}" class="flex justify-around space-x-4"
                 method="GET">

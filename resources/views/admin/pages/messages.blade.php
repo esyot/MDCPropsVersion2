@@ -2,13 +2,12 @@
 @section('content')
 
 <!-- Main Content -->
-<div id="main-content"
-    class="bg-gray-100 main-content mt-16 ml-20 h-[calc(100vh-4rem)] flex flex-1 overflow-y-auto transition-all duration-300 ease-in-out">
+<div id="contacts" class="main-content flex flex-1 overflow-y-auto transition-all duration-300 ease-in-out">
 
-    <div id="chats" class="flex w-80 m-2 items-center flex-col">
+    <div id="chats" class="flex w-80 items-center m-2 flex-col">
 
-        <div class="text-2xl font-bold m-2">
-            Chats
+        <div id="title" class="text-2xl font-bold m-2">
+            <h1>Chats</h1>
         </div>
         <div>
             <div class="relative my-2 mx-1 mb-4">
@@ -29,7 +28,7 @@
         <div id="contacts" class="mb-2 flex p-2 overflow-y-auto custom-scrollbar">
             <ul id="contact-list" class="list-none">
 
-                @include('admin.pages.partials.contact-list')
+                @include('admin.partials.contact-list')
 
             </ul>
 
@@ -40,12 +39,12 @@
     <!-- Box C -->
     <div class="w-full flex flex-col">
 
-        <div class="bg-blue-500 shadow-md p-2">
+        <div id="header-messenger" class="bg-blue-500 shadow-md p-2">
             <div class="items-center flex ">
                 <img class="w-12 h-12 p-2 drop-shadow-md" src="{{ asset('asset/photos/user.png') }}" alt="">
-                <div class="text-xl text-white font-semibold">
+                <h1 class="text-xl text-white font-semibold">
                     {{ $receiver_name }}
-                </div>
+                </h1>
 
             </div>
 
@@ -64,8 +63,8 @@
         </div> -->
 
 
-        <div id="messages-container" class="flex flex-1 overflow-y-auto flex-col bg-blue-300 custom-scrollbar h-64">
-            @include('admin.pages.partials.inclusions.message-bubble')
+        <div id="messages-container" class="flex flex-1 overflow-y-auto flex-col custom-scrollbar h-64">
+            @include('admin.partials.message-bubble')
         </div>
 
         <a hx-get="{{ route('messageBubble', ['receiver_name' => $receiver_name])}}" hx-swap="innerHTML"
@@ -104,7 +103,7 @@
             @endforeach
 
 
-            <div class="flex space-x-2 p-4 bg-blue-400">
+            <div id="footer-messenger" class="flex space-x-2 p-4">
 
                 <form id="myForm" action="{{ route('messageSend') }}" method="POST"
                     class=" flex items-end w-full space-x-4">
@@ -185,6 +184,7 @@
 </div>
 
 <script>
+
     // Scroll messages container to the bottom when the page loads
 
     function scrollToBottom() {
@@ -197,6 +197,7 @@
         scrollToBottom();
         document.getElementById('content').focus();
     }
+
 
 
     function imagePreviewClose() {
