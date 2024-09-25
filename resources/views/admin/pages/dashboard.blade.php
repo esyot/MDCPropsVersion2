@@ -5,10 +5,10 @@
 <div id="dashboard" class="flex flex-col h-full">
 
     @if ($categoriesIsNull == false)
-        @include('admin.pages.partials.calendar')
+        @include('admin.partials.calendar')
     @else
 
-        @include('admin.pages.partials.errors.category-null-error')
+        @include('admin.partials.errors.category-null-error')
 
     @endif
 

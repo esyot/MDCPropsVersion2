@@ -122,7 +122,7 @@
                         <h1 class="text-lg font-semibold truncate">{{ $item->name }}</h1>
                     </div>
                 </div>
-                @include('admin.pages.partials.modals.item-preview')
+                @include('admin.modals.item-preview')
             @endforeach
 
         </div>

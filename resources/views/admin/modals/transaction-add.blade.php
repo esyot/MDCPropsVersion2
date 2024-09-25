@@ -29,7 +29,7 @@
                     <div class="border border-gray-200 my-2 bg-gray-100">
                         <div>
                             <ul id="item-list-{{$day}}">
-                                @include('admin.pages.partials.inclusions.item')
+                                @include('admin.partials.item')
                             </ul>
                         </div>
                     </div>

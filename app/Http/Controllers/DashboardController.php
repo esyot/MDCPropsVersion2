@@ -31,9 +31,13 @@ class DashboardController extends Controller
         // Messages
         $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
         $unreadMessages = $messages->count();
-        $contacts = $messages->groupBy('sender_name')->map(fn($group) => $group->first())->values();
+        $contacts = Message::where('receiver_name', $current_user_name)
+            ->latest()
+            ->get()
+            ->groupBy('sender_name')
+            ->map(fn($group) => $group->first())
+            ->values();
 
-        // Settings and roles
         $setting = Setting::find(1);
         $roles = Auth::user()->getRoleNames();
 
@@ -99,7 +103,7 @@ class DashboardController extends Controller
 
         $setting = Setting::find(1);
 
-        return view('admin.pages.partials.date-view', compact('setting', 'transactions', 'date'));
+        return view('admin.partials.date-view', compact('setting', 'transactions', 'date'));
     }
 
     public function dateCustom(Request $request)
@@ -283,7 +287,7 @@ class DashboardController extends Controller
 
         $transactions = Transaction::all();
 
-        return view('admin.pages.partials.calendar', compact(
+        return view('admin.partials.calendar', compact(
             'categories',
             'destinations',
             'users',
