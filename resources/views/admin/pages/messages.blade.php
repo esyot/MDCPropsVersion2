@@ -185,8 +185,6 @@
 
 <script>
 
-    // Scroll messages container to the bottom when the page loads
-
     function scrollToBottom() {
         const messagesContainer = document.getElementById('messages-container');
         messagesContainer.scrollTop = messagesContainer.scrollHeight;

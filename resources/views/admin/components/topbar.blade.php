@@ -85,7 +85,10 @@
                             // Listen for the htmx:afterRequest event to hide the loader
                             document.body.addEventListener('htmx:afterRequest', function () {
                                 hideLoader();
+
+
                             });
+
                         </script>
 
 
