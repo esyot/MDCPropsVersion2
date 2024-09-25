@@ -15,7 +15,7 @@ class NotificationController extends Controller
         // Optionally, you can check if the update was successful
         if ($update) {
             // Redirect to the provided link if the update was successful
-            return redirect($redirect_link);
+            return redirect('/admin/'.$redirect_link);
         } else {
             // Handle the case where the update failed
             return redirect()->back()->with('error', 'Failed to mark notification as read.');

@@ -8,7 +8,7 @@
     <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
-    <link rel="icon" href="{{ asset('asset/logo/MDC-logo-clipped.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
     <style>
         @media (max-width: 768px) {
             .container-height {
@@ -142,7 +142,7 @@
                 class="shadow-md logo-container flex flex-col bg-gradient-to-b from-blue-500 to-teal-500 flex-1 rounded-t-lg md:rounded-l-lg overflow-auto p-4">
                 <div class="flex justify-center items-center flex-col h-full">
                     <img class="drop-shadow-md max-w-full h-auto mb-4"
-                        src="{{ asset('asset/logo/MDC-Logo-Clipped.png')}}" height="200" width="200" alt="">
+                        src="{{ asset('asset/logo/logo.png')}}" height="200" width="200" alt="">
                     <h1 class="text-xl text-white text-center font-serif mb-4">MDC Property Rental & <br>
                         Reservation
                         Management <br> System</h1>

@@ -1,4 +1,4 @@
-@extends('layouts.messenger-header')
+@extends('admin.layouts.messenger-header')
 @section('content')
 
 <!-- Main Content -->
@@ -29,7 +29,7 @@
         <div id="contacts" class="mb-2 flex p-2 overflow-y-auto custom-scrollbar">
             <ul id="contact-list" class="list-none">
 
-                @include('pages.partials.contact-list')
+                @include('admin.pages.partials.contact-list')
 
             </ul>
 
@@ -81,7 +81,7 @@
                             <p class="p-4 bg-red-500"> no conversation is made</p>
                         </div>
                     @endif
-                    @include('pages.partials.modals.image-preview')
+                    @include('admin.pages.partials.modals.image-preview')
 
 
                     <div

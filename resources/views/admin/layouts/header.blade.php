@@ -489,8 +489,11 @@
                                     <i class="fa-solid fa-ellipsis hover:bg-gray-300 px-[10px] py-[9px] rounded-full"></i>
                                     </div>
                                 <div title="See all in messages">
+                                <a href="{{ route('messages') }}" class=" font-medium  hover:underline py-2">
+                                   
+                                    
                                 <i class="fas fa-expand-arrows-alt hover:bg-gray-300 px-[10px] py-[9px] rounded-full"></i>
-
+                                </a>
 
                                 </div>
                                 <div title="New message" onclick="document.getElementById('message-new').classList.remove('hidden')">

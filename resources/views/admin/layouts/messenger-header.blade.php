@@ -202,7 +202,7 @@
 
                             <div id="notification-list"
                                 class="z-10 flex flex-col max-h-64 overflow-y-auto custom-scrollbar">
-                                @include('pages.partials.notification-list')
+                                @include('admin.pages.partials.notification-list')
 
                                 <!-- "See More" Button -->
                                 @if(count($notifications) > 5)
@@ -246,7 +246,7 @@
                                         </form>
                                     </div>
                                     <ul id="contact-list" class="list-none">
-                                        @include('pages.partials.contact-list')
+                                        @include('admin.pages.partials.contact-list')
                                     </ul>
                                 </div>
                             </div>

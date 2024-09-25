@@ -172,7 +172,7 @@ class DashboardController extends Controller
             // Create a notification
             Notification::create([
                 'user_id' => Auth::user()->id,
-                'icon' => "https://cdn-icons-png.flaticon.com/512/9187/9187604.png",
+                'icon' => Auth::user()->img,
                 'title' => "New Transaction",
                 'description' => "$currentUserName added a new transaction, check it now.",
                 'redirect_link' => "transactions"

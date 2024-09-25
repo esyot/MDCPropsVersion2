@@ -54,16 +54,16 @@ class CategoryController extends Controller
 
         $currentCategory = null;
         $categoriesIsNull = true;
-        $categories = [];
+        
 
         if ($roles->contains('admin') && $categories_admin->isNotEmpty()) {
-            $categories == $categories_admin;
+            $currentCategory == $categories_admin->first();
             $categoriesIsNull = false;
         } elseif ($roles->contains('staff') && $categories_staff->isNotEmpty()) {
-            $categories == $categories_staff;
+            $currentCategory == $categories_staff->first();
             $categoriesIsNull = false;
         }
-
+$categories = Category::all();
         $transactions = [];
         $items = [];
         $daysWithRecords = [];

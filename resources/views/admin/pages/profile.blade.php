@@ -97,7 +97,7 @@
                 <h1 class="text-xl font-medium">Profile</h1>
 
                 <div class="mt-2 flex flex-col items-center space-y-4 mb-6">
-                    <img id="profile-image" class="bg-gray-100 p-2 w-40 h-40 rounded-full"
+                    <img id="profile-image" class="bg-gray-100 p-2 w-[100px] h-[100px] rounded-full"
                         src="{{ asset('storage/images/users/' . Auth::user()->img) }}" alt="Profile Image">
 
                     <input type="file" name="img" accept="image/*" id="img"
