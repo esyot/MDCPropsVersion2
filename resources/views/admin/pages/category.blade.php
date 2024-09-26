@@ -99,6 +99,7 @@
     </div>
 </form>
 
+
 <div id="main-content" class="p-2 w-full h-full overflow-y-auto">
     <div class="flex flex-wrap gap-6">
         <!-- Add Category Button -->
@@ -115,9 +116,64 @@
         </div>
         @endhasrole
 
+        @foreach ($categories as $category)
+            <div id="category-{{$category->id}}"
+                class="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
+                <form action="{{ route('managedCategoriesUpdate', ['category_id' => $category->id]) }}" method="POST">
+                    @csrf
+                    <input id="isUncheckedAll" type="hidden" name="isUncheckedAll" value="">
+
+                    <div class="bg-white p-2 rounded w-[300px]">
+                        <div id="category-{{$category->id}}">
+                            <div class="flex items-end justify-between">
+                                <h1 class="text-xl text-red-500 font-medium">User Can Manage {{ $category->title }}</h1>
+                                <button type="button"
+                                    onclick="document.getElementById('category-{{$category->id}}').classList.add('hidden')"
+                                    class="text-xl">&times;</button>
+                            </div>
+                            @foreach ($users_for_roles as $user)
+                                <div class="mt-2">
+                                    <input type="checkbox" class="category-checkbox" name="users[{{$category->id}}][]"
+                                        value="{{ $user->id }}" @if(isset($managedCategories[$user->id]) && in_array($category->id, $managedCategories[$user->id])) checked @endif>
+                                    <span>{{ $user->name }}</span>
+
+                                </div>
+                            @endforeach
+                            <button class=" mt-2 px-4 py-2 bg-green-100 text-green-800 hover:bg-green-500 rounded"
+                                type="submit">Save</button>
+                        </div>
+                    </div>
+            </div>
+        @endforeach
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('.category-checkbox').forEach(checkbox => {
+                    checkbox.addEventListener('change', checkCheckboxes);
+                });
+
+                function checkCheckboxes() {
+                    const checkboxes = document.querySelectorAll('.category-checkbox');
+                    const allUnchecked = Array.from(checkboxes).every(checkbox => !checkbox.checked);
+
+                    if (allUnchecked) {
+                        document.getElementById('isUncheckedAll').value = "true";
+                    } else {
+                        document.getElementById('isUncheckedAll').value = "false";
+                    }
+                }
+            });
+        </script>
+
+
         <!-- Category Items -->
         @foreach ($categories as $category)
-                <div class="flex flex-col text-white rounded-lg w-52 h-52 overflow-hidden">
+
+
+
+
+                <div onclick="document.getElementById('category-{{$category->id}}').classList.remove('hidden')"
+                    class="flex flex-col text-white rounded-lg w-52 h-52 overflow-hidden">
                     <div class="relative w-full max-w-3xl overflow-hidden slide-container">
                         <div class="slide-wrapper shadow-inner">
                             @php

@@ -11,6 +11,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RolePermissionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -77,5 +78,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/item-search/{day}', [ItemController::class, 'search'])->name('itemSearch');
 
     Route::get('/admin/message-bubble/{receiver_name}', [MessageController::class, 'messageBubble'])->name('messageBubble');
-
+    Route::post('/admin/manage-categories-user-update/{category_id}', [RolePermissionController::class, 'managedCategoriesUpdate'])->name('managedCategoriesUpdate');
 });

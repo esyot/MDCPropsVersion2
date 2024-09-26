@@ -7,6 +7,7 @@ use App\Models\Setting;
 use App\Models\Notification;
 use App\Models\Message;
 use App\Models\User;
+use App\Models\ManagedCategory;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Storage;
@@ -38,7 +39,8 @@ class CategoryController extends Controller
             ->map(fn($group) => $group->first())
             ->values();
 
-        $users = User::all();
+        $users = User::whereNot('id', Auth::user()->id)->get();
+        $users_for_roles = User::all();
 
         $roles = Auth::user()->getRoleNames();
 
@@ -54,7 +56,7 @@ class CategoryController extends Controller
 
         $currentCategory = null;
         $categoriesIsNull = true;
-        
+
 
         if ($roles->contains('admin') && $categories_admin->isNotEmpty()) {
             $currentCategory == $categories_admin->first();
@@ -63,13 +65,32 @@ class CategoryController extends Controller
             $currentCategory == $categories_staff->first();
             $categoriesIsNull = false;
         }
-$categories = Category::all();
+        $categories = Category::all();
         $transactions = [];
         $items = [];
         $daysWithRecords = [];
 
+        $managedCategories = ManagedCategory::all()
+            ->groupBy('user_id')
+            ->map(function ($group) {
+                return $group->pluck('category_id')->toArray();
+            })
+            ->toArray();
 
-        return view('admin.pages.category', compact('categoriesIsNull', 'users', 'currentCategory', 'contacts', 'unreadMessages', 'notifications', 'unreadNotifications', 'page_title', 'setting', 'categories'));
+        return view('admin.pages.category', compact(
+            'users_for_roles',
+            'categoriesIsNull',
+            'managedCategories',
+            'users',
+            'currentCategory',
+            'contacts',
+            'unreadMessages',
+            'notifications',
+            'unreadNotifications',
+            'page_title',
+            'setting',
+            'categories'
+        ));
 
     }
 
