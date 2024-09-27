@@ -229,7 +229,7 @@
                     <div id="user-dropdown"
                         class="absolute right-0 hidden mt-2 border p-2 border-gray-300 bg-white rounded-lg w-[200px] shadow-xl z-10">
                         <div class="flex flex-col space-y-2">
-                            <a href="{{ route('profile') }}">
+                            <a href="{{ route('profile') }}" title="{{Auth::user()->name}}">
 
                                 <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-lg">
 
@@ -239,7 +239,7 @@
                                 </div>
                             </a>
 
-                            <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-lg"
+                            <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-lg" title="Logout"
                                 onclick="document.getElementById('logoutConfirm').classList.remove('hidden')">
 
 

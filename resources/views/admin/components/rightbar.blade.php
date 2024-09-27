@@ -5,7 +5,7 @@
         <h2 class="text-2xl font-bold">Display Settings</h2>
 
         <!-- Dark Mode Toggle -->
-        <form action="{{ route('darkMode') }}" method="POST">
+        <form action="{{ route('darkMode', ['id' => $setting->id]) }}" method="POST">
             @csrf
             <div class="flex items-start mt-4">
                 <div
@@ -28,7 +28,7 @@
         </form>
 
         <!-- Transitions Toggle -->
-        <form action="{{ route('transitions') }}" method="POST">
+        <form action="{{ route('transitions', ['id' => $setting->id]) }}" method="POST">
             @csrf
             <div class="flex items-start mt-4">
                 <div

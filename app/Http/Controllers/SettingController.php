@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Auth;
 
 class SettingController extends Controller
 {
-    public function darkMode(Request $request)
+    public function darkMode(Request $request, $id)
     {
 
-        $setting = Setting::findOrFail(1);
+        $setting = Setting::find($id);
 
         if ($request->action == null) {
 
@@ -28,10 +29,10 @@ class SettingController extends Controller
 
         return redirect()->back();
     }
-    public function transitions(Request $request)
+    public function transitions(Request $request, $id)
     {
 
-        $setting = Setting::findOrFail(1);
+        $setting = Setting::find($id);
 
         if ($request->action == null) {
 

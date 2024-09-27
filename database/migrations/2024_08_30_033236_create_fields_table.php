@@ -58,9 +58,11 @@ return new class extends Migration {
             $table->string('title');
             $table->string('description');
             $table->string('redirect_link');
+            $table->enum('for', ['admin', 'staff']); // admin or staff
             $table->boolean('isRead')->default(false);
             $table->timestamps();
         });
+
 
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
@@ -79,6 +81,7 @@ return new class extends Migration {
 
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->boolean('darkMode')->default(false);
             $table->boolean('leftbarOpen')->default(false);
             $table->boolean('transition')->default(true);

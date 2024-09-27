@@ -97,7 +97,7 @@ class CategoryController extends Controller
 
     public function create(Request $request)
     {
-        // Validate file uploads
+
         $request->validate([
             'files.*' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'title' => 'required|string|max:255',
@@ -105,14 +105,14 @@ class CategoryController extends Controller
         ]);
 
         $filePaths = [];
-        $imageFolderName = Str::random(10); // Generate folder name once
+        $imageFolderName = Str::random(10);
 
-        // Handle file uploads
+
         if ($request->hasFile('files')) {
             $files = $request->file('files');
 
             foreach ($files as $file) {
-                // Generate a unique filename and store the file
+
                 $imageFileName = Str::random(10) . '.' . $file->getClientOriginalExtension();
                 $fileName = time() . '_' . $imageFileName;
                 $filePath = $file->storeAs('public/images/categories/' . $imageFolderName, $fileName);
@@ -120,11 +120,20 @@ class CategoryController extends Controller
             }
         }
 
-        // Create category with the folder name
+
         Category::create([
             'title' => $request->title,
             'approval_level' => $request->approval_level,
             'folder_name' => $imageFolderName,
+        ]);
+
+        Notification::create([
+            'user_id' => Auth::user()->id,
+            'icon' => Auth::user()->img,
+            'title' => 'Added a new category',
+            'description' => Auth::user()->name . ' added a new category ' . $request->title,
+            'redirect_link' => 'categories',
+            'for' => 'admin',
         ]);
 
         return back()->with('success', 'Files uploaded successfully!');

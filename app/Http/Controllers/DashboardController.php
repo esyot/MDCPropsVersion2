@@ -24,9 +24,7 @@ class DashboardController extends Controller
         $currentDate = now();
         $page_title = 'Dashboard';
 
-        // Notifications
-        $notifications = Notification::orderBy('created_at', 'DESC')->get();
-        $unreadNotifications = Notification::where('isRead', false)->count();
+
 
         // Messages
         $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
@@ -38,8 +36,27 @@ class DashboardController extends Controller
             ->map(fn($group) => $group->first())
             ->values();
 
-        $setting = Setting::find(1);
+        $setting = Setting::where('user_id', Auth::user()->id)->first();
+
         $roles = Auth::user()->getRoleNames();
+
+        if ($roles->contains('staff')) {
+            $notifications = Notification::where('for', 'staff')->orderBy('created_at', 'DESC')->get();
+            $unreadNotifications = Notification::where('for', 'staff')->where('isRead', false)->count();
+
+        } else {
+            $notifications = Notification::where('for', 'admin')->orderBy('created_at', 'DESC')->get();
+            $unreadNotifications = Notification::where('for', 'admin')->where('isRead', false)->count();
+
+
+        }
+
+
+
+
+
+
+
 
         if ($roles->contains('staff')) {
 
@@ -139,7 +156,7 @@ class DashboardController extends Controller
             ->map(fn($group) => $group->first())
             ->values();
 
-        // Settings and roles
+
         $setting = Setting::find(1);
         $roles = Auth::user()->getRoleNames();
 
@@ -148,8 +165,8 @@ class DashboardController extends Controller
         if ($roles->contains('staff')) {
 
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
-            $categoryIds = $managedCategories->pluck('category_id'); // Get the category IDs
-            $categories = Category::whereIn('id', $categoryIds)->get(); // Fetch the categories
+            $categoryIds = $managedCategories->pluck('category_id');
+            $categories = Category::whereIn('id', $categoryIds)->get();
             $currentCategory = Category::find($category);
 
 

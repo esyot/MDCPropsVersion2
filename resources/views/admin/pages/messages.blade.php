@@ -4,9 +4,9 @@
 <!-- Main Content -->
 <div id="contacts" class="main-content flex flex-1 overflow-y-auto transition-all duration-300 ease-in-out">
 
-    <div id="chats" class="flex w-80 items-center m-2 flex-col">
+    <div id="chats" class="flex w-80 items-center flex-col shadow">
 
-        <div id="title" class="text-2xl font-bold m-2">
+        <div id="title" class="mt-2 text-2xl font-bold">
             <h1>Chats</h1>
         </div>
         <div>
@@ -228,7 +228,7 @@
     // Attach the updateIcon function to the input's input event
     document.getElementById('content').addEventListener('input', updateIcon);
 
-    // Initial check in case the input is not empty on load
+
     updateIcon();
 
 

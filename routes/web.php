@@ -14,6 +14,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RolePermissionController;
 use Illuminate\Support\Facades\Route;
 
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+
 /*
 |---------------------------------------------------------------------------
 | Web Routes
@@ -34,7 +37,7 @@ Route::get('test', function () {
 
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/', [DashboardController::class, 'index']); // Home route
+    Route::get('/admin', [DashboardController::class, 'index']);
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/admin/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/admin/transactions', [TransactionController::class, 'index'])->name('transactions');
@@ -42,7 +45,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/notification-list/{filter}', [NotificationController::class, 'notificationList'])->name('notificationList');
     Route::get('/admin/messages', [MessageController::class, 'index'])->name('messages');
     Route::get('/admin/chat-selected/{contact}', [MessageController::class, 'chatSelected'])->name('chatSelected');
-    Route::get('/admin/categories', [CategoryController::class, 'index'])->name('categories');
     Route::get('/admin/items', [ItemController::class, 'index'])->name('items');
     Route::get('/admin/items-filter', [ItemController::class, 'itemsFilter'])->name('itemsFilter');
     Route::get('/admin/transactions-filter', [TransactionController::class, 'filter'])->name('transactionsFilter');
@@ -55,8 +57,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/message-is-reacted/{id}', [MessageController::class, 'messageReacted'])->name('messageReacted');
     Route::post('/admin/message-send', [MessageController::class, 'messageSend'])->name('messageSend');
     Route::get('/admin/contacts', [MessageController::class, 'contacts'])->name('contacts');
-    Route::post('/admin/dark-mode', [SettingController::class, 'darkMode'])->name('darkMode');
-    Route::post('/admin/transitions', [SettingController::class, 'transitions'])->name('transitions');
+    Route::post('/admin/dark-mode/{id}', [SettingController::class, 'darkMode'])->name('darkMode');
+    Route::post('/admin/transitions/{id}', [SettingController::class, 'transitions'])->name('transitions');
     Route::post('/admin/category-add', [CategoryController::class, 'create'])->name('category-add');
     Route::post('/admin/item-add', [ItemController::class, 'create'])->name('itemAdd');
     Route::put('/admin/item-update/{id}', [ItemController::class, 'update'])->name('itemUpdate');
@@ -67,16 +69,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/profile/update/{id}', [ProfileController::class, 'profileUpdate'])->name('profileUpdate');
     Route::post('/admin/password/update/{id}', [ProfileController::class, 'passwordUpdate'])->name('passwordUpdate');
 
-
-    Route::get('/admin/users-manage', [UserController::class, 'index'])->name('users');
-    Route::post('/admin/users-role-update', [UserController::class, 'roleUpdate'])->name('roleUpdate');
-    Route::post('/admin/user-add', [UserController::class, 'create'])->name('userAdd');
-    Route::post('/admin/user-delete/{id}', [UserController::class, 'delete'])->name('userDelete');
-
     Route::post('/admin/message-new-send', [MessageController::class, 'messageNewSend'])->name('messageNewSend');
 
     Route::get('/admin/item-search/{day}', [ItemController::class, 'search'])->name('itemSearch');
 
     Route::get('/admin/message-bubble/{receiver_name}', [MessageController::class, 'messageBubble'])->name('messageBubble');
     Route::post('/admin/manage-categories-user-update/{category_id}', [RolePermissionController::class, 'managedCategoriesUpdate'])->name('managedCategoriesUpdate');
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/categories', [CategoryController::class, 'index'])->name('categories');
+    Route::get('/admin/users', [UserController::class, 'index'])->name('users');
+    Route::post('/admin/users-role-update', [UserController::class, 'roleUpdate'])->name('roleUpdate');
+    Route::post('/admin/user-add', [UserController::class, 'create'])->name('userAdd');
+    Route::post('/admin/user-delete/{id}', [UserController::class, 'delete'])->name('userDelete');
 });

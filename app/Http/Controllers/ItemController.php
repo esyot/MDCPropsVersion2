@@ -231,6 +231,7 @@ class ItemController extends Controller
     public function search(Request $request, $day)
     {
         $items = Item::where('name', 'LIKE', '%' . $request->input . '%')->get();
-        return view('admin.pages.partials.inclusions.item', compact('items', 'day'));
+        return view('admin.partials.item', compact('items', 'day'));
     }
+
 }

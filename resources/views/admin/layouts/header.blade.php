@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
     <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
     <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
-    <link rel="icon" href="{{ asset('asset/logo/MDC-logo-clipped.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
     @include('admin.styles.header')
 
     @if (!Auth::user()->isPasswordChanged && $page_title != 'Profile')

@@ -37,7 +37,7 @@
                 </section>
             </a>
 
-
+            @hasrole('admin')
             <a href="{{ route('categories') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
                 title="Categories">
@@ -48,6 +48,7 @@
                     <span class="pl-2 pr-[100px] text-sm hidden">Categories</span>
                 </section>
             </a>
+            @endhasrole
 
             <a href="{{ route('transactions') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "

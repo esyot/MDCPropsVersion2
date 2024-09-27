@@ -26,7 +26,7 @@ class UserController extends Controller
         // Fetch necessary data
         $users = User::all();
         $roles = Role::all();
-        $setting = Setting::find(1);
+        $setting = Setting::where('user_id', Auth::user()->id)->first();
         $currentCategory = Category::find($defaultCategoryId);
         $transactions = Transaction::where('category_id', $defaultCategoryId)->get();
         $categories = Category::orderBy('id')->get();
@@ -92,6 +92,8 @@ class UserController extends Controller
             'password' => Hash::make(value: 'P@ssw0rd'),
         ]);
 
+
+
         // Assign a role to the user
         $role = Role::findByName('staff'); // Replace 'your_role_name' with the desired role name
         $user->assignRole($role);
@@ -99,9 +101,17 @@ class UserController extends Controller
         Notification::create([
             'user_id' => Auth::user()->id,
             'icon' => Auth::user()->img,
-            'title' => "New User",
-            'description' => Auth::user()->name . " added a new user, you can   check it now.",
-            'redirect_link' => "users-manage"
+            'title' => 'Added a new user',
+            'description' => Auth::user()->name . ' added a new user ' . $request->name,
+            'redirect_link' => 'users',
+            'for' => 'admin',
+        ]);
+
+        Setting::create([
+            'user_id' => $user->id,
+            'darkMode' => false,
+            'transition' => true,
+
         ]);
 
         return redirect()->back()->with('success', 'A new user has been added successfully!');

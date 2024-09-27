@@ -15,6 +15,7 @@ class SettingSeeder extends Seeder
     public function run()
     {
         Setting::create([
+            'user_id' => '1',
             'darkMode' => false,
             'transition' => true,
             'created_at' => now(),

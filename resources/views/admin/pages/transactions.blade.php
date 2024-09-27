@@ -33,8 +33,9 @@
     <div id="main-content" class="flex-1 overflow-y-auto custom-scrollbar w-full h-full">
         <div class="flex p-4">
             @foreach($transactions as $transaction)
-                @include('admin.modals.transaction')
-                <div class="mx-2 w-64 bg-white rounded-lg shadow-md overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-110' : '' }}">
+
+                <div title="Details"
+                    class="mx-2 w-64 bg-white rounded-lg shadow-md overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-110' : '' }}">
                     <div onclick="document.getElementById('transaction-{{$transaction->id}}').classList.remove('hidden')">
 
 
@@ -73,6 +74,7 @@
                         </div>
                     </div>
                 </div>
+                @include('admin.modals.transaction')
                 @include('admin.modals.approve-confirm')
             @endforeach
         </div>

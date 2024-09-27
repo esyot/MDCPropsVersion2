@@ -9,6 +9,7 @@ use App\Models\Setting;
 use App\Models\Category;
 use App\Models\Message;
 use App\Models\User;
+use App\Models\ManagedCategory;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -47,19 +48,24 @@ class TransactionController extends Controller
 
         $roles = Auth::user()->getRoleNames();
 
-        $currentCategory = null;
+        if ($roles->contains('staff')) {
 
-        $categories_admin = Category::where('approval_level', 1)->get();
-        $categories_staff = Category::where('approval_level', 2)->get();
+            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+            $categoryIds = $managedCategories->pluck('category_id');
+            $categories = Category::whereIn('id', $categoryIds)->get();
+            $currentCategory = $categories->first();
 
-        $currentCategory = null;
-        $categoriesIsNull = false;
-
-        if ($roles->contains('admin') && $categories_admin->isNotEmpty()) {
-            $currentCategory = $categories_admin->first();
-        } elseif ($roles->contains('staff') && $categories_staff->isNotEmpty()) {
-            $currentCategory = $categories_staff->first();
         } else {
+            $categories = Category::all();
+            $currentCategory = $categories->first();
+        }
+
+        if ($currentCategory) {
+
+            $currentCategoryId = $currentCategory->id;
+            $categoriesIsNull = false;
+        } else {
+
             $categoriesIsNull = true;
         }
 
@@ -102,7 +108,10 @@ class TransactionController extends Controller
     {
 
         $transactions = Transaction::where('status', $request->status)->where('category_id', $request->category)->get();
+
         $current_user_name = Auth::user()->name;
+
+        $category = $request->category;
 
         $unreadNotifications = Notification::where('isRead', false)->get()->count();
         $notifications = Notification::orderBy('created_at', 'DESC')->get();
@@ -128,23 +137,24 @@ class TransactionController extends Controller
         $currentCategory = Category::find($request->category);
 
         $currentStatus = $request->status;
-
         $roles = Auth::user()->getRoleNames();
 
-        $categories_admin = Category::where('approval_level', 1)->get();
-        $categories_staff = Category::where('approval_level', 2)->get();
-
-        $currentCategory = null;
         $categoriesIsNull = false;
 
-        if ($roles->contains('admin') && $categories_admin->isNotEmpty()) {
-            $currentCategory = $categories_admin->first();
-        } elseif ($roles->contains('staff') && $categories_staff->isNotEmpty()) {
-            $currentCategory = $categories_staff->first();
-        } else {
-            $categoriesIsNull = true;
-        }
+        if ($roles->contains('staff')) {
 
+            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+            $categoryIds = $managedCategories->pluck('category_id'); // Get the category IDs
+            $categories = Category::whereIn('id', $categoryIds)->get(); // Fetch the categories
+            $currentCategory = Category::find($category);
+
+
+        } else {
+            $categories = Category::all();
+            $currentCategory = Category::find($category);
+            $categoriesIsNull = false;
+
+        }
         $users = User::whereNot('name', Auth::user()->name)->get();
 
 

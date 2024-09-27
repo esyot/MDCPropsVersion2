@@ -1,7 +1,6 @@
 @extends('admin.layouts.header')
 @section('content')
 
-<!-- Main Container -->
 <div id="dashboard" class="flex flex-col h-full">
 
     @if ($categoriesIsNull == false)
@@ -13,8 +12,4 @@
     @endif
 
 </div>
-
-
-
-
 @endsection

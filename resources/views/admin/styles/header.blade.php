@@ -100,7 +100,9 @@
             background: linear-gradient(to right, #00bcd4, #006064);
         }
 
-        #main-content {}
+        #chats {
+            background-color: #f1f1f1;
+        }
 
         #sidebar {
 
