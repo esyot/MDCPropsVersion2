@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Route;
 // Public Routes
 Route::get('/admin/login', [LoginController::class, 'index'])->name('loginPage');
 Route::post('/admin.login', [AuthController::class, 'login'])->name('login');
-Route::get('admin/test', function () {
+Route::get('test', function () {
     return view('admin.test');
 });
 

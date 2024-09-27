@@ -34,7 +34,7 @@
         <div class="flex p-4">
             @foreach($transactions as $transaction)
                 @include('admin.modals.transaction')
-                <div class="mx-2 w-64 bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="mx-2 w-64 bg-white rounded-lg shadow-md overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-110' : '' }}">
                     <div onclick="document.getElementById('transaction-{{$transaction->id}}').classList.remove('hidden')">
 
 
@@ -144,7 +144,7 @@
 
 @else
 
-    @include('admin.pages.partials.errors.category-null-error')
+    @include('admin.partials.errors.category-null-error')
 
 @endif
 

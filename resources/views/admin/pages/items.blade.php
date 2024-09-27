@@ -42,7 +42,7 @@
                         <input type="file" name="img" accept="image/*" id="img"
                             class="block p-2 border border-gray-300 bg-white rounded" required>
 
-                        <img id="img-preview" src="" alt="Image Preview" class="mt-2 w-full h-64 object-cover hidden">
+                        <img id="img-preview" src="" alt="Image Preview" class="mt-2 h-[150px] object-cover hidden">
 
                         <small class="font-bold">Note:
                             <i class="font-normal">Make sure the selected file is in "jpg", "png", or "jpeg" format.</i>
@@ -97,7 +97,7 @@
         <div class="flex flex-wrap flex-grow gap-2">
             <!-- Add Category Button -->
             <div title="Add a new category"
-                class="flex flex-col relative bg-gray-200 mr-2 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden  transition-transform transform hover:scale-105">
+                class="flex flex-col relative bg-gray-200 mr-2 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-105' : '' }}">
                 <div class="flex justify-center items-center bg-gray-200 h-3/4 cursor-pointer hover:text-gray-800 text-gray-400 "
                     onclick="document.getElementById('item-add-modal').classList.remove('hidden')">
                     <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
@@ -111,7 +111,7 @@
             @foreach ($items as $item)
 
                 <div title="Click to preview" onclick="document.getElementById('item-{{$item->id}}').classList.remove('hidden')"
-                    class="flex flex-col text-white relative bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden  transition-transform transform hover:scale-105">
+                    class="flex flex-col text-white relative bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-105' : '' }}">
                     <!-- Image Container -->
                     <div class="flex justify-center items-center bg-gray-200 h-3/4 shadow-inner">
                         <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
@@ -151,7 +151,7 @@
 
 @else
 
-    @include('admin.pages.partials.errors.category-null-error')
+    @include('admin.partials.errors.category-null-error')
 
 @endif
 

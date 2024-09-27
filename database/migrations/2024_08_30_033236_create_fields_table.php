@@ -80,6 +80,7 @@ return new class extends Migration {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
             $table->boolean('darkMode')->default(false);
+            $table->boolean('leftbarOpen')->default(false);
             $table->boolean('transition')->default(true);
             $table->timestamps();
 

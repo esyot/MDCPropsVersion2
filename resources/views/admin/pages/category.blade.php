@@ -46,11 +46,10 @@
         right: 0;
     }
 
-    /* Removed hover-based animation to avoid conflicts with JavaScript */
 </style>
 
 <form id="category-add-form" method="POST" action="{{ route('category-add') }}" enctype="multipart/form-data">
-    @csrf <!-- Add CSRF token for Laravel security -->
+    @csrf 
     <div id="category-add-modal"
         class="fixed flex inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
         <div id="category-add-content" class="bg-white shadow-md max-w-full rounded">
@@ -105,7 +104,7 @@
         <!-- Add Category Button -->
         @hasrole('admin')
         <div title="Add a new category"
-            class="flex flex-col bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden">
+            class="flex flex-col bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-110' : '' }}">
             <div class="flex items-center justify-center cursor-pointer hover:text-gray-800 text-gray-400 "
                 onclick="document.getElementById('category-add-modal').classList.remove('hidden')">
                 <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
@@ -124,12 +123,12 @@
                     <input id="isUncheckedAll" type="hidden" name="isUncheckedAll" value="">
 
                     <div class="bg-white p-2 rounded w-[300px]">
-                        <div id="category-{{$category->id}}">
-                            <div class="flex items-end justify-between">
+                      
+                            <div class="flex items-start justify-between">
                                 <h1 class="text-xl text-red-500 font-medium">User Can Manage {{ $category->title }}</h1>
                                 <button type="button"
                                     onclick="document.getElementById('category-{{$category->id}}').classList.add('hidden')"
-                                    class="text-xl">&times;</button>
+                                    class="text-4xl">&times;</button>
                             </div>
                             @foreach ($users_for_roles as $user)
                                 <div class="mt-2">
@@ -139,31 +138,18 @@
 
                                 </div>
                             @endforeach
-                            <button class=" mt-2 px-4 py-2 bg-green-100 text-green-800 hover:bg-green-500 rounded"
+                            <div clas="flex float-right">
+                            <button class="mt-2 px-4 py-2 bg-green-100 text-green-800 hover:bg-green-500 rounded"
                                 type="submit">Save</button>
-                        </div>
+
+                            </div>
+                           
+                
                     </div>
+</form>
             </div>
         @endforeach
 
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                document.querySelectorAll('.category-checkbox').forEach(checkbox => {
-                    checkbox.addEventListener('change', checkCheckboxes);
-                });
-
-                function checkCheckboxes() {
-                    const checkboxes = document.querySelectorAll('.category-checkbox');
-                    const allUnchecked = Array.from(checkboxes).every(checkbox => !checkbox.checked);
-
-                    if (allUnchecked) {
-                        document.getElementById('isUncheckedAll').value = "true";
-                    } else {
-                        document.getElementById('isUncheckedAll').value = "false";
-                    }
-                }
-            });
-        </script>
 
 
         <!-- Category Items -->
@@ -172,8 +158,8 @@
 
 
 
-                <div onclick="document.getElementById('category-{{$category->id}}').classList.remove('hidden')"
-                    class="flex flex-col text-white rounded-lg w-52 h-52 overflow-hidden">
+                <div @hasrole('admin') onclick="document.getElementById('category-{{$category->id}}').classList.remove('hidden')"@endhasrole
+                    class="flex flex-col text-white rounded-lg w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-110' : '' }}">
                     <div class="relative w-full max-w-3xl overflow-hidden slide-container">
                         <div class="slide-wrapper shadow-inner">
                             @php
@@ -200,8 +186,25 @@
     </div>
 </div>
 <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('.category-checkbox').forEach(checkbox => {
+                    checkbox.addEventListener('change', checkCheckboxes);
+                });
+
+                function checkCheckboxes() {
+                    const checkboxes = document.querySelectorAll('.category-checkbox');
+                    const allUnchecked = Array.from(checkboxes).every(checkbox => !checkbox.checked);
+
+                    if (allUnchecked) {
+                        document.getElementById('isUncheckedAll').value = "true";
+                    } else {
+                        document.getElementById('isUncheckedAll').value = "false";
+                    }
+                }
+            });
+       
     document.querySelectorAll('.slide-container').forEach(slideContainer => {
-        let currentIndex = 0; // Each container has its own currentIndex
+        let currentIndex = 0;
 
         const slideWrapper = slideContainer.querySelector('.slide-wrapper');
         const slides = slideWrapper.querySelectorAll('.slide');
@@ -213,7 +216,7 @@
             slideWrapper.style.transform = `translateX(${offset}%)`;
         }
 
-        // Attach event listeners to the buttons
+        
         slideContainer.querySelector('.prev-slide').addEventListener('click', () => moveSlide(-1));
         slideContainer.querySelector('.next-slide').addEventListener('click', () => moveSlide(1));
     });
