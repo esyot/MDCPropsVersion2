@@ -12,11 +12,17 @@ class NotificationController extends Controller
 {
     public function isRead($id, $redirect_link)
     {
-        // Find the notification by ID and update its 'isRead' status
-        $update = Notification::where('id', $id)->update(['isRead' => true]);
+
+        $notification = Notification::find($id);
+        $isReadBy = json_decode($notification->isReadBy != null) ?: [];
+        $isReadBy = array_merge($isReadBy, [Auth::user()->id]);
+
+        $notification->update([
+            'isReadBy' => $isReadBy,
+        ]);
 
         // Optionally, you can check if the update was successful
-        if ($update) {
+        if ($notification) {
             // Redirect to the provided link if the update was successful
             return redirect('/admin/' . $redirect_link);
         } else {

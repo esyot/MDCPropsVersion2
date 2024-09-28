@@ -73,7 +73,8 @@ Route::middleware(['auth', 'role:moderator|admin'])->group(function () {
     Route::get('/admin/transaction-decline/{id}', [TransactionController::class, 'decline'])->name('transactionDecline');
     Route::get('/admin/pending-approve/{id}', [TransactionController::class, 'approve'])->name('transactionApprove');
     Route::post('/admin/transaction-create', [TransactionController::class, 'create'])->name('transaction-create');
-
+    //Category
+    Route::post('/admin/category-update/{category_id}', [CategoryController::class, 'update'])->name('categoryUpdate');
     // Transactions
     Route::get('/admin/transactions', [TransactionController::class, 'index'])->name('transactions');
     Route::get('/admin/transactions-filter', [TransactionController::class, 'filter'])->name('transactionsFilter');

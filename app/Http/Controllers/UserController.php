@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Setting;
 use App\Models\Category;
 use App\Models\Transaction;
+use App\Models\ManagedCategory;
 use App\Models\Item;
 use App\Models\Notification;
 use App\Models\Message;
@@ -32,8 +33,6 @@ class UserController extends Controller
         $categories = Category::orderBy('id')->get();
         $items = Item::where('category_id', $defaultCategoryId)->get();
 
-        $notifications = Notification::orderBy('created_at', 'DESC')->get();
-        $unreadNotificationsCount = Notification::where('isRead', false)->count();
 
         $messages = Message::where('receiver_name', $currentUserName)->where('isRead', false)->get();
         $unreadMessagesCount = $messages->count();
@@ -46,6 +45,24 @@ class UserController extends Controller
             ->values();
 
 
+        $categories = Category::all();
+        $currentCategory = $categories->first();
+
+        $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
+        $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain('isReadBy', Auth::user()->id)->count();
+
+
+
+        if ($currentCategory) {
+
+            $currentCategoryId = $currentCategory->id;
+            $categoriesIsNull = false;
+        } else {
+
+            $categoriesIsNull = true;
+        }
+
+
         return view('admin.pages.users', [
             'roles' => $roles,
             'users' => $users,
@@ -54,7 +71,7 @@ class UserController extends Controller
             'contacts' => $contacts,
             'unreadMessages' => $unreadMessagesCount,
             'page_title' => 'Manage Users',
-            'unreadNotifications' => $unreadNotificationsCount,
+            'unreadNotifications' => $unreadNotifications,
             'notifications' => $notifications,
             'items' => $items,
             'currentCategory' => $currentCategory,
@@ -104,6 +121,7 @@ class UserController extends Controller
             'description' => Auth::user()->name . ' added a new user ' . $request->name,
             'redirect_link' => 'users',
             'for' => 'both',
+
         ]);
 
         $newuser = User::latest()->first();

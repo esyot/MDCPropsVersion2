@@ -59,12 +59,9 @@ return new class extends Migration {
             $table->string('redirect_link');
             $table->enum('for', ['admin', 'staff', 'both']);
             $table->string('category_id')->nullable();
-            $table->json('isReadBy');
+            $table->json('isReadBy')->default(json_encode([]));
             $table->timestamps();
         });
-
-
-
 
         Schema::create('messages', function (Blueprint $table) {
             $table->id();

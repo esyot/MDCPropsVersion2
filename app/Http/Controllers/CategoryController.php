@@ -68,7 +68,7 @@ class CategoryController extends Controller
                 ->orderBy('created_at', 'DESC')
                 ->get();
 
-            $unreadNotifications = Notification::where('isRead', false)->where(function ($query) use ($categoryIds) {
+            $unreadNotifications = Notification::whereJsonContains('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
             })->whereIn('for', ['staff', 'both'])
@@ -79,8 +79,8 @@ class CategoryController extends Controller
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->where('isRead', false)->count();
+            $notifications = Notification::orderBy('created_at', 'DESC')->get();
+            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain('isReadBy', Auth::user()->id)->count();
 
         }
 
@@ -140,13 +140,13 @@ class CategoryController extends Controller
         }
 
 
-        $newcategory = Category::create([
+        Category::create([
             'title' => $request->title,
             'approval_level' => $request->approval_level,
             'folder_name' => $imageFolderName,
         ]);
 
-        $category = Category::latest()->first();
+        $isReadBy = [];
 
         Notification::create([
             'icon' => Auth::user()->img,
@@ -154,9 +154,32 @@ class CategoryController extends Controller
             'description' => Auth::user()->name . ' added a new category ' . $request->title,
             'redirect_link' => 'categories',
             'for' => 'admin',
+            'isReadBy' => $isReadBy
         ]);
 
         return back()->with('success', 'Files uploaded successfully!');
+    }
+
+    public function update(Request $request, $category_id)
+    {
+        $request->validate([
+            'title' => ['required', 'string'],
+            'approval_level' => ['required']
+        ]);
+
+        $category = Category::find($category_id);
+
+        $category->update([
+            'title' => $request->title,
+            'approval_level' => $request->approval_level
+        ]);
+
+        if ($category) {
+
+            return redirect()->back()->with('success', 'Category has been updated successfully!');
+
+        }
+
     }
 
 }

@@ -50,7 +50,7 @@ class ItemController extends Controller
                 ->orderBy('created_at', 'DESC')
                 ->get();
 
-            $unreadNotifications = Notification::where('isRead', false)->where(function ($query) use ($categoryIds) {
+            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
             })->whereIn('for', ['staff', 'both'])
@@ -62,7 +62,7 @@ class ItemController extends Controller
             $currentCategory = $categories->first();
 
             $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->where('isRead', false)->count();
+            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain('isReadBy', Auth::user()->id)->count();
 
         }
 
@@ -131,6 +131,7 @@ class ItemController extends Controller
             'redirect_link' => 'items',
             'category_id' => $validatedData['category'],
             'for' => 'both',
+
         ]);
 
         return redirect()->back()->with('success', 'A new item has been added successfully!');
@@ -172,7 +173,7 @@ class ItemController extends Controller
                 ->orderBy('created_at', 'DESC')
                 ->get();
 
-            $unreadNotifications = Notification::where('isRead', false)->where(function ($query) use ($categoryIds) {
+            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
             })->whereIn('for', ['staff', 'both'])
@@ -184,7 +185,7 @@ class ItemController extends Controller
             $currentCategory = $categories->first();
 
             $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->where('isRead', false)->count();
+            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContains('isReadBy', Auth::user()->id)->count();
 
         }
 

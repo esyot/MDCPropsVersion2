@@ -47,6 +47,7 @@
     }
 </style>
 
+
 <form id="category-add-form" method="POST" action="{{ route('category-add') }}" enctype="multipart/form-data">
     @csrf
     <div id="category-add-modal"
@@ -87,10 +88,10 @@
                 </div>
                 <div class="flex justify-end my-2 space-x-1">
                     <button type="submit"
-                        class="px-4 py-2 bg-blue-500 text-blue-100 hover:bg-blue-800 rounded">Add</button>
+                        class="px-4 py-2 bg-green-100 text-green-800 hover:bg-green-500 hover:text-green-100 shadow-md rounded">Add</button>
                     <button type="button"
                         onclick="document.getElementById('category-add-modal').classList.add('hidden')"
-                        class="px-4 py-2 bg-gray-500 text-gray-100 hover:bg-gray-800 rounded">Close</button>
+                        class="px-4 py-2 bg-red-100 text-red-800 hover:bg-red-500 hover:text-red-100 shadow-md rounded">Close</button>
                 </div>
             </div>
         </div>
@@ -114,44 +115,7 @@
             </div>
         @endcan
 
-        @foreach ($categories as $category)
-            <div id="category-{{$category->id}}"
-                class="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-70 z-50 hidden">
-                <form action="{{ route('managedCategoriesUpdate', ['category_id' => $category->id]) }}" method="POST"
-                    class="bg-white rounded w-[300px]">
-                    @csrf
-                    <input id="isUncheckedAll-{{$category->id}}" type="hidden" name="isUncheckedAll" value="">
 
-
-                    <div class="flex items-center justify-between mb-2 m-2">
-                        <h1 class="text-xl font-medium">{{ $category->title }}</h1>
-                        <button type="button" aria-label="Close"
-                            onclick="document.getElementById('category-{{$category->id}}').classList.add('hidden')"
-                            class="text-2xl font-bold text-gray-600 hover:text-gray-800">&times;</button>
-                    </div>
-
-                    <div class="flex flex-col bg-gray-100 p-2 border-2 border-b border-t">
-                        <h2 class="text-medium mb-2">Users can manage:</h2>
-                        @foreach ($users_for_roles as $user)
-                            <div class="flex items-center mb-1">
-                                <input type="checkbox" class="category-checkbox" name="users[{{$category->id}}][]"
-                                    value="{{ $user->id }}" @if(isset($managedCategories[$user->id]) && in_array($category->id, $managedCategories[$user->id])) checked @endif>
-                                <label class="ml-2">{{ $user->name }}</label>
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="flex p-2 justify-end space-x-1">
-                        <button class="px-4 py-2 shadow-md bg-green-200 text-green-800 hover:bg-green-400 rounded"
-                            type="submit">Save</button>
-                        <button type="button"
-                            class="px-4 py-2 shadow-md bg-gray-200 text-gray-800 hover:bg-gray-400 rounded"
-                            onclick="document.getElementById('category-{{$category->id}}').classList.add('hidden')">Cancel
-                        </button>
-                    </div>
-
-                </form>
-            </div>
-        @endforeach
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {
@@ -172,19 +136,13 @@
         </script>
 
 
-
-
         <!-- Category Items -->
-        @foreach ($categories as $category)
+        @foreach ($categories as $category)  
 
-
-
-
-                <div @hasrole('admin')
-                    onclick="document.getElementById('category-{{$category->id}}').classList.remove('hidden')" @endhasrole
+                <div
                     class="flex flex-col text-white rounded-lg w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-110' : '' }}">
-                    <div class="relative w-full max-w-3xl overflow-hidden slide-container">
-                        <div class="slide-wrapper shadow-inner">
+                    <div class="relative w-full max-w-3xl overflow-hidden slide-container ">
+                        <div class="slide-wrapper shadow-inner z-50">
                             @php
                                 $directory = storage_path('app/public/images/categories/' . $category->folder_name);
                                 $images = array_diff(scandir($directory), array('..', '.'));
@@ -200,14 +158,37 @@
                         <button class="prev-slide">&#10094;</button>
                         <button class="next-slide">&#10095;</button>
                     </div>
-                    <div class="bg-blue-500 w-full h-full shadow-md text-center p-2 flex items-center justify-center">
-                        <h1 class="text-lg font-semibold drop-shadow">{{ $category->title }}</h1>
+                    <div
+                        class="flex-col bg-gradient-to-b from-blue-500 to-blue-800 w-full h-full shadow-md text-center p-2 flex items-center justify-center">
+                        <div class="flex items-center justify-center">
+                            <h1 class="text-lg font-semibold drop-shadow">{{ $category->title }}</h1>
+                        </div>
+
+                        <div class="space-y-1">
+                            <button title="Edit Details"
+                                onclick="document.getElementById('category-update-{{$category->id}}').classList.remove('hidden')"
+                                class="w-full shadow-md px-4 py-2 bg-blue-100 text-blue-800 hover:bg-blue-800 hover:text-blue-100 rounded">Edit
+                                Details
+                            </button>
+
+                            @hasrole('admin')
+                            <button title="Assign Users"
+                                onclick="document.getElementById('category-{{$category->id}}').classList.remove('hidden')"
+                                class="w-full shadow-md px-4 py-2 bg-green-100 text-green-800 hover:bg-green-500 hover:text-green-100 rounded">Assign
+                                Users
+                            </button>
+                            @endhasrole
+                        </div>
                     </div>
                 </div>
         @endforeach
 
     </div>
 </div>
+@foreach ($categories as $category) 
+    @include('admin.modals.category-assign') 
+    @include('admin.modals.category-update')
+@endforeach
 <script>
 
     document.querySelectorAll('.slide-container').forEach(slideContainer => {

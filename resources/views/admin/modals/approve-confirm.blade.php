@@ -1,5 +1,5 @@
 <div id="transaction-confirm-{{$transaction->id}}"
-    class="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 hidden">
+    class="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 hidden z-40">
     <div class="bg-white shadow-md max-w-md rounded-lg px-4 py-1">
 
         <div class="flex space-x-6 justify-center font-semibold items-start">

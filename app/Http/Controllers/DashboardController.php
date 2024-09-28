@@ -134,9 +134,6 @@ class DashboardController extends Controller
 
         $transactions = Transaction::where('category_id', $category)->get();
 
-        $notifications = Notification::orderBy('created_at', 'DESC')->get();
-        $unreadNotifications = Notification::where('isRead', false)->count();
-
         $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
         $unreadMessages = $messages->count();
 
@@ -158,7 +155,6 @@ class DashboardController extends Controller
         $setting = Setting::find(1);
         $roles = Auth::user()->getRoleNames();
 
-        $categoriesIsNull = false;
 
         if ($roles->contains('moderator') || $roles->contains('editor')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
@@ -173,7 +169,7 @@ class DashboardController extends Controller
                 ->orderBy('created_at', 'DESC')
                 ->get();
 
-            $unreadNotifications = Notification::where('isRead', false)->where(function ($query) use ($categoryIds) {
+            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
             })->whereIn('for', ['staff', 'both'])
@@ -182,12 +178,16 @@ class DashboardController extends Controller
 
         } else if ($roles->contains('admin')) {
             $categories = Category::all();
-            $currentCategory = $categories->first();
+            $currentCategory = Category::find($request->category);
 
             $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->where('isRead', false)->count();
-
+            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+            $categoriesIsNull = false;
         }
+
+
+
+
 
         $users = User::whereNot('name', Auth::user()->name)->get();
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
@@ -195,9 +195,9 @@ class DashboardController extends Controller
         return view(
             'admin.pages.dashboard',
             compact(
+                'categoriesIsNull',
                 'destinations',
                 'users',
-                'categoriesIsNull',
                 'roles',
                 'categories',
                 'setting',
@@ -242,7 +242,7 @@ class DashboardController extends Controller
         // Settings and roles
         $setting = Setting::find(1);
         $roles = Auth::user()->getRoleNames();
-        $categoriesIsNull = false;
+
 
         if ($roles->contains('moderator') || $roles->contains('editor')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
@@ -257,22 +257,22 @@ class DashboardController extends Controller
                 ->orderBy('created_at', 'DESC')
                 ->get();
 
-            $unreadNotifications = Notification::whereNotJsonContains('isReadBy', Auth::user()->id)
-                ->where(function ($query) use ($categoryIds) {
-                    $query->whereIn('category_id', $categoryIds)
-                        ->orWhereNull('category_id');
-                })->whereIn('for', ['staff', 'both'])
+            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds)
+                    ->orWhereNull('category_id');
+            })->whereIn('for', ['staff', 'both'])
                 ->orderBy('created_at', 'DESC')
                 ->get()->count();
 
         } else if ($roles->contains('admin')) {
             $categories = Category::all();
-            $currentCategory = $categories->first();
+            $currentCategory = Category::find($category);
 
             $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::whereNotJsonContains('isReadBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
-
+            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+            $categoriesIsNull = false;
         }
+
 
         // Safely get items only if currentCategory exists
         $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : collect();

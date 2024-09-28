@@ -22,8 +22,6 @@ class TransactionController extends Controller
 
         $transactions = Transaction::where('category_id', 1)->where('status', 'pending')->get();
 
-        $unreadNotifications = Notification::where('isRead', false)->get()->count();
-        $notifications = Notification::orderBy('created_at', 'DESC')->get();
 
         $categories = Category::all();
 
@@ -61,7 +59,7 @@ class TransactionController extends Controller
                 ->orderBy('created_at', 'DESC')
                 ->get();
 
-            $unreadNotifications = Notification::where('isRead', false)->where(function ($query) use ($categoryIds) {
+            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
             })->whereIn('for', ['staff', 'both'])
@@ -73,7 +71,7 @@ class TransactionController extends Controller
             $currentCategory = $categories->first();
 
             $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->where('isRead', false)->count();
+            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain('isReadBy', Auth::user()->id)->count();
 
         }
 
@@ -116,6 +114,15 @@ class TransactionController extends Controller
         ]);
 
         if ($transaction) {
+
+            Notification::create([
+                'icon' => Auth::user()->img,
+                'title' => 'Approved Transaction',
+                'description' => Auth::user()->name . ' approved a new transaction, check it now!',
+                'redirect_link' => 'transactions',
+                'for' => 'both'
+            ]);
+
             return redirect()->back()->with('success', 'Transaction has been successfuly approved!');
         }
 
@@ -129,9 +136,6 @@ class TransactionController extends Controller
         $current_user_name = Auth::user()->name;
 
         $category = $request->category;
-
-        $unreadNotifications = Notification::where('isRead', false)->get()->count();
-        $notifications = Notification::orderBy('created_at', 'DESC')->get();
 
         $categories = Category::all();
 
@@ -156,14 +160,12 @@ class TransactionController extends Controller
         $currentStatus = $request->status;
         $roles = Auth::user()->getRoleNames();
 
-        $categoriesIsNull = false;
+        if ($roles->contains('staff')) {
 
-        if ($roles->contains('moderator') || $roles->contains('editor')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
             $categories = Category::whereIn('id', $categoryIds)->get();
             $currentCategory = $categories->first();
-
             $notifications = Notification::where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
@@ -171,20 +173,20 @@ class TransactionController extends Controller
                 ->orderBy('created_at', 'DESC')
                 ->get();
 
-            $unreadNotifications = Notification::where('isRead', false)->where(function ($query) use ($categoryIds) {
+            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
             })->whereIn('for', ['staff', 'both'])
                 ->orderBy('created_at', 'DESC')
                 ->get()->count();
 
-        } else if ($roles->contains('admin')) {
+        } else {
             $categories = Category::all();
             $currentCategory = $categories->first();
 
             $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->where('isRead', false)->count();
-
+            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain('isReadBy', Auth::user()->id)->count();
+            $categoriesIsNull = false;
         }
         $users = User::whereNot('name', Auth::user()->name)->get();
 
@@ -215,14 +217,14 @@ class TransactionController extends Controller
             // Create the transaction
             Transaction::create(array_merge($validatedData, ['status' => 'pending']));
 
-            // Create a notification
             Notification::create([
                 'category_id' => $request->category_id,
                 'icon' => Auth::user()->img,
                 'title' => "New Transaction",
                 'description' => "$currentUserName added a new transaction, check it now.",
                 'redirect_link' => "transactions",
-                'for' => 'both'
+                'for' => 'both',
+
             ]);
 
             return redirect()->back()->with('success', 'Transaction created successfully.');

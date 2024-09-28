@@ -55,23 +55,23 @@
                         @endif
                     </div>
 
-                    @hasrole('admin')
+                    @can('can assign roles')
 
-                    <div class="flex justify-center space-x-1 mt-2">
-                        <button onclick="openModal('{{ $user->id }}', '{{ $user->getRoleNames()->first() }}')"
-                            class="px-4 py-2 space-x-1 bg-blue-300 hover:text-blue-100 hover:bg-blue-800 rounded">
-                            <i class="fas fa-edit fa-fw"></i><span>Edit</span>
-                        </button>
-
-                        <form action="{{ route('userDelete', ['id' => $user->id]) }}" method="POST">
-                            @csrf
-                            <button type="button"
-                                onclick="document.getElementById('userDeleteConfirm-{{$user->id}}').classList.remove('hidden')"
-                                class="px-4 py-2 space-x-1 bg-red-300 hover:text-red-100 hover:bg-red-500 rounded">
-                                <i class="fa-solid fa-trash fa-w"></i><span>Delete</span>
+                        <div class="flex justify-center space-x-1 mt-2">
+                            <button onclick="openModal('{{ $user->id }}', '{{ $user->getRoleNames()->first() }}')"
+                                class="px-4 py-2 space-x-1 bg-blue-300 hover:text-blue-100 hover:bg-blue-800 rounded">
+                                <i class="fas fa-edit fa-fw"></i><span>Edit Role</span>
                             </button>
-                    </div>
-                    @endhasrole
+
+                            <form action="{{ route('userDelete', ['id' => $user->id]) }}" method="POST">
+                                @csrf
+                                <button type="button"
+                                    onclick="document.getElementById('userDeleteConfirm-{{$user->id}}').classList.remove('hidden')"
+                                    class="px-4 py-2 space-x-1 bg-red-300 hover:text-red-100 hover:bg-red-500 rounded">
+                                    <i class="fa-solid fa-trash fa-w"></i><span>Delete</span>
+                                </button>
+                        </div>
+                    @endcan
 
                 </div>
 
@@ -124,21 +124,25 @@
 
 @include('admin.modals.user-add')
 <!-- Modal -->
-<div id="roleModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden z-50">
-    <div class="bg-white px-3 py-2 rounded-lg shadow-md w-[200px]">
-        <div class="flex justify-center">
-            <i class="bg-orange-500 px-2 rounded-full py-2.5 fas fa-user-cog text-white"></i>
-        </div>
-        <div class="flex justify-center">
-            <h2 class="text-xl font-semibold mb-4">Edit User Role</h2>
+<div id="roleModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50 hidden">
+    <div class="bg-white rounded-lg shadow-md w-64">
+
+        <div class="p-2 flex justify-between items-start ">
+            <div>
+                <h2 class="text-xl font-semibold">Edit Role</h2>
+
+                <small>Assign role for {{$user->name}}</small>
+            </div>
+            <button class="text-xl font-bold hover:opacity-50" onclick="closeModal()">&times;</button>
 
         </div>
+
 
         <form id="roleForm" action="{{ route('roleUpdate') }}" method="POST">
             @csrf
             <input type="hidden" name="user_id" id="user_id">
 
-            <div class="ml-12 mb-4 flex flex-col justify-center flex">
+            <div class="flex flex-col p-2 justify-center border-t border-b border-gary-300 bg-gray-100">
                 @foreach ($roles as $role)
                     <label class="flex items-center mb-2">
                         <input type="radio" name="role" value="{{ $role->name }}" class="mr-2">
@@ -147,10 +151,14 @@
                 @endforeach
             </div>
 
-            <div class="flex justify-between mt-4">
+            <div class="flex justify-end p-2 space-x-1">
+                <button type="submit"
+                    class="bg-green-100 hover:bg-green-500 text-green-800 hover:text-green-100 px-4 py-2 shadow-md rounded">
+                    Save
+                </button>
                 <button type="button" onclick="closeModal()"
-                    class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded">Cancel</button>
-                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Save</button>
+                    class="bg-red-100 hover:bg-red-500 hover:text-red-100 text-red-800 px-4 py-2 shadow-md rounded">Cancel</button>
+
             </div>
         </form>
     </div>

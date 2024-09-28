@@ -25,7 +25,7 @@
 
                 <!-- Notification Dropdown -->
                 <div id="notification-dropdown"
-                    class="rounded absolute right-0 mt-2 hidden w-[30rem] bg-white p-2 shadow-lg border border-gray-200 z-50 scale-95 transform transition-transform transition-opacity duration-300 ease-out">
+                    class="rounded absolute right-0 mt-2 hidden w-[30rem] bg-white p-2 shadow-lg border border-gray-200 transform transition-transform transition-opacity duration-300 ease-out z-50">
                     <div>
                         <h1 class="text-2xl font-bold">Notifications</h1>
                     </div>
@@ -50,7 +50,7 @@
                         </div>
 
                         <div id="loader"
-                            class="rounded bg-gray-400 bg-opacity-50 absolute inset-0 flex items-center justify-center z-50 hidden">
+                            class="rounded bg-gray-400 bg-opacity-50 absolute inset-0 flex items-center justify-center hidden">
                             <img src="{{asset('asset/loader/loading.gif')}}" alt="Loading..." class="w-16 h-16">
                         </div>
 
@@ -147,7 +147,7 @@
 
                         <!-- Messages Dropdown Menu -->
                         <div id="messages-dropdown"
-                            class="absolute right-0 hidden mt-2 w-[400px] bg-white border border-gray-300 rounded-lg shadow-lg z-50">
+                            class="absolute right-0 hidden mt-2 w-[400px] bg-white border border-gray-300 rounded-lg shadow-lg">
                             <div class="p-2">
                                 <div class="flex justify-between items-center">
                                     <div id="dropdown-title" class="py-2">
@@ -258,8 +258,7 @@
 
         </div>
 
-        <div id="logoutConfirm"
-            class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
+        <div id="logoutConfirm" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 hidden">
 
             <div class="flex flex-col bg-white p-4 rounded space-y-2 items-center">
                 <div class="bg-red-500 px-3 rounded-full py-1">
