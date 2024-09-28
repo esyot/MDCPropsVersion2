@@ -101,18 +101,18 @@
 <div id="main-content" class="p-2 w-full h-full overflow-y-auto">
     <div class="flex flex-wrap gap-6">
         <!-- Add Category Button -->
-        @hasrole('admin')
-        <div title="Add a new category"
-            class="flex flex-col bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-110' : '' }}">
-            <div class="flex items-center justify-center cursor-pointer hover:text-gray-800 text-gray-400 "
-                onclick="document.getElementById('category-add-modal').classList.remove('hidden')">
-                <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
+        @can('can manage categories')
+            <div title="Add a new category"
+                class="flex flex-col bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-110' : '' }}">
+                <div class="flex items-center justify-center cursor-pointer hover:text-gray-800 text-gray-400 "
+                    onclick="document.getElementById('category-add-modal').classList.remove('hidden')">
+                    <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
+                </div>
+                <div class="bg-blue-500 w-full h-full shadow-md text-center p-2 flex items-center justify-center">
+                    <h1 class="text-white py-2 font-bold">Add a new category</h1>
+                </div>
             </div>
-            <div class="bg-blue-500 w-full h-full shadow-md text-center p-2 flex items-center justify-center">
-                <h1 class="text-white py-2 font-bold">Add a new category</h1>
-            </div>
-        </div>
-        @endhasrole
+        @endcan
 
         @foreach ($categories as $category)
             <div id="category-{{$category->id}}"
@@ -120,7 +120,8 @@
                 <form action="{{ route('managedCategoriesUpdate', ['category_id' => $category->id]) }}" method="POST"
                     class="bg-white rounded w-[300px]">
                     @csrf
-                    <input id="isUncheckedAll" type="hidden" name="isUncheckedAll" value="false">
+                    <input id="isUncheckedAll-{{$category->id}}" type="hidden" name="isUncheckedAll" value="">
+
 
                     <div class="flex items-center justify-between mb-2 m-2">
                         <h1 class="text-xl font-medium">{{ $category->title }}</h1>
@@ -128,7 +129,6 @@
                             onclick="document.getElementById('category-{{$category->id}}').classList.add('hidden')"
                             class="text-2xl font-bold text-gray-600 hover:text-gray-800">&times;</button>
                     </div>
-
 
                     <div class="flex flex-col bg-gray-100 p-2 border-2 border-b border-t">
                         <h2 class="text-medium mb-2">Users can manage:</h2>
@@ -143,14 +143,34 @@
                     <div class="flex p-2 justify-end space-x-1">
                         <button class="px-4 py-2 shadow-md bg-green-200 text-green-800 hover:bg-green-400 rounded"
                             type="submit">Save</button>
-                        <button tyoe="button"
-                            class="px-4 py-2 shadow-md bg-gray-200 text-gray-800 hover:bg-gray-400 rounded" type="submit"
-                            onclick="document.getElementById('category-{{$category->id}}').classList.add('hidden')">Cancel</button>
+                        <button type="button"
+                            class="px-4 py-2 shadow-md bg-gray-200 text-gray-800 hover:bg-gray-400 rounded"
+                            onclick="document.getElementById('category-{{$category->id}}').classList.add('hidden')">Cancel
+                        </button>
                     </div>
 
                 </form>
             </div>
         @endforeach
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('.category-checkbox').forEach(checkbox => {
+                    checkbox.addEventListener('change', checkCheckboxes);
+                });
+
+                function checkCheckboxes() {
+                    const categoryId = this.closest('form').querySelector('input[type="checkbox"]').name.match(/\[(\d+)\]/)[1];
+                    const checkboxes = document.querySelectorAll(`#category-${categoryId} .category-checkbox`);
+                    const allUnchecked = Array.from(checkboxes).every(checkbox => !checkbox.checked);
+
+                    const input = document.getElementById(`isUncheckedAll-${categoryId}`);
+                    input.value = allUnchecked ? "true" : "false";
+                }
+
+            });
+        </script>
+
 
 
 
@@ -189,22 +209,6 @@
     </div>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.category-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', checkCheckboxes);
-        });
-
-        function checkCheckboxes() {
-            const checkboxes = document.querySelectorAll('.category-checkbox');
-            const allUnchecked = Array.from(checkboxes).every(checkbox => !checkbox.checked);
-
-            if (allUnchecked) {
-                document.getElementById('isUncheckedAll').value = "true";
-            } else {
-                document.getElementById('isUncheckedAll').value = "false";
-            }
-        }
-    });
 
     document.querySelectorAll('.slide-container').forEach(slideContainer => {
         let currentIndex = 0;

@@ -40,35 +40,33 @@ class DashboardController extends Controller
 
         $roles = Auth::user()->getRoleNames();
 
-        if ($roles->contains('staff')) {
-            $notifications = Notification::where('for', 'staff')->orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::where('for', 'staff')->where('isRead', false)->count();
-
-        } else {
-            $notifications = Notification::where('for', 'admin')->orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::where('for', 'admin')->where('isRead', false)->count();
-
-
-        }
-
-
-
-
-
-
-
-
-        if ($roles->contains('staff')) {
-
+        if ($roles->contains('moderator') || $roles->contains('editor')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
-            $categoryIds = $managedCategories->pluck('category_id'); // Get the category IDs
-            $categories = Category::whereIn('id', $categoryIds)->get(); // Fetch the categories
-            $currentCategory = $categories->first(); // Set the first category as the current category
+            $categoryIds = $managedCategories->pluck('category_id');
+            $categories = Category::whereIn('id', $categoryIds)->get();
+            $currentCategory = $categories->first();
 
+            $notifications = Notification::where(function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds)
+                    ->orWhereNull('category_id');
+            })->whereIn('for', ['staff', 'both'])
+                ->orderBy('created_at', 'DESC')
+                ->get();
 
-        } else {
+            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds)
+                    ->orWhereNull('category_id');
+            })->whereIn('for', ['staff', 'both'])
+                ->orderBy('created_at', 'DESC')
+                ->get()->count();
+
+        } else if ($roles->contains('admin')) {
             $categories = Category::all();
             $currentCategory = $categories->first();
+
+            $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
+            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+
         }
 
         if ($currentCategory) {
@@ -162,18 +160,32 @@ class DashboardController extends Controller
 
         $categoriesIsNull = false;
 
-        if ($roles->contains('staff')) {
-
+        if ($roles->contains('moderator') || $roles->contains('editor')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
             $categories = Category::whereIn('id', $categoryIds)->get();
-            $currentCategory = Category::find($category);
+            $currentCategory = $categories->first();
 
+            $notifications = Notification::where(function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds)
+                    ->orWhereNull('category_id');
+            })->whereIn('for', ['staff', 'both'])
+                ->orderBy('created_at', 'DESC')
+                ->get();
 
-        } else {
+            $unreadNotifications = Notification::where('isRead', false)->where(function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds)
+                    ->orWhereNull('category_id');
+            })->whereIn('for', ['staff', 'both'])
+                ->orderBy('created_at', 'DESC')
+                ->get()->count();
+
+        } else if ($roles->contains('admin')) {
             $categories = Category::all();
-            $currentCategory = Category::find($category);
-            $categoriesIsNull = false;
+            $currentCategory = $categories->first();
+
+            $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
+            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->where('isRead', false)->count();
 
         }
 
@@ -204,48 +216,7 @@ class DashboardController extends Controller
         );
     }
 
-    public function transactionAdd(Request $request)
-    {
-        $currentUserName = Auth::user()->name;
 
-        // Validate the incoming request data
-        $validatedData = $request->validate([
-            'item_id' => 'required|exists:items,id', // Check if item exists
-            'category_id' => 'required|exists:categories,id', // Check if category exists
-            'rentee_name' => 'required|string|max:255',
-            'rentee_contact_no' => 'required|string|max:255',
-            'rentee_email' => 'required|string|email|max:255',
-            'destination_id' => 'required|exists:destinations,id', // Check if destination exists
-            'rent_date' => 'required|date',
-            'rent_time' => 'required|date_format:H:i',
-            'rent_return' => 'required|date|after_or_equal:rent_date', // Ensure valid return date
-            'rent_return_time' => 'required|date_format:H:i',
-        ]);
-
-        try {
-            // Create the transaction
-            Transaction::create(array_merge($validatedData, ['status' => 'pending']));
-
-            // Create a notification
-            Notification::create([
-                'user_id' => Auth::user()->id,
-                'icon' => Auth::user()->img,
-                'title' => "New Transaction",
-                'description' => "$currentUserName added a new transaction, check it now.",
-                'redirect_link' => "transactions"
-            ]);
-
-            return redirect()->back()->with('success', 'Transaction created successfully.');
-        } catch (\Exception $e) {
-            // Log the error for debugging
-            Log::error('Transaction creation error: ' . $e->getMessage(), [
-                'user_id' => Auth::user()->id,
-                'data' => $request->all(),
-            ]);
-
-            return redirect()->back()->with('error', 'Error creating transaction. Please try again later.');
-        }
-    }
 
     public function calendarMove($action, $category, $year, $month)
     {
@@ -262,9 +233,6 @@ class DashboardController extends Controller
         $current_user_name = Auth::user()->name;
         $page_title = 'Dashboard';
 
-        // Notifications
-        $notifications = Notification::orderBy('created_at', 'DESC')->get();
-        $unreadNotifications = Notification::where('isRead', false)->count();
 
         // Messages
         $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
@@ -276,20 +244,34 @@ class DashboardController extends Controller
         $roles = Auth::user()->getRoleNames();
         $categoriesIsNull = false;
 
-        if ($roles->contains('staff')) {
-
+        if ($roles->contains('moderator') || $roles->contains('editor')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
-            $categoryIds = $managedCategories->pluck('category_id'); // Get the category IDs
-            $categories = Category::whereIn('id', $categoryIds)->get(); // Fetch the categories
+            $categoryIds = $managedCategories->pluck('category_id');
+            $categories = Category::whereIn('id', $categoryIds)->get();
+            $currentCategory = $categories->first();
 
-            $currentCategory = Category::find($category);
-            $categoriesIsNull = false;
+            $notifications = Notification::where(function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds)
+                    ->orWhereNull('category_id');
+            })->whereIn('for', ['staff', 'both'])
+                ->orderBy('created_at', 'DESC')
+                ->get();
 
+            $unreadNotifications = Notification::whereNotJsonContains('isReadBy', Auth::user()->id)
+                ->where(function ($query) use ($categoryIds) {
+                    $query->whereIn('category_id', $categoryIds)
+                        ->orWhereNull('category_id');
+                })->whereIn('for', ['staff', 'both'])
+                ->orderBy('created_at', 'DESC')
+                ->get()->count();
 
-        } else {
+        } else if ($roles->contains('admin')) {
             $categories = Category::all();
-            $currentCategory = Category::find($category);
-            $categoriesIsNull = false;
+            $currentCategory = $categories->first();
+
+            $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
+            $unreadNotifications = Notification::whereNotJsonContains('isReadBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+
         }
 
         // Safely get items only if currentCategory exists

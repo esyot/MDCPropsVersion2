@@ -54,10 +54,27 @@ class TransactionController extends Controller
             $categoryIds = $managedCategories->pluck('category_id');
             $categories = Category::whereIn('id', $categoryIds)->get();
             $currentCategory = $categories->first();
+            $notifications = Notification::where(function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds)
+                    ->orWhereNull('category_id');
+            })->whereIn('for', ['staff', 'both'])
+                ->orderBy('created_at', 'DESC')
+                ->get();
+
+            $unreadNotifications = Notification::where('isRead', false)->where(function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds)
+                    ->orWhereNull('category_id');
+            })->whereIn('for', ['staff', 'both'])
+                ->orderBy('created_at', 'DESC')
+                ->get()->count();
 
         } else {
             $categories = Category::all();
             $currentCategory = $categories->first();
+
+            $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
+            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->where('isRead', false)->count();
+
         }
 
         if ($currentCategory) {
@@ -141,18 +158,32 @@ class TransactionController extends Controller
 
         $categoriesIsNull = false;
 
-        if ($roles->contains('staff')) {
-
+        if ($roles->contains('moderator') || $roles->contains('editor')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
-            $categoryIds = $managedCategories->pluck('category_id'); // Get the category IDs
-            $categories = Category::whereIn('id', $categoryIds)->get(); // Fetch the categories
-            $currentCategory = Category::find($category);
+            $categoryIds = $managedCategories->pluck('category_id');
+            $categories = Category::whereIn('id', $categoryIds)->get();
+            $currentCategory = $categories->first();
 
+            $notifications = Notification::where(function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds)
+                    ->orWhereNull('category_id');
+            })->whereIn('for', ['staff', 'both'])
+                ->orderBy('created_at', 'DESC')
+                ->get();
 
-        } else {
+            $unreadNotifications = Notification::where('isRead', false)->where(function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds)
+                    ->orWhereNull('category_id');
+            })->whereIn('for', ['staff', 'both'])
+                ->orderBy('created_at', 'DESC')
+                ->get()->count();
+
+        } else if ($roles->contains('admin')) {
             $categories = Category::all();
-            $currentCategory = Category::find($category);
-            $categoriesIsNull = false;
+            $currentCategory = $categories->first();
+
+            $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
+            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->where('isRead', false)->count();
 
         }
         $users = User::whereNot('name', Auth::user()->name)->get();
@@ -161,5 +192,48 @@ class TransactionController extends Controller
         return view('admin.pages.transactions', compact('users', 'categoriesIsNull', 'currentStatus', 'contacts', 'unreadMessages', 'setting', 'page_title', 'currentCategory', 'categories', 'transactions', 'unreadNotifications', 'notifications'));
 
 
+    }
+    public function create(Request $request)
+    {
+        $currentUserName = Auth::user()->name;
+
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'item_id' => 'required|exists:items,id', // Check if item exists
+            'category_id' => 'required|exists:categories,id', // Check if category exists
+            'rentee_name' => 'required|string|max:255',
+            'rentee_contact_no' => 'required|string|max:255',
+            'rentee_email' => 'required|string|email|max:255',
+            'destination_id' => 'required|exists:destinations,id', // Check if destination exists
+            'rent_date' => 'required|date',
+            'rent_time' => 'required|date_format:H:i',
+            'rent_return' => 'required|date|after_or_equal:rent_date', // Ensure valid return date
+            'rent_return_time' => 'required|date_format:H:i',
+        ]);
+
+        try {
+            // Create the transaction
+            Transaction::create(array_merge($validatedData, ['status' => 'pending']));
+
+            // Create a notification
+            Notification::create([
+                'category_id' => $request->category_id,
+                'icon' => Auth::user()->img,
+                'title' => "New Transaction",
+                'description' => "$currentUserName added a new transaction, check it now.",
+                'redirect_link' => "transactions",
+                'for' => 'both'
+            ]);
+
+            return redirect()->back()->with('success', 'Transaction created successfully.');
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            Log::error('Transaction creation error: ' . $e->getMessage(), [
+                'user_id' => Auth::user()->id,
+                'data' => $request->all(),
+            ]);
+
+            return redirect()->back()->with('error', 'Error creating transaction. Please try again later.');
+        }
     }
 }

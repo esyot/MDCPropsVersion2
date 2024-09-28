@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Notification;
+use App\Models\ManagedCategory;
+use App\Models\Category;
+use Auth;
 
 class NotificationController extends Controller
 {
@@ -24,14 +27,45 @@ class NotificationController extends Controller
 
     public function notificationList($filter)
     {
+        $roles = Auth::user()->getRoleNames();
         if ($filter === 'unread') {
-            $notifications = Notification::where('isRead', false)->get();
-            return view('admin.partials.notification-list', compact('notifications'));
+            if ($roles->contains('moderator') || $roles->contains('editor')) {
+                $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+                $categoryIds = $managedCategories->pluck('category_id');
+                $categories = Category::whereIn('id', $categoryIds)->get();
+                $currentCategory = $categories->first();
+
+                $notifications = Notification::where('isRead', false)->where(function ($query) use ($categoryIds) {
+                    $query->whereIn('category_id', $categoryIds)
+                        ->orWhereNull('category_id');
+                })->whereIn('for', ['staff', 'both'])
+                    ->orderBy('created_at', 'DESC')
+                    ->get();
+                return view('admin.partials.notification-list', compact('notifications'));
+            } else {
+                $notifications = Notification::where('isRead', false)->orderBy('created_at', 'DESC')->get();
+                return view('admin.partials.notification-list', compact('notifications'));
+            }
         }
 
         if ($filter === 'all') {
-            $notifications = Notification::orderBy('created_at', 'DESC')->get();
-            return view('admin.partials.notification-list', compact('notifications'));
+            if ($roles->contains('moderator') || $roles->contains('editor')) {
+                $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+                $categoryIds = $managedCategories->pluck('category_id');
+                $categories = Category::whereIn('id', $categoryIds)->get();
+                $currentCategory = $categories->first();
+
+                $notifications = Notification::where(function ($query) use ($categoryIds) {
+                    $query->whereIn('category_id', $categoryIds)
+                        ->orWhereNull('category_id');
+                })->whereIn('for', ['staff', 'both'])
+                    ->orderBy('created_at', 'DESC')
+                    ->get();
+                return view('admin.partials.notification-list', compact('notifications'));
+            } else {
+                $notifications = Notification::orderBy('created_at', 'DESC')->get();
+                return view('admin.partials.notification-list', compact('notifications'));
+            }
         }
 
         return view('admin.partials.notification-list', ['notifications' => collect()]);

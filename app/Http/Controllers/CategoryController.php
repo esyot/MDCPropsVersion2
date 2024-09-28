@@ -26,9 +26,6 @@ class CategoryController extends Controller
 
         $setting = Setting::findOrFail(1);
 
-        $notifications = Notification::orderBy('created_at', 'DESC')->get();
-        $unreadNotifications = Notification::where('isRead', false)->get()->count();
-
         $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
         $unreadMessages = $messages->count();
 
@@ -58,13 +55,35 @@ class CategoryController extends Controller
         $categoriesIsNull = true;
 
 
-        if ($roles->contains('admin') && $categories_admin->isNotEmpty()) {
-            $currentCategory == $categories_admin->first();
-            $categoriesIsNull = false;
-        } elseif ($roles->contains('staff') && $categories_staff->isNotEmpty()) {
-            $currentCategory == $categories_staff->first();
-            $categoriesIsNull = false;
+        if ($roles->contains('moderator') || $roles->contains('editor')) {
+            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+            $categoryIds = $managedCategories->pluck('category_id');
+            $categories = Category::whereIn('id', $categoryIds)->get();
+            $currentCategory = $categories->first();
+
+            $notifications = Notification::where(function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds)
+                    ->orWhereNull('category_id');
+            })->whereIn('for', ['staff', 'both'])
+                ->orderBy('created_at', 'DESC')
+                ->get();
+
+            $unreadNotifications = Notification::where('isRead', false)->where(function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds)
+                    ->orWhereNull('category_id');
+            })->whereIn('for', ['staff', 'both'])
+                ->orderBy('created_at', 'DESC')
+                ->get()->count();
+
+        } else if ($roles->contains('admin')) {
+            $categories = Category::all();
+            $currentCategory = $categories->first();
+
+            $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
+            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->where('isRead', false)->count();
+
         }
+
         $categories = Category::all();
         $transactions = [];
         $items = [];
@@ -121,14 +140,15 @@ class CategoryController extends Controller
         }
 
 
-        Category::create([
+        $newcategory = Category::create([
             'title' => $request->title,
             'approval_level' => $request->approval_level,
             'folder_name' => $imageFolderName,
         ]);
 
+        $category = Category::latest()->first();
+
         Notification::create([
-            'user_id' => Auth::user()->id,
             'icon' => Auth::user()->img,
             'title' => 'Added a new category',
             'description' => Auth::user()->name . ' added a new category ' . $request->title,

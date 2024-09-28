@@ -53,15 +53,17 @@ return new class extends Migration {
 
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('icon');
             $table->string('title');
             $table->string('description');
             $table->string('redirect_link');
-            $table->enum('for', ['admin', 'staff']); // admin or staff
-            $table->boolean('isRead')->default(false);
+            $table->enum('for', ['admin', 'staff', 'both']);
+            $table->string('category_id')->nullable();
+            $table->json('isReadBy');
             $table->timestamps();
         });
+
+
 
 
         Schema::create('messages', function (Blueprint $table) {

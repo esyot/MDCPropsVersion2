@@ -15,4 +15,7 @@ class Notification extends Model
     {
         return $this->belongsTo(User::class);
     }
+    protected $casts = [
+        'isReadBy' => 'array',
+    ];
 }

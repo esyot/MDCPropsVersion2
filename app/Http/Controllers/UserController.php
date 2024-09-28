@@ -99,16 +99,17 @@ class UserController extends Controller
         $user->assignRole($role);
 
         Notification::create([
-            'user_id' => Auth::user()->id,
             'icon' => Auth::user()->img,
             'title' => 'Added a new user',
             'description' => Auth::user()->name . ' added a new user ' . $request->name,
             'redirect_link' => 'users',
-            'for' => 'admin',
+            'for' => 'both',
         ]);
 
+        $newuser = User::latest()->first();
+
         Setting::create([
-            'user_id' => $user->id,
+            'user_id' => $newuser->id,
             'darkMode' => false,
             'transition' => true,
 

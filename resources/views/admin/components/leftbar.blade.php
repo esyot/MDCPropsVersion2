@@ -37,18 +37,18 @@
                 </section>
             </a>
 
-            @hasrole('admin')
-            <a href="{{ route('categories') }}"
-                class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
-                title="Categories">
-                <section
-                    class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Categories' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
-                    <i
-                        class="fa-solid fa-th-large fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
-                    <span class="pl-2 pr-[100px] text-sm hidden">Categories</span>
-                </section>
-            </a>
-            @endhasrole
+            @can('can manage categories')
+                <a href="{{ route('categories') }}"
+                    class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
+                    title="Categories">
+                    <section
+                        class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Categories' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
+                        <i
+                            class="fa-solid fa-th-large fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                        <span class="pl-2 pr-[100px] text-sm hidden">Categories</span>
+                    </section>
+                </a>
+            @endcan
 
             <a href="{{ route('transactions') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "

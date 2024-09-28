@@ -49,8 +49,13 @@ class RolePermissionController extends Controller
                 }
 
             }
-        } else {
+        } else if ($request->isUncheckedAll == "true") {
             ManagedCategory::where('category_id', $category_id)->delete();
+
+        } else {
+
+
+            return redirect()->back();
 
         }
 

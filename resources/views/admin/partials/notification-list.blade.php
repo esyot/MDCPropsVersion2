@@ -34,7 +34,7 @@
 
 
     <div
-        class="{{ $notification->isRead ? 'bg-white' : 'bg-gray-200 font-bold' }} notification-item flex items-center space-x-2 p-2 text-gray-800 cursor-pointer hover:shadow-inner hover:bg-gray-300 transition duration-150 ease-in-out border-t border-gray-300">
+        class="{{ $notification->isRead == true ? 'bg-white' : 'bg-gray-200 font-bold' }} notification-item flex items-center space-x-2 p-2 text-gray-800 cursor-pointer hover:shadow-inner hover:bg-gray-300 transition duration-150 ease-in-out border-t border-gray-300">
         <img class="w- h-10 rounded-full" src="{{ asset('storage/images/users/' . $notification->icon) }}"
             alt="Notification Icon">
         <div class="flex flex-col">
