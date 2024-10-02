@@ -26,16 +26,19 @@
                 </section>
             </a>
 
-            <a href="{{ route('items') }}"
-                class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
-                title="Items">
-                <section
-                    class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Items' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
-                    <i
-                        class="fa-solid fa-boxes-stacked fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
-                    <span class="pl-2 pr-[120px] text-sm hidden">Items</span>
-                </section>
-            </a>
+            @can('can view items')
+
+                <a href="{{ route('items') }}"
+                    class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
+                    title="Items">
+                    <section
+                        class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Items' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
+                        <i
+                            class="fa-solid fa-boxes-stacked fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                        <span class="pl-2 pr-[120px] text-sm hidden">Items</span>
+                    </section>
+                </a>
+            @endcan
 
             @can('can manage categories')
                 <a href="{{ route('categories') }}"
@@ -49,17 +52,18 @@
                     </section>
                 </a>
             @endcan
-
-            <a href="{{ route('transactions') }}"
-                class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
-                title="Transactions">
-                <section
-                    class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Transactions' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
-                    <i
-                        class="fa-solid fa-business-time fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
-                    <span class="pl-2 pr-[100px] text-sm hidden">Transactions</span>
-                </section>
-            </a>
+            @can('can view transactions')
+                <a href="{{ route('transactions') }}"
+                    class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
+                    title="Transactions">
+                    <section
+                        class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Transactions' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
+                        <i
+                            class="fa-solid fa-business-time fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                        <span class="pl-2 pr-[100px] text-sm hidden">Transactions</span>
+                    </section>
+                </a>
+            @endcan
             @hasrole('admin')
             <a href="{{ route('users') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"

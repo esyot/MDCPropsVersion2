@@ -16,6 +16,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'can approve transactions']);
         Permission::create(['name' => 'can view transactions']);
         Permission::create(['name' => 'can view items']);
+        Permission::create(['name' => 'can view categories']);
         Permission::create(['name' => 'can add transactions']);
         Permission::create(['name' => 'can manage categories']);
         Permission::create(['name' => 'can manage items']);
@@ -31,6 +32,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'can add transactions',
             'can view transactions',
             'can view items',
+            'can view categories'
         ]);
 
         $editorRole = Role::create(['name' => 'moderator']);
@@ -40,6 +42,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'can add transactions',
             'can view transactions',
             'can view items',
+            'can view categories'
         ]);
 
         $editorRole = Role::create(['name' => 'editor']);
@@ -48,13 +51,13 @@ class RolesAndPermissionsSeeder extends Seeder
             'can manage categories',
             'can add transactions',
             'can view transactions',
+            'can view categories',
             'can view items',
         ]);
 
         $editorRole = Role::create(['name' => 'viewer']);
         $editorRole->givePermissionTo([
-            'can view transactions',
-            'can view items',
+
         ]);
     }
 }

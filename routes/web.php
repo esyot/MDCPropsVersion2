@@ -1,5 +1,7 @@
 <?php
+use Illuminate\Support\Facades\Route;
 
+//admin
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
@@ -12,7 +14,20 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RolePermissionController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserItemsController;
+
+//User Controller
+
+use App\Http\Controllers\UserHomeController;
+
+//User Routes
+Route::get('/', function () {
+    return view('user.pages.welcome');
+});
+Route::get('/home', [UserHomeController::class, 'index'])->name('home');
+Route::get('/items/{category_id}', [UserItemsController::class, 'index'])->name('userItems');
+
+
 
 // Public Routes
 Route::get('/admin/login', [LoginController::class, 'index'])->name('loginPage');
@@ -69,6 +84,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 // Moderator and Admin Role Routes
 Route::middleware(['auth', 'role:moderator|admin'])->group(function () {
+    Route::get('/admin/items', [ItemController::class, 'index'])->name('items');
+    Route::get('/admin/items-filter', [ItemController::class, 'itemsFilter'])->name('itemsFilter');
+    Route::get('/admin/item-search/{day}', [ItemController::class, 'search'])->name('itemSearch');
+    Route::post('/admin/item-add', [ItemController::class, 'create'])->name('itemAdd');
     Route::post('/admin/category-add', [CategoryController::class, 'create'])->name('category-add');
     Route::get('/admin/transaction-decline/{id}', [TransactionController::class, 'decline'])->name('transactionDecline');
     Route::get('/admin/pending-approve/{id}', [TransactionController::class, 'approve'])->name('transactionApprove');
@@ -82,10 +101,6 @@ Route::middleware(['auth', 'role:moderator|admin'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:moderator|admin|viewer'])->group(function () {
-    Route::get('/admin/items', [ItemController::class, 'index'])->name('items');
-    Route::get('/admin/items-filter', [ItemController::class, 'itemsFilter'])->name('itemsFilter');
-    Route::get('/admin/item-search/{day}', [ItemController::class, 'search'])->name('itemSearch');
     Route::get('/admin/categories', [CategoryController::class, 'index'])->name('categories');
-    Route::post('/admin/item-add', [ItemController::class, 'create'])->name('itemAdd');
     Route::put('/admin/item-update/{id}', [ItemController::class, 'update'])->name('itemUpdate');
 });

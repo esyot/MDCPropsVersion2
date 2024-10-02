@@ -5,9 +5,11 @@
         <!-- Close Button -->
         <div class="flex items-center justify-between">
             <h2 class="text-xl font-semibold mb-4">Records on {{ \Carbon\Carbon::parse($date)->format('F j, Y') }}</h2>
-            <button
-                onclick="document.getElementById('transaction-add-{{ \Carbon\Carbon::parse($date)->format('j') }}').classList.remove('hidden')"
-                class="px-4 py-2 bg-blue-500 hover:bg-blue-800 text-white mb-2 rounded">Add Transaction</button>
+            @if(!$roles->contains('viewer'))
+                <button
+                    onclick="document.getElementById('transaction-add-{{ \Carbon\Carbon::parse($date)->format('j') }}').classList.remove('hidden')"
+                    class="px-4 py-2 bg-blue-500 hover:bg-blue-800 text-white mb-2 rounded">Add Transaction</button>
+            @endif
         </div>
         <!-- Modal Content -->
         <div class="flex flex-col">
@@ -51,7 +53,7 @@
                                             {{ \Carbon\Carbon::parse($transaction->rent_return_time)->format('g:i A') }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                {{ $transaction->status == 'pending' ? 'text-yellow-500' :
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                {{ $transaction->status == 'pending' ? 'text-yellow-500' :
                         ($transaction->status == 'approved' ? 'text-green-500' :
                             ($transaction->status == 'declined' ? 'text-red-500' : 'text-gray-500')) }}">
                                             {{ $transaction->status ?? 'Pending' }}

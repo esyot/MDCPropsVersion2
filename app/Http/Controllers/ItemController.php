@@ -37,6 +37,11 @@ class ItemController extends Controller
         $setting = Setting::find(1);
         $roles = Auth::user()->getRoleNames();
 
+        $categories = [];
+        $unreadNotifications = 0;
+        $notifications = [];
+        $currentCategory = null;
+
         if ($roles->contains('moderator') || $roles->contains('editor')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
@@ -145,8 +150,7 @@ class ItemController extends Controller
         $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : Item::all();
         $categories = Category::all();
         $setting = Setting::findOrFail(1);
-        $notifications = Notification::orderBy('created_at', 'DESC')->get();
-        $unreadNotifications = Notification::where('isRead', false)->count();
+
         $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
         $unreadMessages = $messages->count();
         $contacts = Message::where('receiver_name', $current_user_name)
@@ -164,7 +168,7 @@ class ItemController extends Controller
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
             $categories = Category::whereIn('id', $categoryIds)->get();
-            $currentCategory = $categories->first();
+
 
             $notifications = Notification::where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
@@ -182,12 +186,32 @@ class ItemController extends Controller
 
         } else if ($roles->contains('admin')) {
             $categories = Category::all();
-            $currentCategory = $categories->first();
+
 
             $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContains('isReadBy', Auth::user()->id)->count();
+            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+
+        } else if ($roles->contains('viewer')) {
+            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+            $categoryIds = $managedCategories->pluck('category_id');
+            $categories = Category::whereIn('id', $categoryIds)->get();
+
+            $notifications = Notification::where(function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds)
+                    ->orWhereNull('category_id');
+            })->whereIn('for', ['staff', 'both'])
+                ->orderBy('created_at', 'DESC')
+                ->get();
+
+            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds)
+                    ->orWhereNull('category_id');
+            })->whereIn('for', ['staff', 'both'])
+                ->orderBy('created_at', 'DESC')
+                ->get()->count();
 
         }
+
 
         if ($currentCategory) {
             // You can safely access $currentCategory->id here

@@ -24,8 +24,6 @@ class DashboardController extends Controller
         $currentDate = now();
         $page_title = 'Dashboard';
 
-
-
         // Messages
         $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
         $unreadMessages = $messages->count();
@@ -39,6 +37,11 @@ class DashboardController extends Controller
         $setting = Setting::where('user_id', Auth::user()->id)->first();
 
         $roles = Auth::user()->getRoleNames();
+
+        $categories = [];
+        $unreadNotifications = 0;
+        $notifications = [];
+        $currentCategory = null;
 
         if ($roles->contains('moderator') || $roles->contains('editor')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
@@ -67,7 +70,30 @@ class DashboardController extends Controller
             $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
             $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
 
+        } else if ($roles->contains('viewer')) {
+            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+            $categoryIds = $managedCategories->pluck('category_id');
+            $categories = Category::whereIn('id', $categoryIds)->get();
+            $currentCategory = $categories->first();
+
+            $notifications = Notification::where(function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds)
+                    ->orWhereNull('category_id');
+            })->whereIn('for', ['staff', 'both'])
+                ->orderBy('created_at', 'DESC')
+                ->get();
+
+            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds)
+                    ->orWhereNull('category_id');
+            })->whereIn('for', ['staff', 'both'])
+                ->orderBy('created_at', 'DESC')
+                ->get()->count();
+
         }
+
+
+
 
         if ($currentCategory) {
             // You can safely access $currentCategory->id here
@@ -114,11 +140,12 @@ class DashboardController extends Controller
 
     public function dateView($date)
     {
+        $roles = Auth::user()->getRoleNames();
         $transactions = Transaction::where('rent_date', $date)->get();
 
         $setting = Setting::find(1);
 
-        return view('admin.partials.date-view', compact('setting', 'transactions', 'date'));
+        return view('admin.partials.date-view', compact('roles', 'setting', 'transactions', 'date'));
     }
 
     public function dateCustom(Request $request)

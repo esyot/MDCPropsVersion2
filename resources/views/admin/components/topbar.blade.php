@@ -147,7 +147,7 @@
 
                         <!-- Messages Dropdown Menu -->
                         <div id="messages-dropdown"
-                            class="absolute right-0 hidden mt-2 w-[400px] bg-white border border-gray-300 rounded-lg shadow-lg">
+                            class="absolute right-0 hidden mt-2 w-[400px] bg-white border border-gray-300 rounded-lg shadow-lg z-50">
                             <div class="p-2">
                                 <div class="flex justify-between items-center">
                                     <div id="dropdown-title" class="py-2">
@@ -227,7 +227,7 @@
 
                     <!-- User Dropdown Menu -->
                     <div id="user-dropdown"
-                        class="absolute right-0 hidden mt-2 border p-2 border-gray-300 bg-white rounded-lg w-[200px] shadow-xl z-10">
+                        class="absolute right-0 hidden mt-2 border p-2 border-gray-300 bg-white rounded-lg w-[200px] shadow-xl z-50">
                         <div class="flex flex-col space-y-2">
                             <a href="{{ route('profile') }}" title="{{Auth::user()->name}}">
 
@@ -258,7 +258,8 @@
 
         </div>
 
-        <div id="logoutConfirm" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 hidden">
+        <div id="logoutConfirm"
+            class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
 
             <div class="flex flex-col bg-white p-4 rounded space-y-2 items-center">
                 <div class="bg-red-500 px-3 rounded-full py-1">
@@ -273,9 +274,11 @@
                 <div clas="flex justify-center">
 
                     <a href="{{ route('logout') }}" type="button"
-                        class="px-4 py-2 bg-green-100 text-green-500 rounded hover:bg-green-800">Yes, sure</a>
+                        class="px-4 py-2 bg-green-100 text-green-800 rounded hover:bg-green-500 hover:text-green-100">Yes,
+                        sure</a>
                     <button onclick="document.getElementById('logoutConfirm').classList.add('hidden')" type="button"
-                        class="px-4 py-2 bg-gray-100 text-gray-500 rounded hover:bg-gray-800">No, cancel</button>
+                        class="px-4 py-2 bg-red-100 text-red-800 hover:text-red-100 rounded hover:bg-red-500">No,
+                        cancel</button>
                 </div>
 
             </div>
