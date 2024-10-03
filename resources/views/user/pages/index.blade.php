@@ -76,7 +76,9 @@
 
 
 
-        <h1 class="text-3xl font-bold mb-8 text-center">Categories</h1>
+        <div class="sticky top-0 z-10 mb-8">
+            <h1 id="title" class="text-2xl font-bold text-center">Categories</h1>
+        </div>
         <div class="flex flex-wrap -mx-2 overflow-y-auto">
             @foreach($categories as $category)
                         <a href="{{ route('userItems', ['category_id' => $category->id]) }}" title="{{ $category->title }}"
