@@ -20,6 +20,29 @@
     @endif
 
 </head>
+<style>
+    @media(orientation:landscape) {
+
+        #footer {
+            display: none;
+        }
+
+        #see-more-btn {
+            display: none;
+        }
+
+
+
+    }
+
+    @media (orientation: portrait) {
+        #pageTitle {
+            display: none;
+        }
+    }
+
+    @media {}
+</style>
 
 <body class="font-verdana flex h-screen overflow-hidden bg-gray-100 text-gray-800">
     <!-- Components -->
@@ -31,6 +54,6 @@
     <!-- contents -->
     @yield('content')
 
-    <footer class="flex p-2 justify-center">
+    <footer id="footer" class="flex p-2 justify-center">
         <p>All rights reserved &copy; 2024</p>
     </footer>

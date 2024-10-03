@@ -3,7 +3,7 @@
 @if ($categoriesIsNull == false)
 
     <div id="navbar" class="flex p-4 text-white">
-        <div class="bg-white p-2 rounded-xl border border-gray-400">
+        <div class="flex items-center w-64  bg-white p-2 rounded-xl border border-gray-400">
             <form action="{{ route('itemsFilter') }}">
                 @csrf
                 <i class="text-black fa-solid fa-list"></i>
@@ -97,7 +97,7 @@
         <div class="flex flex-wrap flex-grow gap-2">
             <!-- Add Category Button -->
             <div title="Add a new category"
-                class="flex flex-col relative bg-gray-200 mr-2 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-105' : '' }}">
+                class="flex flex-col flex-grow relative bg-gray-200 mr-2 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-105' : '' }}">
                 <div class="flex justify-center items-center bg-gray-200 h-3/4 cursor-pointer hover:text-gray-800 text-gray-400 "
                     onclick="document.getElementById('item-add-modal').classList.remove('hidden')">
                     <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
@@ -111,7 +111,7 @@
             @foreach ($items as $item)
 
                 <div title="Click to preview" onclick="document.getElementById('item-{{$item->id}}').classList.remove('hidden')"
-                    class="flex flex-col text-white relative bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-105' : '' }}">
+                    class="flex flex-col flex-grow text-white relative bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-105' : '' }}">
                     <!-- Image Container -->
                     <div class="flex justify-center items-center bg-gray-200 h-3/4 shadow-inner">
                         <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"

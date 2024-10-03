@@ -3,7 +3,7 @@
     <!-- Navbar -->
     <div id="topbar" class="flex items-center justify-between bg-white p-4 shadow-md relative">
         <!-- App Name -->
-        <div class="flex items-center space-x-2">
+        <div id="pageTitle" class="flex items-center space-x-2">
             <span class="text-lg font-semibold"> {{ $page_title }}</span>
         </div>
 
@@ -113,7 +113,8 @@
 
 
 
-                    <div id="notification-list" class="z-10 flex flex-col max-h-64 overflow-y-auto custom-scrollbar">
+                    <div id="notification-list"
+                        class="z-10 flex flex-col max-h-[200px] overflow-y-auto custom-scrollbar">
 
                         @include('admin.partials.notification-list')
 

@@ -49,7 +49,7 @@ class NotificationController extends Controller
                     ->get();
                 return view('admin.partials.notification-list', compact('notifications'));
             } else {
-                $notifications = Notification::where('isRead', false)->orderBy('created_at', 'DESC')->get();
+                $notifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
                 return view('admin.partials.notification-list', compact('notifications'));
             }
         }

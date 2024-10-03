@@ -25,15 +25,15 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // Validate the input
+
         $validatedData = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
-        // Attempt to authenticate the user
+
         if (Auth::attempt($validatedData)) {
-            // Authentication passed
+
             $user = Auth::user();
             if ($request->expectsJson()) {
                 return response()->json([
@@ -44,15 +44,19 @@ class AuthController extends Controller
             }
             return redirect()->intended('/admin/dashboard');
         } else {
-            // Authentication failed
+
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'The provided credentials are incorrect.'
+                    'message' => 'The provided credentials are incorrect.',
+                    'username' => $validatedData['email'],
+                    'password' => $validatedData['password'],
                 ], 401);
             }
             return redirect()->back()->withErrors([
-                'email' => 'The provided credentials are incorrect.'
+                'email' => 'The provided credentials are incorrect.',
+                'username' => $validatedData['email'],
+                'password' => $validatedData['password']
             ])->withInput();
         }
     }

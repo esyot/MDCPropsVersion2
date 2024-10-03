@@ -111,14 +111,16 @@
                         <div class="relative mb-4 mx-4">
                             <input type="text" name="email" placeholder="Input email"
                                 class="shadow-inner pl-12 pr-12 w-full border-2 border-blue-500 rounded-md py-2 outline-none transition-all duration-300 focus:border-dodgerBlue focus:ring-0 focus:ring-dodgerBlue focus:ring-opacity-50"
-                                required>
-                            <i
-                                class="hover:bg-blue-800 absolute left-0 top-1/2 transform -translate-y-1/2 bg-blue-500 text-white rounded-l-md py-3 px-3 transition-colors duration-300 fas fa-envelope"></i>
+                                value="{{ session('username') ?? old('email') }}" required>
+                            <i class=" hover:bg-blue-800 absolute left-0 top-1/2 transform -translate-y-1/2
+                                bg-blue-500 text-white rounded-l-md py-3 px-3 transition-colors duration-300 fas
+                                fa-envelope"></i>
                         </div>
                         <div class="relative mb-4 mx-4">
                             <input id="password" name="password" type="password" placeholder="Input password"
                                 class="shadow-inner w-full border-2 border-red-500 rounded-md py-2 pl-12 outline-none transition-all duration-300 focus:border-dodgerBlue focus:ring-0 focus:ring-dodgerBlue focus:ring-opacity-50"
-                                required>
+                                value="{{old('password') }}" required>
+
                             <i
                                 class="hover:bg-red-800 hover:border-red-800 border border-transparent absolute left-0 top-1/2 transform -translate-y-1/2 bg-red-500 text-white rounded-l-md py-3 px-3 transition-colors duration-300 fas fa-lock"></i>
                             <i id="togglePassword"
@@ -141,8 +143,8 @@
             <div
                 class="shadow-md logo-container flex flex-col bg-gradient-to-b from-blue-500 to-teal-500 flex-1 rounded-t-lg md:rounded-l-lg overflow-auto p-4">
                 <div class="flex justify-center items-center flex-col h-full">
-                    <img class="drop-shadow-md max-w-full h-auto mb-4"
-                        src="{{ asset('asset/logo/logo.png')}}" height="200" width="200" alt="">
+                    <img class="drop-shadow-md max-w-full h-auto mb-4" src="{{ asset('asset/logo/logo.png')}}"
+                        height="200" width="200" alt="">
                     <h1 class="text-xl text-white text-center font-serif mb-4">MDC Property Rental & <br>
                         Reservation
                         Management <br> System</h1>
