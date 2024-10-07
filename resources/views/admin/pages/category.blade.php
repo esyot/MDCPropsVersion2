@@ -104,19 +104,51 @@
         </div>
     </div>
 </form>
+<style>
+    @media(orientation:landscape) {
+        #add-new-category-card {
+            width: 300px;
+            height: 300px;
+
+        }
+
+        #card {
+            width: 300px;
+            height: 300px;
+        }
 
 
-<div id="main-content" class="p-2 w-full h-full overflow-y-auto">
-    <div class="flex flex-wrap gap-6">
+    }
+
+    @media(orientation:portrait) {
+        #add-new-category-card {
+            width: 100%;
+            height: 200px;
+
+        }
+
+        #card {
+            width: 100%;
+            height: 200px;
+
+        }
+
+
+    }
+</style>
+
+<div id="main-content" class="w-full h-full relative p-4 overflow-y-auto custom-scrollbar">
+    <div class="flex flex-wrap flex-grow gap-2">
         <!-- Add Category Button -->
         @can('can manage categories')
-            <div title="Add a new category"
+            <div id="add-new-category-card" title="Add a new category"
                 class="flex flex-col bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-110' : '' }}">
-                <div class="flex items-center justify-center cursor-pointer hover:text-gray-800 text-gray-400 "
+                <div class="h-full flex items-center justify-center cursor-pointer hover:text-gray-800 text-gray-400 "
                     onclick="document.getElementById('category-add-modal').classList.remove('hidden')">
                     <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
                 </div>
-                <div class="bg-blue-500 w-full h-full shadow-md text-center p-2 flex items-center justify-center">
+                <div
+                    class="bg-gradient-to-b p-2 from-blue-500 to-blue-800 w-full h-full shadow-md text-center flex items-center justify-center">
                     <h1 class="text-white py-2 font-bold">Add a new category</h1>
                 </div>
             </div>
@@ -146,7 +178,7 @@
         <!-- Category Items -->
         @foreach ($categories as $category)  
 
-                <div
+                <div id="card"
                     class="flex flex-col text-white rounded-lg w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-110' : '' }}">
                     <div class="relative w-full max-w-3xl overflow-hidden slide-container ">
                         <div class="slide-wrapper shadow-inner z-50">

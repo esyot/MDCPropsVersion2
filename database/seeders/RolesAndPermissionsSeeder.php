@@ -10,19 +10,26 @@ class RolesAndPermissionsSeeder extends Seeder
 {
     public function run()
     {
-        // Create permissions
-        Permission::create(['name' => 'can manage users']);
-        Permission::create(['name' => 'can assign roles']);
-        Permission::create(['name' => 'can approve transactions']);
-        Permission::create(['name' => 'can view transactions']);
-        Permission::create(['name' => 'can view items']);
-        Permission::create(['name' => 'can view categories']);
-        Permission::create(['name' => 'can add transactions']);
-        Permission::create(['name' => 'can manage categories']);
-        Permission::create(['name' => 'can manage items']);
+        // Define permissions
+        $permissions = [
+            'can manage users',
+            'can assign roles',
+            'can approve transactions',
+            'can view transactions',
+            'can view items',
+            'can view categories',
+            'can add transactions',
+            'can manage categories',
+            'can manage items'
+        ];
+
+        // Create permissions if they do not exist
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
+        }
 
         // Create roles and assign permissions
-        $adminRole = Role::create(['name' => 'admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $adminRole->givePermissionTo([
             'can assign roles',
             'can manage users',
@@ -35,8 +42,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'can view categories'
         ]);
 
-        $editorRole = Role::create(['name' => 'moderator']);
-        $editorRole->givePermissionTo([
+        $moderatorRole = Role::firstOrCreate(['name' => 'moderator']);
+        $moderatorRole->givePermissionTo([
             'can manage categories',
             'can approve transactions',
             'can add transactions',
@@ -45,7 +52,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'can view categories'
         ]);
 
-        $editorRole = Role::create(['name' => 'editor']);
+        $editorRole = Role::firstOrCreate(['name' => 'editor']);
         $editorRole->givePermissionTo([
             'can manage items',
             'can manage categories',
@@ -55,9 +62,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'can view items',
         ]);
 
-        $editorRole = Role::create(['name' => 'viewer']);
-        $editorRole->givePermissionTo([
-
+        $viewerRole = Role::firstOrCreate(['name' => 'viewer']);
+        // Optionally assign permissions for the viewer role if needed
+        $viewerRole->givePermissionTo([
+            // Add viewer permissions here
         ]);
     }
 }

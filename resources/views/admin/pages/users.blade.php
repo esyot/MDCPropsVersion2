@@ -1,40 +1,61 @@
 @extends('admin.layouts.header')
 
 @section('content')
+<div id="navbar" class="bg-gray-200 p-4 shadow-md z-40">
+    <div class="flex items-center">
+        <form action="{{ route('itemsFilter') }}"
+            class="flex space-x-1 items-center bg-white p-2 rounded-full shadow-md">
+            @csrf
+            <i class="fas fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search" class="focus:outline-none">
 
+        </form>
+    </div>
+</div>
+<style>
+    @media(orientation: landscape) {
+        #add-new-user-card {
+            width: 300px;
+
+
+        }
+
+        #card {
+            width: 300px;
+        }
+    }
+
+    @media(orientation: portrait) {
+        #add-new-user-card {
+            width: 100%;
+        }
+
+        #card {
+            width: 100%;
+        }
+    }
+</style>
 <div id="main-content" class="w-full h-full relative p-4 overflow-y-auto custom-scrollbar">
     <div class="flex flex-wrap flex-grow gap-2">
 
         @hasrole('admin')
-        <div onclick="document.getElementById('userAddModal').classList.remove('hidden')" class=" flex flex-col items-center bg-blue-500 m-2 rounded-lg shadow-lg transition-transform transform
-            hover:scale-105 flex-1 min-w-[200px] max-w-[300px]">
 
-            <div class="bg-gray-100 hover:bg-gray-300 hover:text-gray-400 w-full rounded-t-lg">
-
-                <div class="flex space-x-1 justify-center">
-                    <div class="p-6">
-                        <i class="fas fa-plus text-8xl "></i>
-
-                    </div>
-                </div>
+        <div id="add-new-user-card" title="Add a new category"
+            class="flex flex-col rounded-lg bg-gray-300 {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-105' : '' }}">
+            <div class="flex justify-center items-center rounded-lg bg-gray-200 h-3/4 cursor-pointer hover:text-gray-800 text-gray-400 "
+                onclick="document.getElementById('userAddModal').classList.remove('hidden')">
+                <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
             </div>
-            <div class="mt-2">
-                <h1 class="text-xl text-white">
-                    Add new user
-                </h1>
-
+            <div class="bg-blue-500 w-full h-1/4 shadow-md text-center flex items-center rounded-b-lg justify-center">
+                <h1 class="text-lg font-semibold text-white truncate">Add User</h1>
             </div>
-
-            <div>
-
-            </div>
-
         </div>
+
+
         @endhasrole
 
         @foreach ($users as $user)
-            <div
-                class="flex flex-col items-center bg-blue-500 p-6 m-2 rounded-lg shadow-lg transition-transform transform hover:scale-105 flex-1 min-w-[200px] max-w-[300px]">
+            <div id="card" class="flex flex-col items-center rounded-lg p-2 bg-blue-500 justify-center">
                 <img class="w-32 h-32 border-4 border-gray-300 drop-shadow-lg rounded-full mb-4"
                     src="{{ asset('storage/images/users/' . $user->img) }}" alt="">
                 <div>

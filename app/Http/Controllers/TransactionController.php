@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\ManagedCategory;
 
 use Illuminate\Support\Facades\Auth;
+use Log;
 
 
 class TransactionController extends Controller
@@ -197,21 +198,29 @@ class TransactionController extends Controller
     }
     public function create(Request $request)
     {
-        $currentUserName = Auth::user()->name;
-
         // Validate the incoming request data
         $validatedData = $request->validate([
-            'item_id' => 'required|exists:items,id', // Check if item exists
-            'category_id' => 'required|exists:categories,id', // Check if category exists
+            'item_id' => 'required|exists:items,id',
+            'category_id' => 'required|exists:categories,id',
             'rentee_name' => 'required|string|max:255',
             'rentee_contact_no' => 'required|string|max:255',
             'rentee_email' => 'required|string|email|max:255',
-            'destination_id' => 'required|exists:destinations,id', // Check if destination exists
+            'destination_id' => 'required|exists:destinations,id',
             'rent_date' => 'required|date',
             'rent_time' => 'required|date_format:H:i',
-            'rent_return' => 'required|date|after_or_equal:rent_date', // Ensure valid return date
+            'rent_return' => 'required|date|after_or_equal:rent_date',
             'rent_return_time' => 'required|date_format:H:i',
         ]);
+
+        // Check for existing transactions
+        $existingTransaction = Transaction::where('item_id', $request->item_id)
+            ->where('rentee_email', $request->rentee_email)
+            ->where('status', 'pending') // Check for pending status or whatever logic you have
+            ->first();
+
+        if ($existingTransaction) {
+            return redirect()->back()->with('error', 'You already have a pending transaction for this item.');
+        }
 
         try {
             // Create the transaction
@@ -221,10 +230,9 @@ class TransactionController extends Controller
                 'category_id' => $request->category_id,
                 'icon' => Auth::user()->img,
                 'title' => "New Transaction",
-                'description' => "$currentUserName added a new transaction, check it now.",
+                'description' => Auth::user()->name . " added a new transaction, check it now.",
                 'redirect_link' => "transactions",
                 'for' => 'both',
-
             ]);
 
             return redirect()->back()->with('success', 'Transaction created successfully.');

@@ -42,34 +42,8 @@ class ItemController extends Controller
         $notifications = [];
         $currentCategory = null;
 
-        if ($roles->contains('moderator') || $roles->contains('editor')) {
-            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
-            $categoryIds = $managedCategories->pluck('category_id');
-            $categories = Category::whereIn('id', $categoryIds)->get();
-            $currentCategory = $categories->first();
+        include app_path('http\controllers\inclusion\inclusion-1.php');
 
-            $notifications = Notification::where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get();
-
-            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get()->count();
-
-        } else if ($roles->contains('admin')) {
-            $categories = Category::all();
-            $currentCategory = $categories->first();
-
-            $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain('isReadBy', Auth::user()->id)->count();
-
-        }
 
         if ($currentCategory) {
             // You can safely access $currentCategory->id here

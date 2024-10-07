@@ -1,6 +1,20 @@
+<style>
+    @media(orientation: portrait) {
+        #transaction-form-{{$day}} {
+            height: 600px;
+            overflow-y: auto;
+            margin-left: 16px;
+            margin-right: 16px;
+        }
+    }
+</style>
+
+
+
 <div id="transaction-add-{{$day}}"
     class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 hidden">
-    <div id="transaction-form-{{$day}}" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl relative">
+    <div id="transaction-form-{{$day}}"
+        class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl relative flex flex-col">
 
 
         <!-- Modal Items  -->
@@ -15,8 +29,6 @@
                 </div>
 
                 <div>
-
-
 
                     <div class="flex items-center space-x-1 p-2 border border-gray-300 rounded-full">
                         <form hx-get="{{ route('itemSearch', ['day' => $day]) }}" hx-trigger="input" hx-swap="innerHTML"
@@ -39,7 +51,7 @@
 
             </div>
         </div>
-        <form action="{{ route('transaction-create') }}" method="POST">
+        <form action="{{ route('transaction-create') }}" method="POST" class="">
             @csrf <!-- CSRF token for security -->
 
             <!-- Close Button -->
@@ -141,7 +153,7 @@
             </div>
 
             <!-- Submit and Cancel Buttons -->
-            <div class="col-span-2 flex justify-end mt-4 space-x-2">
+            <div class="col-span-2 flex justify-end mt-4 space-x-2 sticky">
                 <button type="submit"
                     class="bg-blue-500 text-white px-4 py-2 rounded shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     Submit

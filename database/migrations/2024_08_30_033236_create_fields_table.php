@@ -60,6 +60,7 @@ return new class extends Migration {
             $table->enum('for', ['admin', 'staff', 'both']);
             $table->string('category_id')->nullable();
             $table->json('isReadBy')->default(json_encode([]));
+            $table->json('isDeletedBy')->default(json_encode([]));
             $table->timestamps();
         });
 

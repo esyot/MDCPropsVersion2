@@ -25,6 +25,10 @@
             margin-bottom: 30px;
 
         }
+
+        #toggleButton {
+            display: none;
+        }
     }
 
     @media (orientation: landscape) {
@@ -73,12 +77,10 @@
 
         </div>
 
-
-
-
-        <div class="sticky top-0 z-10 mb-8">
-            <h1 id="title" class="text-2xl font-bold text-center">Categories</h1>
+        <div class="">
+            <h1 class="text-2xl font-bold text-center mb-2">Categories</h1>
         </div>
+
         <div class="flex flex-wrap -mx-2 overflow-y-auto">
             @foreach($categories as $category)
                         <a href="{{ route('userItems', ['category_id' => $category->id]) }}" title="{{ $category->title }}"
@@ -103,9 +105,17 @@
 
                                 </div>
                             </div>
-                            </>
+
             @endforeach
         </div>
+
+        <footer class="flex fixed bottom-0 right-0 left-0 justify-center bg-blue-500">
+            <section class="">
+                <div class="p-4">
+                    <i class="fas fa-home text-white fa-2xl"></i>
+                </div>
+            </section>
+        </footer>
     </div>
     <script>
         const sidebar = document.getElementById('sidebar');

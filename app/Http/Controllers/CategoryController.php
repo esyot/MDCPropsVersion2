@@ -55,34 +55,9 @@ class CategoryController extends Controller
         $categoriesIsNull = true;
 
 
-        if ($roles->contains('moderator') || $roles->contains('editor')) {
-            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
-            $categoryIds = $managedCategories->pluck('category_id');
-            $categories = Category::whereIn('id', $categoryIds)->get();
-            $currentCategory = $categories->first();
+        include app_path('http\controllers\inclusion\inclusion-1.php');
 
-            $notifications = Notification::where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get();
 
-            $unreadNotifications = Notification::whereJsonContains('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get()->count();
-
-        } else if ($roles->contains('admin')) {
-            $categories = Category::all();
-            $currentCategory = $categories->first();
-
-            $notifications = Notification::orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain('isReadBy', Auth::user()->id)->count();
-
-        }
 
         $categories = Category::all();
         $transactions = [];
@@ -147,6 +122,7 @@ class CategoryController extends Controller
         ]);
 
         $isReadBy = [];
+        $isDeletedBy = [];
 
         Notification::create([
             'icon' => Auth::user()->img,
@@ -154,7 +130,7 @@ class CategoryController extends Controller
             'description' => Auth::user()->name . ' added a new category ' . $request->title,
             'redirect_link' => 'categories',
             'for' => 'admin',
-            'isReadBy' => $isReadBy
+            'isReadBy' => $isReadBy,
         ]);
 
         return back()->with('success', 'Files uploaded successfully!');

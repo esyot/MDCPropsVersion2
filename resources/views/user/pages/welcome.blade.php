@@ -8,6 +8,8 @@
 
     <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
+
+    <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
     <title>Dashboard</title>
 </head>
 

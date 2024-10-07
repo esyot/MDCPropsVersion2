@@ -27,6 +27,10 @@ Route::get('/', function () {
 Route::get('/home', [UserHomeController::class, 'index'])->name('home');
 Route::get('/items/{category_id}', [UserItemsController::class, 'index'])->name('userItems');
 
+Route::get('/item/{id}', [UserItemsController::class, 'itemUnAvailableDates']);
+
+
+
 
 
 // Public Routes

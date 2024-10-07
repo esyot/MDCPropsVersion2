@@ -31,6 +31,10 @@
             display: none;
         }
 
+        #footer-portrait {
+            display: none;
+        }
+
     }
 
     @media (orientation: portrait) {
@@ -61,6 +65,10 @@
             margin-right: 12px;
         }
 
+        #footer-landscape {
+            display: none;
+        }
+
 
     }
 </style>
@@ -76,7 +84,14 @@
     <!-- contents -->
     @yield('content')
 
-    <footer id="footer" class="flex bg-blue-500 p-2 justify-center z-50 shadow-md">
+
+
+
+    <footer id="footer-landscape" class="flex p-2 justify-center">
+        All rights reserved &copy; 2024
+    </footer>
+
+    <footer id="footer-portrait" class="flex bg-blue-500 p-2 justify-center z-50 shadow-md">
 
 
         <div class="items-center flex p-2 space-x-8">
@@ -84,22 +99,21 @@
                 <i class="fa-solid fa-th-large text-white drop-shadow-lg"></i>
 
             </a>
-
-            <a href="{{ route('users') }}"> <i class="fa-solid fa-users-gear text-white drop-shadow-lg"></i>
+            <a href="{{ route('items') }}">
+                <i class="fa-solid fa-boxes-stacked text-white drop-shadow-lg"></i>
             </a>
+
 
             <a href="{{ route('dashboard') }}">
                 <i class="fas fa-home text-white fa-2xl drop-shadow-lg"></i>
             </a>
 
-            <a href="{{ route('items') }}">
-                <i class="fa-solid fa-boxes-stacked text-white drop-shadow-lg"></i>
-            </a>
+
             <a href="{{ route('transactions') }}">
                 <i class="fa-solid fa-business-time text-white drop-shadow-lg"></i>
             </a>
-
-
+            <a href="{{ route('users') }}"> <i class="fa-solid fa-users-gear text-white drop-shadow-lg"></i>
+            </a>
 
         </div>
 

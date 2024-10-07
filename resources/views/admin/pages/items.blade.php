@@ -95,16 +95,40 @@
         </div>
     </div>
 
+
+    <style>
+        @media(orientation: landscape) {
+            #add-new-item-card {
+                width: 200px;
+
+            }
+
+            #card {
+                width: 200px;
+            }
+        }
+
+        @media(orientation: portrait) {
+            #add-new-item-card {
+                width: 100%;
+            }
+
+            #card {
+                width: 100%;
+            }
+        }
+    </style>
+
     <div id="main-content" class="w-full h-full relative p-4 overflow-y-auto custom-scrollbar">
         <div class="flex flex-wrap flex-grow gap-2">
             <!-- Add Category Button -->
-            <div title="Add a new category"
-                class="flex flex-col flex-grow relative bg-gray-200 mr-2 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-105' : '' }}">
-                <div class="flex justify-center items-center bg-gray-200 h-3/4 cursor-pointer hover:text-gray-800 text-gray-400 "
+            <div id="add-new-item-card" title="Add a new category"
+                class="flex flex-col rounded-lg bg-gray-300 {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-105' : '' }}">
+                <div class="flex justify-center items-center rounded-lg bg-gray-200 h-3/4 cursor-pointer hover:text-gray-800 text-gray-400 "
                     onclick="document.getElementById('item-add-modal').classList.remove('hidden')">
                     <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
                 </div>
-                <div class="bg-blue-500 w-full h-1/4 shadow-md text-center flex items-center justify-center">
+                <div class="bg-blue-500 w-full h-1/4 shadow-md text-center flex items-center rounded-b-lg justify-center">
                     <h1 class="text-lg font-semibold text-white truncate">Add Item</h1>
                 </div>
             </div>
@@ -112,8 +136,9 @@
             <!--  Items -->
             @foreach ($items as $item)
 
-                <div title="Click to preview" onclick="document.getElementById('item-{{$item->id}}').classList.remove('hidden')"
-                    class="flex flex-col flex-grow text-white relative bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-105' : '' }}">
+                <div id="card" title="Click to preview"
+                    onclick="document.getElementById('item-{{$item->id}}').classList.remove('hidden')"
+                    class="flex flex-col text-white relative bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-105' : '' }}">
                     <!-- Image Container -->
                     <div class="flex justify-center items-center bg-gray-200 h-3/4 shadow-inner">
                         <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
