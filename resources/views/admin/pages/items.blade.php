@@ -2,12 +2,14 @@
 @section('content')
 @if ($categoriesIsNull == false)
 
-    <div id="navbar" class="flex p-4 text-white">
-        <div class="flex items-center w-64  bg-white p-2 rounded-xl border border-gray-400">
-            <form action="{{ route('itemsFilter') }}">
+    <div id="navbar" class="bg-gray-200 p-4">
+        <div class="flex items-center">
+            <form action="{{ route('itemsFilter') }}" class="flex space-x-1 items-center bg-white p-2 rounded shadow-md">
                 @csrf
-                <i class="text-black fa-solid fa-list"></i>
-                <select name="category" class="text-black bg-transparent focus:outline-none" onchange="this.form.submit();">
+                <i class="fa-solid fa-list"></i>
+                <select name="category"
+                    class="bg-transparent focus:outline-none w-full overflow-hidden text-ellipsis whitespace-nowrap"
+                    onchange="this.form.submit();">
 
                     <option class="text-red-500 font-semibold" value="{{ $currentCategory->id }}">
                         {{ $currentCategory->title }}

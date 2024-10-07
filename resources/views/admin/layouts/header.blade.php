@@ -31,17 +31,38 @@
             display: none;
         }
 
-
-
     }
 
     @media (orientation: portrait) {
-        #pageTitle {
+
+
+        #sidebar {
             display: none;
         }
-    }
 
-    @media {}
+        #topbar-content {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        #notificationTitle {
+            display: none;
+        }
+
+        #messageTitle {
+            display: none;
+        }
+
+        #calendar-controls {
+            display: none;
+        }
+
+        #custom-date-form {
+            margin-right: 12px;
+        }
+
+
+    }
 </style>
 
 <body class="font-verdana flex h-screen overflow-hidden bg-gray-100 text-gray-800">
@@ -51,9 +72,36 @@
     @include('admin.components.topbar')
 
 
+
     <!-- contents -->
     @yield('content')
 
-    <footer id="footer" class="flex p-2 justify-center">
-        <p>All rights reserved &copy; 2024</p>
+    <footer id="footer" class="flex bg-blue-500 p-2 justify-center z-50 shadow-md">
+
+
+        <div class="items-center flex p-2 space-x-8">
+            <a href="{{ route('categories') }}">
+                <i class="fa-solid fa-th-large text-white drop-shadow-lg"></i>
+
+            </a>
+
+            <a href="{{ route('users') }}"> <i class="fa-solid fa-users-gear text-white drop-shadow-lg"></i>
+            </a>
+
+            <a href="{{ route('dashboard') }}">
+                <i class="fas fa-home text-white fa-2xl drop-shadow-lg"></i>
+            </a>
+
+            <a href="{{ route('items') }}">
+                <i class="fa-solid fa-boxes-stacked text-white drop-shadow-lg"></i>
+            </a>
+            <a href="{{ route('transactions') }}">
+                <i class="fa-solid fa-business-time text-white drop-shadow-lg"></i>
+            </a>
+
+
+
+        </div>
+
+        </div>
     </footer>

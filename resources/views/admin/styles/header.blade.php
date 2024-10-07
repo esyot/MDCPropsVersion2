@@ -96,9 +96,6 @@
     <style>
         #topbar {}
 
-        #navbar {
-            background: linear-gradient(to right, #00bcd4, #006064);
-        }
 
         #chats {
             background-color: #f1f1f1;
