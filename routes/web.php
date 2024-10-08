@@ -24,12 +24,12 @@ use App\Http\Controllers\UserHomeController;
 Route::get('/', function () {
     return view('user.pages.welcome');
 });
-Route::get('/home', [UserHomeController::class, 'index'])->name('home');
-Route::get('/items/{category_id}', [UserItemsController::class, 'index'])->name('userItems');
+Route::get('/user/home', [UserHomeController::class, 'index'])->name('home');
+Route::get('/user/items/{category_id}', [UserItemsController::class, 'index'])->name('userItems');
 
-Route::get('/item/{id}', [UserItemsController::class, 'itemUnAvailableDates']);
+Route::get('/user/item/{id}', [UserItemsController::class, 'itemUnAvailableDates']);
 
-
+Route::get('/user/items/filter/{category_id}', [UserItemsController::class, 'filter'])->name('userItemsFilter');
 
 
 

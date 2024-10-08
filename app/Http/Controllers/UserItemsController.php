@@ -12,7 +12,7 @@ class UserItemsController extends Controller
     {
         $items = Item::where('category_id', $category_id)->get();
 
-        return view('user.pages.items', compact('items'));
+        return view('user.pages.items', compact('items', 'category_id'));
     }
 
     public function itemUnAvailableDates($id)
@@ -33,12 +33,11 @@ class UserItemsController extends Controller
         return response()->json($unavailableDates);
     }
 
+    public function filter(Request $request, $category_id)
+    {
+        $items = Item::where('name', 'LIKE', '%' . $request->search . '%')->where('category_id', $category_id)->get();
 
-
-
-
-
-
-
+        return view('user.partials.item', compact('items'));
+    }
 
 }

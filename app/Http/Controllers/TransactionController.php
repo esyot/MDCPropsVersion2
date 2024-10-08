@@ -198,7 +198,6 @@ class TransactionController extends Controller
     }
     public function create(Request $request)
     {
-        // Validate the incoming request data
         $validatedData = $request->validate([
             'item_id' => 'required|exists:items,id',
             'category_id' => 'required|exists:categories,id',
@@ -212,10 +211,9 @@ class TransactionController extends Controller
             'rent_return_time' => 'required|date_format:H:i',
         ]);
 
-        // Check for existing transactions
         $existingTransaction = Transaction::where('item_id', $request->item_id)
             ->where('rentee_email', $request->rentee_email)
-            ->where('status', 'pending') // Check for pending status or whatever logic you have
+            ->where('status', 'pending')
             ->first();
 
         if ($existingTransaction) {
@@ -223,8 +221,19 @@ class TransactionController extends Controller
         }
 
         try {
-            // Create the transaction
-            Transaction::create(array_merge($validatedData, ['status' => 'pending']));
+            Transaction::create([
+                'item_id' => $validatedData['item_id'],
+                'category_id' => $validatedData['category_id'],
+                'rentee_name' => $validatedData['rentee_name'],
+                'rentee_contact_no' => $validatedData['rentee_contact_no'],
+                'rentee_email' => $validatedData['rentee_email'],
+                'destination_id' => $validatedData['destination_id'],
+                'rent_date' => $validatedData['rent_date'],
+                'rent_time' => $validatedData['rent_time'],
+                'rent_return' => $validatedData['rent_return'],
+                'rent_return_time' => $validatedData['rent_return_time'],
+                'status' => 'pending',
+            ]);
 
             Notification::create([
                 'category_id' => $request->category_id,
@@ -237,8 +246,7 @@ class TransactionController extends Controller
 
             return redirect()->back()->with('success', 'Transaction created successfully.');
         } catch (\Exception $e) {
-            // Log the error for debugging
-            Log::error('Transaction creation error: ' . $e->getMessage(), [
+            Logs::error('Transaction creation error: ' . $e->getMessage(), [
                 'user_id' => Auth::user()->id,
                 'data' => $request->all(),
             ]);
@@ -246,4 +254,5 @@ class TransactionController extends Controller
             return redirect()->back()->with('error', 'Error creating transaction. Please try again later.');
         }
     }
+
 }
