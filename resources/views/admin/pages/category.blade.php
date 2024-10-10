@@ -210,7 +210,7 @@
                                 Details
                             </button>
 
-                            @hasrole('admin')
+                            @hasrole('superadmin|admin')
                             <button title="Assign Users"
                                 onclick="document.getElementById('category-{{$category->id}}').classList.remove('hidden')"
                                 class="w-full shadow-md px-4 py-2 bg-green-100 text-green-800 hover:bg-green-500 hover:text-green-100 rounded">Assign

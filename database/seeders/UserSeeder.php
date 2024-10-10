@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
         ]);
 
         // Assigned admin to this user
-        $user->assignRole('admin');
-        $user1->assignRole('moderator');
+        $user->assignRole('superadmin');
+        $user1->assignRole('staff');
     }
 }

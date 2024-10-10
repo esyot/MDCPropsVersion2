@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\PaymentsController;
 use Illuminate\Support\Facades\Route;
 
 //admin
@@ -77,7 +78,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Admin Role Routes
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:superadmin'])->group(function () {
     Route::get('/admin/users', [UserController::class, 'index'])->name('users');
     Route::post('/admin/users-role-update', [UserController::class, 'roleUpdate'])->name('roleUpdate');
     Route::post('/admin/user-add', [UserController::class, 'create'])->name('userAdd');
@@ -87,24 +88,33 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 // Moderator and Admin Role Routes
-Route::middleware(['auth', 'role:moderator|admin'])->group(function () {
+Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
+    Route::post('/admin/category-add', [CategoryController::class, 'create'])->name('category-add');
+    Route::get('/admin/transaction-decline/{id}', action: [TransactionController::class, 'decline'])->name('transactionDecline');
+    Route::get('/admin/pending-approve/{id}', [TransactionController::class, 'approve'])->name('transactionApprove');
+    //Category
+
+    Route::get('/admin/categories', [CategoryController::class, 'index'])->name('categories');
+    Route::post('/admin/category-update/{category_id}', [CategoryController::class, 'update'])->name('categoryUpdate');
+
+});
+
+Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
+
     Route::get('/admin/items', [ItemController::class, 'index'])->name('items');
     Route::get('/admin/items-filter', [ItemController::class, 'itemsFilter'])->name('itemsFilter');
     Route::get('/admin/item-search/{day}', [ItemController::class, 'search'])->name('itemSearch');
     Route::post('/admin/item-add', [ItemController::class, 'create'])->name('itemAdd');
-    Route::post('/admin/category-add', [CategoryController::class, 'create'])->name('category-add');
-    Route::get('/admin/transaction-decline/{id}', [TransactionController::class, 'decline'])->name('transactionDecline');
-    Route::get('/admin/pending-approve/{id}', [TransactionController::class, 'approve'])->name('transactionApprove');
-    Route::post('/admin/transaction-create', [TransactionController::class, 'create'])->name('transaction-create');
-    //Category
-    Route::post('/admin/category-update/{category_id}', [CategoryController::class, 'update'])->name('categoryUpdate');
+    Route::put('/admin/item-update/{id}', [ItemController::class, 'update'])->name('itemUpdate');
     // Transactions
+    Route::post('/admin/transaction-create', [TransactionController::class, 'create'])->name('transaction-create');
     Route::get('/admin/transactions', [TransactionController::class, 'index'])->name('transactions');
     Route::get('/admin/transactions-filter', [TransactionController::class, 'filter'])->name('transactionsFilter');
 
 });
 
-Route::middleware(['auth', 'role:moderator|admin|viewer'])->group(function () {
-    Route::get('/admin/categories', [CategoryController::class, 'index'])->name('categories');
-    Route::put('/admin/item-update/{id}', [ItemController::class, 'update'])->name('itemUpdate');
+
+Route::middleware(['auth', 'role:cashier'])->group(function () {
+    Route::get('/admin/payments', [PaymentsController::class, 'index']);
+    Route::get('/admin/payments', [PaymentsController::class, 'index'])->name('payments');
 });

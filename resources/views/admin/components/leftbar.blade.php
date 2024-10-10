@@ -22,18 +22,18 @@
 
         <!-- Menu Items -->
         <div id="menu-items" class="flex space-y-4 flex-col justify-between relative overflow-hidden">
-
-            <a href="{{ route('dashboard') }}"
-                class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
-                title="Dashboard">
-                <section
-                    class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Dashboard' ? 'bg-gray-100 text-blue-500 ' : '' }}  ">
-                    <i
-                        class="fa-solid fa-calendar-days fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
-                    <span class="pl-2 pr-[100px] text-sm hidden">Dashboard</span>
-                </section>
-            </a>
-
+            @can('can view dashboard')
+                <a href="{{ route('dashboard') }}"
+                    class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
+                    title="Dashboard">
+                    <section
+                        class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Dashboard' ? 'bg-gray-100 text-blue-500 ' : '' }}  ">
+                        <i
+                            class="fa-solid fa-calendar-days fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                        <span class="pl-2 pr-[100px] text-sm hidden">Dashboard</span>
+                    </section>
+                </a>
+            @endcan
             @can('can view items')
 
                 <a href="{{ route('items') }}"
@@ -72,7 +72,19 @@
                     </section>
                 </a>
             @endcan
-            @hasrole('admin')
+            @hasrole('cashier')
+            <a href="{{ route('payments') }}"
+                class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
+                title="Transactions">
+                <section
+                    class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Transactions' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
+                    <i
+                        class="fas fa-cash-register fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                    <span class="pl-2 pr-[100px] text-sm hidden">Payments</span>
+                </section>
+            </a>
+            @endhasrole
+            @hasrole('superadmin|admin')
             <a href="{{ route('users') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
                 title="Users">

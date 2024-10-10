@@ -57,7 +57,7 @@ return new class extends Migration {
             $table->string('title');
             $table->string('description');
             $table->string('redirect_link');
-            $table->enum('for', ['admin', 'staff', 'both']);
+            $table->enum('for', ['superadmin', 'admin', 'staff', 'all']);
             $table->string('category_id')->nullable();
             $table->json('isReadBy')->default(json_encode([]));
             $table->json('isDeletedBy')->default(json_encode([]));

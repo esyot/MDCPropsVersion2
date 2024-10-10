@@ -20,7 +20,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'can view categories',
             'can add transactions',
             'can manage categories',
-            'can manage items'
+            'can manage items',
+            'can manage payments',
         ];
 
         // Create permissions if they do not exist
@@ -29,11 +30,21 @@ class RolesAndPermissionsSeeder extends Seeder
         }
 
         // Create roles and assign permissions
+        $superadminRole = Role::firstOrCreate(['name' => 'superadmin']);
+        $superadminRole->givePermissionTo([
+            'can manage users',
+            'can assign roles',
+            'can approve transactions',
+            'can view transactions',
+            'can view items',
+            'can view categories',
+            'can add transactions',
+            'can manage categories',
+            'can manage items'
+        ]);
+
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $adminRole->givePermissionTo([
-            'can assign roles',
-            'can manage users',
-            'can manage items',
             'can manage categories',
             'can approve transactions',
             'can add transactions',
@@ -42,30 +53,19 @@ class RolesAndPermissionsSeeder extends Seeder
             'can view categories'
         ]);
 
-        $moderatorRole = Role::firstOrCreate(['name' => 'moderator']);
-        $moderatorRole->givePermissionTo([
-            'can manage categories',
-            'can approve transactions',
-            'can add transactions',
-            'can view transactions',
-            'can view items',
-            'can view categories'
-        ]);
-
-        $editorRole = Role::firstOrCreate(['name' => 'editor']);
-        $editorRole->givePermissionTo([
+        $staffRole = Role::firstOrCreate(['name' => 'staff']);
+        $staffRole->givePermissionTo([
             'can manage items',
-            'can manage categories',
             'can add transactions',
             'can view transactions',
             'can view categories',
             'can view items',
         ]);
 
-        $viewerRole = Role::firstOrCreate(['name' => 'viewer']);
-        // Optionally assign permissions for the viewer role if needed
-        $viewerRole->givePermissionTo([
-            // Add viewer permissions here
+        $cashierRole = Role::firstOrCreate(['name' => 'cashier']);
+        $cashierRole->givePermissionTo([
+            'can manage payments',
+
         ]);
     }
 }
