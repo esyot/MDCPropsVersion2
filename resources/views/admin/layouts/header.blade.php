@@ -83,7 +83,10 @@
 
 
     <!-- contents -->
+
+    <div>
     @yield('content')
+    </div>
 
 
 

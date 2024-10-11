@@ -150,4 +150,20 @@ class UserController extends Controller
 
     }
 
+    public function filter(Request $request){
+
+        if($request->search == null){
+
+            $users = User::all();
+
+            return view('admin.partials.users', compact('users'));
+        }else{
+
+            $users = User::where('name', 'LIKE', '%'  .$request->search.'%')->orwhere('email', 'LIKE', '%'.$request->search.'%')->get();
+
+            return view('admin.partials.users', compact('users'));
+        }
+
+    }
+
 }

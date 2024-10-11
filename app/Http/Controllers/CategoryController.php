@@ -188,7 +188,7 @@ class CategoryController extends Controller
             'title' => 'Added a new category',
             'description' => Auth::user()->name . ' added a new category ' . $request->title,
             'redirect_link' => 'categories',
-            'for' => 'admin',
+            'for' => 'superadmin',
             'isReadBy' => $isReadBy,
         ]);
 

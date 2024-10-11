@@ -15,6 +15,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'can manage users',
             'can assign roles',
             'can approve transactions',
+            'can view dashboard',
             'can view transactions',
             'can view items',
             'can view categories',
@@ -35,6 +36,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'can manage users',
             'can assign roles',
             'can approve transactions',
+            'can view dashboard',
             'can view transactions',
             'can view items',
             'can view categories',
@@ -48,6 +50,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'can manage categories',
             'can approve transactions',
             'can add transactions',
+            'can view dashboard',
             'can view transactions',
             'can view items',
             'can view categories'
@@ -56,6 +59,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $staffRole = Role::firstOrCreate(['name' => 'staff']);
         $staffRole->givePermissionTo([
             'can manage items',
+            'can view dashboard',
             'can add transactions',
             'can view transactions',
             'can view categories',

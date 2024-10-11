@@ -41,6 +41,8 @@ Route::get('test', function () {
     return view('admin.test');
 });
 
+Route::get('/admin/users-filter', [UserController::class, 'filter'])->name('usersFilter');
+
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
     Route::get('/admin', [DashboardController::class, 'index']);
