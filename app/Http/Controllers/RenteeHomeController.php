@@ -6,16 +6,16 @@ use Illuminate\Http\Request;
 
 use App\Models\Category;
 
-class UserHomeController extends Controller
+class RenteeHomeController extends Controller
 {
     public function index()
     {
         $categories = Category::all();
 
-        return view('user.pages.index', compact('categories'));
+        return view('rentee.pages.index', compact('categories'));
     }
     public function welcome()
     {
-        return view('user.pages.welcome');
+        return view('rentee.pages.welcome');
     }
 }

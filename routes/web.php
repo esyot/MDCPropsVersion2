@@ -15,31 +15,32 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RolePermissionController;
-use App\Http\Controllers\UserItemsController;
-use App\Http\Controllers\UserCustomerServiceController;
-use App\Http\Controllers\UserCartController;
+use App\Http\Controllers\RenteeItemsController;
+use App\Http\Controllers\RenteeCustomerServiceController;
+use App\Http\Controllers\RenteeCartController;
+use App\Http\Controllers\RenteeHomeController;
 
 //User Controller
 
 use App\Http\Controllers\UserHomeController;
 
-//User Routes
+//Rentee Routes
 Route::get('/', function () {
-    return view('user.pages.welcome');
+    return view('rentee.pages.welcome');
 });
 
-Route::get('/welcome', [UserHomeController::class, 'welcome'])->name('welcome');
-Route::get('/user/home', [UserHomeController::class, 'index'])->name('home');
-Route::get('/user/items/{category_id}', [UserItemsController::class, 'index'])->name('userItems');
+Route::get('/welcome', [RenteeHomeController::class, 'welcome'])->name('welcome');
+Route::get('/rentee/home', [RenteeHomeController::class, 'index'])->name('home');
+Route::get('/rentee/items/{category_id}', [RenteeItemsController::class, 'index'])->name('userItems');
 
-Route::get('/user/item/{id}', [UserItemsController::class, 'itemUnAvailableDates']);
+Route::get('/rentee/item/{id}', [RenteeItemsController::class, 'itemUnAvailableDates']);
 
-Route::get('/user/items/filter/{category_id}', [UserItemsController::class, 'filter'])->name('userItemsFilter');
+Route::get('/rentee/items/filter/{category_id}', [RenteeItemsController::class, 'filter'])->name('userItemsFilter');
 
-Route::get('user/customer-service', [UserCustomerServiceController::class, 'index'])->name('customerService');
+Route::get('rentee/customer-service', [RenteeCustomerServiceController::class, 'index'])->name('customerService');
 
 
-Route::get('/user/cart', [UserCartController::class, 'index'])->name('cart');
+Route::get('/rentee/cart', [RenteeCartController::class, 'index'])->name('cart');
 
 
 

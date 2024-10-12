@@ -15,5 +15,5 @@
         </div>
     </div>
 
-    @include('user.modals.preview-date')
+    @include('rentee.modals.preview-date')
 @endforeach

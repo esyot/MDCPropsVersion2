@@ -49,7 +49,7 @@
 </style>
 
 <body class="bg-white overflow-x-hidden overflow-y-auto">
-    @include('user.modals.information-form')
+    @include('rentee.modals.information-form')
 
     <div id="sidebar"
         class="fixed left-0 top-0 h-full bg-gradient-to-b from-blue-500 to-blue-800 fromshadow-md transform -translate-x-full transition-transform duration-300 z-50">
@@ -127,7 +127,7 @@
             @endforeach
         </div>
 
-        @include('user.components.footer')
+        @include('rentee.components.footer')
     </div>
     <script>
         const sidebar = document.getElementById('sidebar');

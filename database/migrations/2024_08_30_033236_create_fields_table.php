@@ -104,6 +104,36 @@ return new class extends Migration {
             $table->timestamps();
         });
 
+        Schema::create('rentees', function (Blueprint $table) {
+            $table->id();
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('middle_name');
+            $table->string('email');
+            $table->string('contact_no');
+            $table->string('address_1');
+            $table->string('address_2');
+            $table->timestamps();
+
+        });
+
+        Schema::create('carts', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->json('items');
+            $table->timestamps();
+        });
+
+        Schema::create('carted_items_requests', function (Blueprint $table) {
+            $table->id();
+            $table->string('tracking_no');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('cart_id')->constrained()->onDelete('cascade');
+            $table->string('status')->default('pending');
+            $table->dateTime('approved_at')->default(null);
+            $table->timestamps();
+        });
+
 
     }
 

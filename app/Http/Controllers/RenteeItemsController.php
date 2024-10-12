@@ -6,13 +6,13 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\Item;
 
-class UserItemsController extends Controller
+class RenteeItemsController extends Controller
 {
     public function index($category_id)
     {
         $items = Item::where('category_id', $category_id)->get();
 
-        return view('user.pages.items', compact('items', 'category_id'));
+        return view('rentee.pages.items', compact('items', 'category_id'));
     }
 
     public function itemUnAvailableDates($id)
@@ -37,7 +37,7 @@ class UserItemsController extends Controller
     {
         $items = Item::where('name', 'LIKE', '%' . $request->search . '%')->where('category_id', $category_id)->get();
 
-        return view('user.partials.item', compact('items'));
+        return view('rentee.partials.item', compact('items'));
     }
 
 }

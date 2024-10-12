@@ -67,11 +67,11 @@
 
         <div class="mx-auto px-4 py-6 relative">
             <div id="items" class="flex flex-wrap -mx-2 justify-start">
-                @include('user.partials.item')
+                @include('rentee.partials.item')
 
             </div>
         </div>
-        @include('user.components.footer')
+        @include('rentee.components.footer')
     @else
         <div class="flex flex-col justify-center items-center h-screen">
             <div class="border-2 border-red-500 px-2 shadow-md">
@@ -92,7 +92,7 @@
 
         async function fetchUnavailableDates(itemId) {
             try {
-                const res = await fetch(`/user/item/${itemId}`);
+                const res = await fetch(`/rentee/item/${itemId}`);
                 if (res.ok) unavailableDates[itemId] = await res.json();
                 updateCalendar(itemId);
             } catch (err) {

@@ -38,7 +38,7 @@
                 <h1 class="text-2xl font-bold">Welcome!</h1>
             </section>
             <footer class="flex justify-center p-2 mb-2">
-                <a href="{{ route('home') }}"
+                <a href="{{ route('getStarted') }}"
                     class="px-4 py-2 bg-blue-200 text-blue-800 rounded-lg hover:bg-blue-500 hover:text-blue-100 shadow">
                     Get Started!
                 </a>
