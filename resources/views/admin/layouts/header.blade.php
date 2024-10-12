@@ -84,8 +84,8 @@
 
     <!-- contents -->
 
-    <div>
-    @yield('content')
+    <div class="h-full overflow-hidden">
+        @yield('content')
     </div>
 
 

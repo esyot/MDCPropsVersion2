@@ -24,7 +24,6 @@ class UserController extends Controller
         $currentUserName = $currentUser->name;
         $defaultCategoryId = 1;
 
-        // Fetch necessary data
         $users = User::all();
         $roles = Role::all();
         $setting = Setting::where('user_id', Auth::user()->id)->first();
@@ -48,9 +47,15 @@ class UserController extends Controller
         $categories = Category::all();
         $currentCategory = $categories->first();
 
-        $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
-        $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain('isReadBy', Auth::user()->id)->count();
+        $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
+            'isDeletedBy',
+            Auth::user()->id
+        )->orderBy('created_at', 'DESC')->get();
 
+        $unreadNotifications = Notification::whereJsonDoesntContain(
+            'isReadBy',
+            Auth::user()->id
+        )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
 
 
         if ($currentCategory) {
@@ -89,7 +94,7 @@ class UserController extends Controller
         ]);
 
         $user = User::findOrFail($request->user_id);
-        $user->syncRoles([$request->role]); // Update user roles
+        $user->syncRoles([$request->role]);
 
         return redirect()->back()->with('success', 'User role has been updated successfully!');
     }
@@ -102,7 +107,7 @@ class UserController extends Controller
             'email' => ['required', 'string', 'email', 'unique:users,email'],
         ]);
 
-        // Create the user
+
         $user = User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
@@ -110,9 +115,7 @@ class UserController extends Controller
         ]);
 
 
-
-        // Assign a role to the user
-        $role = Role::findByName('staff'); // Replace 'your_role_name' with the desired role name
+        $role = Role::findByName('staff');
         $user->assignRole($role);
 
         Notification::create([
@@ -150,16 +153,17 @@ class UserController extends Controller
 
     }
 
-    public function filter(Request $request){
+    public function filter(Request $request)
+    {
 
-        if($request->search == null){
+        if ($request->search == null) {
 
             $users = User::all();
 
             return view('admin.partials.users', compact('users'));
-        }else{
+        } else {
 
-            $users = User::where('name', 'LIKE', '%'  .$request->search.'%')->orwhere('email', 'LIKE', '%'.$request->search.'%')->get();
+            $users = User::where('name', 'LIKE', '%' . $request->search . '%')->orwhere('email', 'LIKE', '%' . $request->search . '%')->get();
 
             return view('admin.partials.users', compact('users'));
         }

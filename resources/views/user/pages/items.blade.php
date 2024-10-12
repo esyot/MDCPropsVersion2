@@ -13,65 +13,80 @@
 </head>
 
 <body class="bg-white overflow-x-hidden overflow-y-auto">
-    <div class="flex items-center justify-between z-50 bg-gradient-to-r from-blue-500 to-blue-800 p-2 shadow-md">
-        <div class="flex items-center">
-            <a href="{{ route('home') }}" class="hover:opacity-50 z-40 px-4 py-2 rounded">
-                <i class="fas fa-arrow-circle-left fa-2xl text-white"></i>
-            </a>
-            <h1 class="text-white font-bold line-clamp-1">{{ $items->first()->category->title }}</h1>
-        </div>
-        <div id="searchContainer">
-            <form hx-get="{{ route('userItemsFilter', ['category_id' => $category_id]) }}" hx-target="#items"
-                hx-swap="innerHTML" hx-trigger="input" name="search" id="searchBar" onclick="expand()"
-                class="flex space-x-1 items-center bg-white p-2 border border-gray-300 rounded-full">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" name="search" placeholder="Search Items..."
-                    class="w-[80px] bg-transparent focus:outline-none hidden">
+    @if(count($items) > 0)
+        <div class="flex items-center justify-between z-50 bg-gradient-to-r from-blue-500 to-blue-800 p-2 shadow-md">
+            <div class="flex items-center">
+                <a href="{{ route('home') }}" class="hover:opacity-50 z-40 px-4 py-2 rounded">
+                    <i class="fas fa-arrow-circle-left fa-2xl text-white"></i>
+                </a>
+                <h1 class="text-white font-bold line-clamp-1">{{ $items->first()->category->title }}</h1>
+            </div>
+            <div id="searchContainer">
+                <form hx-get="{{ route('userItemsFilter', ['category_id' => $category_id]) }}" hx-target="#items"
+                    hx-swap="innerHTML" hx-trigger="input" name="search" id="searchBar" onclick="expand()"
+                    class="flex space-x-1 items-center bg-white p-2 border border-gray-300 rounded-full">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" name="search" placeholder="Search Items..."
+                        class="w-[80px] bg-transparent focus:outline-none hidden">
 
-            </form>
-        </div>
+                </form>
+            </div>
 
-        <script>
-            function toggleSearch(isOpen) {
-                const searchBar = document.getElementById('searchBar');
-                const input = searchBar.querySelector('input');
-                searchBar.classList.toggle('w-[140px]', isOpen);
-                input.classList.toggle('hidden', !isOpen);
-                if (isOpen) input.focus();
-            }
+            <script>
+                function toggleSearch(isOpen) {
+                    const searchBar = document.getElementById('searchBar');
+                    const input = searchBar.querySelector('input');
+                    searchBar.classList.toggle('w-[140px]', isOpen);
+                    input.classList.toggle('hidden', !isOpen);
+                    if (isOpen) input.focus();
+                }
 
-            document.addEventListener('click', (event) => {
-                const searchContainer = document.getElementById('searchContainer');
-                if (!searchContainer.contains(event.target)) toggleSearch(false);
+                document.addEventListener('click', (event) => {
+                    const searchContainer = document.getElementById('searchContainer');
+                    if (!searchContainer.contains(event.target)) toggleSearch(false);
 
-            });
+                });
 
-            function expand() {
-                toggleSearch(true);
+                function expand() {
+                    toggleSearch(true);
 
-            }
-        </script>
+                }
+            </script>
 
-
-    </div>
-
-    <div id="rightbar" class="flex fixed right-0 top-[80px] justify-end z-50">
-        <button title="Messages" class="hover:opacity-50 mb-2 drop-shadow px-4 py-2 rounded flex flex-col items-center">
-            <i class="fab fa-facebook-messenger fa-2xl text-blue-400"></i>
-        </button>
-        <button title="Cart" class="hover:opacity-50 drop-shadow px-4 py-2 rounded flex flex-col items-center">
-            <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
-        </button>
-    </div>
-
-    <div class="mx-auto px-4 py-6 relative">
-        <div id="items" class="flex flex-wrap -mx-2 justify-start">
-            @include('user.partials.item')
 
         </div>
-    </div>
-    @include('user.components.footer')
 
+        <div id="rightbar" class="flex fixed right-0 top-[80px] justify-end z-50">
+            <button title="Messages" class="hover:opacity-50 mb-2 drop-shadow px-4 py-2 rounded flex flex-col items-center">
+                <i class="fab fa-facebook-messenger fa-2xl text-blue-400"></i>
+            </button>
+            <button title="Cart" class="hover:opacity-50 drop-shadow px-4 py-2 rounded flex flex-col items-center">
+                <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
+            </button>
+        </div>
+
+        <div class="mx-auto px-4 py-6 relative">
+            <div id="items" class="flex flex-wrap -mx-2 justify-start">
+                @include('user.partials.item')
+
+            </div>
+        </div>
+        @include('user.components.footer')
+    @else
+        <div class="flex flex-col justify-center items-center h-screen">
+            <div class="border-2 border-red-500 px-2 shadow-md">
+
+                <h1 class="text-2xl">No items available. </h1>
+
+            </div>
+            <div class="flex space-x-1">
+                <p>back to home,</p>
+                <a href="{{ route('home') }}" class="hover:underline text-blue-500">click here.</a>
+            </div>
+
+        </div>
+        </div>
+    @endif
     <script>
         let unavailableDates = {};
 
@@ -95,13 +110,13 @@
             let newDate;
 
             if (dir === 'right') {
-                newDate = new Date(y, m + 1, 1);
+                newDate = new Date(y, m + 1, 0);
             } else {
                 newDate = new Date(y, m - 2, 1);
             }
 
 
-            if (newDate.getMonth() === 11) {
+            if (newDate.getMonth() === 12) {
                 newDate.setFullYear(newDate.getFullYear() + 1);
             } else if (newDate.getMonth() === -1) {
                 newDate.setFullYear(newDate.getFullYear() - 1);

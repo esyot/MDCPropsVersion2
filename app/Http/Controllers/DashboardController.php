@@ -44,11 +44,11 @@ class DashboardController extends Controller
         $currentCategory = null;
 
         if ($roles->contains('superadmin')) {
-            $categories = Category::all();
 
+            $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['superadmin','all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -56,7 +56,7 @@ class DashboardController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin','all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
 
 
         } else if ($roles->contains('admin')) {
@@ -68,15 +68,15 @@ class DashboardController extends Controller
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['admin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
+
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
-
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'all'])->count();
 
 
         } else if ($roles->contains('staff')) {
@@ -85,19 +85,16 @@ class DashboardController extends Controller
             $categories = Category::whereIn('id', $categoryIds)->get();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get();
+            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'all'])->whereJsonDoesntContain(
+                'isDeletedBy',
+                Auth::user()->id
+            )->orderBy('created_at', 'DESC')->get();
 
-            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get()->count();
+            $unreadNotifications = Notification::whereIn('category_id', $categoryIds)->whereJsonDoesntContain(
+                'isReadBy',
+                Auth::user()->id
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'all'])->count();
+
 
         }
 
@@ -201,7 +198,7 @@ class DashboardController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
 
 
         } else if ($roles->contains('admin')) {
@@ -245,12 +242,26 @@ class DashboardController extends Controller
                 ->get()->count();
 
         }
+        if ($currentCategory) {
+            // You can safely access $currentCategory->id here
+            $currentCategoryId = $currentCategory->id;
+            $categoriesIsNull = false;
+        } else {
+            // Handle the case where no categories are found
+            $categoriesIsNull = true; // or set a default value
+        }
 
+        // Safely get items only if currentCategory exists
+        $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : collect();
 
+        // Transactions and records
+        $daysWithRecords = Transaction::all()->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))->unique()->values()->toArray();
 
-
-        $users = User::whereNot('name', Auth::user()->name)->get();
+        // Users and destinations
+        $users = User::where('name', '!=', $current_user_name)->get();
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
+
+        $transactions = Transaction::all();
 
         return view(
             'admin.pages.dashboard',
@@ -291,7 +302,7 @@ class DashboardController extends Controller
             $currentDate = now();
         }
         $current_user_name = Auth::user()->name;
-        
+
         $page_title = 'Dashboard';
 
         // Messages
@@ -318,7 +329,7 @@ class DashboardController extends Controller
 
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['superadmin','all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -326,7 +337,7 @@ class DashboardController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin','all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
 
 
         } else if ($roles->contains('admin')) {

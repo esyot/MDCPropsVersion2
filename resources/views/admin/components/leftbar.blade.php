@@ -84,7 +84,7 @@
                 </section>
             </a>
             @endhasrole
-            @hasrole('superadmin|admin')
+            @hasrole('superadmin')
             <a href="{{ route('users') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
                 title="Users">

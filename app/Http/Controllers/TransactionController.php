@@ -47,35 +47,61 @@ class TransactionController extends Controller
 
         $roles = Auth::user()->getRoleNames();
 
-        if ($roles->contains('staff')) {
 
+        if ($roles->contains('superadmin')) {
+
+            $categories = Category::all();
+            $currentCategory = $categories->first();
+
+            $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
+                'isDeletedBy',
+                Auth::user()->id
+            )->orderBy('created_at', 'DESC')->get();
+
+            $unreadNotifications = Notification::whereJsonDoesntContain(
+                'isReadBy',
+                Auth::user()->id
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
+
+
+        } else if ($roles->contains('admin')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
             $categories = Category::whereIn('id', $categoryIds)->get();
             $currentCategory = $categories->first();
-            $notifications = Notification::where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get();
 
-            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get()->count();
-
-        } else {
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain('isReadBy', Auth::user()->id)->count();
+            $notifications = Notification::whereIn('for', ['admin', 'all'])->whereJsonDoesntContain(
+                'isDeletedBy',
+                Auth::user()->id
+            )->orderBy('created_at', 'DESC')->get();
+
+            $unreadNotifications = Notification::whereJsonDoesntContain(
+                'isReadBy',
+                Auth::user()->id
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'all'])->count();
+
+
+        } else if ($roles->contains('staff')) {
+            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+            $categoryIds = $managedCategories->pluck('category_id');
+            $categories = Category::whereIn('id', $categoryIds)->get();
+            $currentCategory = $categories->first();
+
+            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'all'])->whereJsonDoesntContain(
+                'isDeletedBy',
+                Auth::user()->id
+            )->orderBy('created_at', 'DESC')->get();
+
+            $unreadNotifications = Notification::whereIn('category_id', $categoryIds)->whereJsonDoesntContain(
+                'isReadBy',
+                Auth::user()->id
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'all'])->count();
+
 
         }
-
         if ($currentCategory) {
 
             $currentCategoryId = $currentCategory->id;
@@ -118,10 +144,11 @@ class TransactionController extends Controller
 
             Notification::create([
                 'icon' => Auth::user()->img,
+                'category_id' => $transaction->category_id,
                 'title' => 'Approved Transaction',
                 'description' => Auth::user()->name . ' approved a new transaction, check it now!',
                 'redirect_link' => 'transactions',
-                'for' => 'both'
+                'for' => 'admin'
             ]);
 
             return redirect()->back()->with('success', 'Transaction has been successfuly approved!');
@@ -161,12 +188,39 @@ class TransactionController extends Controller
         $currentStatus = $request->status;
         $roles = Auth::user()->getRoleNames();
 
-        if ($roles->contains('staff')) {
+        if ($roles->contains('superadmin')) {
+            $categories = Category::all();
 
+            $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
+                'isDeletedBy',
+                Auth::user()->id
+            )->orderBy('created_at', 'DESC')->get();
+
+            $unreadNotifications = Notification::whereJsonDoesntContain(
+                'isReadBy',
+                Auth::user()->id
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
+
+
+        } else if ($roles->contains('admin')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
-            $categories = Category::whereIn('id', $categoryIds)->get();
-            $currentCategory = $categories->first();
+
+            $notifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain(
+                'isDeletedBy',
+                Auth::user()->id
+            )->orderBy('created_at', 'DESC')->get();
+            $unreadNotifications = Notification::whereJsonDoesntContain(
+                'isReadBy',
+                Auth::user()->id
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+
+
+
+        } else if ($roles->contains('staff')) {
+            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+            $categoryIds = $managedCategories->pluck('category_id');
+
             $notifications = Notification::where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
@@ -181,13 +235,14 @@ class TransactionController extends Controller
                 ->orderBy('created_at', 'DESC')
                 ->get()->count();
 
-        } else {
-            $categories = Category::all();
-            $currentCategory = $categories->first();
+        }
+        if ($currentCategory) {
 
-            $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain('isReadBy', Auth::user()->id)->count();
+            $currentCategoryId = $currentCategory->id;
             $categoriesIsNull = false;
+        } else {
+
+            $categoriesIsNull = true;
         }
         $users = User::whereNot('name', Auth::user()->name)->get();
 
@@ -235,18 +290,21 @@ class TransactionController extends Controller
                 'status' => 'pending',
             ]);
 
+            $isReadBy = [];
+
             Notification::create([
-                'category_id' => $request->category_id,
                 'icon' => Auth::user()->img,
-                'title' => "New Transaction",
-                'description' => Auth::user()->name . " added a new transaction, check it now.",
-                'redirect_link' => "transactions",
-                'for' => 'both',
+                'title' => 'New Transaction',
+                'category_id' => $validatedData['category_id'],
+                'description' => Auth::user()->name . ' added a new transaction.',
+                'redirect_link' => 'transactions',
+                'for' => 'all',
+                'isReadBy' => $isReadBy,
             ]);
 
             return redirect()->back()->with('success', 'Transaction created successfully.');
         } catch (\Exception $e) {
-            Logs::error('Transaction creation error: ' . $e->getMessage(), [
+            Log::error('Transaction creation error: ' . $e->getMessage(), [
                 'user_id' => Auth::user()->id,
                 'data' => $request->all(),
             ]);

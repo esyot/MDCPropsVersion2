@@ -14,4 +14,8 @@ class UserHomeController extends Controller
 
         return view('user.pages.index', compact('categories'));
     }
+    public function welcome()
+    {
+        return view('user.pages.welcome');
+    }
 }

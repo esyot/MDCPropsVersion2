@@ -32,7 +32,7 @@ class PaymentsController extends Controller
 
         $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
         $categoryIds = $managedCategories->pluck('category_id');
-        $categories = ManagedCategory::whereIn('id', $categoryIds)->get();
+        $categories = Category::all();
         $currentCategory = $categories->first();
 
         $notifications = Notification::where(function ($query) use ($categoryIds) {
@@ -54,6 +54,6 @@ class PaymentsController extends Controller
         $users = User::where('name', '!=', $current_user_name)->get();
 
 
-        return view('admin.pages.payments', compact('users', 'unreadMessages', 'contacts', 'setting', 'page_title', 'notifications', 'unreadNotifications'));
+        return view('admin.pages.payments', compact('currentCategory', 'users', 'unreadMessages', 'contacts', 'setting', 'page_title', 'notifications', 'unreadNotifications'));
     }
 }

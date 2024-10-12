@@ -43,8 +43,8 @@ class ItemController extends Controller
         $currentCategory = null;
 
         if ($roles->contains('superadmin')) {
-            $categories = Category::all();
 
+            $categories = Category::all();
             $currentCategory = $categories->first();
 
             $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
@@ -55,7 +55,7 @@ class ItemController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
 
 
         } else if ($roles->contains('admin')) {
@@ -67,15 +67,15 @@ class ItemController extends Controller
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['admin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
+
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
-
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'all'])->count();
 
 
         } else if ($roles->contains('staff')) {
@@ -84,22 +84,18 @@ class ItemController extends Controller
             $categories = Category::whereIn('id', $categoryIds)->get();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get();
+            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'all'])->whereJsonDoesntContain(
+                'isDeletedBy',
+                Auth::user()->id
+            )->orderBy('created_at', 'DESC')->get();
 
-            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get()->count();
+            $unreadNotifications = Notification::whereIn('category_id', $categoryIds)->whereJsonDoesntContain(
+                'isReadBy',
+                Auth::user()->id
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'all'])->count();
+
 
         }
-
 
 
 
@@ -164,7 +160,7 @@ class ItemController extends Controller
 
         Notification::create([
             'icon' => Auth::user()->img,
-            'title' => 'Added a new item',
+            'title' => 'New Item',
             'description' => Auth::user()->name . ' added a new item named ' . $validatedData['name'] .
                 ', check it now.',
             'redirect_link' => 'items',
@@ -198,37 +194,47 @@ class ItemController extends Controller
         $setting = Setting::find(1);
         $roles = Auth::user()->getRoleNames();
 
-        if ($roles->contains('moderator') || $roles->contains('editor')) {
-            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
-            $categoryIds = $managedCategories->pluck('category_id');
-            $categories = Category::whereIn('id', $categoryIds)->get();
-
-
-            $notifications = Notification::where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get();
-
-            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get()->count();
-
-        } else if ($roles->contains('admin')) {
+        if ($roles->contains('superadmin')) {
             $categories = Category::all();
 
+            $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+            $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
+                'isDeletedBy',
+                Auth::user()->id
+            )->orderBy('created_at', 'DESC')->get();
 
-        } else if ($roles->contains('viewer')) {
+            $unreadNotifications = Notification::whereJsonDoesntContain(
+                'isReadBy',
+                Auth::user()->id
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
+
+
+        } else if ($roles->contains('admin')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
             $categories = Category::whereIn('id', $categoryIds)->get();
+            $currentCategory = $categories->first();
+
+            $categories = Category::all();
+            $currentCategory = $categories->first();
+
+            $notifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain(
+                'isDeletedBy',
+                Auth::user()->id
+            )->orderBy('created_at', 'DESC')->get();
+            $unreadNotifications = Notification::whereJsonDoesntContain(
+                'isReadBy',
+                Auth::user()->id
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+
+
+
+        } else if ($roles->contains('staff')) {
+            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+            $categoryIds = $managedCategories->pluck('category_id');
+            $categories = Category::whereIn('id', $categoryIds)->get();
+            $currentCategory = $categories->first();
 
             $notifications = Notification::where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
@@ -245,7 +251,6 @@ class ItemController extends Controller
                 ->get()->count();
 
         }
-
 
         if ($currentCategory) {
             // You can safely access $currentCategory->id here
@@ -326,9 +331,12 @@ class ItemController extends Controller
         return redirect()->back()->with('success', 'Item has been successfully updated!');
     }
 
-    public function search(Request $request, $day)
+    public function search(Request $request, $day, $category_id)
     {
-        $items = Item::where('name', 'LIKE', '%' . $request->input . '%')->get();
+        $items = Item::where('category_id', $category_id)
+            ->where('name', 'LIKE', '%' . $request->input('input') . '%')
+            ->get();
+
         return view('admin.partials.item', compact('items', 'day'));
     }
 

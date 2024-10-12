@@ -2,6 +2,7 @@
 @section('content')
 
 <!-- Main Content -->
+
 <div id="contacts" class="main-content flex flex-1 overflow-y-auto transition-all duration-300 ease-in-out">
 
     <div id="chats" class="flex w-80 items-center flex-col shadow">
@@ -57,125 +58,122 @@
 
 
         </div>
-        <!-- <div id="loader"
-            class="rounded bg-gray-400 bg-opacity-50 absolute inset-0 flex items-center justify-center z-50 hidden">
-            <img src="{{ asset('asset/loader/loading.gif') }}" alt="Loading..." class="w-16 h-16">
-        </div> -->
 
 
         <div id="messages-container" class="flex flex-1 overflow-y-auto flex-col custom-scrollbar h-64">
             @include('admin.partials.message-bubble')
         </div>
-
-        <a hx-get="{{ route('messageBubble', ['receiver_name' => $receiver_name])}}" hx-swap="innerHTML"
-            hx-trigger="every 1s" hx-target="#messages-container"></a>
-
-
-        <div class="bg-blue-500">
-            @foreach($allMessages as $message)
-                <div id="message-to-reply-{{$message->id}}" class="p-2 bg-white shadow-md hidden">
-                    <div class="flex justify-between">
+        @if(count($allMessages) > 0)
+            <a hx-get="{{ route('messageBubble', ['receiver_name' => $receiver_name])}}" hx-swap="innerHTML"
+                hx-trigger="every 1s" hx-target="#messages-container"></a>
 
 
-                        @if($message->sender_name == $current_user_name)
-                            <h1 class="font-semibold">Replying to yourself</h1>
+            <div class="bg-blue-500">
+
+                @foreach($allMessages as $message)
+                    <div id="message-to-reply-{{$message->id}}" class="p-2 bg-white shadow-md hidden">
+                        <div class="flex justify-between">
+
+
+                            @if($message->sender_name == $current_user_name)
+                                <h1 class="font-semibold">Replying to yourself</h1>
+                            @else
+                                <h1 class="font-semibold">Replying to {{$message->sender_name}}</h1>
+                            @endif
+                            </h1>
+                            <button class="text-2xl hover:text-gray-400" onclick="messageReplyViewClose('{{ $message->id}}')">
+                                &times;
+                            </button>
+                        </div>
+
+                        @if($message->type == 'sticker')
+                            <p>
+                                sticker
+                            </p>
+                        @elseif($message->type == 'image')
+                            <p>image</p>
+
                         @else
-                            <h1 class="font-semibold">Replying to {{$message->sender_name}}</h1>
+                            <p>{{ $message->content }}</p>
                         @endif
-                        </h1>
-                        <button class="text-2xl hover:text-gray-400" onclick="messageReplyViewClose('{{ $message->id}}')">
-                            &times;
-                        </button>
                     </div>
 
-                    @if($message->type == 'sticker')
-                        <p>
-                            sticker
-                        </p>
-                    @elseif($message->type == 'image')
-                        <p>image</p>
-
-                    @else
-                        <p>{{ $message->content }}</p>
-                    @endif
-                </div>
-
-            @endforeach
+                @endforeach
 
 
-            <div id="footer-messenger" class="flex space-x-2 p-4">
+                <div id="footer-messenger" class="flex space-x-2 p-4">
 
-                <form id="myForm" action="{{ route('messageSend') }}" method="POST"
-                    class=" flex items-end w-full space-x-4">
+                    <form id="myForm" action="{{ route('messageSend') }}" method="POST"
+                        class=" flex items-end w-full space-x-4">
 
-                    @csrf
+                        @csrf
 
 
-                    <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="previewImage(event)">
-                    <button type="button" title="Image"
-                        class="rounded-full hover:bg-blue-300 transition-transform duration-300 ease-in-out transform hover:scale-110 drop-shadow text-xl px-2 py-1 hover:text-white text-gray-100"
-                        onclick="document.getElementById('fileInput').click();">
-                        <i class="fa-solid fa-image"></i>
-                    </button>
+                        <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="previewImage(event)">
+                        <button type="button" title="Image"
+                            class="rounded-full hover:bg-blue-300 transition-transform duration-300 ease-in-out transform hover:scale-110 drop-shadow text-xl px-2 py-1 hover:text-white text-gray-100"
+                            onclick="document.getElementById('fileInput').click();">
+                            <i class="fa-solid fa-image"></i>
+                        </button>
 
 
 
 
-                    <input type="hidden" name="replied_message_id" id="replied-message-id">
-                    <input type="hidden" name="replied_message_name" id="replied-message-name">
-                    <input type="hidden" name="replied_message_type" id="replied-message-type">
-                    <input type="hidden" value="{{$sender_name}}" name="sender_name" id="sender_name">
-                    <input type="hidden" value="{{$receiver_name}}" name="receiver_name" id="receiver_name">
-                    <input type="hidden" id="image-data" name="image-data" />
+                        <input type="hidden" name="replied_message_id" id="replied-message-id">
+                        <input type="hidden" name="replied_message_name" id="replied-message-name">
+                        <input type="hidden" name="replied_message_type" id="replied-message-type">
+                        <input type="hidden" value="{{$sender_name}}" name="sender_name" id="sender_name">
+                        <input type="hidden" value="{{$receiver_name}}" name="receiver_name" id="receiver_name">
+                        <input type="hidden" id="image-data" name="image-data" />
 
-                    <div class="relative w-full">
-                        <div class="flex items-end space-x-2 rounded-lg">
+                        <div class="relative w-full">
+                            <div class="flex items-end space-x-2 rounded-lg">
 
-                            <div class="flex flex-col flex-1 bg-white rounded-xl">
-                                <div class="flex flex-wrap items-start">
-                                    <div class="flex flex-wrap">
+                                <div class="flex flex-col flex-1 bg-white rounded-xl">
+                                    <div class="flex flex-wrap items-start">
+                                        <div class="flex flex-wrap">
 
-                                        <div id="image-container" class="flex justify-between">
+                                            <div id="image-container" class="flex justify-between">
+
+
+                                            </div>
+                                        </div>
+                                        <div id="img-preview-x"
+                                            class="absolute left-[9.5rem] top-1 text-red-800 font-semibold hidden">
+
+                                            <button type="button" onclick="imagePreviewClose()" title="Close"
+                                                class="shadow-md border border-gray-300 w-8 h-8 flex items-center justify-center rounded-full bg-white hover:bg-gray-200 text-gray-600 hover:text-gray-800 focus:outline-none">
+                                                <span class="mb-1 text-2xl font-semibold">&times;</span>
+                                            </button>
+
 
 
                                         </div>
+
                                     </div>
-                                    <div id="img-preview-x"
-                                        class="absolute left-[9.5rem] top-1 text-red-800 font-semibold hidden">
 
-                                        <button type="button" onclick="imagePreviewClose()" title="Close"
-                                            class="shadow-md border border-gray-300 w-8 h-8 flex items-center justify-center rounded-full bg-white hover:bg-gray-200 text-gray-600 hover:text-gray-800 focus:outline-none">
-                                            <span class="mb-1 text-2xl font-semibold">&times;</span>
-                                        </button>
+                                    <div class="flex flex-col p-2 bg-white rounded-full">
 
-
+                                        <input autocomplete="off" type="text" id="content" name="content"
+                                            class="w-full px-2 focus:outline-none" placeholder="Aa">
 
                                     </div>
 
                                 </div>
+                                <div class="px-2">
 
-                                <div class="flex flex-col p-2 bg-white rounded-full">
-
-                                    <input autocomplete="off" type="text" id="content" name="content"
-                                        class="w-full px-2 focus:outline-none" placeholder="Aa">
+                                    <button type="submit" id="sendButton" title="Send"
+                                        class="rounded-full hover:bg-blue-300 transition-transform duration-300 ease-in-out transform hover:scale-110 drop-shadow flex items-center text-xl text-2xl px-2 py-2 hover:text-white text-blue-100 mb-0.5">
+                                        <i id="sendIcon" class="fa-solid fa-thumbs-up"></i>
+                                    </button>
 
                                 </div>
 
                             </div>
-                            <div class="px-2">
-
-                                <button type="submit" id="sendButton" title="Send"
-                                    class="rounded-full hover:bg-blue-300 transition-transform duration-300 ease-in-out transform hover:scale-110 drop-shadow flex items-center text-xl text-2xl px-2 py-2 hover:text-white text-blue-100 mb-0.5">
-                                    <i id="sendIcon" class="fa-solid fa-thumbs-up"></i>
-                                </button>
-
-                            </div>
-
                         </div>
-                    </div>
-            </div>
+                </div>
 
-
+        @endif
             </form>
 
         </div>

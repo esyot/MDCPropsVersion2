@@ -14,8 +14,13 @@
 </head>
 
 <body>
+    <div title="Monitor Transaction"
+        class="fixed right-0 z-50 p-2 transition-transform duration-300 hover:scale-110 ease-in-out">
+        <a href="{{ route('customerService') }}"> <i class="fas fa-desktop fa-xl text-white shadow-md"></i></a>
+
+    </div>
     <div id="welcome"
-        class="flex fixed inset-0 bg-gradient-to-b from-blue-500 to-blue-900 justify-center items-center z-50">
+        class="flex fixed inset-0 bg-gradient-to-b from-blue-500 to-blue-900 justify-center items-center z-40">
 
         <div class="bg-white rounded shadow-2xl p-2">
             <header class="flex flex-col items-center">

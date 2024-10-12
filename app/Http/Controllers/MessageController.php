@@ -33,8 +33,6 @@ class MessageController extends Controller
 
         $receiver_name = $latestContact ? $latestContact->sender_name : null;
 
-
-
         $messagesByCurrentUser = Message::where('sender_name', $current_user_name)->where('receiver_name', $receiver_name)->orderBy('created_at', 'ASC')->get();
         $messagesFromOtherUser = Message::where('sender_name', $receiver_name)->where('receiver_name', $sender_name)->orderBy('created_at', 'ASC')->get();
 
@@ -48,10 +46,7 @@ class MessageController extends Controller
         });
 
 
-
         $allMessages = $messagesByCurrentUser->concat($messagesFromOtherUser)->sortBy('created_at');
-
-
 
         $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
 
@@ -64,39 +59,97 @@ class MessageController extends Controller
             ->map(fn($group) => $group->first())
             ->values();
 
-        $setting = Setting::findOrFail(1);
+        $setting = Setting::where('user_id', Auth::user()->id)->first();
 
         $roles = Auth::user()->getRoleNames();
 
-        if ($roles->contains('moderator') || $roles->contains('editor')) {
+        $categories = [];
+        $unreadNotifications = 0;
+        $notifications = [];
+        $currentCategory = null;
+
+        if ($roles->contains('superadmin')) {
+
+            $categories = Category::all();
+            $currentCategory = $categories->first();
+
+            $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
+                'isDeletedBy',
+                Auth::user()->id
+            )->orderBy('created_at', 'DESC')->get();
+
+            $unreadNotifications = Notification::whereJsonDoesntContain(
+                'isReadBy',
+                Auth::user()->id
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
+
+
+        } else if ($roles->contains('admin')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
             $categories = Category::whereIn('id', $categoryIds)->get();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get();
+            $categories = Category::all();
+            $currentCategory = $categories->first();
 
-            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get()->count();
+            $notifications = Notification::whereIn('for', ['admin', 'all'])->whereJsonDoesntContain(
+                'isDeletedBy',
+                Auth::user()->id
+            )->orderBy('created_at', 'DESC')->get();
 
-        } else if ($roles->contains('admin')) {
+            $unreadNotifications = Notification::whereJsonDoesntContain(
+                'isReadBy',
+                Auth::user()->id
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'all'])->count();
 
 
-            $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+        } else if ($roles->contains('staff')) {
+            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+            $categoryIds = $managedCategories->pluck('category_id');
+            $categories = Category::whereIn('id', $categoryIds)->get();
+            $currentCategory = $categories->first();
+
+            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'all'])->whereJsonDoesntContain(
+                'isDeletedBy',
+                Auth::user()->id
+            )->orderBy('created_at', 'DESC')->get();
+
+            $unreadNotifications = Notification::whereIn('category_id', $categoryIds)->whereJsonDoesntContain(
+                'isReadBy',
+                Auth::user()->id
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'all'])->count();
+
 
         }
 
-        return view('admin.pages.messages', compact('setting', 'unreadMessages', 'contacts', 'current_user_name', 'receiver_name', 'sender_name', 'notifications', 'unreadNotifications', 'page_title', 'allMessages'));
+        if ($currentCategory) {
+            // You can safely access $currentCategory->id here
+            $currentCategoryId = $currentCategory->id;
+            $categoriesIsNull = false;
+        } else {
+            // Handle the case where no categories are found
+            $categoriesIsNull = true; // or set a default value
+        }
+        $users = User::all();
+
+        return view(
+            'admin.pages.messages',
+            compact(
+                'users',
+                'setting',
+                'unreadMessages',
+                'contacts',
+                'current_user_name',
+                'receiver_name',
+                'sender_name',
+                'notifications',
+                'unreadNotifications',
+                'page_title',
+                'allMessages',
+                'currentCategory'
+            )
+        );
     }
 
 
@@ -119,12 +172,9 @@ class MessageController extends Controller
     public function messageReacted($id)
     {
 
-        // Find the message by ID
-        $message = Message::findOrFail($id);
+        $message = Message::find($id);
 
-        // Check if the message has been reacted to
         if ($message->isReacted) {
-            // If already reacted, set 'isReacted' to false
             $message->update(['isReacted' => false]);
         } else {
 
@@ -185,36 +235,36 @@ class MessageController extends Controller
 
         $imageFileName = null;
         if ($validatedData['image-data']) {
-            // Extract base64 image data and format
+
             $imageData = $request->input('image-data');
 
-            // Extract image format and data
-            if (preg_match('/data:image\/(.*?);base64,(.*)/', $imageData, $matches)) {
-                $imageFormat = $matches[1]; // e.g., 'png', 'jpeg', etc.
-                $base64Data = str_replace(' ', '+', $matches[2]); // Base64 encoded image data
 
-                // Validate the format
+            if (preg_match('/data:image\/(.*?);base64,(.*)/', $imageData, $matches)) {
+                $imageFormat = $matches[1];
+                $base64Data = str_replace(' ', '+', $matches[2]);
+
+
                 $validFormats = ['jpeg', 'jpg', 'png', 'gif'];
                 if (!in_array($imageFormat, $validFormats)) {
-                    // Handle unsupported formats
+
                     return response()->json(['error' => 'Unsupported image format.'], 400);
                 }
 
-                // Generate a random file name with the correct extension
+
                 $imageFileName = \Str::random(10) . '.' . $imageFormat;
                 $filePath = 'images/' . $imageFileName;
 
-                // Decode and save the image
+
                 Storage::disk('public')->put($filePath, base64_decode($base64Data));
             } else {
-                // Handle invalid image data
+
                 return response()->json(['error' => 'Invalid image data.'], 400);
             }
         }
 
         if (!is_null($validatedData['content'])) {
             if ($imageFileName) {
-                // Both content and image-data are present
+
                 $messageData = [
                     'replied_message_name' => $repliedMessageName,
                     'replied_message' => $repliedMessageType == 'image' ? $repliedMessageImg : $repliedMessageContent,
@@ -226,7 +276,7 @@ class MessageController extends Controller
                     'img' => $imageFileName,
                 ];
             } else {
-                // Only content is present
+
                 $messageData = [
                     'replied_message_name' => $repliedMessageName,
                     'replied_message' => $repliedMessageType == 'image' ? $repliedMessageImg : $repliedMessageContent,
@@ -239,26 +289,26 @@ class MessageController extends Controller
             }
         } else {
             if ($imageFileName) {
-                // Only image-data is present
+
                 $messageData = [
                     'replied_message_name' => $repliedMessageName,
                     'replied_message' => $repliedMessageType == 'image' ? $repliedMessageImg : $repliedMessageContent,
                     'replied_message_type' => $repliedMessageType,
                     'sender_name' => $validatedData['sender_name'],
                     'receiver_name' => $validatedData['receiver_name'],
-                    'content' => null, // No text content
+                    'content' => null,
                     'type' => 'image',
                     'img' => $imageFileName,
                 ];
             } else {
-                // Neither content nor image-data is present
+
                 $messageData = [
                     'replied_message_name' => $repliedMessageName,
                     'replied_message' => $repliedMessageType == 'image' ? $repliedMessageImg : $repliedMessageContent,
                     'replied_message_type' => $repliedMessageType,
                     'sender_name' => $validatedData['sender_name'],
                     'receiver_name' => $validatedData['receiver_name'],
-                    'content' => 'like', // Default text
+                    'content' => 'like',
                     'type' => 'sticker',
                 ];
             }
@@ -300,11 +350,11 @@ class MessageController extends Controller
             ->get();
 
         if ($messages->isEmpty()) {
-            // Handle the case where no messages are found
+
             dd('No messages found.');
         }
 
-        // Group by sender or receiver based on the presence of the current user
+
         $contacts = Message::where('receiver_name', $current_user_name)
             ->latest()
             ->get()
@@ -319,33 +369,73 @@ class MessageController extends Controller
 
         $roles = Auth::user()->getRoleNames();
 
-        if ($roles->contains('moderator') || $roles->contains('editor')) {
+        $categories = [];
+        $unreadNotifications = 0;
+        $notifications = [];
+        $currentCategory = null;
+
+        if ($roles->contains('superadmin')) {
+
+            $categories = Category::all();
+            $currentCategory = $categories->first();
+
+            $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
+                'isDeletedBy',
+                Auth::user()->id
+            )->orderBy('created_at', 'DESC')->get();
+
+            $unreadNotifications = Notification::whereJsonDoesntContain(
+                'isReadBy',
+                Auth::user()->id
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
+
+
+        } else if ($roles->contains('admin')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
             $categories = Category::whereIn('id', $categoryIds)->get();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get();
-
-            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get()->count();
-
-        } else if ($roles->contains('admin')) {
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['admin', 'both'])->orderBy('created_at', 'DESC')->get();
-            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+            $notifications = Notification::whereIn('for', ['admin', 'all'])->whereJsonDoesntContain(
+                'isDeletedBy',
+                Auth::user()->id
+            )->orderBy('created_at', 'DESC')->get();
 
+            $unreadNotifications = Notification::whereJsonDoesntContain(
+                'isReadBy',
+                Auth::user()->id
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'all'])->count();
+
+
+        } else if ($roles->contains('staff')) {
+            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+            $categoryIds = $managedCategories->pluck('category_id');
+            $categories = Category::whereIn('id', $categoryIds)->get();
+            $currentCategory = $categories->first();
+
+            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'all'])->whereJsonDoesntContain(
+                'isDeletedBy',
+                Auth::user()->id
+            )->orderBy('created_at', 'DESC')->get();
+
+            $unreadNotifications = Notification::whereIn('category_id', $categoryIds)->whereJsonDoesntContain(
+                'isReadBy',
+                Auth::user()->id
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'all'])->count();
+
+
+        }
+
+        if ($currentCategory) {
+
+            $currentCategoryId = $currentCategory->id;
+            $categoriesIsNull = false;
+        } else {
+
+            $categoriesIsNull = true;
         }
 
         $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
@@ -357,6 +447,7 @@ class MessageController extends Controller
 
         return view('admin.pages.messages', compact(
             'setting',
+            'currentCategory',
             'users',
             'unreadMessages',
             'contacts',

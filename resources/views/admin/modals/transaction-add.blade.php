@@ -31,8 +31,8 @@
                 <div>
 
                     <div class="flex items-center space-x-1 p-2 border border-gray-300 rounded-full">
-                        <form hx-get="{{ route('itemSearch', ['day' => $day]) }}" hx-trigger="input" hx-swap="innerHTML"
-                            hx-target="#item-list-{{$day}}">
+                        <form hx-get="{{ route('itemSearch', ['day' => $day, 'category_id' => $currentCategory->id]) }}"
+                            hx-trigger="input" hx-swap="innerHTML" hx-target="#item-list-{{$day}}">
                             <i class="fas fa-search"></i>
                             <input type="text" class="focus:outline-none" name="input" placeholder="Search Item...">
                         </form>

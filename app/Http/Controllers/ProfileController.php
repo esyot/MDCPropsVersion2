@@ -6,6 +6,8 @@ use App\Models\Setting;
 use App\Models\Notification;
 use App\Models\Message;
 use App\Models\User;
+use App\Models\ManagedCategory;
+use App\Models\Category;
 use Auth;
 use Hash;
 use Str;
@@ -18,7 +20,7 @@ class ProfileController extends Controller
         $setting = Setting::find(1);
         $current_user_name = Auth::user()->name;
         $page_title = "Profile";
-       
+
         $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
         $unreadMessages = $messages->count();
 
@@ -40,6 +42,9 @@ class ProfileController extends Controller
 
         if ($roles->contains('superadmin')) {
 
+            $categories = Category::all();
+            $currentCategory = $categories->first();
+
             $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
@@ -48,41 +53,57 @@ class ProfileController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
 
 
         } else if ($roles->contains('admin')) {
+            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+            $categoryIds = $managedCategories->pluck('category_id');
+            $categories = Category::whereIn('id', $categoryIds)->get();
+            $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain(
+            $categories = Category::all();
+            $currentCategory = $categories->first();
+
+            $notifications = Notification::whereIn('for', ['admin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
+
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
-
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'all'])->count();
 
 
         } else if ($roles->contains('staff')) {
+            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+            $categoryIds = $managedCategories->pluck('category_id');
+            $categories = Category::whereIn('id', $categoryIds)->get();
+            $currentCategory = $categories->first();
 
-            $notifications = Notification::where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get();
+            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'all'])->whereJsonDoesntContain(
+                'isDeletedBy',
+                Auth::user()->id
+            )->orderBy('created_at', 'DESC')->get();
 
-            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
-                ->orderBy('created_at', 'DESC')
-                ->get()->count();
+            $unreadNotifications = Notification::whereIn('category_id', $categoryIds)->whereJsonDoesntContain(
+                'isReadBy',
+                Auth::user()->id
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'all'])->count();
+
 
         }
 
-        return view('admin.pages.profile', compact('users', 'unreadMessages', 'contacts', 'notifications', 'unreadNotifications', 'setting', 'page_title'));
+        if ($currentCategory) {
+            // You can safely access $currentCategory->id here
+            $currentCategoryId = $currentCategory->id;
+            $categoriesIsNull = false;
+        } else {
+            // Handle the case where no categories are found
+            $categoriesIsNull = true; // or set a default value
+        }
+        return view('admin.pages.profile', compact('currentCategory', 'users', 'unreadMessages', 'contacts', 'notifications', 'unreadNotifications', 'setting', 'page_title'));
 
     }
 

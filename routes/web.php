@@ -16,6 +16,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UserItemsController;
+use App\Http\Controllers\UserCustomerServiceController;
+use App\Http\Controllers\UserCartController;
 
 //User Controller
 
@@ -25,12 +27,19 @@ use App\Http\Controllers\UserHomeController;
 Route::get('/', function () {
     return view('user.pages.welcome');
 });
+
+Route::get('/welcome', [UserHomeController::class, 'welcome'])->name('welcome');
 Route::get('/user/home', [UserHomeController::class, 'index'])->name('home');
 Route::get('/user/items/{category_id}', [UserItemsController::class, 'index'])->name('userItems');
 
 Route::get('/user/item/{id}', [UserItemsController::class, 'itemUnAvailableDates']);
 
 Route::get('/user/items/filter/{category_id}', [UserItemsController::class, 'filter'])->name('userItemsFilter');
+
+Route::get('user/customer-service', [UserCustomerServiceController::class, 'index'])->name('customerService');
+
+
+Route::get('/user/cart', [UserCartController::class, 'index'])->name('cart');
 
 
 
@@ -55,7 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/password/update/{id}', [ProfileController::class, 'passwordUpdate'])->name('passwordUpdate');
 
     // Notifications
-    Route::get('/admin/notification-list/{filter}', [NotificationController::class, 'notificationList'])->name('notificationList');
+    Route::get('/admin/notification-list/{filter}/{category}', [NotificationController::class, 'notificationList'])->name('notificationList');
     Route::get('/admin/isRead/{id}/{redirect_link}', [NotificationController::class, 'isRead'])->name('isRead');
     Route::get('/admin/notification/read/all', [NotificationController::class, 'readAll'])->name('readAll');
     Route::get('/admin/notification/delete/all', [NotificationController::class, 'deleteAll'])->name('deleteAll');
@@ -105,7 +114,7 @@ Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
 
     Route::get('/admin/items', [ItemController::class, 'index'])->name('items');
     Route::get('/admin/items-filter', [ItemController::class, 'itemsFilter'])->name('itemsFilter');
-    Route::get('/admin/item-search/{day}', [ItemController::class, 'search'])->name('itemSearch');
+    Route::get('/admin/item-search/{day}/{category_id}', [ItemController::class, 'search'])->name('itemSearch');
     Route::post('/admin/item-add', [ItemController::class, 'create'])->name('itemAdd');
     Route::put('/admin/item-update/{id}', [ItemController::class, 'update'])->name('itemUpdate');
     // Transactions

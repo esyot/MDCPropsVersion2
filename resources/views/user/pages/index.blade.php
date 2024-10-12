@@ -72,10 +72,12 @@
                 class="hover:opacity-50 mb-2 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
                 <i class="fab fa-facebook-messenger fa-2xl text-blue-400"></i>
             </button>
-
-            <button title="Cart" class="hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
-                <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
-            </button>
+            <a href="{{  route('cart') }}">
+                <button title="Cart"
+                    class="hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
+                    <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
+                </button>
+            </a>
 
         </div>
 
@@ -85,10 +87,24 @@
 
         <div class="flex flex-wrap -mx-2 overflow-y-auto">
             @foreach($categories as $category)
-                        <a href="{{ route('userItems', ['category_id' => $category->id]) }}" title="{{ $category->title }}"
-                            class="w-full md:w-1/3 px-2 mb-4 transition-transform ease-in-out duration-300 hover:scale-90 hover:opacity-50">
+
+                        <a onmouseout="document.getElementById('open-{{$category->id}}').classList.add('hidden')"
+                            onmouseover="document.getElementById('open-{{$category->id}}').classList.remove('hidden')"
+                            href="{{ route('userItems', ['category_id' => $category->id]) }}" title="{{ $category->title }}"
+                            class="w-full md:w-1/3 px-2 mb-4 transition-transform ease-in-out duration-300 hover:scale-90">
+
+
                             <div class="shadow-lg rounded-lg overflow-hidden">
+
                                 <div class="flex h-[200px] relative">
+                                    <div id="open-{{$category->id}}"
+                                        class="flex relative w-full justify-center transition-transform ease-in-out duration-300 items-center bg-gray-800 bg-opacity-50 hidden z-50">
+                                        <div class="px-4 text-blue-100 bg-blue-500 py-2 rounded-full shadow-md hover:bg-blue-800">
+                                            Open
+
+                                        </div>
+                                    </div>
+
                                     @php
                                         $directory = storage_path('app/public/images/categories/' . $category->folder_name);
                                         $images = array_diff(scandir($directory), array('..', '.'));

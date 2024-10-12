@@ -140,6 +140,16 @@
         }
 
     }
+
+    .calendar-cell {
+        /* You can adjust padding, margin, etc. */
+        flex-grow: 1;
+        /* This will not have an effect in grid layout */
+        display: flex;
+        /* Retain flex for centering contents */
+        align-items: center;
+        justify-content: center;
+    }
 </style>
 
 
@@ -198,10 +208,10 @@
                 hx-target="#modal-item" hx-swap="innerHTML" hx-trigger="click" @endif
                     class="{{ $setting->transition == true ? 'transition-transform duration-300 ease-in-out transform hover:scale-105' : '' }} relative cursor-auto calendar-cell {{ $hasRecord == true ? 'bg-blue-500 text-white cursor-pointer shadow-md' : 'bg-gray-300' }} p-4 flex flex-col items-center justify-center font-semibold overflow-hidden group">
                     <div class="flex justify-center items-center">
-                        <h1 class="drop-shadow font-bold text-2xl {{ $isSunday ? 'text-red-500' : '' }}">{{ $day }}</h1>
+                        <h1 class="drop-shadow font-bold text-4xl {{ $isSunday ? 'text-red-500' : '' }}">{{ $day }}</h1>
                     </div>
                     @if(!$hasRecord && !$roles->contains('viewer'))
-                        <div onclick="toggleTransactionForm({{$day}}, {{$setting->trnasition}})" title="Add Transaction"
+                        <div onclick="toggleTransactionForm({{$day}}, {{$setting->transition}})" title="Add Transaction"
                             class="absolute inset-0 flex items-center justify-center text-2xl font-bold text-white opacity-0 bg-gray-500 {{ $setting->transitiona == true ? '' : 'group-hover:opacity-100 transition-opacity duration-300 ease-in-out'}}">
                             <h1 class="flex justify-center items-center text-4xl">+</h1>
                         </div>

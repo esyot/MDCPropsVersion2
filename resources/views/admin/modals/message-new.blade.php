@@ -14,7 +14,7 @@
             <div class="px-2 py-2 space-y-2">
                 <div>
                     <input type="hidden" value="{{Auth::user()->name}}" name="sender_name">
-                    <label for="">Receipient:</label>
+                    <label for="">Recipient:</label>
                     <select name="receiver_name" id="" class="block p-2  border border-gray-300 rounded">
                         @foreach ($users as $user)
                             <option value="{{ $user->name }}">{{ $user->name }}</option>

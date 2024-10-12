@@ -145,14 +145,15 @@
                         @if($message->sender_name == $current_user_name)
                             <div id="icons-{{$message->id}}" class="items-center hidden">
                                 <form class="flex" action="{{ route('messageReacted', ['id' => $message->id]) }}">
-                                    <button type="submit" title="React" class="px-1 py-1.2 rounded-full hover:bg-blue-300 ">
-                                        <i class="hover:text-blue-100 fa-regular fa-face-smile"></i>
+                                    <button type="submit" title="React"
+                                        class="px-1 py-1.2 rounded-full hover:bg-blue-500 hover:text-blue-100">
+                                        <i class="fa-regular fa-face-smile"></i>
                                     </button>
 
-                                    <button title="Reply" class="px-1 py-1.2 rounded-full hover:bg-blue-300"
+                                    <button title="Reply" class="px-1 py-1.2 rounded-full hover:bg-blue-500 hover:text-blue-100"
                                         onclick="handleButtonClick('{{ $message->id }}', '{{ $message->sender_name }}', '{{ $message->type }}')"
                                         type="button">
-                                        <i class="hover:text-blue-100 fa-solid fa-share" style="transform: scaleX(-1);"></i>
+                                        <i class="fa-solid fa-share" style="transform: scaleX(-1);"></i>
                                     </button>
                                 </form>
                             </div>
@@ -217,14 +218,15 @@
                         @if($message->sender_name != $current_user_name)
                             <div id="icons-{{$message->id}}" class="items-center hidden">
                                 <form class="flex" action="{{ route('messageReacted', ['id' => $message->id]) }}">
-                                    <button type="submit" title="React" class="px-1 py-1.2 rounded-full hover:bg-blue-300 ">
-                                        <i class="hover:text-blue-100 fa-regular fa-face-smile"></i>
+                                    <button type="submit" title="React"
+                                        class="px-1 py-1.2 rounded-full hover:bg-blue-500 hover:text-blue-100">
+                                        <i class="fa-regular fa-face-smile"></i>
                                     </button>
 
-                                    <button title="Reply" class="px-1 py-1.2 rounded-full hover:bg-blue-300"
+                                    <button title="Reply" class="px-1 py-1.2 rounded-full hover:bg-blue-500 hover:text-blue-100"
                                         onclick="handleButtonClick('{{ $message->id }}', '{{ $message->sender_name }}', '{{ $message->type }}')"
                                         type="button">
-                                        <i class="hover:text-blue-100 fa-solid fa-share" style="transform: scaleX(-1);"></i>
+                                        <i class="fa-solid fa-share" style="transform: scaleX(-1);"></i>
                                     </button>
                                 </form>
                             </div>

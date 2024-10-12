@@ -14,68 +14,75 @@ class NotificationController extends Controller
     {
         $notification = Notification::find($id);
 
-        // Check if the notification exists
         if (!$notification) {
             return redirect()->back()->with('error', 'Notification not found.');
         }
 
-        // Check if the notification is already marked as read by the current user
-        if (in_array(Auth::user()->id, $notification->isReadBy)) {
+
+        if (in_array(Auth::user()->id, $notification->isReadBy ?? [])) {
             return redirect('/admin/' . $redirect_link);
         }
 
-        $isReadBy = json_decode($notification->isReadBy != null) ?: [];
-        $isReadBy = array_merge($isReadBy, [Auth::user()->id]);
+
+        $isReadByOld = is_array($notification->isReadBy) ? $notification->isReadBy : [];
+        $isReadBy = array_merge($isReadByOld, [Auth::user()->id]);
 
         $notification->update([
             'isReadBy' => $isReadBy,
         ]);
 
-        // Redirect based on whether the update was successful
-        if ($notification) {
-            return redirect('/admin/' . $redirect_link);
-        } else {
-            return redirect()->back()->with('error', 'Failed to mark notification as read.');
-        }
+
+        return redirect('/admin/' . $redirect_link);
     }
 
 
-    public function notificationList($filter)
+
+    public function notificationList($filter, $category)
     {
         $roles = Auth::user()->getRoleNames();
+
+
         if ($filter === 'unread') {
-            if ($roles->contains('moderator') || $roles->contains('editor')) {
-                $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
-                $categoryIds = $managedCategories->pluck('category_id');
-                $categories = Category::whereIn('id', $categoryIds)->get();
-                $currentCategory = $categories->first();
 
-                $notifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
+            if ($roles->contains('superadmin')) {
 
-                return view('admin.partials.notification-list', compact('notifications'));
-            } else {
-                $notifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
-                return view('admin.partials.notification-list', compact('notifications'));
+                $notifications = Notification::whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->
+                    whereJsonDoesntContain('isReadBy', Auth::user()->orderBy('created_at', 'DESC')->id)->get();
+
+
+            } else if ($roles->contains('admin')) {
+
+                $notifications = Notification::where('category_id', $category)->whereJsonDoesntContain('isReadBy', Auth::user()->id)->get();
+
+            } else if ($roles->contains('staff')) {
+
+                $notifications = Notification::where('category_id', $category)->whereJsonDoesntContain('isReadBy', Auth::user()->id)->get();
+
             }
-        }
 
-        if ($filter === 'all') {
-            if ($roles->contains('moderator') || $roles->contains('editor')) {
-                $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
-                $categoryIds = $managedCategories->pluck('category_id');
-                $categories = Category::whereIn('id', $categoryIds)->get();
-                $currentCategory = $categories->first();
 
-                $notifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
 
-                return view('admin.partials.notification-list', compact('notifications'));
-            } else {
-                $notifications = Notification::orderBy('created_at', 'DESC')->get();
-                return view('admin.partials.notification-list', compact('notifications'));
+            return view('admin.partials.notification-list', compact('notifications'));
+
+        } else if ($filter === 'all') {
+
+            if ($roles->contains('superadmin')) {
+
+                $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
+
+
+            } else if ($roles->contains('admin')) {
+
+                $notifications = Notification::whereIn('for', ['admin', 'all'])->orderBy('created_at', 'DESC')->get();
+
+            } else if ($roles->contains('staff')) {
+
+                $notifications = Notification::where('category_id', $category)->get();
+
             }
-        }
 
-        return view('admin.partials.notification-list', ['notifications' => collect()]);
+            return view('admin.partials.notification-list', compact('notifications'));
+        }
     }
 
     public function readAll()
