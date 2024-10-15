@@ -106,20 +106,21 @@ return new class extends Migration {
 
         Schema::create('rentees', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('middle_name');
-            $table->string('email');
-            $table->string('contact_no');
-            $table->string('address_1');
-            $table->string('address_2');
+            $table->string('rentee_code');
+            $table->string('first_name')->nullable(true);
+            $table->string('last_name')->nullable(true);
+            $table->string('middle_name')->nullable(true);
+            $table->string('email')->nullable(true);
+            $table->string('contact_no')->nullable(true);
+            $table->string('address_1')->nullable(true);
+            $table->string('address_2')->nullable(true);
             $table->timestamps();
 
         });
 
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('rentee_id')->constrained()->onDelete('cascade');
             $table->json('items');
             $table->timestamps();
         });
@@ -131,6 +132,14 @@ return new class extends Migration {
             $table->foreignId('cart_id')->constrained()->onDelete('cascade');
             $table->string('status')->default('pending');
             $table->dateTime('approved_at')->default(null);
+            $table->timestamps();
+        });
+
+
+        Schema::create('rentee_sessions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('rentee_id')->constrained()->onDelete('cascade');
+            $table->boolean('isSessionStarted')->default(false);
             $table->timestamps();
         });
 

@@ -33,7 +33,8 @@
         </div>
 
         <div class="flex justify-end p-2 space-x-2">
-            <button class="px-4 py-2 bg-blue-100 text-blue-800 rounded">Add to cart</button>
+            <a href="{{ route('addToCart', ['rentee' => $rentee, 'item' => $item->id]) }}"
+                class="px-4 py-2 bg-blue-100 text-blue-800 rounded">Add to cart</a>
             <button onclick="document.getElementById('date-{{$item->id}}').classList.add('hidden')"
                 class="px-4 py-2 bg-red-100 text-red-800 rounded">Cancel</button>
         </div>

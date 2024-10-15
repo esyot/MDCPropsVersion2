@@ -51,16 +51,16 @@
                         <div class="font-medium p-2">
                             <button id="all"
                                 onclick="document.getElementById('all').classList.add('bg-gray-300'); document.getElementById('unread').classList.remove('bg-gray-300')"
-                                hx-get="{{ route('notificationList', ['filter' => 'all', 'category' => $currentCategory->id])}}"
-                                hx-swap="innerHTML" hx-trigger="click" hx-target="#notification-list"
+                                hx-get="{{ route('notificationList', ['filter' => 'all'])}}" hx-swap="innerHTML"
+                                hx-trigger="click" hx-target="#notification-list"
                                 class="px-2 rounded-full bg-gray-300 hover:bg-gray-200">
                                 All
                             </button>
 
                             <button id="unread"
                                 onclick="document.getElementById('unread').classList.add('bg-gray-300'); document.getElementById('all').classList.remove('bg-gray-300');"
-                                hx-get="{{ route('notificationList', ['filter' => 'unread', 'category' => $currentCategory->id]) }}"
-                                hx-swap="innerHTML" hx-trigger="click" hx-target="#notification-list"
+                                hx-get="{{ route('notificationList', ['filter' => 'unread']) }}" hx-swap="innerHTML"
+                                hx-trigger="click" hx-target="#notification-list"
                                 class="px-2 rounded-full hover:bg-gray-200">
                                 Unread
                             </button>
@@ -84,7 +84,7 @@
                             document.getElementById('all').addEventListener('click', function () {
                                 showLoader();
 
-                                htmx.ajax('GET', '{{ route('notificationList', ['filter' => 'all', 'category' => $currentCategory->id]) }}', {
+                                htmx.ajax('GET', '{{ route('notificationList', ['filter' => 'all']) }}', {
                                     target: '#notification-list',
                                     swap: 'innerHTML'
                                 });
@@ -93,7 +93,7 @@
                             document.getElementById('unread').addEventListener('click', function () {
                                 showLoader();
 
-                                htmx.ajax('GET', '{{ route('notificationList', ['filter' => 'unread', 'category' => $currentCategory->id]) }}', {
+                                htmx.ajax('GET', '{{ route('notificationList', ['filter' => 'unread']) }}', {
                                     target: '#notification-list',
                                     swap: 'innerHTML'
                                 });

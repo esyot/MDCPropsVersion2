@@ -8,11 +8,11 @@ use App\Models\Item;
 
 class RenteeItemsController extends Controller
 {
-    public function index($category_id)
+    public function index($category_id, $rentee)
     {
         $items = Item::where('category_id', $category_id)->get();
 
-        return view('rentee.pages.items', compact('items', 'category_id'));
+        return view('rentee.pages.items', compact('items', 'category_id', 'rentee'));
     }
 
     public function itemUnAvailableDates($id)

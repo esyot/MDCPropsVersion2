@@ -16,7 +16,7 @@
     @if(count($items) > 0)
         <div class="flex items-center justify-between z-50 bg-gradient-to-r from-blue-500 to-blue-800 p-2 shadow-md">
             <div class="flex items-center">
-                <a href="{{ route('home') }}" class="hover:opacity-50 z-40 px-4 py-2 rounded">
+                <a href="{{ route('home', ['rentee' => $rentee]) }}" class="hover:opacity-50 z-40 px-4 py-2 rounded">
                     <i class="fas fa-arrow-circle-left fa-2xl text-white"></i>
                 </a>
                 <h1 class="text-white font-bold line-clamp-1">{{ $items->first()->category->title }}</h1>
@@ -57,12 +57,16 @@
         </div>
 
         <div id="rightbar" class="flex fixed right-0 top-[80px] justify-end z-50">
-            <button title="Messages" class="hover:opacity-50 mb-2 drop-shadow px-4 py-2 rounded flex flex-col items-center">
+            <button title="Messages"
+                class="hover:opacity-50 mb-2 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
                 <i class="fab fa-facebook-messenger fa-2xl text-blue-400"></i>
             </button>
-            <button title="Cart" class="hover:opacity-50 drop-shadow px-4 py-2 rounded flex flex-col items-center">
-                <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
-            </button>
+
+            <a href="{{ route('cart', ['rentee' => $rentee]) }}">
+                <button title="Cart" class="hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
+                    <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
+                </button>
+            </a>
         </div>
 
         <div class="mx-auto px-4 py-6 relative">
@@ -71,6 +75,22 @@
 
             </div>
         </div>
+        @if(session()->has('success'))
+            <div id="successModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                <div class="bg-green-500 text-white rounded-md shadow-md p-6 w-1/3">
+                    <h2 class="text-xl font-semibold mb-4">Success!</h2>
+                    <p>{{ session('success') }}</p>
+                    <div class="flex justify-end mt-4">
+                        <button onclick="document.getElementById('successModal').classList.add('hidden')"
+                            class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+
         @include('rentee.components.footer')
     @else
         <div class="flex flex-col justify-center items-center h-screen">

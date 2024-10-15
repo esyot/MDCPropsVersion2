@@ -19,6 +19,7 @@ use App\Http\Controllers\RenteeItemsController;
 use App\Http\Controllers\RenteeCustomerServiceController;
 use App\Http\Controllers\RenteeCartController;
 use App\Http\Controllers\RenteeHomeController;
+use App\Http\Controllers\RenteeController;
 
 //User Controller
 
@@ -30,8 +31,8 @@ Route::get('/', function () {
 });
 
 Route::get('/welcome', [RenteeHomeController::class, 'welcome'])->name('welcome');
-Route::get('/rentee/home', [RenteeHomeController::class, 'index'])->name('home');
-Route::get('/rentee/items/{category_id}', [RenteeItemsController::class, 'index'])->name('userItems');
+
+Route::get('/rentee/items/{category_id}/{rentee}', [RenteeItemsController::class, 'index'])->name('userItems');
 
 Route::get('/rentee/item/{id}', [RenteeItemsController::class, 'itemUnAvailableDates']);
 
@@ -40,10 +41,17 @@ Route::get('/rentee/items/filter/{category_id}', [RenteeItemsController::class, 
 Route::get('rentee/customer-service', [RenteeCustomerServiceController::class, 'index'])->name('customerService');
 
 
-Route::get('/rentee/cart', [RenteeCartController::class, 'index'])->name('cart');
+Route::get('/rentee/cart/{rentee}', [RenteeCartController::class, 'index'])->name('cart');
 
+Route::get('/get-started', [RenteeController::class, 'create'])->name('getStarted');
 
+Route::get('/home/{rentee}', [RenteeHomeController::class, 'home'])->name('home');
 
+Route::get('/rentee/cancel-order/{rentee}', [RenteeController::class, 'cancelOrder'])->name('cancelOrder');
+
+Route::get('/rentee/add-to-cart/{rentee}/{item}', [RenteeCartController::class, 'addToCart'])->name('addToCart');
+
+Route::get('/rentee/back-to-home/{rentee}', [RenteeHomeController::class, 'backToHome'])->name('backToHome');
 // Public Routes
 Route::get('/admin/login', [LoginController::class, 'index'])->name('loginPage');
 Route::post('/admin.login', [AuthController::class, 'login'])->name('login');
@@ -65,7 +73,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/password/update/{id}', [ProfileController::class, 'passwordUpdate'])->name('passwordUpdate');
 
     // Notifications
-    Route::get('/admin/notification-list/{filter}/{category}', [NotificationController::class, 'notificationList'])->name('notificationList');
+    Route::get('/admin/notification-list/{filter}', [NotificationController::class, 'notificationList'])->name('notificationList');
     Route::get('/admin/isRead/{id}/{redirect_link}', [NotificationController::class, 'isRead'])->name('isRead');
     Route::get('/admin/notification/read/all', [NotificationController::class, 'readAll'])->name('readAll');
     Route::get('/admin/notification/delete/all', [NotificationController::class, 'deleteAll'])->name('deleteAll');

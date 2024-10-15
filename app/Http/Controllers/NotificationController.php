@@ -37,10 +37,12 @@ class NotificationController extends Controller
 
 
 
-    public function notificationList($filter, $category)
+    public function notificationList($filter)
     {
         $roles = Auth::user()->getRoleNames();
 
+        $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->pluck('category_id');
+        $categories = Category::whereIn('id', $managedCategories)->get();
 
         if ($filter === 'unread') {
 
@@ -52,11 +54,11 @@ class NotificationController extends Controller
 
             } else if ($roles->contains('admin')) {
 
-                $notifications = Notification::where('category_id', $category)->whereJsonDoesntContain('isReadBy', Auth::user()->id)->get();
+                $notifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->get();
 
             } else if ($roles->contains('staff')) {
 
-                $notifications = Notification::where('category_id', $category)->whereJsonDoesntContain('isReadBy', Auth::user()->id)->get();
+                $notifications = Notification::whereIn('category_id', $categories)->whereJsonDoesntContain('isReadBy', Auth::user()->id)->get();
 
             }
 
@@ -77,7 +79,7 @@ class NotificationController extends Controller
 
             } else if ($roles->contains('staff')) {
 
-                $notifications = Notification::where('category_id', $category)->get();
+                $notifications = Notification::whereIn('category_id', $categories)->get();
 
             }
 

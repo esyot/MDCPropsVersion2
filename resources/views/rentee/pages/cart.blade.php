@@ -15,16 +15,41 @@
 
 <body class="bg-gray-200">
 
-    <header class="flex items-center bg-white p-2 space-x-1">
-        <a href="{{ route('home') }}" class="transition-transform ease-in-out duration-300 hover:scale-110">
-            <i class="fas fa-arrow-circle-left fa-xl text-blue-500"></i>
+    <header class="flex items-center p-4 space-x-2 bg-blue-500 shadow-md">
+        <a href="{{ route('backToHome', ['rentee' => $rentee]) }}" class="hover:opacity-50">
+            <i class="fas fa-arrow-circle-left fa-xl text-white"></i>
         </a>
 
-        <h1 class="text-xl">
+        <h1 class="text-xl text-white font-bold">
             Cart
         </h1>
 
     </header>
+
+    <section class="flex flex-col mt-2 overflow-y-auto">
+        @foreach ($items as $item)
+            <div class="flex justify-between p-4 mx-4 bg-white items-center">
+                <div class="flex space-x-2 items-center">
+                    <input type="checkbox" name="" id="">
+                    <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
+                        alt="{{ $item->name }}" class="w-[50px] h-[50px] object-cover">
+
+                    <p>{{$item->name}}</p>
+                </div>
+                <div>
+                    <i class="fas fa-trash"></i>
+                </div>
+            </div>
+        @endforeach
+
+        <div class="flex fixed bottom-0 right-0 left-0  justify-center">
+            <div>
+
+
+                <button class="px-4 py-2 bg-yellow-500 text-yellow-100 m-2 rounded">Proceed to checkout</button>
+            </div>
+        </div>
+    </section>
 
 </body>
 

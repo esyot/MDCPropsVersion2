@@ -195,9 +195,7 @@ class ItemController extends Controller
         $roles = Auth::user()->getRoleNames();
 
         if ($roles->contains('superadmin')) {
-            $categories = Category::all();
 
-            $currentCategory = $categories->first();
 
             $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
@@ -213,11 +211,6 @@ class ItemController extends Controller
         } else if ($roles->contains('admin')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
-            $categories = Category::whereIn('id', $categoryIds)->get();
-            $currentCategory = $categories->first();
-
-            $categories = Category::all();
-            $currentCategory = $categories->first();
 
             $notifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain(
                 'isDeletedBy',
@@ -233,8 +226,7 @@ class ItemController extends Controller
         } else if ($roles->contains('staff')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
-            $categories = Category::whereIn('id', $categoryIds)->get();
-            $currentCategory = $categories->first();
+
 
             $notifications = Notification::where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
