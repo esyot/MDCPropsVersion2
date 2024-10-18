@@ -35,8 +35,11 @@
 
     <div
         class="{{ in_array(Auth::user()->id, $notification->isReadBy) ? 'bg-white' : 'bg-gray-200 font-bold' }} notification-item flex items-center space-x-2 p-2 text-gray-800 cursor-pointer hover:shadow-inner hover:bg-gray-300 transition duration-150 ease-in-out border-t border-gray-300">
-        <img class="w- h-10 rounded-full" src="{{ asset('storage/images/users/' . $notification->icon) }}"
-            alt="Notification Icon">
+        <img class="border-2 border-gray-600 h-[40px] w-[40px] rounded-full"
+            src="{{ Storage::exists('public/images/users/' . $notification->img) ? asset('storage/images/users/user.png') : asset('asset/photos/user.png') }}"
+            alt="User Image">
+
+
         <div class="flex flex-col">
             <a href="{{ route('isRead', ['id' => $notification->id, 'redirect_link' => $notification->redirect_link]) }}">
                 <h1 class="text-xs font-bold">{{ $notification->title }}</h1>

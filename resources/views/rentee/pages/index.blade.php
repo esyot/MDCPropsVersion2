@@ -63,14 +63,24 @@
 
     <div id="confirmLogoutModal"
         class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
-        <div class="bg-white p-4 rounded">
-            <h1 class="text-2xl">Are you sure to cancel your order?</h1>
-            <div class="flex justify-end space-x-1 mt-4">
+        <div class="bg-white p-4 rounded-lg w-[500px]">
+            <div class="flex justify-end ">
+                <button class="text-2xl font-bold hover:text-gray-300"
+                    onclick="document.getElementById('confirmLogoutModal').classList.add('hidden')">&times;</button>
+
+            </div>
+
+            <div class="my-4">
+                <h1 class="text-2xl font-medium">Are you sure to cancel your order?</h1>
+                <p>if you proceed all carts will not be saved and start a new transaction.</p>
+            </div>
+
+            <div class="flex justify-end space-x-1 mt-6">
 
                 <button onclick="document.getElementById('confirmLogoutModal').classList.add('hidden')"
-                    class="px-4 py-2 bg-red-500 rounded text-red-100 hover:bg-red-800">No, cancel.</button>
+                    class="px-4 py-2 border border-gray-300 rounded text-gray-800 hover:bg-gray-500 hover:text-gray-100">Cancel</button>
                 <a href="{{ route('cancelOrder', ['rentee' => $rentee]) }}"
-                    class="px-4 py-2 bg-blue-500 rounded text-blue-100 hover:bg-blue-800">Yes, sure.</a>
+                    class="px-4 py-2 bg-red-500 rounded text-red-100 hover:bg-red-800">Logout</a>
             </div>
         </div>
     </div>
@@ -104,7 +114,7 @@
             <i class="fas fa-bars"></i>
         </button>
 
-        <div id="rightbar" class="flex fixed right-0 justify-end">
+        <div id="rightbar" class="flex fixed right-0 justify-end z-50">
 
             <button title="Messages"
                 class="hover:opacity-50 mb-2 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
@@ -128,7 +138,7 @@
             <h1 class="text-2xl font-bold text-center mb-2">Categories</h1>
         </div>
 
-        <div class="flex flex-wrap -mx-2 overflow-y-auto">
+        <div class="flex flex-wrap -mx-2 overflow-y-auto ">
             @foreach($categories as $category)
                         <a onmouseout="document.getElementById('open-{{$category->id}}').classList.add('hidden')"
                             onmouseover="document.getElementById('open-{{$category->id}}').classList.remove('hidden')"
@@ -138,7 +148,7 @@
                             <div class="shadow-lg rounded-lg overflow-hidden">
                                 <div class="flex h-[200px] relative">
                                     <div id="open-{{$category->id}}"
-                                        class="flex relative w-full justify-center transition-transform ease-in-out duration-300 items-center bg-gray-800 bg-opacity-50 hidden z-50">
+                                        class="flex relative w-full justify-center transition-transform ease-in-out duration-300 items-center bg-gray-800 bg-opacity-50 hidden z-4      0">
                                         <div class="px-4 text-blue-100 bg-blue-500 py-2 rounded-full shadow-md hover:bg-blue-800">
                                             Open
                                         </div>

@@ -190,14 +190,12 @@ class MessageController extends Controller
     public function messageNewSend(Request $request)
     {
         $validatedData = $request->validate([
-
-            'sender_name' => ['string', 'required'],
             'receiver_name' => ['string', 'required'],
             'content' => ['string', 'required']
         ]);
 
         Message::create([
-            'sender_name' => $validatedData['sender_name'],
+            'sender_name' => Auth::user()->name,
             'receiver_name' => $validatedData['receiver_name'],
             'content' => $validatedData['content'],
             'type' => 'text',

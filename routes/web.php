@@ -66,7 +66,7 @@ Route::get('test', function () {
     return view('admin.test');
 });
 
-Route::get('/admin/search-contacts', [ContactController::class, 'searchContact'])->name('searchContact');
+Route::get('/admin/contacts-search', [ContactController::class, 'search'])->name('searchContact');
 
 Route::get('/admin/users-filter', [UserController::class, 'filter'])->name('usersFilter');
 

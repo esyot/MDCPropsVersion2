@@ -255,7 +255,9 @@
                         <div class="flex items-center space-x-2">
                             <div class="relative">
                                 <img class="border-2 border-gray-600 h-[40px] w-[40px] rounded-full"
-                                    src="{{ asset('storage/images/users/' . Auth::user()->img) }}" alt="User Image">
+                                    src="{{ Storage::exists('public/images/users/' . Auth::user()->img) ? asset('storage/images/users/' . Auth::user()->img) : asset('asset/photos/user.png') }}"
+                                    alt="User Image">
+
                                 <i
                                     class="fas fa-chevron-circle-down absolute bottom-0 right-0 transform translate-x-1 translate-y-1 text-gray-600"></i>
                             </div>

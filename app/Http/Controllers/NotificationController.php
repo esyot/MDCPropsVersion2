@@ -49,7 +49,7 @@ class NotificationController extends Controller
             if ($roles->contains('superadmin')) {
 
                 $notifications = Notification::whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->
-                    whereJsonDoesntContain('isReadBy', Auth::user()->orderBy('created_at', 'DESC')->id)->get();
+                    whereJsonDoesntContain('isReadBy', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
 
 
             } else if ($roles->contains('admin')) {
