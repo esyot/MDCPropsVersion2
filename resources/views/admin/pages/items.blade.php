@@ -2,7 +2,7 @@
 @section('content')
 @if ($categoriesIsNull == false)
 
-    <div id="navbar" class="bg-gray-200 p-4">
+    <div id="items-header" class="p-4">
         <div class="flex items-center">
             <form action="{{ route('itemsFilter') }}" class="flex space-x-1 items-center bg-white p-2 rounded shadow-md">
                 @csrf
@@ -123,7 +123,7 @@
         <div class="flex flex-wrap flex-grow gap-2">
             <!-- Add Category Button -->
             <div id="add-new-item-card" title="Add a new category"
-                class="flex flex-col rounded-lg bg-gray-300 {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-105' : '' }}">
+                class="flex flex-col rounded-lg bg-gray-300 {{ $setting->transition == true ? 'transition-transform duration-300 hover:scale-90' : '' }}">
                 <div class="flex justify-center items-center rounded-lg bg-gray-200 h-3/4 cursor-pointer hover:text-gray-800 text-gray-400 "
                     onclick="document.getElementById('item-add-modal').classList.remove('hidden')">
                     <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
@@ -138,7 +138,7 @@
 
                 <div id="card" title="Click to preview"
                     onclick="document.getElementById('item-{{$item->id}}').classList.remove('hidden')"
-                    class="flex flex-col text-white relative bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-105' : '' }}">
+                    class="flex flex-col text-white relative bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transition-transform  duration-300 hover:scale-90' : '' }}">
                     <!-- Image Container -->
                     <div class="flex justify-center items-center bg-gray-200 h-3/4 shadow-inner">
                         <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"

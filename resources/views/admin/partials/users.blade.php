@@ -1,5 +1,5 @@
 @foreach ($users as $user)
-            <div id="card" class="flex flex-col items-center rounded-lg p-2 bg-blue-500 justify-center">
+            <div id="card" class="flex flex-col items-center rounded-lg p-2 bg-blue-500 justify-center transition-transform duration-300 ease-in-out hover:scale-90">
                 <img class="w-32 h-32 border-4 border-gray-300 drop-shadow-lg rounded-full mb-4"
                     src="{{ asset('storage/images/users/' . $user->img) }}" alt="">
                 <div>

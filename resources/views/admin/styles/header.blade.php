@@ -89,11 +89,36 @@
         #dropdown-title {
             color: #fff;
         }
+        #calendar-header {
+            background-color: #1d1d1d;
+        }
+        #items-header {
+            background-color: #1d1d1d;
+        }
+        #transactions-header {
+            background-color: #1d1d1d;
+        }
+        #users-header {
+            background-color: #1d1d1d;
+        }
+
     </style>
 
 @else
 
     <style>
+        #calendar-header{
+            background-color: #BBDEFB;
+        }
+        #items-header{
+            background-color: #BBDEFB;
+        }
+        #transactions-header{
+            background-color: #BBDEFB;
+        }
+        #users-header{
+            background-color: #BBDEFB;
+        }
         #topbar {}
 
 

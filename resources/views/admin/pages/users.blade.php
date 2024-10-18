@@ -1,7 +1,7 @@
 @extends('admin.layouts.header')
 
 @section('content')
-<div id="navbar" class="bg-gray-200 p-4 shadow-md z-40">
+<div id="users-header" class="bg-gray-200 p-4 shadow-md z-40">
     <div class="flex items-center">
         <form hx-get="{{ route('usersFilter') }}" hx-trigger="input" hx-target="#users" hx-swap="innerHTML"
             class="flex space-x-1 items-center bg-white p-2 rounded-full shadow-md">
@@ -34,13 +34,14 @@
         }
     }
 </style>
-<div id="main-content" class="w-full h-full relative p-4 overflow-y-auto custom-scrollbar">
+
+<div id="main-content" class="w-full h-[90%] relative p-4 overflow-y-auto custom-scrollbar">
     <div class="flex flex-wrap flex-grow gap-2">
 
-        @hasrole('admin')
+        @hasrole('superadmin')
 
-        <div id="add-new-user-card" title="Add a new category"
-            class="flex flex-col rounded-lg bg-gray-300 {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-105' : '' }}">
+        <div id="add-new-user-card" title="Add a new user"
+            class="flex flex-col rounded-lg bg-gray-300 {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-90' : '' }}">
             <div class="flex justify-center items-center rounded-lg bg-gray-200 h-3/4 cursor-pointer hover:text-gray-800 text-gray-400 "
                 onclick="document.getElementById('userAddModal').classList.remove('hidden')">
                 <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
@@ -52,10 +53,10 @@
 
 
         @endhasrole
-<div id="users" class="flex flex-wrap flex-grow gap-2">
-@include('admin.partials.users')
+        <div id="users" class="flex flex-wrap flex-grow gap-2">
+        @include('admin.partials.users')
 
-</div>
+        </div>
 
       
     </div>
@@ -67,6 +68,20 @@
         <div class="bg-white px-6 py-4 rounded">
             <div>
                 <h1 class="text-lg">{{ session('success') }}</h1>
+            </div>
+            <div class="flex justify-end mt-2">
+                <button onclick="document.getElementById('success').classList.toggle('hidden')"
+                    class="px-4 py-2 bg-gray-100 hover:bg-gray-500 rounded">OK</button>
+            </div>
+        </div>
+    </div>
+@endif
+
+@if(session('error'))
+    <div id="success" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50">
+        <div class="bg-white px-6 py-4 rounded">
+            <div>
+                <h1 class="text-lg">{{ session('error') }}</h1>
             </div>
             <div class="flex justify-end mt-2">
                 <button onclick="document.getElementById('success').classList.toggle('hidden')"
@@ -117,7 +132,6 @@
         </form>
     </div>
 </div>
-
 
 <script>
 

@@ -19,7 +19,7 @@
                         <i class="fas fa-search text-gray-500"></i>
                     </div>
                     <input type="text" title="Search" name="searchValue" placeholder="Search contact"
-                        class="bg-transparent mr-8 focus:outline-none">
+                        class="bg-transparent focus:outline-none">
 
                 </form>
 

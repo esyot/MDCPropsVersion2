@@ -12,7 +12,6 @@
     .slide-wrapper {
         display: flex;
         transition: transform 0.5s ease-in-out;
-        /* Ensure smooth transition */
     }
 
     .slide {
@@ -142,7 +141,7 @@
         <!-- Add Category Button -->
         @can('can manage categories')
             <div id="add-new-category-card" title="Add a new category"
-                class="flex flex-col bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-110' : '' }}">
+                class="flex flex-col bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-90' : '' }}">
                 <div class="h-full flex items-center justify-center cursor-pointer hover:text-gray-800 text-gray-400 "
                     onclick="document.getElementById('category-add-modal').classList.remove('hidden')">
                     <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
@@ -179,16 +178,16 @@
         @foreach ($categories as $category)  
 
                 <div id="card"
-                    class="flex flex-col text-white rounded-lg w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-110' : '' }}">
+                    class="flex flex-col text-white rounded-lg w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-90' : '' }}">
                     <div class="relative w-full max-w-3xl overflow-hidden slide-container ">
-                        <div class="slide-wrapper shadow-inner z-50">
+                        <div class="slide-wrapper shadow-md z-50">
                             @php
                                 $directory = storage_path('app/public/images/categories/' . $category->folder_name);
                                 $images = array_diff(scandir($directory), array('..', '.'));
                             @endphp
 
                             @foreach ($images as $image)
-                                <div class="slide">
+                                <div class="slide bg-gray-100" >
                                     <img src="{{ asset('storage/images/categories/' . $category->folder_name . '/' . $image) }}"
                                         alt="Image">
                                 </div>

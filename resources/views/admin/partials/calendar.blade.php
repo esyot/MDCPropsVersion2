@@ -1,6 +1,6 @@
 <form id="filter-form" class="" action="{{ route('dateCustom')}}" method="GET">
     @csrf
-    <div class="bg-blue-200 p-2">
+    <div id="calendar-header" class="p-2">
 
         <div class="flex items-center">
             <div id="calendar-controls" class="flex space-x-2 p-2 ">
@@ -206,7 +206,7 @@
 
                 <button @if($hasRecord) hx-get="{{ $date ? route('dateView', ['date' => $date]) : '#' }}"
                 hx-target="#modal-item" hx-swap="innerHTML" hx-trigger="click" @endif
-                    class="{{ $setting->transition == true ? 'transition-transform duration-300 ease-in-out transform hover:scale-105' : '' }} relative cursor-auto calendar-cell {{ $hasRecord == true ? 'bg-blue-500 text-white cursor-pointer shadow-md' : 'bg-gray-300' }} p-4 flex flex-col items-center justify-center font-semibold overflow-hidden group">
+                    class="{{ $setting->transition == true ? 'transition-transform duration-300 ease-in-out transform hover:scale-90' : '' }} relative cursor-auto calendar-cell {{ $hasRecord == true ? 'bg-blue-500 text-white cursor-pointer shadow-md' : 'bg-gray-300' }} p-4 flex flex-col items-center justify-center font-semibold overflow-hidden group">
                     <div class="flex justify-center items-center">
                         <h1 class="drop-shadow font-bold text-4xl {{ $isSunday ? 'text-red-500' : '' }}">{{ $day }}</h1>
                     </div>

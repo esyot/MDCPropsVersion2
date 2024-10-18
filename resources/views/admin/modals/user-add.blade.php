@@ -12,13 +12,13 @@
                 <div>
                     <label for="name">Name:</label>
                     <input type="text" name="name" placeholder="Input name"
-                        class="block p-2 border border border-gray-300 w-full rounded">
+                        class="block p-2 border border border-gray-300 w-full rounded" required>
                 </div>
 
                 <div>
                     <label for="name">Email:</label>
                     <input type="email" name="email" placeholder="Input email"
-                        class="block p-2 border border border-gray-300 w-full rounded">
+                        class="block p-2 border border border-gray-300 w-full rounded" required>
                 </div>
                 <div class="flex justify-end space-x-1">
                     <button type="submit" class="px-4 py-2 bg-blue-500 text-blue-100 hover:bg-blue-800 rounded">

@@ -3,7 +3,7 @@
 
 @if ($categoriesIsNull == false)
 
-    <div id="navbar" class="flex items-center justify-between p-4 shadow-md">
+    <div id="transactions-header" class="flex items-center justify-between p-4 shadow-md">
         <div class="flex items-center space-x-2 ">
             <form onchange="this.submit()" action="{{ route('transactionsFilter') }}" class="flex justify-around space-x-4"
                 method="GET">
@@ -35,7 +35,7 @@
             @foreach($transactions as $transaction)
 
                 <div title="Details"
-                    class="mx-2 w-64 bg-white rounded-lg shadow-md overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-110' : '' }}">
+                    class="mx-2 w-64 bg-white rounded-lg shadow-md overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-90' : '' }}">
                     <div onclick="document.getElementById('transaction-{{$transaction->id}}').classList.remove('hidden')">
 
 

@@ -20,6 +20,7 @@ use App\Http\Controllers\RenteeCustomerServiceController;
 use App\Http\Controllers\RenteeCartController;
 use App\Http\Controllers\RenteeHomeController;
 use App\Http\Controllers\RenteeController;
+use App\Http\Controllers\ContactController;
 
 //User Controller
 
@@ -64,6 +65,8 @@ Route::post('/admin.login', [AuthController::class, 'login'])->name('login');
 Route::get('test', function () {
     return view('admin.test');
 });
+
+Route::get('/admin/search-contacts', [ContactController::class, 'searchContact'])->name('searchContact');
 
 Route::get('/admin/users-filter', [UserController::class, 'filter'])->name('usersFilter');
 
