@@ -52,6 +52,12 @@ Route::get('/rentee/cancel-order/{rentee}', [RenteeController::class, 'cancelOrd
 Route::get('/rentee/add-to-cart/{rentee}/{item}', [RenteeCartController::class, 'addToCart'])->name('addToCart');
 
 Route::get('/rentee/back-to-home/{rentee}', [RenteeHomeController::class, 'backToHome'])->name('backToHome');
+
+
+Route::post('/rentee/checkout/{rentee}', [RenteeCartController::class, 'checkout'])->name('checkout');
+
+Route::get('/rentee/remove-item-in-cart/{id}/{rentee}', [RenteeCartController::class, 'removeItemInCart'])->name('removeItemInCart');
+
 // Public Routes
 Route::get('/admin/login', [LoginController::class, 'index'])->name('loginPage');
 Route::post('/admin.login', [AuthController::class, 'login'])->name('login');

@@ -26,29 +26,35 @@
 
     </header>
 
-    <section class="flex flex-col mt-2 overflow-y-auto">
-        @foreach ($items as $item)
-            <div class="flex justify-between p-4 mx-4 bg-white items-center">
-                <div class="flex space-x-2 items-center">
-                    <input type="checkbox" name="" id="">
-                    <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
-                        alt="{{ $item->name }}" class="w-[50px] h-[50px] object-cover">
+    <section class="flex flex-col mt-2  overflow-y-auto">
+        <form action="{{ route('checkout', ['rentee' => $rentee]) }}" method="POST" id="checkout-form"
+            class="space-y-2">
+            @csrf
+            @foreach ($items as $item)
+                <div class="flex justify-between p-4 mx-4 bg-white items-center">
+                    <div class="flex space-x-2 items-center">
+                        <input type="checkbox" name="items[]" value="{{ $item->id }}" id="item-{{ $item->id }}">
+                        <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
+                            alt="{{ $item->name }}" class="w-[50px] h-[50px] object-cover">
 
-                    <p>{{$item->name}}</p>
+                        <p>{{$item->name}}</p>
+                    </div>
+                    <div>
+                        <a href="{{route('removeItemInCart', ['id' => $item->id, 'rentee' => $rentee])}}">
+
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
                 </div>
+            @endforeach
+
+            <div class="flex fixed bottom-0 right-0 left-0 justify-center">
                 <div>
-                    <i class="fas fa-trash"></i>
+                    <button type="submit" class="px-4 py-2 bg-yellow-500 text-yellow-100 m-2 rounded">Proceed to
+                        checkout</button>
                 </div>
             </div>
-        @endforeach
-
-        <div class="flex fixed bottom-0 right-0 left-0  justify-center">
-            <div>
-
-
-                <button class="px-4 py-2 bg-yellow-500 text-yellow-100 m-2 rounded">Proceed to checkout</button>
-            </div>
-        </div>
+        </form>
     </section>
 
 </body>

@@ -115,7 +115,7 @@
                 <button title="Cart"
                     class="hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
                     <span class="absolute bottom-4 right-1 bg-red-500 text-white rounded-full px-[5px] text-xs">
-                        {{ $items }} <!-- Replace with your cart item count variable -->
+                        {{ $items }}
                     </span>
                     <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
 
