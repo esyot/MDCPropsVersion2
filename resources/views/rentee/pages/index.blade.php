@@ -48,7 +48,7 @@
     @if(session()->has('error'))
         <div id="errorModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div class="bg-red-500 text-white rounded-md shadow-md p-6 w-1/3">
-                <h2 class="text-xl font-semibold mb-4">Success!</h2>
+                <h2 class="text-xl font-semibold mb-4">Error!</h2>
                 <p>{{ session('error') }}</p>
                 <div class="flex justify-end mt-4">
                     <button onclick="document.getElementById('errorModal').classList.add('hidden')"
@@ -108,7 +108,7 @@
         }
     </script>
 
-    <div class="container mx-auto px-4 py-6">
+    <div class="container px-4 py-6">
         <button id="toggleButton" class="hover:opacity-50 fixed z-40 bg-blue-500 text-white px-4 py-2 rounded"
             aria-label="Open Sidebar">
             <i class="fas fa-bars"></i>
@@ -148,7 +148,7 @@
                             <div class="shadow-lg rounded-lg overflow-hidden">
                                 <div class="flex h-[200px] relative">
                                     <div id="open-{{$category->id}}"
-                                        class="flex relative w-full justify-center transition-transform ease-in-out duration-300 items-center bg-gray-800 bg-opacity-50 hidden z-4      0">
+                                        class="flex relative w-full justify-center transition-transform ease-in-out duration-300 items-center bg-gray-800 bg-opacity-50 hidden z-40">
                                         <div class="px-4 text-blue-100 bg-blue-500 py-2 rounded-full shadow-md hover:bg-blue-800">
                                             Open
                                         </div>

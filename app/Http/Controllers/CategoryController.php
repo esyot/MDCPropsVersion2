@@ -178,7 +178,7 @@ class CategoryController extends Controller
         Notification::create([
             'icon' => Auth::user()->img,
             'title' => 'Added a new category',
-            'description' => Auth::user()->name . ' added a new category ' . $request->title,
+            'description' => Auth::user()->name . ' added a new category named' . $request->title,
             'redirect_link' => 'categories',
             'for' => 'superadmin',
             'isReadBy' => $isReadBy,
