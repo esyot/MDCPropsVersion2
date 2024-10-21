@@ -3,27 +3,46 @@
 @if ($categoriesIsNull == false)
 
     <div id="items-header" class="p-4">
-        <div class="flex items-center">
-            <form action="{{ route('itemsFilter') }}" class="flex space-x-1 items-center bg-white p-2 rounded shadow-md">
-                @csrf
-                <i class="fa-solid fa-list"></i>
-                <select name="category"
-                    class="bg-transparent focus:outline-none w-full overflow-hidden text-ellipsis whitespace-nowrap"
-                    onchange="this.form.submit();">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
 
-                    <option class="text-red-500 font-semibold" value="{{ $currentCategory->id }}">
-                        {{ $currentCategory->title }}
-                    </option>
 
-                    @foreach ($categories as $category)
-                        <option value="{{ $category->id }}">
-                            {{ $category->title }}
+                <form action="{{ route('itemsFilter') }}"
+                    class="flex space-x-1 items-center bg-white p-2 rounded shadow-md">
+                    @csrf
+                    <i class="fa-solid fa-list"></i>
+                    <select name="category"
+                        class="bg-transparent focus:outline-none w-full overflow-hidden text-ellipsis whitespace-nowrap"
+                        onchange="this.form.submit();">
+
+                        <option class="text-red-500 font-semibold" value="{{ $currentCategory->id }}">
+                            {{ $currentCategory->title }}
                         </option>
 
-                    @endforeach
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}">
+                                {{ $category->title }}
+                            </option>
 
-                </select>
-            </form>
+                        @endforeach
+
+                    </select>
+                </form>
+
+                <div onclick="document.getElementById('item-add-modal').classList.remove('hidden')">
+                    <button class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">Add Item</button>
+                </div>
+
+            </div>
+
+            <div>
+                <form action="" class="rounded-full bg-white p-2 shadow-inner">
+
+                    <i class="fas fa-magnifying-glass"></i>
+                    <input type="text" class="bg-transparent focus:outline-none" placeholder="Search items...">
+                </form>
+
+            </div>
         </div>
     </div>
 
@@ -122,16 +141,16 @@
     <div id="main-content" class="w-full h-full relative p-4 overflow-y-auto custom-scrollbar">
         <div class="flex flex-wrap flex-grow gap-2">
             <!-- Add Category Button -->
-            <div id="add-new-item-card" title="Add a new category"
-                class="flex flex-col rounded-lg bg-gray-300 {{ $setting->transition == true ? 'transition-transform duration-300 hover:scale-90' : '' }}">
-                <div class="flex justify-center items-center rounded-lg bg-gray-200 h-3/4 cursor-pointer hover:text-gray-800 text-gray-400 "
-                    onclick="document.getElementById('item-add-modal').classList.remove('hidden')">
-                    <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
-                </div>
-                <div class="bg-blue-500 w-full h-1/4 shadow-md text-center flex items-center rounded-b-lg justify-center">
-                    <h1 class="text-lg font-semibold text-white truncate">Add Item</h1>
-                </div>
-            </div>
+            <!-- <div id="add-new-item-card" title="Add a new category"
+                            class="flex flex-col rounded-lg bg-gray-300 {{ $setting->transition == true ? 'transition-transform duration-300 hover:scale-90' : '' }}">
+                            <div class="flex justify-center items-center rounded-lg bg-gray-200 h-3/4 cursor-pointer hover:text-gray-800 text-gray-400 "
+                                onclick="document.getElementById('item-add-modal').classList.remove('hidden')">
+                                <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
+                            </div>
+                            <div class="bg-blue-500 w-full h-1/4 shadow-md text-center flex items-center rounded-b-lg justify-center">
+                                <h1 class="text-lg font-semibold text-white truncate">Add Item</h1>
+                            </div>
+                        </div> -->
 
             <!--  Items -->
             @foreach ($items as $item)

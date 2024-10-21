@@ -251,7 +251,7 @@
 
                 <!-- User Icon -->
                 <div id="inside-user" class="relative" title="Profile">
-                    <button id="user-icon" class="relative flex items-center focus:outline-none">
+                    <button id="user-icon" class="relative flex items-center focus:outline-none hover:opacity-50">
                         <div class="flex items-center space-x-2">
                             <div class="relative">
                                 <img class="border-2 border-gray-600 h-[40px] w-[40px] rounded-full"

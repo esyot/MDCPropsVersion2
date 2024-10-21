@@ -1,7 +1,7 @@
 @extends('admin.layouts.header')
 
 @section('content')
-<div id="users-header" class="bg-gray-200 p-4 shadow-md z-40">
+<div id="users-header" class="flex justify-between items-center bg-gray-200 p-4 shadow-md z-40">
     <div class="flex items-center">
         <form hx-get="{{ route('usersFilter') }}" hx-trigger="input" hx-target="#users" hx-swap="innerHTML"
             class="flex space-x-1 items-center bg-white p-2 rounded-full shadow-md">
@@ -10,6 +10,13 @@
             <input type="text" name="search" placeholder="Search user..." class="focus:outline-none">
 
         </form>
+
+    </div>
+    <div>
+        <button type="button" class="px-4 py-2 bg-blue-500 text-blue-100 rounded hover:opacity-50"
+            onclick="document.getElementById('userAddModal').classList.remove('hidden')">
+            Add User
+        </button>
     </div>
 </div>
 <style>
@@ -40,25 +47,25 @@
 
         @hasrole('superadmin')
 
-        <div id="add-new-user-card" title="Add a new user"
+        <!-- <div id="add-new-user-card" title="Add a new user"
             class="flex flex-col rounded-lg bg-gray-300 {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-90' : '' }}">
             <div class="flex justify-center items-center rounded-lg bg-gray-200 h-3/4 cursor-pointer hover:text-gray-800 text-gray-400 "
-                onclick="document.getElementById('userAddModal').classList.remove('hidden')">
+                >
                 <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
             </div>
             <div class="bg-blue-500 w-full h-1/4 shadow-md text-center flex items-center rounded-b-lg justify-center">
                 <h1 class="text-lg font-semibold text-white truncate">Add User</h1>
             </div>
-        </div>
+        </div> -->
 
 
         @endhasrole
         <div id="users" class="flex flex-wrap flex-grow gap-2">
-        @include('admin.partials.users')
+            @include('admin.partials.users')
 
         </div>
 
-      
+
     </div>
 </div>
 
@@ -100,7 +107,7 @@
             <div>
                 <h2 class="text-xl font-semibold">Edit Role</h2>
 
-    
+
             </div>
             <button class="text-xl font-bold hover:opacity-50" onclick="closeModal()">&times;</button>
 
