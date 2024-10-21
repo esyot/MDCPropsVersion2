@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\PaymentsController;
+use App\Http\Controllers\RenteeTrackingController;
 use Illuminate\Support\Facades\Route;
 
 //admin
@@ -37,9 +38,10 @@ Route::get('/rentee/items/{category_id}/{rentee}', [RenteeItemsController::class
 
 Route::get('/rentee/item/{id}', [RenteeItemsController::class, 'itemUnAvailableDates']);
 
-Route::get('/rentee/items/filter/{category_id}', [RenteeItemsController::class, 'filter'])->name('userItemsFilter');
 
-Route::get('rentee/customer-service', [RenteeCustomerServiceController::class, 'index'])->name('customerService');
+Route::get('/rentee/items-filter/{category_id}/{rentee}', [RenteeItemsController::class, 'renteeItemsFilter'])->name('renteeItemsFilter');
+
+Route::get('rentee/tracking', [RenteeTrackingController::class, 'index'])->name('tracking');
 
 
 Route::get('/rentee/cart/{rentee}', [RenteeCartController::class, 'index'])->name('cart');

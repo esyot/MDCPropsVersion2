@@ -17,12 +17,11 @@
 
     <header>
 
-        <div class="flex items-center space-x-2 p-2">
-            <a href="{{ route('welcome') }}"
-                class="hover:text-blue-800 text-blue-500 transition-transform duration-300 ease-in-out hover:scale-110">
+        <div class="flex items-center space-x-2 p-2 bg-gradient-to-r from-blue-500 to-blue-800">
+            <a href="{{ route('welcome') }}" class="hover:opacity-50 text-white">
                 <i class="fas fa-arrow-circle-left fa-2xl"></i>
             </a>
-            <h1 class="text-xl">Customer Service</h1>
+            <h1 class="text-xl text-white">Tracking</h1>
         </div>
 
     </header>
@@ -38,7 +37,7 @@
     <section class="">
         <div class="mt-2 flex justify-center">
             <div class="shadow-md bg-white w-[500px] px-4">
-                <h1 class="">No results found.</h1>
+                <h1 class="flex justify-center">No results found.</h1>
 
             </div>
 

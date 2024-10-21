@@ -1,14 +1,15 @@
 @if($setting->darkMode == true)
-
-    <!-- dark mode -->
-
     <style>
+        #content {
+            background-color: #000000;
+        }
+
         #sidebar {
             background-color: #2d2d2d;
         }
 
         #topbar {
-            background-color: #6b7280;
+            background-color: #404040;
             color: white;
         }
 
@@ -17,7 +18,8 @@
         }
 
         #navbar {
-            background-color: #1d1d1d;
+            background-color: #404040;
+            color: white;
         }
 
         #navbar h1 {
@@ -89,36 +91,45 @@
         #dropdown-title {
             color: #fff;
         }
+
         #calendar-header {
-            background-color: #1d1d1d;
+            background-color: #202020;
         }
+
         #items-header {
             background-color: #1d1d1d;
         }
+
         #transactions-header {
             background-color: #1d1d1d;
         }
+
         #users-header {
             background-color: #1d1d1d;
         }
 
+        #calendar {}
     </style>
 
 @else
 
     <style>
-        #calendar-header{
+        #calendar-header {
             background-color: #BBDEFB;
         }
-        #items-header{
+
+        #items-header {
             background-color: #BBDEFB;
         }
-        #transactions-header{
+
+        #transactions-header {
             background-color: #BBDEFB;
         }
-        #users-header{
+
+        #users-header {
             background-color: #BBDEFB;
         }
+
         #topbar {}
 
 

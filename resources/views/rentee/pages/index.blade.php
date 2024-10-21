@@ -45,11 +45,11 @@
 <body class="bg-white overflow-x-hidden overflow-y-auto">
     @include('rentee.modals.information-form')
 
-    @if(session()->has('error'))
+    @if(session()->has('cart'))
         <div id="errorModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div class="bg-red-500 text-white rounded-md shadow-md p-6 w-1/3">
                 <h2 class="text-xl font-semibold mb-4">Error!</h2>
-                <p>{{ session('error') }}</p>
+                <p>{{ session('cart') }}</p>
                 <div class="flex justify-end mt-4">
                     <button onclick="document.getElementById('errorModal').classList.add('hidden')"
                         class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md">
@@ -72,15 +72,15 @@
 
             <div class="my-4">
                 <h1 class="text-2xl font-medium">Are you sure to cancel your order?</h1>
-                <p>if you proceed all carts will not be saved and start a new transaction.</p>
+                <p>This will erase your cart items and start a new transaction.</p>
             </div>
 
             <div class="flex justify-end space-x-1 mt-6">
 
                 <button onclick="document.getElementById('confirmLogoutModal').classList.add('hidden')"
-                    class="px-4 py-2 border border-gray-300 rounded text-gray-800 hover:bg-gray-500 hover:text-gray-100">Cancel</button>
+                    class="px-4 py-2 border border-gray-300 rounded text-gray-800 hover:bg-gray-500 hover:text-gray-100">No</button>
                 <a href="{{ route('cancelOrder', ['rentee' => $rentee]) }}"
-                    class="px-4 py-2 bg-red-500 rounded text-red-100 hover:bg-red-800">Logout</a>
+                    class="px-4 py-2 bg-red-500 rounded text-red-100 hover:bg-red-800">Yes</a>
             </div>
         </div>
     </div>
@@ -144,7 +144,7 @@
                             onmouseover="document.getElementById('open-{{$category->id}}').classList.remove('hidden')"
                             href="{{ route('userItems', ['category_id' => $category->id, 'rentee' => $rentee]) }}"
                             title="{{ $category->title }}"
-                            class="w-full md:w-1/3 px-2 mb-4 transition-transform ease-in-out duration-300 hover:scale-90">
+                            class="w-full md:w-1/3 px-2 mb-4 m-2 transition-transform ease-in-out duration-300 hover:scale-90">
                             <div class="shadow-lg rounded-lg overflow-hidden">
                                 <div class="flex h-[200px] relative">
                                     <div id="open-{{$category->id}}"

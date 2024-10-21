@@ -13,6 +13,20 @@
 </head>
 
 <body class="bg-white overflow-x-hidden overflow-y-auto">
+    @if(session()->has('cart'))
+        <div id="errorModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div class="bg-red-500 text-white rounded-md shadow-md p-6 w-1/3">
+                <h2 class="text-xl font-semibold mb-4">Error!</h2>
+                <p>{{ session('cart') }}</p>
+                <div class="flex justify-end mt-4">
+                    <button onclick="document.getElementById('errorModal').classList.add('hidden')"
+                        class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
     @if(count($items) > 0)
         <div class="flex items-center justify-between z-50 bg-gradient-to-r from-blue-500 to-blue-800 p-2 shadow-md">
             <div class="flex items-center">
@@ -22,12 +36,14 @@
                 <h1 class="text-white font-bold line-clamp-1">{{ $items->first()->category->title }}</h1>
             </div>
             <div id="searchContainer">
-                <form hx-get="{{ route('userItemsFilter', ['category_id' => $category_id]) }}" hx-target="#items"
-                    hx-swap="innerHTML" hx-trigger="input" name="search" id="searchBar" onclick="expand()"
-                    class="flex space-x-1 items-center bg-white p-2 border border-gray-300 rounded-full">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" name="search" placeholder="Search Items..."
-                        class="w-[80px] bg-transparent focus:outline-none hidden">
+                <form hx-get="{{ route('renteeItemsFilter', ['category_id' => $category_id, 'rentee' => $rentee]) }}"
+                    hx-target="#item-single" hx-swap="innerHTML" hx-trigger="input" name="search" id="searchBar"
+                    onclick="expand()" class="flex space-x-1 items-center bg-white border border-gray-300 rounded-full">
+                    <div class="flex items-center p-2 space-x-2">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" name="search" placeholder="Search Items..."
+                            class="w-[100px] bg-transparent focus:outline-none hidden">
+                    </div>
 
                 </form>
             </div>
@@ -36,7 +52,7 @@
                 function toggleSearch(isOpen) {
                     const searchBar = document.getElementById('searchBar');
                     const input = searchBar.querySelector('input');
-                    searchBar.classList.toggle('w-[140px]', isOpen);
+                    searchBar.classList.toggle('w-[160px]', isOpen);
                     input.classList.toggle('hidden', !isOpen);
                     if (isOpen) input.focus();
                 }
@@ -64,17 +80,16 @@
 
             <a href="{{ route('cart', ['rentee' => $rentee]) }}">
                 <button title="Cart" class="hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
+                    <span class="absolute bottom-4 right-1 bg-red-500 text-white rounded-full px-[5px] text-xs">
+                        {{ $cartedItems}}
+                    </span>
                     <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
+
                 </button>
             </a>
         </div>
 
-        <div class="mx-auto px-4 py-6 relative">
-            <div id="items" class="flex flex-wrap -mx-2 justify-start">
-                @include('rentee.partials.item')
 
-            </div>
-        </div>
         @if(session()->has('success'))
             <div id="successModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                 <div class="bg-green-500 text-white rounded-md shadow-md p-6 w-1/3">
@@ -89,6 +104,13 @@
                 </div>
             </div>
         @endif
+        <div id="item-single" class="mx-auto px-4 py-6 relative">
+            <div class="flex flex-wrap mx-2 justify-start">
+
+                @include('rentee.partials.item-single')
+
+            </div>
+        </div>
 
 
         @include('rentee.components.footer')
@@ -108,75 +130,81 @@
         </div>
     @endif
     <script>
-        let unavailableDates = {};
+        (function () {
+            let unavailableDates = {};
 
-        async function fetchUnavailableDates(itemId) {
-            try {
-                const res = await fetch(`/rentee/item/${itemId}`);
-                if (res.ok) unavailableDates[itemId] = await res.json();
-                updateCalendar(itemId);
-            } catch (err) {
-                console.error('Fetch error:', err);
-            }
-        }
-
-        function openCalendar(itemId) {
-            fetchUnavailableDates(itemId);
-            document.getElementById(`date-${itemId}`).classList.remove('hidden');
-        }
-        function changeMonth(itemId, dir) {
-            const monthInput = document.getElementById(`month-input-${itemId}`);
-            const [y, m] = monthInput.value.split('-').map(Number);
-            let newDate;
-
-            if (dir === 'right') {
-                newDate = new Date(y, m + 1, 0);
-            } else {
-                newDate = new Date(y, m - 2, 1);
-            }
-
-
-            if (newDate.getMonth() === 12) {
-                newDate.setFullYear(newDate.getFullYear() + 1);
-            } else if (newDate.getMonth() === -1) {
-                newDate.setFullYear(newDate.getFullYear() - 1);
-            }
-
-            monthInput.value = newDate.toISOString().slice(0, 7);
-            updateCalendar(itemId);
-        }
-
-        function updateCalendar(itemId) {
-            const [y, m] = document.getElementById(`month-input-${itemId}`).value.split('-').map(Number);
-            const start = new Date(y, m - 1), end = new Date(y, m, 0);
-            const calendarContainer = document.getElementById(`calendar-${itemId}`);
-            calendarContainer.innerHTML = '';
-
-            Array.from({ length: (start.getDay() + 6) % 7 }).forEach(() => calendarContainer.appendChild(document.createElement('div')));
-
-            const unavailableDays = new Set();
-            (unavailableDates[itemId] || []).forEach((date, i) => {
-                if (i % 2 === 0) {
-                    for (let d = new Date(date); d <= new Date(unavailableDates[itemId][i + 1]); d.setDate(d.getDate() + 1)) {
-                        unavailableDays.add(d.toISOString().split('T')[0]);
-                    }
+            async function fetchUnavailableDates(itemId) {
+                try {
+                    const res = await fetch(`/rentee/item/${itemId}`);
+                    if (res.ok) unavailableDates[itemId] = await res.json();
+                    updateCalendar(itemId);
+                } catch (err) {
+                    console.error('Fetch error:', err);
                 }
+            }
+
+            function openCalendar(itemId) {
+                fetchUnavailableDates(itemId);
+                document.getElementById(`date-${itemId}`).classList.remove('hidden');
+            }
+
+            function changeMonth(itemId, dir) {
+                const monthInput = document.getElementById(`month-input-${itemId}`);
+                const [y, m] = monthInput.value.split('-').map(Number);
+                let newDate;
+
+                if (dir === 'right') {
+                    newDate = new Date(y, m, 0);
+                } else {
+                    newDate = new Date(y, m - 2, 1);
+                }
+
+                if (newDate.getMonth() === 12) {
+                    newDate.setFullYear(newDate.getFullYear() + 1);
+                } else if (newDate.getMonth() === -1) {
+                    newDate.setFullYear(newDate.getFullYear() - 1);
+                }
+
+                monthInput.value = newDate.toISOString().slice(0, 7);
+                updateCalendar(itemId);
+            }
+
+            function updateCalendar(itemId) {
+                const [y, m] = document.getElementById(`month-input-${itemId}`).value.split('-').map(Number);
+                const start = new Date(y, m - 1), end = new Date(y, m, 0);
+                const calendarContainer = document.getElementById(`calendar-${itemId}`);
+                calendarContainer.innerHTML = '';
+
+                Array.from({ length: (start.getDay() + 6) % 7 }).forEach(() => calendarContainer.appendChild(document.createElement('div')));
+
+                const unavailableDays = new Set();
+                (unavailableDates[itemId] || []).forEach((date, i) => {
+                    if (i % 2 === 0) {
+                        for (let d = new Date(date); d <= new Date(unavailableDates[itemId][i + 1]); d.setDate(d.getDate() + 1)) {
+                            unavailableDays.add(d.toISOString().split('T')[0]);
+                        }
+                    }
+                });
+
+                for (let day = 1; day <= end.getDate(); day++) {
+                    const currentDay = new Date(y, m - 1, day);
+                    const dayDiv = document.createElement('div');
+                    dayDiv.innerText = day;
+                    dayDiv.className = `flex justify-center items-center h-10 w-10 rounded border ${currentDay.getDay() === 0 ? 'text-red-500' : ''} ${unavailableDays.has(currentDay.toISOString().split('T')[0]) ? 'bg-gray-300' : ''}`;
+                    calendarContainer.appendChild(dayDiv);
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                @foreach($items as $item)
+                    updateCalendar('{{$item->id}}');
+                @endforeach
             });
 
-            for (let day = 1; day <= end.getDate(); day++) {
-                const currentDay = new Date(y, m - 1, day);
-                const dayDiv = document.createElement('div');
-                dayDiv.innerText = day;
-                dayDiv.className = `flex justify-center items-center h-10 w-10 rounded border ${currentDay.getDay() === 0 ? 'text-red-500' : ''} ${unavailableDays.has(currentDay.toISOString().split('T')[0]) ? 'bg-gray-300' : ''}`;
-                calendarContainer.appendChild(dayDiv);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            @foreach($items as $item)
-                updateCalendar('{{$item->id}}');
-            @endforeach
-        });
+            // Expose functions to the global scope if needed
+            window.openCalendar = openCalendar;
+            window.changeMonth = changeMonth;
+        })();
     </script>
 
 </body>

@@ -1,7 +1,7 @@
 <!-- Navbar -->
 <div class="flex-1 flex flex-col overflow-hidden">
     <!-- Navbar -->
-    <div class="flex items-center justify-between bg-white p-4 shadow-md relative">
+    <div id="navbar" class="flex items-center justify-between p-4 shadow-md relative">
         <!-- App Name -->
         <div id="pageTitle" class="flex items-center space-x-2">
             <span class="text-lg font-semibold"> {{ $page_title }}</span>
@@ -12,7 +12,7 @@
             <!-- Notification Icon -->
             <div class="relative" id="inside-notification" title="Notifications">
                 <!-- Notification Button -->
-                <button id="notification-icon" class="hover:text-gray-300">
+                <button id="notification-icon" class="hover:opacity-50">
                     <i class="fa-solid fa-bell fa-lg text-blue-600"></i>
                     <span id="notificationTitle">Notifications</span>
                     @if($unreadNotifications > 0)
@@ -99,7 +99,7 @@
                                 });
                             });
 
-                            // Listen for the htmx:afterRequest event to hide the loader
+
                             document.body.addEventListener('htmx:afterRequest', function () {
                                 hideLoader();
 
@@ -151,9 +151,9 @@
                 <!-- Messages Icon -->
                 @if($page_title != 'Messages')
                     <div class="relative" id="inside-messages" title="Messages">
-                        <button id="messages-icon" class="flex items-center focus:outline-none">
+                        <button id="messages-icon" class="flex items-center hover:opacity-50 focus:outline-none">
                             <i class="fa-solid fa-envelope fa-lg mt-1 text-blue-600"></i>
-                            <span id="messageTitle" class="ml-2 hover:text-gray-300">Messages</span>
+                            <span id="messageTitle" class="ml-2">Messages</span>
 
                             @if($unreadMessages > 0)
                                 <span id="notification-count"
@@ -273,7 +273,7 @@
                             <div class="flex flex-col space-y-2">
                                 <a href="{{ route('profile') }}" title="{{Auth::user()->name}}">
 
-                                    <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-lg">
+                                    <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-t-lg">
 
                                         <i class="text-blue-500 fas fa-user mr-2"></i>
                                         <span>{{ Auth::user()->name }}</span>
@@ -281,7 +281,7 @@
                                     </div>
                                 </a>
 
-                                <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-lg" title="Logout"
+                                <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-b-lg" title="Logout"
                                     onclick="document.getElementById('logoutConfirm').classList.remove('hidden')">
 
 

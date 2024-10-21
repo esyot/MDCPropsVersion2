@@ -14,7 +14,7 @@
 <body>
     <div title="Monitor Transaction"
         class="fixed right-0 z-50 p-2 transition-transform duration-300 hover:scale-110 ease-in-out">
-        <a href="{{ route('customerService') }}"> <i class="fas fa-desktop fa-xl text-white shadow-md"></i></a>
+        <a href="{{ route('tracking') }}"> <i class="fas fa-desktop fa-xl text-white shadow-md"></i></a>
     </div>
     <div id="welcome"
         class="flex fixed inset-0 bg-gradient-to-b from-blue-500 to-blue-900 justify-center items-center z-40">
@@ -30,19 +30,23 @@
                 </div>
             </header>
             <section class="flex p-2 justify-center">
-                <h1 class="text-2xl font-bold">Welcome!</h1>
+
             </section>
 
-            @if (session()->has('rentee'))
-                <div class="text-green-600 text-center">
-                    <p>Welcome back! Your rentee has been created.</p>
-                </div>
-            @endif
+            <div class="text-green-600 text-center">
+                <p>
+                    @if (session()->has('rentee'))
+                        <h1 class="text-2xl font-bold">Welcome back!</h1>
+                    @else
+                        <h1 class="text-2xl font-bold">Welcome!</h1>
+                    @endif
+                </p>
+            </div>
 
             <footer class="flex justify-center p-2 mb-2">
                 <a href="{{ route('getStarted') }}"
                     class="px-4 py-2 bg-blue-200 text-blue-800 rounded-lg hover:bg-blue-500 hover:text-blue-100 shadow">
-                    Get Started!
+                    {{ session()->has('rentee') ? 'Back to Home' : 'Get started' }}
                 </a>
             </footer>
         </div>

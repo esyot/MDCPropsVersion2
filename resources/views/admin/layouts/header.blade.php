@@ -11,7 +11,7 @@
     <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
     <script src="{{ asset('asset/js/jsQR.min.js') }}"></script>
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
-    @include('admin.styles.header')
+    @include('admin.styles.style')
 
     @if (!Auth::user()->isPasswordChanged && $page_title != 'Profile')
         <script>
@@ -84,7 +84,7 @@
 
     <!-- contents -->
 
-    <div class="h-full overflow-hidden">
+    <div id="content" class="h-full overflow-hidden">
         @yield('content')
     </div>
 

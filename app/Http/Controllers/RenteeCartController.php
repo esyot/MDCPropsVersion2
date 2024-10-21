@@ -24,7 +24,7 @@ class RenteeCartController extends Controller
 
 
         if (!$cart) {
-            return redirect()->back()->with('error', 'Cart not found.');
+            return redirect()->back()->with('cart', 'Cart not found, please add items to cart first.');
         }
 
 

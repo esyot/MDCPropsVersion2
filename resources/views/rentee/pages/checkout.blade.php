@@ -35,6 +35,10 @@
 
                 <div class="flex items-center w-1/3 space-x-4">
                     <div>
+                        <label>Quantity:</label>
+                        <input type="number" class="p-2 border border-gray-300 rounded">
+                    </div>
+                    <div>
                         <label>Date Rent:</label>
                         <input type="date" class="p-2 border border-gray-300 rounded">
                     </div>
