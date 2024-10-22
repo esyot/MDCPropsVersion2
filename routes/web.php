@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\RenteeTrackingController;
+use App\Http\Controllers\RenteeTransactionController;
 use Illuminate\Support\Facades\Route;
 
 //admin
@@ -57,9 +58,18 @@ Route::get('/rentee/add-to-cart/{rentee}/{item}', [RenteeCartController::class, 
 Route::get('/rentee/back-to-home/{rentee}', [RenteeHomeController::class, 'backToHome'])->name('backToHome');
 
 
-Route::post('/rentee/checkout/{rentee}', [RenteeCartController::class, 'checkout'])->name('checkout');
+Route::get('/rentee/checkout/{rentee}', [RenteeCartController::class, 'checkout'])->name('checkout');
 
 Route::get('/rentee/remove-item-in-cart/{id}/{rentee}', [RenteeCartController::class, 'removeItemInCart'])->name('removeItemInCart');
+
+Route::post('/rentee/create-transaction/{rentee}', [RenteeTransactionController::class, 'store'])->name('renteeCreateTransaction');
+
+Route::get('/rentee/track-transaction', [RenteeTrackingController::class, 'track'])->name('transactionTrack');
+
+
+Route::get('/rentee/tracking-page', [RenteeTrackingController::class, 'index'])->name('tracking');
+
+Route::get('/rentee/tracking', [RenteeTrackingController::class, 'fetch']);
 
 // Public Routes
 Route::get('/admin/login', [LoginController::class, 'index'])->name('loginPage');

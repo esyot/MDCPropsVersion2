@@ -38,28 +38,29 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach($transactions as $transaction)
-                                    <tr title="Click this to preview {{$transaction->item->name}}"
-                                        class="cursor-pointer hover:bg-gray-300"
-                                        onclick="document.getElementById('single-preview-{{$transaction->id}}').classList.remove('hidden')">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            {{ $transaction->item->name }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ \Carbon\Carbon::parse($transaction->rent_date)->format('F j, Y') }}
-                                            {{ \Carbon\Carbon::parse($transaction->rent_time)->format('g:i A') }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ \Carbon\Carbon::parse($transaction->rent_return)->format('F j, Y') }}
-                                            {{ \Carbon\Carbon::parse($transaction->rent_return_time)->format('g:i A') }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                {{ $transaction->status == 'pending' ? 'text-yellow-500' :
-                        ($transaction->status == 'approved' ? 'text-green-500' :
-                            ($transaction->status == 'declined' ? 'text-red-500' : 'text-gray-500')) }}">
-                                            {{ $transaction->status ?? 'Pending' }}
-                                        </td>
-                                    </tr>
-                                    @include('admin.modals.date-view-single')
+                        <tr title="Click this to preview {{$transaction->item->name}}"
+                            class="cursor-pointer hover:bg-gray-300"
+                            onclick="document.getElementById('single-preview-{{$transaction->id}}').classList.remove('hidden')">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {{ $transaction->item->name }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ \Carbon\Carbon::parse($transaction->rent_date)->format('F j, Y') }}
+                                {{ \Carbon\Carbon::parse($transaction->rent_time)->format('g:i A') }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ \Carbon\Carbon::parse($transaction->rent_return)->format('F j, Y') }}
+                                {{ \Carbon\Carbon::parse($transaction->rent_return_time)->format('g:i A') }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                @if($transaction->approvedByAdmin_at == null && $transaction->approvedByCashier_at == null)
+                                    <span class="text-yellow-500">Pending</span>
+                                @elseif($transaction->approvedByAdmin_at && $transaction->approvedByCashier_at)
+                                    <span class="text-green-500">Approved</span>
+                                @endif
+                            </td>
+                        </tr>
+                        @include('admin.modals.date-view-single')
                     @endforeach
                 </tbody>
             </table>

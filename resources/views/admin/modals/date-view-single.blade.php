@@ -24,19 +24,29 @@
                     </div>
                     <div>
                         <span class="font-medium text-gray-700 text-sm">Rentee Name:</span>
-                        <p class="text-gray-900 text-base">{{ $transaction->rentee_name }}</p>
+                        <p class="text-gray-900 text-base">
+                            {{ $transaction->transaction->rentee->first_name }}
+                            {{ $transaction->transaction->rentee->middle_name[0] }}.
+                            {{ $transaction->transaction->rentee->last_name }}
+                        </p>
                     </div>
                     <div>
                         <span class="font-medium text-gray-700 text-sm">Contact #:</span>
-                        <p class="text-gray-900 text-base">{{ $transaction->rentee_contact_no }}</p>
+                        <p class="text-gray-900 text-base">{{ $transaction->transaction->rentee->contact_no }}</p>
                     </div>
                     <div>
                         <span class="font-medium text-gray-700 text-sm">Email:</span>
-                        <p class="text-gray-900 text-base">{{ $transaction->rentee_email }}</p>
+                        <p class="text-gray-900 text-base">{{ $transaction->transaction->rentee->email }}</p>
                     </div>
                     <div>
                         <span class="font-medium text-gray-700 text-sm">Status:</span>
-                        <p class="text-gray-900 text-base">{{ $transaction->status }}</p>
+                        <p class="text-gray-900 text-base">
+                            @if($transaction->approvedByAdmin_at == null && $transaction->approvedByCashier_at == null)
+                                <span>pending</span>
+                            @elseif($transaction->approvedByAdmin_at && $transaction->approvedByCashier_at)
+                                <span>Approved</span>
+                            @endif
+                        </p>
                     </div>
                     <div>
                         <span class="font-medium text-gray-700 text-sm">Pickup Date:</span>

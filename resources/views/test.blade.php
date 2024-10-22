@@ -9,8 +9,6 @@
     <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
     <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
     <link rel="icon" href="{{ asset('asset/logo/MDC-logo-clipped.png') }}" type="image/png">
-
-
 </head>
 
 <body>

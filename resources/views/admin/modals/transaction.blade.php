@@ -2,14 +2,17 @@
     class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 hidden">
 
 
-    <div class="bg-white p-2 rounded">
+    <div class="bg-white p-4 rounded">
         <div class="flex items-center">
             <span class="font-medium">Rentee:</span>
-            <span class="ml-2 text-blue-500">{{ $transaction->rentee_name }}</span>
+            <span class="ml-2 text-blue-500">
+                {{ $transaction->transaction->rentee->first_name }}
+                {{ $transaction->transaction->rentee->middle_name[0] }}.
+                {{ $transaction->transaction->rentee->last_name }}</span>
         </div>
         <div class="flex items-center">
             <span class="font-medium">Contact #:</span>
-            <span class="ml-2 text-blue-500">{{ $transaction->rentee_contact_no }}</span>
+            <span class="ml-2 text-blue-500">{{ $transaction->transaction->rentee->contact_no }}</span>
         </div>
         <div class="flex items-center mt-1">
             <span class="font-medium">Date Pick-up:</span>

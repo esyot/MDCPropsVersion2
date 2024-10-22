@@ -22,7 +22,7 @@
     </header>
 
     <section class="flex flex-col mt-2 overflow-y-auto">
-        <form action="{{ route('checkout', ['rentee' => $rentee]) }}" method="POST" id="checkout-form"
+        <form action="{{ route('checkout', ['rentee' => $rentee]) }}" method="GET" id="checkout-form"
             onsubmit="validateCheckout(event)" class="space-y-2">
             @csrf
 
@@ -30,7 +30,9 @@
                 @foreach ($items as $item)
                     <div class="flex justify-between p-4 mx-4 bg-white items-center">
                         <div class="flex space-x-2 items-center">
-                            <input type="checkbox" name="items[]" value="{{ $item->id }}" id="item-{{ $item->id }}">
+                            <input type="checkbox" name="items[]" value="{{ $item->id }}" id="item-{{ $item->id }}"
+                                class="w-6 h-6 border-gray-300 rounded cursor-pointer focus:outline-none shadow-md">
+
                             <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
                                 alt="{{ $item->name }}" class="w-[50px] h-[50px] object-cover">
                             <p>{{$item->name}}</p>

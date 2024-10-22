@@ -48,18 +48,18 @@
                             <div class="flex justify-center text-xl font-semibold">{{ $transaction->item->name }}</div>
                             <div class="flex items-center">
                                 <span class="font-medium">Rentee:</span>
-                                <span class="ml-2 text-yellow-300">{{ $transaction->rentee_name }}</span>
-                            </div>
-                            <div class="flex items-center mt-1">
-                                <span class="font-medium">Status:</span>
                                 <span class="ml-2 text-yellow-300">
-                                    {{ $transaction->status }}
+                                    {{ $transaction->transaction->rentee->first_name }}
+                                    {{ $transaction->transaction->rentee->middle_name[0] }}.
+                                    {{ $transaction->transaction->rentee->last_name }}
+
                                 </span>
                             </div>
+
                         </div>
                         <div class="flex justify-center space-x-2 mt-2">
                             @can('can approve transactions')
-                                @if($transaction->status == 'pending')
+                                @if($transaction->transaction->status == 'pending')
                                     <button type=" button"
                                         onclick="document.getElementById('transaction-confirm-{{ $transaction->id }}').classList.remove('hidden')"
                                         class="shadow px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center">

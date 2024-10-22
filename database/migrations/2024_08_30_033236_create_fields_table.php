@@ -35,21 +35,7 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('item_id')->constrained()->onDelete('cascade');
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->string('rentee_name')->nullable(false);
-            $table->string('rentee_contact_no')->nullable(false);
-            $table->string('rentee_email')->nullable(false);
-            $table->foreignId('destination_id')->constrained()->onDelete('cascade');
-            $table->date('rent_date');
-            $table->time('rent_time');
-            $table->date('rent_return');
-            $table->time('rent_return_time');
-            $table->string('status')->default('pending');
-            $table->timestamps();
-        });
+
 
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
@@ -117,6 +103,13 @@ return new class extends Migration {
             $table->timestamps();
 
         });
+        Schema::create('transactions', function (Blueprint $table) {
+            $table->id();
+            $table->string('tracking_code')->nullable(false);
+            $table->foreignId('rentee_id')->constrained()->onDelete('cascade');
+            $table->string('status')->default('pending');
+            $table->timestamps();
+        });
 
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
@@ -125,21 +118,29 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('carted_items_requests', function (Blueprint $table) {
-            $table->id();
-            $table->string('tracking_no');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('cart_id')->constrained()->onDelete('cascade');
-            $table->string('status')->default('pending');
-            $table->dateTime('approved_at')->default(null);
-            $table->timestamps();
-        });
-
 
         Schema::create('rentee_sessions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('rentee_id')->constrained()->onDelete('cascade');
             $table->boolean('isSessionStarted')->default(false);
+            $table->timestamps();
+        });
+
+
+        Schema::create('items_transactions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('transaction_id')->constrained()->onDelete('cascade');
+            $table->foreignId('item_id')->constrained()->onDelete('cascade');
+            $table->foreignId('destination_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->integer('qty');
+            $table->date('rent_date');
+            $table->time('rent_time');
+            $table->date('rent_return');
+            $table->time('rent_return_time');
+            $table->datetime('declinedByAdmin_at')->nullable(true);
+            $table->datetime('approvedByAdmin_at')->nullable(true);
+            $table->datetime('approvedByCashier_at')->nullable(true);
             $table->timestamps();
         });
 

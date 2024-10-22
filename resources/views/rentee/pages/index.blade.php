@@ -71,7 +71,7 @@
             </div>
 
             <div class="my-4">
-                <h1 class="text-2xl font-medium">Are you sure to cancel your order?</h1>
+                <h1 class="text-2xl font-medium">Are you sure to cancel your reservation?</h1>
                 <p>This will erase your cart items and start a new transaction.</p>
             </div>
 

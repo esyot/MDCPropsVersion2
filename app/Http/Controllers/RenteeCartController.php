@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Destination;
 use App\Models\Item;
 use App\Models\Rentee;
 use Illuminate\Http\Request;
@@ -42,8 +43,6 @@ class RenteeCartController extends Controller
     }
 
 
-
-
     public function addToCart($rentee, $item)
     {
         $user = Rentee::where('rentee_code', $rentee)->first();
@@ -81,7 +80,9 @@ class RenteeCartController extends Controller
 
         $items = Item::whereIn('id', $selectedItems)->get();
 
-        return view('rentee.pages.checkout', compact('rentee', 'items'));
+        $destinations = Destination::all();
+
+        return view('rentee.pages.checkout', compact('rentee', 'items', 'destinations'));
 
     }
 

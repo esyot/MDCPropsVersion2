@@ -6,6 +6,7 @@ use App\Models\Cart;
 
 use App\Models\Item;
 
+use App\Models\ItemsTransaction;
 use App\Models\Rentee;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -40,24 +41,45 @@ class RenteeItemsController extends Controller
         return view('rentee.pages.items', compact('items', 'category_id', 'rentee', 'cartedItems'));
     }
 
-
-    public function itemUnAvailableDates($id)
+    public function itemUnavailableDates($id)
     {
-        $transactions = Transaction::where('item_id', $id)->get();
+        $item = Item::find($id);
+        $transactions = ItemsTransaction::where('item_id', $id)->whereNot('approvedByAdmin_at', null)->whereNot('approvedByCashier_at', null)->get();
 
+        // Return 404 if there are no transactions for the item
         if ($transactions->isEmpty()) {
             return response()->json(['message' => 'No transactions found for this item'], 404);
         }
 
-        $unavailableDates = $transactions->flatMap(function ($transaction) {
-            return [
-                \Carbon\Carbon::parse($transaction->rent_date)->toISOString(),
-                \Carbon\Carbon::parse($transaction->rent_return)->toISOString(),
-            ];
-        })->unique()->values()->toArray();
+        $unavailableDates = [];
 
-        return response()->json($unavailableDates);
+        foreach ($transactions as $transaction) {
+            // Parse the rent dates
+            $start = \Carbon\Carbon::parse($transaction->rent_date);
+            $end = \Carbon\Carbon::parse($transaction->rent_return);
+
+            // Generate all dates between start and end, inclusive
+            while ($start->lte($end)) {
+                $unavailableDates[] = $start->toISOString();
+                $start->addDay(); // Move to the next day
+            }
+        }
+
+        // Remove duplicates and return unique unavailable dates
+        $uniqueUnavailableDates = array_values(array_unique($unavailableDates));
+
+        // Check if the count of unavailable dates is less than the item's quantity
+        if (count($uniqueUnavailableDates) < $item->qty) {
+            return response()->json(['message' => 'All dates are available']);
+        }
+
+        // Return the unique unavailable dates
+        return response()->json($uniqueUnavailableDates);
     }
+
+
+
+
 
     public function renteeItemsFilter(Request $request, $category_id, $rentee)
     {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemsTransaction;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\Notification;
@@ -21,8 +22,7 @@ class TransactionController extends Controller
     {
         $current_user_name = Auth::user()->name;
 
-        $transactions = Transaction::where('category_id', 1)->where('status', 'pending')->get();
-
+        $transactions = ItemsTransaction::where('category_id', 1)->where('approvedByAdmin_at', null)->where('approvedByCashier_at', null)->get();
 
         $categories = Category::all();
 
@@ -134,10 +134,10 @@ class TransactionController extends Controller
     public function approve($id)
     {
 
-        $transaction = Transaction::find($id);
+        $transaction = ItemsTransaction::find($id);
 
         $transaction->update([
-            'status' => 'approved',
+            'approvedByAdmin_at' => now(),
         ]);
 
         if ($transaction) {
@@ -158,8 +158,17 @@ class TransactionController extends Controller
 
     public function filter(Request $request)
     {
+        if ($request->status == 'pending') {
+            $transactions = ItemsTransaction::where('declinedByAdmin_at', null)->where('approvedByCashier_at', null)->whereNot('approvedByAdmin_at', null)->where('category_id', $request->category)->get();
 
-        $transactions = Transaction::where('status', $request->status)->where('category_id', $request->category)->get();
+        } else if ($request->status == 'approved') {
+            $transactions = ItemsTransaction::where('declinedByAdmin_at', null)->whereNot('approvedByCashier_at', null)->whereNot('approvedByAdmin_at', null)->where('category_id', $request->category)->get();
+
+        } else if ($request->status == 'declined') {
+            $transactions = ItemsTransaction::whereNot('declinedByAdmin_at', null)->where('category_id', $request->category)->get();
+
+        }
+
 
         $current_user_name = Auth::user()->name;
 

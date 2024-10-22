@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemsTransaction;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\Category;
@@ -111,13 +112,13 @@ class DashboardController extends Controller
         $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : collect();
 
         // Transactions and records
-        $daysWithRecords = Transaction::all()->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))->unique()->values()->toArray();
+        $daysWithRecords = ItemsTransaction::all()->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))->unique()->values()->toArray();
 
         // Users and destinations
         $users = User::where('name', '!=', $current_user_name)->get();
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
 
-        $transactions = Transaction::all();
+        $transactions = ItemsTransaction::all();
 
         return view('admin.pages.dashboard', compact(
             'categories',
@@ -144,7 +145,7 @@ class DashboardController extends Controller
     public function dateView($date)
     {
         $roles = Auth::user()->getRoleNames();
-        $transactions = Transaction::where('rent_date', $date)->get();
+        $transactions = ItemsTransaction::where('rent_date', $date)->get();
 
         $setting = Setting::find(1);
 
@@ -162,7 +163,7 @@ class DashboardController extends Controller
 
         $currentDate = Carbon::create($year, $month, 25);
 
-        $transactions = Transaction::where('category_id', $category)->get();
+        $transactions = ItemsTransaction::where('category_id', $category)->get();
 
         $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
         $unreadMessages = $messages->count();

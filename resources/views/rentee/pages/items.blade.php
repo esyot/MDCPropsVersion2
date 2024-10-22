@@ -131,16 +131,16 @@
     @endif
     <script>
         (function () {
-            let unavailableDates = {};
+            const unavailableDates = {};
 
             async function fetchUnavailableDates(itemId) {
                 try {
                     const res = await fetch(`/rentee/item/${itemId}`);
-                    if (res.ok) unavailableDates[itemId] = await res.json();
-                    updateCalendar(itemId);
-                } catch (err) {
-                    console.error('Fetch error:', err);
+                    unavailableDates[itemId] = res.ok ? await res.json() : [];
+                } catch {
+                    unavailableDates[itemId] = [];
                 }
+                updateCalendar(itemId);
             }
 
             function openCalendar(itemId) {
@@ -150,47 +150,28 @@
 
             function changeMonth(itemId, dir) {
                 const monthInput = document.getElementById(`month-input-${itemId}`);
-                const [y, m] = monthInput.value.split('-').map(Number);
-                let newDate;
-
-                if (dir === 'right') {
-                    newDate = new Date(y, m, 0);
-                } else {
-                    newDate = new Date(y, m - 2, 1);
-                }
-
-                if (newDate.getMonth() === 12) {
-                    newDate.setFullYear(newDate.getFullYear() + 1);
-                } else if (newDate.getMonth() === -1) {
-                    newDate.setFullYear(newDate.getFullYear() - 1);
-                }
-
-                monthInput.value = newDate.toISOString().slice(0, 7);
+                const date = new Date(monthInput.value + '-01');
+                date.setMonth(date.getMonth() + (dir === 'right' ? 1 : -1));
+                monthInput.value = date.toISOString().slice(0, 7);
                 updateCalendar(itemId);
             }
 
             function updateCalendar(itemId) {
                 const [y, m] = document.getElementById(`month-input-${itemId}`).value.split('-').map(Number);
-                const start = new Date(y, m - 1), end = new Date(y, m, 0);
+                const daysInMonth = new Date(y, m, 0).getDate();
                 const calendarContainer = document.getElementById(`calendar-${itemId}`);
                 calendarContainer.innerHTML = '';
 
-                Array.from({ length: (start.getDay() + 6) % 7 }).forEach(() => calendarContainer.appendChild(document.createElement('div')));
+                const unavailableDays = new Set((unavailableDates[itemId] || []).map(date => date.split('T')[0]));
 
-                const unavailableDays = new Set();
-                (unavailableDates[itemId] || []).forEach((date, i) => {
-                    if (i % 2 === 0) {
-                        for (let d = new Date(date); d <= new Date(unavailableDates[itemId][i + 1]); d.setDate(d.getDate() + 1)) {
-                            unavailableDays.add(d.toISOString().split('T')[0]);
-                        }
-                    }
-                });
+                Array.from({ length: new Date(y, m - 1).getDay() }).forEach(() => calendarContainer.appendChild(document.createElement('div')));
 
-                for (let day = 1; day <= end.getDate(); day++) {
+                for (let day = 1; day <= daysInMonth; day++) {
                     const currentDay = new Date(y, m - 1, day);
+                    const isUnavailable = unavailableDays.has(new Date(currentDay.getTime() + 86400000).toISOString().split('T')[0]);
                     const dayDiv = document.createElement('div');
                     dayDiv.innerText = day;
-                    dayDiv.className = `flex justify-center items-center h-10 w-10 rounded border ${currentDay.getDay() === 0 ? 'text-red-500' : ''} ${unavailableDays.has(currentDay.toISOString().split('T')[0]) ? 'bg-gray-300' : ''}`;
+                    dayDiv.className = `flex justify-center shadow-md items-center h-10 w-10 rounded border ${currentDay.getDay() === 0 ? 'text-red-500' : ''} ${isUnavailable ? 'bg-gray-300 text-gray-400 opacity-60' : ''}`;
                     calendarContainer.appendChild(dayDiv);
                 }
             }
@@ -201,11 +182,13 @@
                 @endforeach
             });
 
-            // Expose functions to the global scope if needed
             window.openCalendar = openCalendar;
             window.changeMonth = changeMonth;
         })();
     </script>
+
+
+
 
 </body>
 
