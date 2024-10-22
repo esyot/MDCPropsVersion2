@@ -19,7 +19,7 @@
 <body class="bg-gray-200 overflow-hidden">
 
     <header>
-        <div class="flex items-center space-x-2 p-2 bg-gradient-to-r from-blue-500 to-blue-800">
+        <div class="flex items-center space-x-2 p-4 bg-gradient-to-r from-blue-500 to-blue-800">
             <a href="{{ route('welcome') }}" class="hover:opacity-50 text-white">
                 <i class="fas fa-arrow-circle-left fa-2xl"></i>
             </a>
@@ -27,7 +27,7 @@
         </div>
     </header>
 
-    <section class="mt-2 flex justify-center space-x-2">
+    <section class="mt-4 flex justify-center space-x-2">
         <form id="searchbar" hx-get="{{ route('transactionTrack') }}" hx-trigger="input" hx-target="#transaction"
             hx-swap="innerHTML" class="flex items-center space-x-1 bg-white px-4 py-2 rounded-full shadow-md w-96">
             <i class="fas fa-magnifying-glass"></i>
@@ -80,12 +80,22 @@
                         <p>Transaction Date: </p> <span>{{ $formattedDate }}</span>
                     </div>
 
+                    <div>
+                        <h1>Reserved Items:</h1>
+                    </div>
+                    @foreach ($items as $item)
+
+                        <div class="flex space-x-2">
+                            {{ $item->item->name }}
+                        </div>
+
+                    @endforeach
 
                 </div>
 
-
-
             @endforeach
+
+
             @if(count($transactions) == 0)
                 <div class="flex bg-white p-2 space-x-2">
                     <span>No results found.</span>
@@ -100,7 +110,6 @@
         </div>
     </footer>
 
-    <!-- Modal -->
     <div id="qr-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="bg-white p-4 rounded shadow-md">
             <video id="video" width="300" height="300" autoplay></video>
@@ -154,7 +163,7 @@
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
 
-            // Ensure video has valid dimensions
+
             if (video.videoWidth > 0 && video.videoHeight > 0) {
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
@@ -165,7 +174,7 @@
 
                 if (code) {
                     console.log('QR Code detected:', code.data);
-                    document.querySelector('input[name="search_val"]').value = code.data; // Populate input with scanned value
+                    document.querySelector('input[name="search_val"]').value = code.data;
                     stopCamera();
                     qrModal.classList.add('hidden');
 
@@ -174,7 +183,7 @@
                     requestAnimationFrame(scanQRCode);
                 }
             } else {
-                requestAnimationFrame(scanQRCode); // Retry if dimensions are not valid
+                requestAnimationFrame(scanQRCode);
             }
         }
     </script>

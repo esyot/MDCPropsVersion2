@@ -8,10 +8,59 @@
     <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
+
     <title>Dashboard</title>
 </head>
 
 <body>
+    @if (request('transaction') != null)
+
+        <script src="{{ asset('asset/dist/qrious.js') }}"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var trackingCode = '{{ $transaction->tracking_code }}';
+                var qr = new QRious({
+                    element: document.getElementById('canvas'),
+                    value: trackingCode,
+                    size: 300
+                });
+            });
+        </script>
+
+
+        <div id="QR" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50">
+            <div class="bg-white p-4 rounded">
+                <div class="flex justify-center">
+
+                    <h1 class="text-2xl font-bold">Successfully added a new Transaction!</h1>
+                </div>
+
+                <div class="flex mt-2 justify-center ">
+                    <canvas id="canvas" class=""></canvas>
+
+                </div>
+                <div class="flex space-x-2 justify-center">
+                    <h1>Tracking Code: </h1>
+                    <span class="font-bold">
+                        {{ $transaction->tracking_code }}
+                    </span>
+
+                </div>
+
+                <div class="flex flex-col mt-2 items-center space-x-1">
+
+                    <small class="border border-red-500 p-2">Note: Please save this QR code; it will be used to track your
+                        reservation on the tracking page <br> and for payment at the cashier once your reservation is
+                        confirmed.</small>
+                </div>
+                <div class="flex justify-center mt-2">
+                    <button onclick="document.getElementById('QR').classList.add('hidden')"
+                        class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">Done</button>
+                </div>
+            </div>
+        </div>
+    @endif
     <div title="Monitor Transaction"
         class="fixed right-0 z-50 p-2 transition-transform duration-300 hover:scale-110 ease-in-out">
         <a href="{{ route('tracking') }}"> <i class="fas fa-desktop fa-xl text-white shadow-md"></i></a>

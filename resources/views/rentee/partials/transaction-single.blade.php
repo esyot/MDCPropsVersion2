@@ -29,13 +29,23 @@
         <div class="flex space-x-2">
             <p>Transaction Date: </p> <span>{{ $formattedDate }}</span>
         </div>
+        <div>
+            <h1>Reserved Items:</h1>
+        </div>
+        @foreach ($items as $item)
 
+            <div class="flex space-x-2">
+                {{ $item->item->name }}
+            </div>
+
+        @endforeach
 
     </div>
 
 
 
 @endforeach
+
 
 @if(count($transactions) == 0)
     <div class="flex bg-white p-2 space-x-2">

@@ -33,7 +33,7 @@ class RenteeTransactionController extends Controller
         }
 
         // Start transaction
-        DB::transaction(function () use ($fetchedRentee, $renteeData, $request) {
+        $transaction = DB::transaction(function () use ($fetchedRentee, $renteeData, $request) {
             // Update rentee data
             $fetchedRentee->update($renteeData);
 
@@ -48,8 +48,7 @@ class RenteeTransactionController extends Controller
                 'items.*.rent_return_time' => 'required|date_format:H:i',
             ]);
 
-            // Create transaction once
-
+            // Create transaction
             $trackingCode = now()->format('Ymd') . '-' . substr(bin2hex(random_bytes(4)), 0, 8);
 
             $transaction = Transaction::create([
@@ -57,6 +56,7 @@ class RenteeTransactionController extends Controller
                 'tracking_code' => $trackingCode,
                 'status' => 'pending',
             ]);
+
             // Process each item in the transaction
             foreach ($validatedData['items'] as $data) {
                 // Fetch item
@@ -89,8 +89,19 @@ class RenteeTransactionController extends Controller
                     'category_id' => $item->category_id,
                 ]);
             }
+
+            return $transaction; // Return the created transaction
         });
 
-        return redirect()->route('home', ['rentee' => $rentee]);
+        return redirect()->route('transactionDone', compact('transaction'));
+    }
+
+
+    public function transactionDone($transaction)
+    {
+
+        session()->forget('rentee');
+
+        return redirect()->route('welcome', compact('transaction'))->with('success', 'Transaction has been saved successfully, please wait');
     }
 }

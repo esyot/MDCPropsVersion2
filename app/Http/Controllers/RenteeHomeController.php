@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Item;
+use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -47,18 +48,22 @@ class RenteeHomeController extends Controller
 
             return view('rentee.pages.index', compact('items', 'rentee', 'categories'));
 
-
         }
-
-
-
-
-
 
     }
 
-    public function welcome()
+    public function welcome(Request $request)
     {
+
+        if ($request) {
+
+            $transaction = Transaction::find($request->transaction);
+
+
+            return view('rentee.pages.welcome', compact('transaction'));
+
+
+        }
 
         return view('rentee.pages.welcome');
     }
