@@ -54,8 +54,7 @@
                     <div class="flex space-x-2">
                         <p>Tracking code: </p>
                         <span>
-                            {{ $transaction->tracking_code}}
-
+                            {{ $transaction->tracking_code }}
                         </span>
                     </div>
                     <div class="flex space-x-2">
@@ -63,18 +62,14 @@
                         <span>
                             {{ $transaction->rentee->first_name }}
                             {{ $transaction->rentee->last_name }}
-
                         </span>
                     </div>
 
                     <div class="flex space-x-2">
                         <p>Status: </p> <span>{{ $transaction->status }}</span>
-
                     </div>
                     @php
                         $formattedDate = \Carbon\Carbon::parse($transaction->created_at)->format('l, F j, Y h:i A');
-
-
                     @endphp
                     <div class="flex space-x-2">
                         <p>Transaction Date: </p> <span>{{ $formattedDate }}</span>
@@ -84,17 +79,12 @@
                         <h1>Reserved Items:</h1>
                     </div>
                     @foreach ($items as $item)
-
                         <div class="flex space-x-2">
                             {{ $item->item->name }}
                         </div>
-
                     @endforeach
-
                 </div>
-
             @endforeach
-
 
             @if(count($transactions) == 0)
                 <div class="flex bg-white p-2 space-x-2">
@@ -113,7 +103,15 @@
     <div id="qr-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="bg-white p-4 rounded shadow-md">
             <video id="video" width="300" height="300" autoplay></video>
-            <button id="close-modal" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">Close</button>
+            <div class="flex justify-end space-x-1">
+                <button id="close-modal" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">
+                    Close
+                </button>
+                <button id="open-camera-button" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Open
+                    Camera
+                </button>
+
+            </div>
         </div>
     </div>
 
@@ -121,8 +119,10 @@
         const scanButton = document.getElementById('scan-qr-button');
         const qrModal = document.getElementById('qr-modal');
         const closeModalButton = document.getElementById('close-modal');
+        const openCameraButton = document.getElementById('open-camera-button');
         const video = document.getElementById('video');
         let scanning = false;
+        let cameraTimeout;
 
         scanButton.onclick = async () => {
             qrModal.classList.remove('hidden');
@@ -134,6 +134,10 @@
             qrModal.classList.add('hidden');
         };
 
+        openCameraButton.onclick = () => {
+            reopenCamera();
+        };
+
         async function startCamera() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
@@ -142,6 +146,12 @@
                 video.play();
                 scanning = true;
                 requestAnimationFrame(scanQRCode);
+
+                // Set a timeout to stop the camera after 1 minute
+                cameraTimeout = setTimeout(() => {
+                    stopCamera();
+                    qrModal.classList.add('hidden');
+                }, 60000); // 60000 milliseconds = 1 minute
             } catch (error) {
                 console.error('Error accessing the camera:', error);
                 alert('Could not access the camera. Please check permissions.');
@@ -150,6 +160,7 @@
 
         function stopCamera() {
             scanning = false;
+            clearTimeout(cameraTimeout); // Clear the timeout if the camera is stopped
             const stream = video.srcObject;
             if (stream) {
                 const tracks = stream.getTracks();
@@ -157,12 +168,16 @@
             }
         }
 
+        function reopenCamera() {
+            qrModal.classList.remove('hidden');
+            startCamera();
+        }
+
         function scanQRCode() {
             if (!scanning) return;
 
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-
 
             if (video.videoWidth > 0 && video.videoHeight > 0) {
                 canvas.width = video.videoWidth;

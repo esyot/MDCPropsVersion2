@@ -1,8 +1,16 @@
 <div id="transaction-{{$transaction->id}}"
-    class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 hidden">
+    class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 hidden z-50">
 
 
     <div class="bg-white p-4 rounded">
+        <div class="flex items-center">
+            <span class="font-medium">Item:</span>
+            <span class="ml-2 text-blue-500">{{ $transaction->item->name }}</span>
+        </div>
+        <div class="flex items-center">
+            <span class="font-medium">Quantity:</span>
+            <span class="ml-2 text-blue-500">{{ $transaction->qty }} pcs</span>
+        </div>
         <div class="flex items-center">
             <span class="font-medium">Rentee:</span>
             <span class="ml-2 text-blue-500">
@@ -42,7 +50,7 @@
         <div class="flex justify-center mt-2">
             <button type="button"
                 onclick="document.getElementById('transaction-{{$transaction->id}}').classList.add('hidden')"
-                class="px-4 py-2 bg-gray-200 rounded text-gray-800 hover:bg-gray-400">
+                class="px-4 py-2 bg-gray-500 rounded text-gray-100 hover:opacity-50">
                 Close
             </button>
         </div>

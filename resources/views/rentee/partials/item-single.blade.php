@@ -1,7 +1,7 @@
 @if(count($items) > 0)
     @foreach($items as $item)
         <div onclick="openCalendar({{ $item->id }})"
-            class="flex flex-col justify-between h-full w-1/3 sm:w-1/4 md:w-1/5 lg:w-1/6 px-2 mt-4 transition-transform ease-in-out duration-300 hover:scale-90 hover:opacity-50 cursor-pointer">
+            class="flex flex-col justify-between h-full transition-transform ease-in-out duration-300 hover:scale-90 hover:opacity-50 cursor-pointer">
             <div class="shadow-lg rounded-lg overflow-hidden relative">
                 <div class="w-full h-0 pt-[50%] relative">
                     <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
@@ -19,12 +19,9 @@
         @include('rentee.modals.preview-date')
     @endforeach
 @else
-    <div class="flex justify-center">
+    <div class="flex justify-center col-span-full">
         <h1>
             No items found
         </h1>
-
     </div>
-
-
 @endif

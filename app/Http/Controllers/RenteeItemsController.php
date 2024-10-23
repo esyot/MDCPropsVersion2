@@ -40,18 +40,21 @@ class RenteeItemsController extends Controller
 
         return view('rentee.pages.items', compact('items', 'category_id', 'rentee', 'cartedItems'));
     }
-
     public function itemUnavailableDates($id)
     {
         $item = Item::find($id);
-        $transactions = ItemsTransaction::where('item_id', $id)->whereNot('approvedByAdmin_at', null)->whereNot('approvedByCashier_at', null)->get();
+        $transactions = ItemsTransaction::where('item_id', $id)
+            ->whereNotNull('approvedByAdmin_at')
+            ->whereNotNull('approvedByCashier_at')
+            ->get();
 
-        // Return 404 if there are no transactions for the item
+        // Return an empty array if there are no transactions for the item
         if ($transactions->isEmpty()) {
-            return response()->json(['message' => 'No transactions found for this item'], 404);
+            return response()->json([]);
         }
 
         $unavailableDates = [];
+        $totalUnavailableQty = 0;
 
         foreach ($transactions as $transaction) {
             // Parse the rent dates
@@ -63,19 +66,24 @@ class RenteeItemsController extends Controller
                 $unavailableDates[] = $start->toISOString();
                 $start->addDay(); // Move to the next day
             }
+
+            // Accumulate the unavailable quantities
+            $totalUnavailableQty += $transaction->qty;
         }
 
         // Remove duplicates and return unique unavailable dates
         $uniqueUnavailableDates = array_values(array_unique($unavailableDates));
 
-        // Check if the count of unavailable dates is less than the item's quantity
-        if (count($uniqueUnavailableDates) < $item->qty) {
+        // Check if the total unavailable quantity is less than the item's quantity
+        if ($totalUnavailableQty < $item->qty) {
             return response()->json(['message' => 'All dates are available']);
         }
 
         // Return the unique unavailable dates
         return response()->json($uniqueUnavailableDates);
     }
+
+
 
 
 

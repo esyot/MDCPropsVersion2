@@ -256,13 +256,13 @@ class DashboardController extends Controller
         $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : collect();
 
         // Transactions and records
-        $daysWithRecords = Transaction::all()->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))->unique()->values()->toArray();
+        $daysWithRecords = ItemsTransaction::all()->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))->unique()->values()->toArray();
 
         // Users and destinations
         $users = User::where('name', '!=', $current_user_name)->get();
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
 
-        $transactions = Transaction::all();
+        $transactions = ItemsTransaction::all();
 
         return view(
             'admin.pages.dashboard',
@@ -396,13 +396,13 @@ class DashboardController extends Controller
         $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : collect();
 
         // Transactions and records
-        $daysWithRecords = Transaction::all()->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))->unique()->values()->toArray();
+        $daysWithRecords = ItemsTransaction::all()->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))->unique()->values()->toArray();
 
         // Users and destinations
         $users = User::where('name', '!=', $current_user_name)->get();
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
 
-        $transactions = Transaction::all();
+        $transactions = ItemsTransaction::all();
 
         return view('admin.partials.calendar', compact(
             'categories',

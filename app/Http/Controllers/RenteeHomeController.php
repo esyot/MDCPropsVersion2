@@ -29,9 +29,9 @@ class RenteeHomeController extends Controller
         // Check if the cart exists
         if (!$cart) {
 
-            $items = 0;
+            $cartedItems = 0;
 
-            return view('rentee.pages.index', compact('items', 'rentee', 'categories'));
+            return view('rentee.pages.index', compact('cartedItems', 'rentee', 'categories'));
 
         } else {
 
@@ -44,9 +44,9 @@ class RenteeHomeController extends Controller
             }
 
             // Fetch items based on the decoded IDs
-            $items = Item::whereIn('id', $itemIds)->get()->count();
+            $cartedItems = Item::whereIn('id', $itemIds)->get()->count();
 
-            return view('rentee.pages.index', compact('items', 'rentee', 'categories'));
+            return view('rentee.pages.index', compact('cartedItems', 'rentee', 'categories'));
 
         }
 
@@ -82,9 +82,9 @@ class RenteeHomeController extends Controller
         // Check if the cart exists
         if (!$cart) {
 
-            $items = 0;
+            $cartedItems = 0;
 
-            return view('rentee.pages.index', compact('items', 'rentee', 'categories'));
+            return view('rentee.pages.index', compact('cartedItems', 'rentee', 'categories'));
 
         } else {
 
@@ -97,9 +97,9 @@ class RenteeHomeController extends Controller
             }
 
             // Fetch items based on the decoded IDs
-            $items = Item::whereIn('id', $itemIds)->get()->count();
+            $cartedItems = Item::whereIn('id', $itemIds)->get()->count();
 
-            return view('rentee.pages.index', compact('items', 'rentee', 'categories'));
+            return view('rentee.pages.index', compact('cartedItems', 'rentee', 'categories'));
 
 
         }

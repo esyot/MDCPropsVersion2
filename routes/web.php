@@ -148,6 +148,7 @@ Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
     Route::get('/admin/item-search/{day}/{category_id}', [ItemController::class, 'search'])->name('itemSearch');
     Route::post('/admin/item-add', [ItemController::class, 'create'])->name('itemAdd');
     Route::put('/admin/item-update/{id}', [ItemController::class, 'update'])->name('itemUpdate');
+    Route::get('admin/item-page-search/{category_id}/', [ItemController::class, 'itemSearch'])->name('adminItemSearch');
     // Transactions
     Route::post('/admin/transaction-create', [TransactionController::class, 'create'])->name('transaction-create');
     Route::get('/admin/transactions', [TransactionController::class, 'index'])->name('transactions');

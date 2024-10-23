@@ -301,26 +301,29 @@
             </div>
 
             <div id="logoutConfirm"
-                class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
+                class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden ">
 
-                <div class="flex flex-col bg-white p-4 rounded space-y-2 items-center">
-                    <div class="bg-red-500 px-3 rounded-full py-1">
-                        <i class="fa-solid fa-question text-red-100"></i>
-
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-medium">Are you sure to log-out?</h1>
-
+                <div class="bg-white rounded w-[500px] mx-2">
+                    <div class="bg-red-500 py-1 rounded-t">
 
                     </div>
-                    <div clas="flex justify-center">
+                    <div class="flex p-4 space-x-4 items-center border-b-2">
+                        <div class="">
+                            <i class="fa-solid fa-triangle-exclamation fa-2xl text-red-500"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <h1 class="text-2xl font-medium">Logout</h1>
+                            <span>Are you sure to logout?</span>
+                        </div>
+                    </div>
+                    <div class="flex p-2 justify-end space-x-2 bg-gray-100 rounded-b">
 
-                        <a href="{{ route('logout') }}" type="button"
-                            class="px-4 py-2 bg-green-100 text-green-800 rounded hover:bg-green-500 hover:text-green-100">Yes,
-                            sure</a>
                         <button onclick="document.getElementById('logoutConfirm').classList.add('hidden')" type="button"
-                            class="px-4 py-2 bg-red-100 text-red-800 hover:text-red-100 rounded hover:bg-red-500">No,
-                            cancel</button>
+                            class="px-4 py-2 border border-red-300 text-red-500 hover:opacity-50 rounded">
+                            Cancel
+                        </button>
+                        <a href="{{ route('logout') }}" type="button"
+                            class="px-4 py-2 bg-red-500 text-red-100 hover:opacity-50 rounded">Logout</a>
                     </div>
 
                 </div>

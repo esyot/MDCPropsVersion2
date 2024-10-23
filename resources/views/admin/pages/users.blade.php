@@ -2,6 +2,12 @@
 
 @section('content')
 <div id="users-header" class="flex justify-between items-center bg-gray-200 p-4 shadow-md z-40">
+    <div>
+        <button type="button" class="px-4 py-2 bg-blue-500 text-blue-100 rounded hover:opacity-50 shadow-md"
+            onclick="document.getElementById('userAddModal').classList.remove('hidden')">
+            Add User
+        </button>
+    </div>
     <div class="flex items-center">
         <form hx-get="{{ route('usersFilter') }}" hx-trigger="input" hx-target="#users" hx-swap="innerHTML"
             class="flex space-x-1 items-center bg-white p-2 rounded-full shadow-md">
@@ -12,12 +18,7 @@
         </form>
 
     </div>
-    <div>
-        <button type="button" class="px-4 py-2 bg-blue-500 text-blue-100 rounded hover:opacity-50"
-            onclick="document.getElementById('userAddModal').classList.remove('hidden')">
-            Add User
-        </button>
-    </div>
+
 </div>
 <style>
     @media(orientation: landscape) {
@@ -103,13 +104,13 @@
 <div id="roleModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50 hidden">
     <div class="bg-white rounded-lg shadow-md w-64">
 
-        <div class="p-2 flex justify-between items-start ">
-            <div>
-                <h2 class="text-xl font-semibold">Edit Role</h2>
+        <div class="p-2 flex justify-between items-start bg-blue-500 rounded-t">
+            <div class="">
+                <h2 class="text-xl font-semibold text-blue-100">Edit Role</h2>
 
 
             </div>
-            <button class="text-xl font-bold hover:opacity-50" onclick="closeModal()">&times;</button>
+            <button class="text-xl font-bold hover:opacity-50 text-blue-100" onclick="closeModal()">&times;</button>
 
         </div>
 
@@ -118,7 +119,7 @@
             @csrf
             <input type="hidden" name="user_id" id="user_id">
 
-            <div class="flex flex-col p-2 justify-center border-t border-b border-gary-300 bg-gray-100">
+            <div class="flex flex-col p-2 justify-center border-t border-b ">
                 @foreach ($roles as $role)
                     <label class="flex items-center mb-2">
                         <input type="radio" name="role" value="{{ $role->name }}" class="mr-2">
@@ -127,13 +128,16 @@
                 @endforeach
             </div>
 
-            <div class="flex justify-end p-2 space-x-1">
-                <button type="submit"
-                    class="bg-green-100 hover:bg-green-500 text-green-800 hover:text-green-100 px-4 py-2 shadow-md rounded">
+            <div class="flex justify-end p-2 bg-gray-100 space-x-1 rounded-b">
+
+                <button type="button" onclick="closeModal()"
+                    class="px-4 p-2 border border-blue-300 border-blue-300 text-blue-500 hover:opacity-50 rounded">
+                    Cancel
+                </button>
+
+                <button type="submit" class="px-4 p-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">
                     Save
                 </button>
-                <button type="button" onclick="closeModal()"
-                    class="bg-red-100 hover:bg-red-500 hover:text-red-100 text-red-800 px-4 py-2 shadow-md rounded">Cancel</button>
 
             </div>
         </form>

@@ -12,10 +12,48 @@
     <title>Dashboard</title>
 </head>
 
+<style>
+    @media(orientation:portrait) {
+        #cart-icon {
+            display: none;
+        }
+
+    }
+</style>
+
+<div id="confirmLogoutModal"
+    class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-4 rounded-lg w-[500px]">
+        <div class="flex justify-end ">
+            <button class="text-2xl font-bold hover:text-gray-300"
+                onclick="document.getElementById('confirmLogoutModal').classList.add('hidden')">&times;</button>
+
+        </div>
+
+        <div class="my-4">
+            <h1 class="text-2xl font-medium">Are you sure to cancel your reservation?</h1>
+            <p>This will erase your cart items and start a new transaction.</p>
+        </div>
+
+        <div class="flex justify-end space-x-1 mt-6">
+
+            <button onclick="document.getElementById('confirmLogoutModal').classList.add('hidden')"
+                class="px-4 py-2 border border-gray-300 rounded text-gray-800 hover:bg-gray-500 hover:text-gray-100">No</button>
+            <a href="{{ route('cancelOrder', ['rentee' => $rentee]) }}"
+                class="px-4 py-2 bg-red-500 rounded text-red-100 hover:bg-red-800">Yes</a>
+        </div>
+    </div>
+</div>
+<script>
+    function confirmLogoutModal() {
+        document.getElementById('confirmLogoutModal').classList.remove('hidden');
+    }
+</script>
+
 <body class="bg-white overflow-x-hidden overflow-y-auto">
     @if(session()->has('cart'))
         <div id="errorModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div class="bg-red-500 text-white rounded-md shadow-md p-6 w-1/3">
+            <div class="bg-red-500 text-white rounded-md shadow-md p-6 ">
                 <h2 class="text-xl font-semibold mb-4">Error!</h2>
                 <p>{{ session('cart') }}</p>
                 <div class="flex justify-end mt-4">
@@ -68,17 +106,15 @@
 
                 }
             </script>
-
-
         </div>
 
         <div id="rightbar" class="flex fixed right-0 top-[80px] justify-end z-50">
-            <button title="Messages"
-                class="hover:opacity-50 mb-2 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
-                <i class="fab fa-facebook-messenger fa-2xl text-blue-400"></i>
-            </button>
+            <!-- <button title="Messages"
+                                                        class="hover:opacity-50 mb-2 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
+                                                        <i class="fab fa-facebook-messenger fa-2xl text-blue-400"></i>
+                                                    </button> -->
 
-            <a href="{{ route('cart', ['rentee' => $rentee]) }}">
+            <a id="cart-icon" href="{{ route('cart', ['rentee' => $rentee]) }}">
                 <button title="Cart" class="hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
                     <span class="absolute bottom-4 right-1 bg-red-500 text-white rounded-full px-[5px] text-xs">
                         {{ $cartedItems}}
@@ -92,7 +128,7 @@
 
         @if(session()->has('success'))
             <div id="successModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                <div class="bg-green-500 text-white rounded-md shadow-md p-6 w-1/3">
+                <div class="bg-green-500 text-white rounded-md shadow-md p-6 ">
                     <h2 class="text-xl font-semibold mb-4">Success!</h2>
                     <p>{{ session('success') }}</p>
                     <div class="flex justify-end mt-4">
@@ -104,14 +140,13 @@
                 </div>
             </div>
         @endif
-        <div id="item-single" class="mx-auto px-4 py-6 relative">
-            <div class="flex flex-wrap mx-2 justify-start">
 
-                @include('rentee.partials.item-single')
+        <div id="item-single" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 mt-4 mx-2">
 
-            </div>
+            @include('rentee.partials.item-single')
+
         </div>
-
+        </div>
 
         @include('rentee.components.footer')
     @else
@@ -162,19 +197,38 @@
                 const calendarContainer = document.getElementById(`calendar-${itemId}`);
                 calendarContainer.innerHTML = '';
 
-                const unavailableDays = new Set((unavailableDates[itemId] || []).map(date => date.split('T')[0]));
+                // Ensure unavailableDates[itemId] is an array
+                const unavailableDays = new Set(Array.isArray(unavailableDates[itemId]) ? unavailableDates[itemId].map(date => date.split('T')[0]) : []);
 
+                // Add empty divs for the leading days of the month
                 Array.from({ length: new Date(y, m - 1).getDay() }).forEach(() => calendarContainer.appendChild(document.createElement('div')));
 
                 for (let day = 1; day <= daysInMonth; day++) {
                     const currentDay = new Date(y, m - 1, day);
-                    const isUnavailable = unavailableDays.has(new Date(currentDay.getTime() + 86400000).toISOString().split('T')[0]);
                     const dayDiv = document.createElement('div');
                     dayDiv.innerText = day;
-                    dayDiv.className = `flex justify-center shadow-md items-center h-10 w-10 rounded border ${currentDay.getDay() === 0 ? 'text-red-500' : ''} ${isUnavailable ? 'bg-gray-300 text-gray-400 opacity-60' : ''}`;
+                    dayDiv.className = 'flex justify-center shadow-md items-center h-10 w-10 bg-white rounded border';
+
+                    // Check if it's a Sunday
+                    if (currentDay.getDay() === 0) {
+                        dayDiv.classList.add('text-red-500'); // Add red text for Sundays
+                    }
+
+                    // Check if there are no unavailable days
+                    if (unavailableDays.size === 0) {
+                        dayDiv.classList.add('bg-gray-200'); // Style for available days
+                    } else {
+                        const isUnavailable = unavailableDays.has(new Date(currentDay.getTime() + 86400000).toISOString().split('T')[0]);
+                        if (isUnavailable) {
+                            dayDiv.classList.add('bg-gray-300', 'text-gray-400'); // Style for unavailable days
+                        }
+                    }
+
                     calendarContainer.appendChild(dayDiv);
                 }
             }
+
+
 
             document.addEventListener('DOMContentLoaded', () => {
                 @foreach($items as $item)

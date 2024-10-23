@@ -332,4 +332,22 @@ class ItemController extends Controller
         return view('admin.partials.item', compact('items', 'day'));
     }
 
+    public function itemSearch(Request $request, $category_id)
+    {
+        $categories = Category::all();
+
+        $items = Item::where('category_id', $category_id)
+            ->where('name', 'LIKE', '%' . $request->search_value . '%')
+            ->get();
+        $setting = Setting::where('user_id', Auth::user()->id)->first();
+
+        $currentCategory = Category::find($category_id);
+
+        return view('admin.partials.items', compact('items', 'currentCategory', 'setting', 'categories'));
+
+
+
+
+    }
+
 }

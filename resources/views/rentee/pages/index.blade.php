@@ -25,6 +25,10 @@
             #toggleButton {
                 display: none;
             }
+
+            #cart-icon {
+                display: none;
+            }
         }
 
         @media (orientation: landscape) {
@@ -116,16 +120,16 @@
 
         <div id="rightbar" class="flex fixed right-0 justify-end z-50">
 
-            <button title="Messages"
+            <!-- <button title="Messages"
                 class="hover:opacity-50 mb-2 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
                 <i class="fab fa-facebook-messenger fa-2xl text-blue-400"></i>
-            </button>
+            </button> -->
 
-            <a href="{{ route('cart', ['rentee' => $rentee]) }}">
+            <a id="cart-icon" href="{{ route('cart', ['rentee' => $rentee]) }}">
                 <button title="Cart"
                     class="hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
                     <span class="absolute bottom-4 right-1 bg-red-500 text-white rounded-full px-[5px] text-xs">
-                        {{ $items }}
+                        {{ $cartedItems }}
                     </span>
                     <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
 

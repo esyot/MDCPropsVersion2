@@ -34,7 +34,7 @@
         <div class="flex p-4">
             @foreach($transactions as $transaction)
 
-                <div title="Details"
+                <div title="Click to preview details"
                     class="mx-2 w-64 bg-white rounded-lg shadow-md overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-90' : '' }}">
                     <div onclick="document.getElementById('transaction-{{$transaction->id}}').classList.remove('hidden')">
 
@@ -55,6 +55,34 @@
 
                                 </span>
                             </div>
+                            @php
+    if ($transaction->created_at) {
+        // Convert to Carbon instance if necessary
+        $transactionTime = $transaction->created_at instanceof \Carbon\Carbon
+            ? $transaction->created_at
+            : \Carbon\Carbon::parse($transaction->created_at);
+
+        // Get the current time
+        $currentTime = \Carbon\Carbon::now();
+
+        // Calculate the time difference in minutes
+        $minutesAgo = $transactionTime->diffInMinutes($currentTime);
+
+        // Determine the appropriate time ago string
+        if ($minutesAgo < 1) {
+            $timeAgo = 'just now';
+        } else {
+            $timeAgo = $transactionTime->diffForHumans($currentTime, [
+                'syntax' => \Carbon\CarbonInterface::DIFF_RELATIVE_TO_NOW,
+            ]);
+        }
+    }
+@endphp
+
+<div class="flex justify-center items-center">
+    <small>{{ $timeAgo }}</small>
+</div>
+
 
                         </div>
                         <div class="flex justify-center space-x-2 mt-2">
@@ -76,74 +104,12 @@
                     </div>
                 </div>
                 @include('admin.modals.transaction')
-                @include('admin.modals.approve-confirm')
+                @include('admin.modals.transaction-confirm')
             @endforeach
         </div>
     </div>
 
-    @foreach($transactions as $transaction)
-        <div id="delete-confirmation-{{$transaction->id}}"
-            class="hidden fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50 confirm-dialog">
-            <div class="relative px-4 min-h-screen md:flex md:items-center md:justify-center">
-                <div
-                    class="bg-white p-6 rounded-lg md:max-w-md md:mx-auto p-4 fixed inset-x-0 bottom-0 z-50 mb-4 mx-4 md:relative shadow-lg">
-                    <div class="items-center">
-                        <div
-                            class="rounded-full border border-gray-300 flex items-center justify-center w-16 h-16 flex-shrink-0 mx-auto">
-                            <i class="fa-solid fa-calendar-xmark text-red-500"></i>
-                        </div>
-
-                        <div class="flex justify-center flex-col">
-                            <p class="font-bold text-lg text-center">Decline Transaction</p>
-
-                            <div class="flex justify-center mt-4">
-                                <div class="text-left flex flex-col">
-                                    <div class="flex items-center">
-                                        <span class="font-medium">Rentee:</span>
-                                        <span class="ml-2 text-red-500">{{ $transaction->rentee_name }}</span>
-                                    </div>
-                                    <div class="flex items-center mt-1">
-                                        <span class="font-medium">Contact #:</span>
-                                        <span class="ml-2 text-red-500">{{ $transaction->rentee_contact_no }}</span>
-                                    </div>
-                                    <div class="flex items-center mt-1">
-                                        <span class="font-medium">Date Pick-up:</span>
-                                        <span class="ml-2 text-red-500">
-                                            {{ \Carbon\Carbon::parse($transaction->rent_date . ' ' . $transaction->rent_time)->format('F j, Y h:i A') }}
-                                        </span>
-                                    </div>
-                                    <div class="flex items-center mt-1">
-                                        <span class="font-medium">Date Return:</span>
-                                        <span class="ml-2 text-red-500">
-                                            {{ \Carbon\Carbon::parse($transaction->rent_return . ' ' . $transaction->rent_return_time)->format('F j, Y h:i A') }}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <p class="text-sm text-gray-700 mt-4 text-center">
-                                Note: This action cannot be undone.
-                            </p>
-
-                            <div class="flex justify-center m-2 space-x-2">
-                                <a href="{{ route('transactionDecline', ['id' => $transaction->id]) }}" id="confirm-delete-btn"
-                                    class="hover:bg-red-400 w-full md:w-auto px-4 py-3 md:py-2 bg-red-200 text-red-700 rounded-lg font-semibold text-sm md:ml-2">
-                                    Yes, decline.
-                                </a>
-                                <button
-                                    onclick="document.getElementById('delete-confirmation-{{$transaction->id}}').classList.add('hidden')"
-                                    class="hover:bg-gray-400 w-full md:w-auto px-4 py-3 md:py-2 bg-gray-200 rounded-lg font-semibold text-sm mt-4 md:mt-0">
-                                    No, cancel.
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    @endforeach
+   @include('admin.modals.transaction-decline')
 
 @else
 

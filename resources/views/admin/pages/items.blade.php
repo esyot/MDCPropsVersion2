@@ -36,10 +36,12 @@
             </div>
 
             <div>
-                <form action="" class="rounded-full bg-white p-2 shadow-inner">
+                <form hx-get="{{ route('adminItemSearch', ['category_id' => $currentCategory])}}" hx-target="#items"
+                    hx-swap="innerHTML" hx-trigger="input" class="rounded-full bg-white p-2 shadow-inner">
 
                     <i class="fas fa-magnifying-glass"></i>
-                    <input type="text" class="bg-transparent focus:outline-none" placeholder="Search items...">
+                    <input type="text" name="search_value" class="bg-transparent focus:outline-none"
+                        placeholder="Search items...">
                 </form>
 
             </div>
@@ -139,37 +141,14 @@
     </style>
 
     <div id="main-content" class="w-full h-full relative p-4 overflow-y-auto custom-scrollbar">
-        <div class="flex flex-wrap flex-grow gap-2">
-            <!-- Add Category Button -->
-            <!-- <div id="add-new-item-card" title="Add a new category"
-                            class="flex flex-col rounded-lg bg-gray-300 {{ $setting->transition == true ? 'transition-transform duration-300 hover:scale-90' : '' }}">
-                            <div class="flex justify-center items-center rounded-lg bg-gray-200 h-3/4 cursor-pointer hover:text-gray-800 text-gray-400 "
-                                onclick="document.getElementById('item-add-modal').classList.remove('hidden')">
-                                <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
-                            </div>
-                            <div class="bg-blue-500 w-full h-1/4 shadow-md text-center flex items-center rounded-b-lg justify-center">
-                                <h1 class="text-lg font-semibold text-white truncate">Add Item</h1>
-                            </div>
-                        </div> -->
+        <div id="items" class="flex flex-wrap flex-grow gap-2">
 
             <!--  Items -->
-            @foreach ($items as $item)
 
-                <div id="card" title="Click to preview"
-                    onclick="document.getElementById('item-{{$item->id}}').classList.remove('hidden')"
-                    class="flex flex-col text-white relative bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transition-transform  duration-300 hover:scale-90' : '' }}">
-                    <!-- Image Container -->
-                    <div class="flex justify-center items-center bg-gray-200 h-3/4 shadow-inner">
-                        <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
-                            alt="{{ $item->name }}" class="w-full h-full object-cover">
-                    </div>
-                    <!-- Name Container -->
-                    <div class="bg-blue-500 w-full h-1/4 shadow-md text-center flex flex-col items-center justify-center">
-                        <h1 class="text-lg font-semibold truncate">{{ $item->name }}</h1>
-                    </div>
-                </div>
-                @include('admin.modals.item-preview')
-            @endforeach
+
+
+            @include('admin.partials.items')
+
 
         </div>
     </div>

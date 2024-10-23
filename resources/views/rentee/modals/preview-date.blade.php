@@ -8,10 +8,10 @@
         </div>
         <div class="flex space-x-3 justify-center items-center mb-4">
             <div class="space-x-2">
-                <button onclick="changeMonth('{{$item->id}}', 'left')">
+                <button onclick="changeMonth('{{$item->id}}', 'left')" class="hover:opacity-50">
                     <i class="fas fa-chevron-circle-left text-blue-500 fa-xl"></i>
                 </button>
-                <button onclick="changeMonth('{{$item->id}}', 'right')">
+                <button onclick="changeMonth('{{$item->id}}', 'right')" class="hover:opacity-50">
                     <i class="fas fa-chevron-circle-right text-blue-500 fa-xl"></i>
                 </button>
             </div>
@@ -29,15 +29,23 @@
             <div class="font-bold">Fri</div>
             <div class="font-bold">Sat</div>
         </div>
-        <div id="calendar-{{$item->id}}" class="grid grid-cols-7 gap-1">
-            <!-- Calendar will be generated here -->
+        <div id="calendar-{{$item->id}}"
+            class="grid grid-cols-7 gap-1 border border-gray-300 p-2 bg-gray-100 shadow-md">
+
+        </div>
+        <div class="flex justify-center mt-2">
+            <small>
+                <i class="fas fa-exclamation-circle text-red-500"></i>
+                <span>Unavailable days are filtered with color gray.</span>
+            </small>
         </div>
 
         <div class="flex justify-end p-2 space-x-2">
-            <a href="{{ route('addToCart', ['rentee' => $rentee, 'item' => $item->id]) }}"
-                class="px-4 py-2 bg-blue-100 text-blue-800 rounded">Add to cart</a>
             <button onclick="document.getElementById('date-{{$item->id}}').classList.add('hidden')"
-                class="px-4 py-2 bg-red-100 text-red-800 rounded">Cancel</button>
+                class="px-4 py-2 bg-red-500 text-red-100 hover:opacity-50 rounded">Cancel</button>
+            <a href="{{ route('addToCart', ['rentee' => $rentee, 'item' => $item->id]) }}"
+                class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">Add to cart</a>
+
         </div>
     </div>
 </div>

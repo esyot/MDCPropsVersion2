@@ -1,0 +1,227 @@
+
+; Copyright (c) Realtek Semiconductor Corp. All rights reserved.
+
+[Version]
+signature="$Windows NT$"
+Class=Image
+ClassGUID={6bdd1fc6-810f-11d0-bec7-08002be2092f}
+Provider=%Rts%
+Catalogfile=rtsuvc.cat
+DriverVer= 06/10/2014,%DriverVersion%
+
+[SourceDisksNames]
+5800 = %cdname%,,,
+
+[SourceDisksFiles]
+rtsuvc.sys = 5800
+RtCamX.dll = 5800
+RtCamU.exe = 5800
+RtTWN.ds = 5800
+RTFTrack.exe = 5800
+FTData.xml = 5800
+FTDataP.xml = 5800
+FTDataR0.xml = 5800
+FTDataR1.xml = 5800
+
+[DestinationDirs]
+rtsuvc.CopyFiles=12
+CoInstaller_CopyFiles=11
+RtsUvcUninstall.CopyFiles = 10
+RtsUvcApp.CopyFiles = 10
+RtsUvcTwain.CopyFiles = 10,twain_32\rtsuvc
+
+[rtsuvc.CopyFiles]
+rtsuvc.sys
+
+[RtsUvcApp.CopyFiles]
+RTFTrack.exe
+FTData.xml
+FTDataP.xml
+FTDataR0.xml
+FTDataR1.xml
+
+[RtsUvcUninstall.CopyFiles]
+RtCamU.exe
+
+[RtsUvcTwain.CopyFiles]
+RtTWN.ds
+
+[Manufacturer]
+%ModuleManufacture%=Realtek,NTx86,NTx86.6
+
+[Realtek.NTx86]
+%rtsuvc.DeviceDesc%=rtsuvc,USB\VID_13D3&PID_5169
+%rtsuvc.DeviceDesc%=rtsuvc,USB\VID_13D3&PID_5170
+%rtsuvc.DeviceDesc%=rtsuvc,USB\VID_13D3&PID_5171
+%rtsuvc.DeviceDesc%=rtsuvc,USB\VID_13D3&PID_5172
+%rtsuvc.DeviceDesc%=rtsuvc,USB\VID_13D3&PID_5173
+%rtsuvc.DeviceDesc%=rtsuvc,USB\VID_13D3&PID_5177
+%rtsuvc.DeviceDesc%=rtsuvc,USB\VID_13D3&PID_5611
+
+[Realtek.NTx86.6]
+%rtsuvc.DeviceDesc%=rtsuvc.NTx86.6,USB\VID_13D3&PID_5169&MI_00
+%rtsuvc.DeviceDesc%=rtsuvc.NTx86.6,USB\VID_13D3&PID_5170&MI_00
+%rtsuvc.DeviceDesc%=rtsuvc.NTx86.6,USB\VID_13D3&PID_5171&MI_00
+%rtsuvc.DeviceDesc%=rtsuvc.NTx86.6,USB\VID_13D3&PID_5172&MI_00
+%rtsuvc.DeviceDesc%=rtsuvc.NTx86.6,USB\VID_13D3&PID_5173&MI_00
+%rtsuvc.DeviceDesc%=rtsuvc.NTx86.6,USB\VID_13D3&PID_5177&MI_00
+%rtsuvc.DeviceDesc%=rtsuvc.NTx86.6,USB\VID_13D3&PID_5611&MI_00
+
+;---------------------------------------------------------------
+;                x 86  D D I n s t a l l
+;---------------------------------------------------------------
+
+[rtsuvc.NTx86.6]
+Include=ks.inf, kscaptur.inf
+Needs=KS.Registration, KSCAPTUR.Registration.NT
+CopyFiles = rtsuvc.CopyFiles,RtsUvcUninstall.CopyFiles, CoInstaller_CopyFiles, RtsUvcTwain.CopyFiles, RtsUvcApp.CopyFiles
+AddReg = RtsUvcUninstall.AddReg, RtsUVCApp.AddReg
+;RegisterDlls = rtsuvc.RegisterDlls
+AddProperty  = OEMCustom.AddProperty
+
+[rtsuvc.NTx86]
+Include=ks.inf, kscaptur.inf, sti.inf
+Needs=KS.Registration, KSCAPTUR.Registration.NT, STI.WIAVideo.Registration
+CopyFiles = rtsuvc.CopyFiles, RtsUvcUninstall.CopyFiles, CoInstaller_CopyFiles, RtsUvcTwain.CopyFiles, RtsUvcApp.CopyFiles
+AddReg = RtsUvcUninstall.AddReg, RtsUVCApp.AddReg
+;RegisterDlls = rtsuvc.RegisterDlls
+
+;wia
+SubClass=StillImage
+DeviceType=3
+DeviceSubType=0x1
+Capabilities=0x00000031
+DeviceData=rtsuvc.DeviceData
+ICMProfiles="sRGB Color Space Profile.icm"
+
+[rtsuvc.DeviceData]
+Server=local
+UI Class ID={5d8ef5a3-ac13-11d2-a093-00c04f72dc3c}
+
+[rtsuvc.NTx86.HW]
+AddReg=rtsuvc.AddReg
+
+[rtsuvc.NTx86.6.HW]
+AddReg=rtsuvc.AddReg
+
+[rtsuvc.NTx86.CoInstallers]
+AddReg=CoInstaller_AddReg
+CopyFiles=CoInstaller_CopyFiles
+
+[rtsuvc.NTx86.6.CoInstallers]
+AddReg=CoInstaller_AddReg
+CopyFiles=CoInstaller_CopyFiles
+
+[CoInstaller_CopyFiles]
+RtCamX.dll
+
+[CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000,"RtCamX.dll,RtsUVC_CoInstaller"
+
+[RTSUVCCoInfo]
+; Used by RtsUVC co-installer to figure out where the original media is
+; located (so it can launch value-added setup programs).
+OriginalInfSourcePath = %1%
+
+[RtsUvcUninstall.AddReg]
+HKLM,%RTSUVC_UNINSTALL%,DisplayName,,%rtsuvc.UninstallName%
+HKLM,%RTSUVC_UNINSTALL%,UninstallString,,%10%"\RtCamU.exe /u /s"
+HKLM,%RTSUVC_UNINSTALL%,DisplayIcon,,%10%"\RtCamU.exe"
+HKLM,%RTSUVC_UNINSTALL%,Publisher,,%OrganizationName%
+HKLM,%RTSUVC_UNINSTALL%,DisplayVersion,,%DriverVersion%
+
+[OEMCustom.AddProperty]
+{A8B865DD-2E3D-4094-AD97-E593A70C75D6},17,0x00000011,,-1
+
+[RtsUvcApp.AddReg]
+HKLM,%AUTORUN%,RtsFT,,"RTFTrack.exe"
+
+;---------------------------------------------------------------
+;                I n t e r f a c e s
+;---------------------------------------------------------------
+
+[rtsuvc.NTx86.Interfaces]
+AddInterface=%KSCATEGORY_CAPTURE%,"GLOBAL",CaptureInterface.NT,
+AddInterface=%KSCATEGORY_VIDEO%,"GLOBAL",CaptureInterface.NT,
+;AddInterface=%KSCATEGORY_CAPTURE%,%RTSUVCCPAFILTER%,CaptureInterface.NT,
+;AddInterface=%KSCATEGORY_VIDEO%,%RTSUVCCPAFILTER%,CaptureInterface.NT,
+
+[rtsuvc.NTx86.6.Interfaces]
+AddInterface=%KSCATEGORY_CAPTURE%,"GLOBAL",CaptureInterface.NT,
+AddInterface=%KSCATEGORY_VIDEO%,"GLOBAL",CaptureInterface.NT,
+;AddInterface=%KSCATEGORY_CAPTURE%,%RTSUVCCPAFILTER%,CaptureInterface.NT,
+;AddInterface=%KSCATEGORY_VIDEO%,%RTSUVCCPAFILTER%,CaptureInterface.NT,
+
+[CaptureInterface.NT]
+AddReg=rtsuvc.AddReg
+
+[PropertyUI]
+PageOEM = Lenovo_AutoBanding
+
+;---------------------------------------------------------------
+;                A d d R e g
+;---------------------------------------------------------------
+
+[rtsuvc.AddReg]
+HKR,,CLSID,,%Proxy.CLSID%
+HKR,,FriendlyName,,%rtsuvc.FriendlyName%
+
+;---------------------------------------------------------------
+;                R e g i s t e r D l l s 
+;---------------------------------------------------------------
+
+[rtsuvc.RegisterDlls]
+11, , RtCamX.dll, 1
+
+;---------------------------------------------------------------
+;                S e r v i c e s  
+;---------------------------------------------------------------
+
+[rtsuvc.NTx86.Services]
+AddService=rtsuvc, 0x00000002, rtsuvc.ServiceInstall
+
+[rtsuvc.NTx86.6.Services]
+AddService=rtsuvc, 0x00000002, rtsuvc.ServiceInstall
+
+[rtsuvc.ServiceInstall]
+DisplayName=%rtsuvc.DeviceDesc%
+ServiceType=%SERVICE_KERNEL_DRIVER%
+StartType=%SERVICE_DEMAND_START%
+ErrorControl=%SERVICE_ERROR_NORMAL%
+ServiceBinary=%12%\rtsuvc.sys
+AddReg=rtsuvcParameters.AddReg
+
+[rtsuvcParameters.AddReg]
+HKR,Parameters,CRCL,0x00010001,0
+HKR,Parameters,FollowINFDeviceName,0x00010001,1
+HKR,Parameters,SpecialSaveProperty,0x00010001,0
+
+;---------------------------------------------------------------
+;                S t r i n g s
+;---------------------------------------------------------------
+
+[Strings]
+; non-localizeable
+Proxy.CLSID="{17CCA71B-ECD7-11D0-B908-00A0C9223196}"
+KSCATEGORY_CAPTURE="{65E8773D-8F56-11D0-A3B9-00A0C9223196}"
+KSCATEGORY_VIDEO="{6994AD05-93EF-11D0-A3CC-00A0C9223196}"
+
+;RTSUVCCPAFILTER="{B7A8FBA3-1AE2-4617-B9BD-A7AB63F5FDDA}"
+
+AUTORUN="Software\Microsoft\Windows\CurrentVersion\Run"
+
+SERVICE_KERNEL_DRIVER=1
+SERVICE_DEMAND_START=3
+SERVICE_ERROR_NORMAL=1
+REG_DWORD=0x00010001
+
+
+Rts="Realtek"
+ModuleManufacture="AzureWave"
+OrganizationName="Realtek Semiconductor Corp."
+rtsuvc.DeviceDesc="Lenovo EasyCamera"
+rtsuvc.FriendlyName="Lenovo EasyCamera"
+rtsuvc.UninstallName="Lenovo EasyCamera"
+RTSUVC_UNINSTALL="Software\Microsoft\Windows\CurrentVersion\Uninstall\{E0A7ED39-8CD6-4351-93C3-69CCA00D12B4}"
+cdname="Lenovo EasyCamera"
+DriverVersion = "6.2.9200.10279"

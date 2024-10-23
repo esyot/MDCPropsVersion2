@@ -1,25 +1,29 @@
-  <!-- Modal for user delete confirmation -->
-  <div id="userDeleteConfirm-{{$user->id}}"
-                class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
-                <div class="bg-white p-6 flex justify-center items-center flex-col rounded drop-shadow-lg">
-                    <div>
-                        <i class="fa-solid fa-question text-white px-4 py-3 bg-yellow-500 rounded-full drop-shadow-lg"></i>
-                    </div>
+<!-- Modal for user delete confirmation -->
+<div id="userDeleteConfirm-{{$user->id}}"
+    class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden ">
+    <div class="bg-white shadow-md rounded w-[500px] mx-2">
+        <div class="bg-red-500 py-1 rounded-t">
 
-                    <div class="mt-2">
-                        <h1>Are you sure to delete this user?</h1>
-                    </div>
-
-                    <div class="space-x-1 mt-3">
-                        <button type="submit" class="text-lg hover:underline text-green-300 hover:text-green-500">Yes,
-                            proceed.</button>
-                        <button type="button"
-                            onclick="document.getElementById('userDeleteConfirm-{{$user->id}}').classList.add('hidden')"
-                            class="text-lg hover:underline text-red-300 hover:text-red-500">No,
-                            cancel.</button>
-                    </div>
-
-
-
-                </div>
+        </div>
+        <div class="flex space-x-2  p-4 items-center border-b-2">
+            <div class="bg-red-500 px-3 py-3.5 rounded-full">
+                <i class="fa-solid fa-trash fa-2xl text-white"></i>
             </div>
+
+            <div>
+                <h1 class="text-2xl font-medium">Delete</h1>
+                <span>Are you sure to delete this user?</span>
+            </div>
+        </div>
+        <div class="flex justify-end space-x-1 p-2">
+
+            <button type="button"
+                onclick="document.getElementById('userDeleteConfirm-{{$user->id}}').classList.add('hidden')"
+                class="font-medium px-4 py-2 border border-red-300 text-red-500 hover:opacity-50 rounded">No,
+                cancel.
+            </button>
+            <button type="submit" class="font-medium px-4 py-2 bg-red-500 text-red-100 hover:opacity-50 rounded">Yes,
+                proceed.</button>
+        </div>
+    </div>
+</div>

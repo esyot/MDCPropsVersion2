@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemsTransaction;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
@@ -24,11 +25,11 @@ class UserController extends Controller
         $currentUserName = $currentUser->name;
         $defaultCategoryId = 1;
 
-        $users = User::all();
+        $users = User::whereNot('id', Auth::user()->id)->get();
         $roles = Role::all();
         $setting = Setting::where('user_id', Auth::user()->id)->first();
         $currentCategory = Category::find($defaultCategoryId);
-        $transactions = Transaction::where('category_id', $defaultCategoryId)->get();
+        $transactions = ItemsTransaction::where('category_id', $defaultCategoryId)->get();
         $categories = Category::orderBy('id')->get();
         $items = Item::where('category_id', $defaultCategoryId)->get();
 
@@ -158,12 +159,12 @@ class UserController extends Controller
 
         if ($request->search == null) {
 
-            $users = User::all();
+            $users = User::whereNot('id', Auth::user()->id)->get();
 
             return view('admin.partials.users', compact('users'));
         } else {
 
-            $users = User::where('name', 'LIKE', '%' . $request->search . '%')->orwhere('email', 'LIKE', '%' . $request->search . '%')->get();
+            $users = User::whereNot('id', Auth::user()->id)->where('name', 'LIKE', '%' . $request->search . '%')->orwhere('email', 'LIKE', '%' . $request->search . '%')->get();
 
             return view('admin.partials.users', compact('users'));
         }

@@ -1,0 +1,892 @@
+---------------------
+Version Information
+---------------------
+RtsUVCDriver
+    Driver  6.2.9200.10279
+
+----------------------------
+Silent Installation Command 
+----------------------------
+Run "setup.exe /s /f2<path\LogFile>"
+i.e. setup.exe /s /f2c:\mylog.log
+
+-------------------------------
+Silent Uninstallation Command
+-------------------------------
+Run "setup.exe /removeonly /s /f1<path\usetup.iss> /f2<path\LogFile>"
+i.e. setup.exe /removeonly /s /f1c:\usetup.iss /f2c:\mylog.log
+
+--------------------
+Support Languages
+--------------------
+Arabic, Arabic Lebanon, Arabic Saudi Arabia
+Basque, Brazilian, Bulgarian, Catalan
+Chinese-Traditional-HK, Chinese-Simplified, Chinese-Traditional-TW
+Croatian, Czech, Danish, Dutch
+English, English-Euro, Estonian, Finnish
+French, French/Canadian, German, Greek
+Hebrew, Hungarian, Italian
+Japanese, Korean, Latvian
+Lithuanian, Norwegian, Polish, Portuguese
+Romanian, Russian, Slovak, Slovenian
+Spanish, Swedish, Thai
+Turkish, Ukrainian 
+
+--------------------
+Change Histroy
+--------------------
+[6.2.9200.10279]
+Fix BSOD issue when SS and device may removed
+Fix BSOD issue when acess property and device may removed
+Add customized settings for 05C8/041F and 05C8/0604
+Update Installation tool for registry issue
+
+[6.2.9200.10278]
+Fix drop frame issue with temporal de-noise function
+Add customized settings for 04F2/B2F7 and 0BDA/57BD
+
+[6.2.9200.10277]
+Add customized settings for 174F/114F, 174F/1168, and 174F/14DD
+Add NoRotationInMetro rregistry key for some projects
+
+[6.2.9200.10276]
+Change Temporal denoise parameters for 5986/0535
+
+[6.2.9200.10275]
+Add customized settings for 0BDA/56A0
+Add customized settings for 04F2/B48F
+Add customized settings for 5986/0535
+Set default auto-deflicker for some projects
+Fix BSOD issue with distance detect AP
+
+[6.2.9200.10274]
+Update rotation AP for auto rotation issue
+Fix BSOD issue with distance detect application
+
+[6.2.9200.10273]
+Add some customized settings for 0BDA/5650
+Fix BSOD issue with distance detect application 
+
+[6.2.9200.10272]
+Update Twin to customized device name for some projects
+Update MJPEG decoder to decrease memory usage
+Disable auto-flicker for 04F2/B43E and 04F2/B43F
+Update rotation AP for error message issue
+
+[6.2.9200.10271]
+Add customized settings for 5986/0662
+
+[6.2.9200.10270]
+Add customized settings for 04F2/B3EF
+Add customized settings for Vid = 174F
+Add customized settings for 04F2/B488
+
+[6.2.9200.10269]
+Fix BSOD issue for WHCK test
+
+[6.2.9200.10268]
+Fix Twain crash issue with Acrobat
+Fix yellow band issue if acess error
+
+[6.2.9200.10267]
+Add customized settings for 0BDA/5771
+Merge de-noise Algorithms
+
+[6.2.9200.10266]
+Add customized settings for 13D3/5721 and 5986/0544
+Add customized settings for 0BDA/5730, 0BDA/5751, and 0BDA/57A4
+
+[6.2.9200.10265]
+Update MJPEG decoder for Win7
+
+[6.2.9200.10264]
+Fix LED issue for some project
+Add some customized settings for some project
+Add customized settings for 04CA/7047, 04CA/7048, 04CA/7049
+Update Twain file
+Fix error message issue in rotate AP
+
+[6.2.9200.10263]
+Fix BSOD issue when XU control length more than 8
+Fix can't preview issue with resolution 1366X768
+
+[6.2.9200.10262]
+Merge Temporal denoise algorithm
+
+[6.2.9200.10261]
+Add customized settings for 04F2/B476, 04F2/B477, 04CA/704C, and 04CA/704D
+Add customized settings for 04F2/B45D and 04F2/B462
+
+[6.2.9200.10260]
+Update FACE AE AP for fixing pop dialog issue
+Disable RGB24 format for some projects
+
+[6.2.9200.10259]
+Fix message box issue during OS boot
+Add customized settings for 04F2/B46F
+update coinstaller for unregister MJPEG decoder
+
+[6.2.9200.10258]
+Fix WHCK BSOD issue
+
+[6.2.9200.10257]
+Add customized settings for 04F2/B45B and 04F2/B45C
+Add support 5986/0651, 5986/065B, 5986/065C, 174F/172E, and 174F/173C
+Merge Temporal denoise Algorithms
+Change add/remove item name for some 5M projects
+
+[6.2.9200.10256]
+Update Twian
+
+[6.2.9200.10255]
+Add customized settings for 0BDA/57AA and 04F2/B46C
+Auto rotate function support two camera devices
+Update MJPEG decoder for Win7 and WinXP issues
+
+[6.2.9200.10254]
+Fix BSOD 0x7E when preview and S3, unplug, resume.
+Add customized settings for 04F2/B46A
+Update MJPEG RsDecoder
+
+[6.2.9200.10253]
+Change device name for some 2M/5M camera
+Fix bug which cause 720p preview error
+Fix AWB value issue for VGA project
+Add customized settings for 05C8/0603, 05C8/041D, 04F2/B43E and 04F2/B43F
+
+[6.2.9200.10252]
+Embed privacy images into sys 
+Fix Win8/Win8.1 USB3 bandwidth issue
+Fix BSOD with ROI extended control
+Add some protection in Handle_Cleanup()
+Add MS property UI for some projects
+Update 5M MJPEG decoder for Win7/Vista/WinXP
+Remove IdeaEye support for 0BDA/579A
+Add customized settings for 5986/0657
+
+[6.2.9200.10251]
+Fix BSOD 0xC4 for new privacy iamge buffer
+Add support 5986/0654
+Add support 0BDA/5790, 0BDA/5791, 0BDA/579D, and 0BDA/579E
+Add customized settings for 5986/0655
+
+[6.2.9200.10250]
+Fix BOSD 0xC4 for privacy image buffer
+Remove Water Marker function for Aoni
+Modify customized settings for 5986/0558 and 04F2/B429
+Modify customized settings for 13D3/5722
+Add rotate function for SSID = 2009/211B/21B3
+Remove jpg files for water maker function
+
+[6.2.9200.10249]
+Add customized settings for 13D3/5727 and 5986/0651
+Add customized settings for VID=174F
+Add customized settings for 0BDA/579C
+Add customized settings for 04F2/B449
+Add customized settings for 5986/055A
+Add customized settings for 5986/0652
+Customized property UI by INF files
+
+[6.2.9200.10248]
+Add customized settings for 5986/055E
+Add support MJPEG decoder for 04F2/B429
+Remove KSPIN_FLAG_DO_NOT_INITIATE_PROCESSING for still pin
+Fix windows hard key issue
+
+[6.2.9200.10247]
+Remove default auto anti-flicker setting for Lenovo JP projects.
+Add customized settings for 0BDA/579A
+Add customized settings for 04F2/B444
+Add customized settings for 0BDA/5799
+Change water mark picture for AONI project
+Fix Ideal Eye issues for SS and FACE AE
+Add capture function for MJPEG in TWAIN AP
+
+[6.2.9200.10246]
+Add parameters for HDR function
+Add cusomized settings for 5986/0557 and 5986/0558
+Fix BSOD 0x50 when Query capability
+Enable Ideal Eye function for some projects
+
+[6.2.9200.10245]
+Fix BSOD at S3 resume when preview
+Add customized settings for VID=174F, PID: 14AB ~ 14B9
+Add customized settings for 5986/055B
+Change Manufacture name for Lenovo Japan projects
+Enable privacy function for Lenovo IdealPad projects
+
+[6.2.9200.10244]
+Fix Lenovo eye distance not working issue
+Add customized setting for 04F2/B430, 04F2/B431, 04CA/703A, and 05C8/0370
+
+[6.2.9200.10243]
+Add rotation function for 064E/9300 and 064E/9303
+Postmessage to on/off LED for 064E/9900
+
+[6.2.9200.10242]
+Fix UI issue for Odin
+Add customized settings for 5986/0550 and 5986/0551
+Add customized settings for 0BDA/574F
+Add customized settings for 04F2/B428 and 04F2/B429
+Add checking memory in deflicker to prevent BSOD
+Change default deflicker settings for HP projects
+
+[6.2.9200.10241]
+Add support 5880 USB 3.0 transfer
+
+[6.2.9200.10240]
+Add customized settings for 04F2/B420 and 04F2/B421
+Fix BSOD when preview S1/resume in bulk mode
+
+[6.2.9200.10239]
+Fix Privacy image distortion issue
+Add customized settings for 04F2/B411
+
+[6.2.9200.10238]
+Fix BSOD 0x9F issue for deviceIOControl when power not D0 long time
+Add privacy image files for different resolutions
+Change Twain device name
+
+[6.2.9200.10237]
+Fix distance detect issue for 13D3/5174
+
+[6.2.9200.10236]
+Fix BSOD for 0BDA/5719
+Support rotate function for 0BDA/5751
+
+[6.2.9200.10235]
+Add 174F/144C, 174F/14A5 and 174F/1A0C
+
+[6.2.9200.10234]
+Delete global parameters pUSBCAMDeviceObject and DeviceExtension
+Add some customized settings for 5986/054A,174F/146D,174F/1472/174F/1473,04F2/B40F, 04F2/B35D
+Update Twain file for message when device is busy
+
+[6.2.9200.10233]
+Add more check in UVCParseDescritor
+
+[6.2.9200.10232]
+Add Customized settings for 2322/9024, 2322/9025, 2322/9026
+Add rotate function for 174F/1483
+Update Twin for error message
+
+[6.2.9200.10231]
+Add rotation function for 04F2/B378
+Add VID/PID for 26EA/0201
+
+[6.2.9200.10230]
+Add some cutomized settings
+
+[6.2.9200.10229]
+Fix FACE AE default off when preview close
+
+[6.2.9200.10228]
+Fix BOSD 0xC4 issue for bulk mode webcam
+Add customized settings for 2232/9023
+
+[6.2.9200.10227]
+Set default as auto-deflicker for 174F/1484
+Fix property UI issue 
+Change uninstall for special customer
+
+[6.2.9200.10226]
+Fix error message issue by RTFTrack.exe
+
+[6.2.9200.10225]
+Fix BSOD issue for bulk mode webcam with special platform
+Fix manufacture name to "Realtek" for some special projects
+
+[6.2.9200.10224]
+Change rotate behavior to option 2 for Edge projects
+
+[6.2.9200.10223]
+Fix porperty issue for 174F/1474
+
+[6.2.9200.10222]
+Set default auto anti-flicker for 174F/1488
+Fix rotate issue for Edge projects
+Add rotation function for 064E/9900
+
+[6.2.9200.10221]
+Remove RGB24 for 0BDA/58DF
+
+[6.2.9200.10220]
+Fix rotation AP fail issue in WinXP/Vista
+Disable RGB24 for 0BDA/58DF
+
+[6.2.9200.10220]
+Change rotate behavior to option 1 for Edge projects
+Add DriverMFTSupport registry key for Edge projects
+Change model ID string key for Edge projects
+Change roate behavior for HP projects(depend on SSID)
+
+[6.2.9200.10219]
+Fix BSOD issue for WHCK test
+
+[6.2.9200.10218]
+Fix rotate issue for metro mode and destop mode
+Fix auto anti-flicker issue by driver
+
+[6.2.9200.10217]
+Fix Enable/Disable camera for IR camera 
+Add some customized settings for VID=13D3
+Add some customized settings for VID=0BDA
+
+[6.2.9200.10216]
+Added gesture mode support for Lenovo
+
+[6.2.9200.10215]
+Fix BSOD for IOCTL_STILL_IMAGE when FW cannot capture still image
+
+[6.2.9200.10214]
+Fix BSOD issue for IOCTL_RTSUVC_LIST_STILL_FORMATS
+Fix BSOD for Edge projects
+Fix Rotate issue for SMBIOS webcam
+Add NoRotationInMetro registry for Edge projects
+Fix property issue for 0BDA/572A
+Add customized settings for 0BDA/5744
+ 
+[6.2.9200.10213]
+Change Default deflicker to auto for 0BDA/572A
+
+[6.2.9200.10212]
+Add MJEG to RGB24 function for 05C8/0601
+
+[6.2.9200.10211]
+Fix defalut auto deflicker by driver issue
+Fix change flicker fail issue
+Support 0BDA/572F project
+Change to media class for 04F2/B3E8
+
+[6.2.9200.10210]
+Add RTD3 for 04F2/B39B
+
+[6.2.9200.10209]
+Fix BSOD issue for XP
+Change water mark file for 1B62/6270
+Add auto rotate function for 064E/E32D
+Add customized settings for 13D3/5174
+
+[6.2.9200.10208]
+Remove PTZ for 04F2/B3B4 and 5986/0541
+Add customized settings for 13D3/5173 and 13D3/5174
+Add customized settings for 04CA/7034
+Add customized settings for 05C8/0368
+Add customized settings for 04F2/B3EC and 04F2/B3ED
+
+[6.2.9200.10207]
+Default auto deflicker by driver for 04F2/B35E and 5986/053D
+Fix LED off issue when close AP in bulk preview
+Add customized settings for 13D3/5173
+Fix LED not off issue in bulk mode when close preview AP
+
+[6.2.9200.10206]
+Fix Stiil capture issue for 1B62/6270
+Fix BSOD issue for Bulk transfer
+Add customized settings for 0BDA/5740
+Add Zoom function for Edge projects
+Add customized settings for 5986/0541
+Remove RGB24 for 0BDA/5730
+
+[6.2.9200.10205]
+Add software Low-light mode for 04F2/B327
+Fix BSOD for Bulk mode transfer
+Add WaterMarker for 1B62/6270
+
+[6.2.9200.10204]
+Fix BSOD issue when unplug module during preview in bulk mode
+Add customized settings for 04F2/b3C8, 04F2/b3C9, 04F2/b3CA
+Fix non-paged memory size to pass WHCK QFE6 test
+Fix driver pnp-start fail for RTS5832 ROM code mode
+
+[6.2.9200.10203]
+Fix color enable issue for new ISP
+Remove LED control for 04F2/B3B4
+Fix software auto deflicker issue    
+
+[6.2.9200.10202]
+Remove water mark for 0BDA/58DD
+Add customized settings for VID = 5986
+Add customized settings for 0BDA/5735
+
+
+[6.2.9200.10201]
+Fix memory test fail for WHCK QFE6   
+Add customized settings for VID = 174F
+Add customized settings for 13D3/5611
+
+[6.2.9200.10200]
+Update property page UI
+
+[6.2.9200.10199]
+Add customized settings for 04F2/B39B, 5986/053B and 5986/053C
+Add customized settings for 0BDA/5836
+Fix auto rotate issue.
+Add customized settings for 0BDA/5177
+Add customized settings for 04F2/B39B
+Add customized settings for 04CA/7031, 04CA/7032, and 04CA/7033
+
+[6.2.9200.10198]
+Change auto-antiFlicker for 5825
+Add customized settings for 174F/1484  
+
+[6.2.9200.10197]
+Add customized settings for 13D3/5172 and 13D3/5173
+Add wait time-out when cancel SS    
+
+[6.2.9200.10196]
+Fix still image issue for 0BDA/58BB
+Add customized settings for 04F2/B3B4
+Add customized settings for 0BDA/5730
+Add customized settings for 0BDA/5733 and 0BDA/5734
+
+
+[6.2.9200.10195]
+Change Azure to AzureWave
+Fix FACE AE default button behavior issue
+Add customized settings for 0BDA/5731
+Add customized settings for 04F2/B39B
+
+[6.2.9200.10194]
+Add preview gate function for 0BDA/58BB
+Add customized settings for 5986/0537 and 5986/0538
+Add customized settings for 174F/1151...1155
+
+[6.2.9200.10193]
+Add Water Mark function for 0BDA/58BB
+
+[6.2.9200.10192]
+Fix BSOD for Device Path test
+Change FACE AE default to off and 3 secends
+
+[6.2.9200.10191]
+Dynamic register KS function for 04F2/B36B
+
+[6.2.9200.10190]
+Add customized settings for 04F2/B3AE
+Change driver version to 9200.xxxxx
+Add customized settings for 04F2/B3B4
+Fix rotate issue with metro APP
+Fix ratate freeze issue
+
+[6.2.8400.10189]
+Add customized settings for 0BDA/5728 and 0BDA/572A
+Change rotate behavior for 04F2/B341 and 04F2/B346 
+
+[6.2.8400.10188]
+Add customized settings for 05C8/0602
+Fix stop preview issue for Bulk mode
+Customized for 5986/0535
+
+[6.2.8400.10187]
+speicial release
+
+[6.2.8400.10186]
+modify custmized settings for 05C8/0602
+Add custmized settings for 0BDA/5723    
+Add customized settings for 04F2/B385, 04F2/B386, 04F2/B389
+Add customized settings for 05C8/0357, 05C8/0358, 05C8/035B
+Fix BSOD issue when burin in cold boot and preview
+Fix rotate disable issue with auto rotate finction
+
+[6.2.8400.10185]
+Update Install package for DPI 150% issue
+Add software flash LED control
+
+[6.2.8400.10184]
+Add customized settings for 05C8/0602
+Fix Bulk video transfer issue
+
+[6.2.8400.10183]
+Fix property issue when UVC command fail
+Add customized settings for 064E/E302 and 064E/E202
+Add customized settings for Dmax projects
+Add customized settings for 0BDA/5820 and 13D3/5172
+Fix descritor issue for 5829
+
+[6.2.8400.10182]
+Add customized settings for 0BDA/5709 and 0BDA/5719
+Fix FACE AE drop frame rate issue in begining
+Change face frame to 10 sec of begining
+
+[6.2.8400.10181]
+Deal with different maximumpacketsize for Intel and MS XHCI driver
+Fix INF fail for Fujifsu mudules
+
+[6.2.8400.10180]
+ Fix BSOD issue when au-deflicker in Win8.	
+ Fix outdoor mode issue.
+ Fix BSOD for RGB24 and pitch not zero.
+ Enable RGB24 format.
+ Increase 5M MJPEG performance
+
+[6.2.8400.10179]
+Adjust USB3.0 transfer size according to alt setting's multi & burst
+Change the way to validate MJPG data integrity(search FFD9 in last 4096 bytes
+
+[6.2.8400.10178]
+Update RtsCM to support Fujitsu rotation request
+
+[6.2.8400.10177]
+Disable RGB24 format to avoid Media Foundation BSOD
+
+[6.2.8400.10176]
+Fix garbage image of media foundation issue with nVidia VGA driver
+Add customized settings for 05C8/0601
+
+[6.2.8400.10175]
+Fix BSOD issue when PNP_REMOVE and RTTRACK.exe is running
+
+[6.1.7600.0174]
+Update RTTrack to fix FACE AE issue
+
+[6.1.7600.0173]
+Add Still capture for standalone
+Fix error when button to still capture
+Add customized settings for 0BDA/58BA
+
+[6.1.7600.0172]
+Add some process count with multiple APP
+Fix FrameShare BSOD when verifier enable
+
+[6.1.7600.0171]
+Add some process count with multiple APP
+Fix FrameShare BSOD when verifier enable
+Update driver version
+
+[6.1.7600.0171]
+Add syschronization for vendor preview to fix BSOD when vendor preview and directshow work simultaneously
+
+[6.1.7600.0170]
+Fix BSOD for peak_frame
+Change packet size and number of packets
+
+[6.1.7600.0169]
+Modify frame share to support muti-AP
+Add customized settings for VID=174F
+
+[6.1.7600.0168]
+Add customized settings for 174f/1471
+
+[6.1.7600.0167]
+Remove drop frames for first time
+Fix FACE AE SS issue
+Fix FACE AE UI string issue
+Fix FACE AE AP timeout issue
+
+[6.1.7600.0166]
+Add customized settings for 5986/052C
+Fix default issue for FACE AE projects
+
+[6.1.7600.0165]
+Add events for Low linght ON/OFF
+Enable FACE AE function for 13D3/5169
+    
+[6.1.7600.0164]
+Change real transfer IRP count
+Disable stop preview issue behavior
+
+[6.1.7600.0163]
+Fix stop preview issue after S4 for Edge project.
+Disable FACE AE for 13D3/5169
+
+[6.1.7600.0162]
+Add customized settings for 05C8/0501 and 05C8/0502    
+Add customized settings for 0BDA/58B9
+Fix broken image issue for FACE AE function
+Fix SS issue for FACE AE function
+
+[6.1.7600.0161]
+Fix preview low FPS issue in WinXP
+Fix BSOD issue when privacy enable and state change
+Enable FACE AE for 13D3/5171 and 174F/146D
+
+[6.1.7600.0160]
+Fix MJPEG bad image at preview start when running RTFTrack
+Remove FACE 25 AE window node by driver
+Enable FACE AE for 5986/0525,0BDA/58DD,04F2/B331,13D3/5169,13D3/5170
+
+[6.1.7600.0159]
+Add some customized settings for 5986/052A and 5986/052B
+Add customized settings for 04F2/B346
+Remove FACE AE for 5169 and 5170
+Update Twain to fix CS4 issue
+
+[6.1.7600.0158]
+Add customized settings for VID=174F    
+Fix lag issue when record video by camera APP in Win8
+Change SS to the end of PnPStart
+Return fail status for acess HW error when PnPStart
+
+[6.1.7600.0157]
+Fix YUY2 to H264 issue
+Add IOCTL_RTSUVC_GET_FRAMECOUNT control
+Add customize settings for 174F/146D and 174F/1149
+Modify localized string for HP project
+
+[6.1.7600.0156]
+Fix BSOD issue for CHAOS of Win8 WHCK test
+Fix USB3.0 compatible issue with win8 Microsoft XHCI driver
+Update RTFTrack file
+
+[6.1.7600.0155]
+Add IOCTL_RTSUVC_GET_DEVICEPOWER control
+Add customized settings for 04F2/B35E
+
+[6.1.7600.0154]
+Fix external still capture issue for 0BDA/58B0 and 0BDA/58BB
+
+[6.1.7600.0153]
+Add For WOA driver build option
+Add customized settings for 0BDA/58BB
+
+[6.1.7600.0152]
+Fix drop frame issue for USB3.0 low resolution
+Change some filenames to fit 8.3 sort filename rule
+
+[6.1.7600.0151]
+Fix BSOD issue when vendor preview and surprise remove device
+
+[6.1.7600.0150]
+Update package to change delete process sequence for 13D3/5169
+Update FaceTrack AP to Peek Frame after 30 seconds for 13D3/5169
+
+[6.1.7600.0149]
+Update Facetrack AP to fix BSOD for face AE function for 13D3/5169.
+Update Facetrack AP to fix face AE recovery function for 13D3/5169.
+
+[6.1.7600.0148]
+Fix memory leak BSOD for privacy function
+Enable external button for still capture
+
+[6.1.7600.0147]
+Ching Update INF to fix prvacy issue for 04f2/B327 and 04f2/B32F
+Fix USB 3.0 Still image issue
+Disable some Twain warning message
+Enable LED control for 0BDA/58B1 and 05C8/0344
+
+[6.1.7600.0146]
+Update Remove AWB control in UI for 04F2/B331
+
+[6.1.7600.0145]
+Fix function call to putprocessframe
+Add customized setting for 0x5986/0x0525
+
+[6.1.7600.0144]
+Fix bad image when preview start/stop with camera manager effect on
+Fix camera manager vendor preview fail after put frame fail when stopping 
+Another fix for Stop Vendor preview, clean up memory share
+Add software HDR function
+Remove CIF special settings
+
+[6.1.7600.0143]
+Add Put_Frame and length is 0 case
+Add save LED function for stand alone module(VID=0x04F2)
+
+[6.1.7600.0142]
+Add customized settings for 0x04F2/0xB3F2
+
+[6.1.7600.0141]
+Update inf to disable device connect sound for VID=0x13D3
+
+[6.1.7600.0140]
+Add some customized settings
+
+[6.1.7600.0139]
+Fix build option for USB3.0 devices
+
+[6.1.7600.0138]
+Add Sleep/Wake notification for Bright and distance detect AP
+
+[6.1.7600.0137]
+Add customized settings for customer's Pad modules
+
+[6.1.7600.0136]
+Addprivacy support for Still capture
+
+[6.1.7600.0135]
+Change AE/AWB property capability report, fix U3 drop frame
+Add Privacy support for preview
+
+[6.1.7600.0134]
+Merge USB3.0 in driver
+
+[6.1.7600.0133]
+Add IOCTL_RTSUVC_PEEK_FRAME to support light and distance detect AP
+
+[6.1.7600.0132]
+Add interface for Privacy function
+Disable I420 support as default settings
+Remove 5827 hotfix
+
+[6.1.7600.0131]
+Fix Still capture BSOD issue in Win8
+
+[6.1.7600.0130]
+Fix BSOD when bulk transfer in X64 OS
+Fix WLK BSOD issue in Win8
+Fix Auto deflicker issue
+
+[6.1.7600.0129]
+Add new auto declicker method
+
+[6.1.7600.0128]
+Fix hang issue when preview and hot unplug USB hub
+
+[6.1.7600.0127]
+Support Bulk transfer
+Auto reset to ROM for 5827
+Change Tilt image direction
+
+[6.1.7600.0126]
+Remove dialog when uninstall driver
+
+[6.1.7600.0125]
+Add Vendor Still capture for some standalone module
+
+[6.1.7600.0124]
+Fix delay and blue screen issue when close vendor preview
+
+[6.1.7600.0123]
+Fix MJPEG issue for VID=0x5986
+[6.1.7600.0122]
+Fix BSOD issue with camera manager
+
+[6.1.7600.0121]
+Change Zoom behavior for VID=0x5986
+
+[6.1.7600.0120]
+Add Chicony PA20H customized setting
+Fix Pan/Tilt/Zoom/Rool issue
+Fix BSOD issue when preview and plug and unplug device(then open another AP)
+
+[6.1.7600.0119]
+Just update driver version
+
+[6.1.7600.0118]
+Disable software Roll for standalone modules(VID=0x04F2)
+
+[6.1.7600.0117]
+Fix BSOD with camera manager
+Fix BSOD with new 5821
+
+[6.1.7600.0116]
+Fix Camera manager compatible issues
+Disable software Zoom/Pan/Tilt for standalone modules(VID=0x04F2)
+
+[6.1.7600.0115]
+Add customized settings for standalone modules(VID=0x04F2)
+
+[6.1.7600.0114]
+Add customized settings for VID=0x13D3
+
+[6.1.7600.0113]
+Update RtsCM file
+
+[6.1.7600.0112]
+Update Twian and RtsCM
+
+[6.1.7600.0111]
+enhance MJPEG performance
+
+[6.1.7600.0110]
+Fix still image bug when still image size larger than preview size
+Implement Pan/Tilt property as MS driver does
+
+[6.1.7600.0109]
+Add some customized settings
+
+[6.1.7600.0108]
+Support multiple extension unit and trapevoid property
+Add free build driver log for special OED request
+
+[6.1.7600.0107]
+Fix BSOD 0x9F issue during reboot burn-in test
+
+[6.1.7600.0106]
+Remove "auto" control for some VID=0x13D3 UI
+
+[6.1.7600.0105]
+Update face tracking file to work with new driver
+Fix incorrect UI issue for some VID=0x13D3 module
+
+[6.1.7600.0104]
+Change driver version from V0104 to V104
+Remove white balence in UI for special customer
+
+[6.1.7600.0103]
+Add some customized settings for VID=0x13D3
+
+[6.1.7600.0102]
+Add some PID for VID=0x5986 in INF files
+
+[6.1.7600.0101]
+Add special customized setting for 
+
+[6.1.7600.0100]
+Add BuildVideoFrameTable in Device.cpp, and using it to build KsDescriptor
+Implement SW scale from VGA to 1280x960 for special customer request
+
+[6.1.7600.0099]
+Fix transfer IRP issue for USB 3.0
+
+[6.1.7600.0098]
+Fix VeriFace AP fail issue after S3/resume
+Update INF to add MI00 for 5821 and 5825
+
+[6.1.7600.0097]
+Update Pan/Tilt/Zoom for VID=0x13D3
+
+[6.1.7600.0096]
+Enable software Pan/Tilt/Zoom for VID=0x13D3
+
+[6.1.7600.0095]
+Just update driver version because can't remove driver in Vista x64.
+
+[6.1.7600.0094]
+Add Customized Ids.
+
+[6.1.7600.0093]
+1.Update install package because uninstall issue for XP.
+
+[6.1.7600.0092]
+1. Remove CancelSelectiveSuspend in power management.
+
+[6.1.7600.0090]
+1. Fix Cancel button function issue for property UI.
+
+[6.1.7600.0089]
+1. Change selective suspend behavior for BSOD issue.
+
+[6.1.7600.0088]
+1. Remove interrupt URB function for BSOD issue.
+
+[6.1.7600.0087]
+1. Fix error message for Amcap start and stop capture.
+2. Add protection when submit Idle Irp.
+
+[6.1.7600.0086]
+1. Removed the I420 and RGB24.
+
+[6.1.7600.0083]
+1.Fix Lite-on/lenovo blue flash issue.
+2.The MP release version for Lenovo.
+
+[6.1.7600.0082]
+1.Fix "Auto" conftrol issue if has software cache.
+
+[6.1.7600.0081]
+1.Change SSIdleTime to 2500 because Lite-On/Lenovo BSOD.
+
+[6.1.7600.0078]
+1.Fix Lite-on/Lenovo UI AWB default issue.
+
+[6.1.7600.0077]
+1.Fix Lite-on/Lenovo UI "cancel" issue.
+
+[6.1.7600.0074]
+1.Add software property register for mapping.
+
+[6.1.7600.0073]
+Customized settings.
+

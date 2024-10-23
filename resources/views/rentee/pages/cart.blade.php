@@ -34,34 +34,47 @@
                                 class="w-6 h-6 border-gray-300 rounded cursor-pointer focus:outline-none shadow-md">
 
                             <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
-                                alt="{{ $item->name }}" class="w-[50px] h-[50px] object-cover">
+                                alt="{{ $item->name }}" class="w-[50px] h-[50px] object-cover border border-gray-300 shadow-md">
                             <p>{{$item->name}}</p>
                         </div>
                         <div>
                             <button type="button" class="hover:opacity-50" title="Remove this item in cart"
                                 onclick="document.getElementById('remove-item-{{$item->id}}').classList.remove('hidden')">
-                                <i class="fas fa-trash"></i>
+                                <i class="fas fa-trash fa-lg text-red-500"></i>
                             </button>
                         </div>
                     </div>
 
                     <div id="remove-item-{{$item->id}}"
-                        class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 hidden">
-                        <div class="p-4 bg-white space-y-2 rounded shadow-md">
-                            <h1 class="text-xl text-center">Are you sure to remove this <br> item from our cart?</h1>
-                            <div class="flex flex-col items-center justify-center">
-                                <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
-                                    alt="{{ $item->name }}" class="w-[50px] h-[50px] object-cover">
-                                <p>{{$item->name}}</p>
+                        class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
+                        <div class="bg-white rounded shadow-md w-[500px] mx-2">
+                            <div class="bg-red-500 py-1 rounded-t">
+
                             </div>
-                            <div class="flex justify-center items-center space-x-1">
+                            <div class="flex p-2 items-center space-x-2 border-b-2">
+                                <div class="bg-red-500 px-3 py-2 rounded-full">
+                                    <i class="fas fa-trash fa-lg text-white"></i>
+                                </div>
+                                <div class="flex flex-col justify-start items-start">
+                                    <h1 class="text-xl font-medium text-center">Confirmation</h1>
+                                    <div class="flex space-x-1">
+                                        <p class="font-normal">Are you sure to remove </p>
+                                        <p class="font-bold">{{$item->name}}</p>?
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="flex justify-end p-2 items-center space-x-1">
                                 <button type="button"
                                     onclick="document.getElementById('remove-item-{{$item->id}}').classList.add('hidden')"
-                                    class="px-4 py-2 border border-gray-300 hover:bg-gray-500 hover:text-gray-100 rounded">
+                                    class="px-4 py-2 border border-red-300 text-red-500 hover:opacity-50 rounded">
                                     No
                                 </button>
                                 <a href="{{route('removeItemInCart', ['id' => $item->id, 'rentee' => $rentee])}}"
-                                    class="px-4 p-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">Yes</a>
+                                    class="px-4 p-2 bg-red-500 text-red-100 hover:opacity-50 rounded">Yes</a>
+
+
                             </div>
                         </div>
                     </div>
