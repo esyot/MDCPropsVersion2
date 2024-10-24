@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\CashierController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\RenteeTrackingController;
 use App\Http\Controllers\RenteeTransactionController;
@@ -72,11 +73,37 @@ Route::get('/rentee/tracking', [RenteeTrackingController::class, 'fetch']);
 
 Route::get('/rentee/transaction-done/{transaction}', [RenteeTransactionController::class, 'transactionDone'])->name('transactionDone');
 
+//Cashier Routes
+
+
+Route::get('/cashier/welcome', [CashierController::class, 'welcome'])->name('cashier.welcome');
+
+Route::get('/cashier/home', [CashierController::class, 'home'])->name('cashier.home');
+
+Route::get('/cashier/reservations', [CashierController::class, 'reservations'])->name('cashier.reservations');
+
+Route::get('/cashier/reservations-details/{tracking_code}', [CashierController::class, 'reservationDetails'])->name('cashier.reservation-details');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Public Routes
 Route::get('/admin/login', [LoginController::class, 'index'])->name('loginPage');
 Route::post('/admin.login', [AuthController::class, 'login'])->name('login');
 Route::get('test', function () {
-    return view('admin.test');
+    return view('test');
 });
 
 Route::get('/admin/contacts-search', [ContactController::class, 'search'])->name('searchContact');

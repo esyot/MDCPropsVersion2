@@ -67,24 +67,31 @@
 
     <div id="confirmLogoutModal"
         class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
-        <div class="bg-white p-4 rounded-lg w-[500px]">
-            <div class="flex justify-end ">
-                <button class="text-2xl font-bold hover:text-gray-300"
-                    onclick="document.getElementById('confirmLogoutModal').classList.add('hidden')">&times;</button>
+        <div class="bg-white rounded-lg w-[500px] mx-2">
+            <div class="bg-red-500 rounded-t py-1">
 
             </div>
 
-            <div class="my-4">
-                <h1 class="text-2xl font-medium">Are you sure to cancel your reservation?</h1>
-                <p>This will erase your cart items and start a new transaction.</p>
+            <div class="flex items-center p-4 space-x-2 border-b-2">
+                <div>
+                    <i class="fas fa-exclamation-circle fa-2xl text-red-500 "></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-medium">Cancel Reservation</h1>
+
+                    <p>This will erase your cart items and start a new
+                        transaction.</p>
+
+                </div>
+
             </div>
 
-            <div class="flex justify-end space-x-1 mt-6">
+            <div class="flex justify-end space-x-1 p-2 bg-gray-100 rounded-b">
 
                 <button onclick="document.getElementById('confirmLogoutModal').classList.add('hidden')"
-                    class="px-4 py-2 border border-gray-300 rounded text-gray-800 hover:bg-gray-500 hover:text-gray-100">No</button>
+                    class="px-4 py-2 border border-red-300 rounded text-red-500 hover:opacity-50">No, cancel.</button>
                 <a href="{{ route('cancelOrder', ['rentee' => $rentee]) }}"
-                    class="px-4 py-2 bg-red-500 rounded text-red-100 hover:bg-red-800">Yes</a>
+                    class="px-4 py-2 bg-red-500 rounded text-red-100 hover:opacity-50">Yes, proceed.</a>
             </div>
         </div>
     </div>
