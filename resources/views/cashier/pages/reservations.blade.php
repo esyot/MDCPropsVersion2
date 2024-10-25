@@ -11,7 +11,7 @@
                 <i class="fas fa-magnifying-glass"></i>
                 <input type="text" placeholder="Search Reservations" class="bg-transparent focus:outline-none">
             </form>
-            <button class="py-2 px-3 bg-blue-500 text-white rounded">
+            <button class="py-2 px-3 bg-blue-500 text-white hover:opacity-50 rounded">
                 <i class="fas fa-qrcode fa-lg"></i>
 
             </button>

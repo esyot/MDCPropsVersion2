@@ -18,9 +18,7 @@
 
 @if(count($items) == 0)
 
-    <div class="flex fixed inset-0 justify-center items-center">
-
+    <div class="relative fixed inset-0">
         <h1>No results found</h1>
-
     </div>
 @endif

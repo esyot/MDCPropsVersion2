@@ -2,7 +2,7 @@
 @section('content')
 @if ($categoriesIsNull == false)
 
-    <div id="items-header" class="p-4">
+    <div id="items-header" class="p-4 z-30">
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-2">
 

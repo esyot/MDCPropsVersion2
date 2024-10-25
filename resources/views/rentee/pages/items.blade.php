@@ -165,7 +165,7 @@
             </div>
             <div class="flex space-x-1">
                 <p>back to home,</p>
-                <a href="{{ route('home') }}" class="hover:underline text-blue-500">click here.</a>
+                <a href="{{ route('home', ['rentee'=>$rentee]) }}" class="hover:underline text-blue-500">click here.</a>
             </div>
 
         </div>

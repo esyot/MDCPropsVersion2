@@ -87,6 +87,11 @@
                         </div>
                         <div class="flex justify-center space-x-2 mt-2">
                             @can('can approve transactions')
+                            <button
+                                    onclick="document.getElementById('delete-confirmation-{{$transaction->id}}').classList.remove('hidden')"
+                                    class="shadow px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 flex items-center">
+                                    <i class="fas fa-times mr-2"></i> Decline
+                                </button>
                                 @if($transaction->transaction->status == 'pending')
                                     <button type=" button"
                                         onclick="document.getElementById('transaction-confirm-{{ $transaction->id }}').classList.remove('hidden')"
@@ -94,11 +99,7 @@
                                         <i class="fas fa-check mr-2"></i> Approve
                                     </button>
                                 @endif
-                                <button
-                                    onclick="document.getElementById('delete-confirmation-{{$transaction->id}}').classList.remove('hidden')"
-                                    class="shadow px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 flex items-center">
-                                    <i class="fas fa-times mr-2"></i> Decline
-                                </button>
+                              
                             @endcan
                         </div>
                     </div>

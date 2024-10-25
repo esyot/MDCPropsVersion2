@@ -32,8 +32,7 @@
         <div id="QR" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50">
             <div class="bg-white p-4 rounded">
                 <div class="flex justify-center">
-
-                    <h1 class="text-2xl font-bold">Successfully added a new Transaction!</h1>
+                    <h1 class="text-2xl font-bold">Your reservation has been successfully saved!</h1>
                 </div>
 
                 <div class="flex mt-2 justify-center ">
