@@ -84,10 +84,7 @@ Route::get('/cashier/reservations', [CashierController::class, 'reservations'])-
 
 Route::get('/cashier/reservations-details/{tracking_code}', [CashierController::class, 'reservationDetails'])->name('cashier.reservation-details');
 
-
-
-
-
+Route::get('/cashier/start-session', [CashierController::class, 'sessionStart'])->name('cashier.session-start');
 
 
 

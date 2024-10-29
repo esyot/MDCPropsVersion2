@@ -19,6 +19,11 @@
             window.location.href = redirectUrl;
         </script>
     @endif
+    @hasrole('cashier')
+    <script>
+        window.location.href = "{{ route('cashier.home') }}"; 
+    </script>
+    @endhasrole
 
 </head>
 <style>
@@ -80,16 +85,11 @@
     @include('admin.components.leftbar')
     @include('admin.components.topbar')
 
-
-
     <!-- contents -->
 
     <div id="content" class="h-full overflow-hidden">
         @yield('content')
     </div>
-
-
-
 
     <footer id="footer-landscape" class="flex p-2 justify-center">
         All rights reserved &copy; 2024

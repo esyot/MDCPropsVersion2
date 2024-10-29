@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\ItemsTransaction;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CashierController extends Controller
 {
+
     public function welcome()
     {
 
@@ -19,6 +21,14 @@ class CashierController extends Controller
         return view('cashier.pages.index');
 
     }
+
+    public function sessionStart()
+    {
+        session()->put('cashier', Auth::user()->id);
+
+        return redirect()->route('cashier.home')->with('success', 'Welcome ' . Auth::user()->name . '!');
+    }
+
 
     public function reservations()
     {
@@ -39,4 +49,5 @@ class CashierController extends Controller
 
 
     }
+
 }
