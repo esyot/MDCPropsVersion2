@@ -117,9 +117,9 @@
 
         <div id="rightbar" class="flex fixed right-0 top-[80px] justify-end z-50">
             <!-- <button title="Messages"
-                                                                        class="hover:opacity-50 mb-2 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
-                                                                        <i class="fab fa-facebook-messenger fa-2xl text-blue-400"></i>
-                                                                    </button> -->
+                                                                                                class="hover:opacity-50 mb-2 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
+                                                                                                <i class="fab fa-facebook-messenger fa-2xl text-blue-400"></i>
+                                                                                            </button> -->
 
             <a id="cart-icon" href="{{ route('cart', ['rentee' => $rentee]) }}">
                 <button title="Cart" class="hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
@@ -165,7 +165,7 @@
             </div>
             <div class="flex space-x-1">
                 <p>back to home,</p>
-                <a href="{{ route('home', ['rentee'=>$rentee]) }}" class="hover:underline text-blue-500">click here.</a>
+                <a href="{{ route('home', ['rentee' => $rentee]) }}" class="hover:underline text-blue-500">click here.</a>
             </div>
 
         </div>

@@ -1,6 +1,6 @@
 <!-- Date Available Preview -->
 <div id="date-{{$item->id}}"
-    class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-75 hidden z-50">
+    class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-75 hidden select-none z-50">
     <div class="bg-white p-6 rounded-lg shadow-lg w-96">
         <div class="text-center font-bold mb-4">
             <h2>Unavailable Dates of</h2>

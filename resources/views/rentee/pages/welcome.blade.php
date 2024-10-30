@@ -66,7 +66,7 @@
     </div>
     <div id="welcome"
         class="flex fixed inset-0 bg-gradient-to-b from-blue-500 to-blue-900 justify-center items-center z-40">
-        <div class="bg-white rounded shadow-2xl p-2">
+        <div class="bg-white rounded shadow-2xl p-2 select-none">
             <header class="flex flex-col items-center">
                 <div class="mt-2">
                     <img src="{{ asset('asset/logo/logo.png') }}"

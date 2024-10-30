@@ -2,7 +2,7 @@
     @csrf
     <div id="category-update-{{$category->id}}"
         class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
-        <div class="bg-white w-[200px] rounded shadow-md">
+        <div class="bg-white w-[300px] rounded shadow-md">
 
             <div class="flex p-2 items-center justify-between">
                 <h1 class="text-xl font-medium">Edit Details</h1>
@@ -43,16 +43,16 @@
                 </div>
             </div>
 
-            <div class="flex justify-center space-x-2 mt-2 pb-2">
-                <button type="submit"
-                    class="px-4 py-2 bg-green-100 hover:bg-green-500 hover:text-green-100 text-green-800 shadow-md rounded ">
-                    Update
-                </button>
+            <div class="flex justify-end space-x-2 p-2">
+
 
                 <button type="button"
                     onclick="document.getElementById('category-update-{{$category->id}}').classList.add('hidden')"
-                    class="px-4 py-2 bg-red-100 hover:bg-red-500 hover:text-red-100 text-red-800 shadow-md rounded ">
+                    class="px-4 py-2 border border-blue-300 text-blue-500 hover:opacity-50 shadow-md rounded">
                     Cancel
+                </button>
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 shadow-md rounded">
+                    Update
                 </button>
             </div>
 

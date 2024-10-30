@@ -30,7 +30,7 @@
                 </form>
 
                 <div onclick="document.getElementById('item-add-modal').classList.remove('hidden')">
-                    <button class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">Add Item</button>
+                    <button class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 shadow-md rounded">Add Item</button>
                 </div>
 
             </div>

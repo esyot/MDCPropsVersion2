@@ -53,24 +53,24 @@
         class="fixed flex inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
         <div id="category-add-content" class="bg-white shadow-md max-w-full rounded">
 
-
-
             <div class="flex justify-between p-2 items-center space-x-6">
                 <h1 class="px-2 text-xl font-bold">Add Category</h1>
                 <button type="button" onclick="document.getElementById('category-add-modal').classList.add('hidden')"
                     class="text-xl hover:text-gray-400 font-medium">&times;</button>
             </div>
 
-
             <div class="bg-gray-100 p-2 mt-2 border-t border-b border-gray-300">
+                <div id="image-preview" class="flex justify-center mt-2 space-x-2"></div>
 
                 <div class="mt-2 flex flex-col">
-                    <input type="file" name="files[]" class="file-upload-input" accept="image/*" multiple required>
+                    <input type="file" name="files[]" class="file-upload-input" accept="image/*" multiple required
+                        onchange="previewImages(event)">
                     <small class="font-bold">Note:
-                        <i class="font-normal">Make sure the selected files are in "jpg", "png", or "jpeg"
-                            format.</i>
+                        <i class="font-normal">Make sure the selected files are in "jpg", "png", or "jpeg" format.</i>
                     </small>
                 </div>
+
+
 
                 <div class="mt-2">
                     <label for="title">Title:</label>
@@ -82,16 +82,15 @@
                     <label for="approval">Approval level:</label>
                     <select name="approval_level" id="" class="block p-2 border border-gray-300 rounded" required>
                         <option value="1"
-                            title="Only the administrator can approve items that belong to this category.">
-                            Admin only</option>
-                        <option value="2" title="Only the staff can approve items that belong to this category.">
-                            Staff
+                            title="Only the administrator can approve items that belong to this category.">Admin only
+                        </option>
+                        <option value="2" title="Only the staff can approve items that belong to this category.">Staff
                             only</option>
                         <option value="3" title="Both roles can approve items within this category.">Both</option>
                     </select>
-
                 </div>
             </div>
+
             <div class="flex justify-end p-2 space-x-1">
                 <button type="submit"
                     class="px-4 py-2 bg-green-100 text-green-800 hover:bg-green-500 hover:text-green-100 shadow-md rounded">Add</button>
@@ -99,10 +98,32 @@
                     class="px-4 py-2 bg-red-100 text-red-800 hover:bg-red-500 hover:text-red-100 shadow-md rounded">Close</button>
             </div>
 
-
         </div>
     </div>
 </form>
+
+<script>
+    function previewImages(event) {
+        const previewContainer = document.getElementById('image-preview');
+        previewContainer.innerHTML = ''; // Clear previous previews
+
+        const files = event.target.files;
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.classList.add('w-24', 'h-24', 'object-cover', 'rounded', 'border', 'border-gray-300'); // Add styles for the preview
+                previewContainer.appendChild(img);
+            }
+
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+
 <style>
     @media(orientation:landscape) {
         #add-new-category-card {
@@ -187,7 +208,7 @@
                             @endphp
 
                             @foreach ($images as $image)
-                                <div class="slide bg-gray-100" >
+                                <div class="slide bg-gray-100">
                                     <img src="{{ asset('storage/images/categories/' . $category->folder_name . '/' . $image) }}"
                                         alt="Image">
                                 </div>
@@ -205,14 +226,14 @@
                         <div class="space-y-1">
                             <button title="Edit Details"
                                 onclick="document.getElementById('category-update-{{$category->id}}').classList.remove('hidden')"
-                                class="w-full shadow-md px-4 py-2 bg-blue-100 text-blue-800 hover:bg-blue-800 hover:text-blue-100 rounded">Edit
+                                class="w-full shadow-md px-4 py-2 bg-blue-100 text-blue-800 hover:opacity-50 rounded">Edit
                                 Details
                             </button>
 
                             @hasrole('superadmin|admin')
                             <button title="Assign Users"
                                 onclick="document.getElementById('category-{{$category->id}}').classList.remove('hidden')"
-                                class="w-full shadow-md px-4 py-2 bg-green-100 text-green-800 hover:bg-green-500 hover:text-green-100 rounded">Assign
+                                class="w-full shadow-md px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 hover:text-green-100 rounded">Assign
                                 Users
                             </button>
                             @endhasrole

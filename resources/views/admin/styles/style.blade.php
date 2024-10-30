@@ -70,10 +70,7 @@
             color: white;
         }
 
-        #user-dropdown {
-            background-color: #6b7280;
-            color: white;
-        }
+
 
         #main-content {
             background-color: #000000;
@@ -109,11 +106,23 @@
         }
 
         #calendar {}
+
+        #user-dropdown {
+            color: #fff;
+        }
+
+        #user-dropdown-content {
+            background-color: #1d1d1d;
+        }
     </style>
 
 @else
 
     <style>
+        #user-dropdown-content {
+            background-color: #fff;
+        }
+
         #calendar-header {
             background-color: #BBDEFB;
         }

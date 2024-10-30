@@ -50,4 +50,20 @@ class CashierController extends Controller
 
     }
 
+    public function search(Request $request)
+    {
+        if ($request->search_value == null) {
+            $reservations = Transaction::all();
+
+            $items = ItemsTransaction::whereIn('transaction_id', $reservations->pluck('id'))->get();
+            return view('cashier.partials.reservations', compact('reservations', 'items'));
+
+        }
+
+        $reservations = Transaction::where('tracking_code', $request->search_value)->get();
+        $items = ItemsTransaction::whereIn('transaction_id', $reservations->pluck('id'))->get();
+
+        return view('cashier.partials.reservations', compact('reservations', 'items'));
+    }
+
 }

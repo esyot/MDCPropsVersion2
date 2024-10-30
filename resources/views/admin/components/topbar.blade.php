@@ -269,11 +269,11 @@
                     <!-- User Dropdown Menu -->
                     <div id="user-dropdown" class="flex absolute right-0 hidden z-50 justify-center items-center z-50">
 
-                        <div class="border w-64 border-gray-300 bg-white rounded-lg shadow-xl">
+                        <div id="user-dropdown-content" class="w-64 rounded-lg shadow-xl">
                             <div class="flex flex-col space-y-2">
                                 <a href="{{ route('profile') }}" title="{{Auth::user()->name}}">
 
-                                    <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-t-lg">
+                                    <div class="p-2 cursor-pointer hover:bg-gray-200 hover:text-gray-500 rounded-t-lg">
 
                                         <i class="text-blue-500 fas fa-user mr-2"></i>
                                         <span>{{ Auth::user()->name }}</span>
@@ -281,7 +281,8 @@
                                     </div>
                                 </a>
 
-                                <div class="p-2 cursor-pointer hover:bg-gray-200 rounded-b-lg" title="Logout"
+                                <div class="p-2 cursor-pointer hover:bg-gray-200 hover:text-gray-500 rounded-b-lg"
+                                    title="Logout"
                                     onclick="document.getElementById('logoutConfirm').classList.remove('hidden')">
 
 

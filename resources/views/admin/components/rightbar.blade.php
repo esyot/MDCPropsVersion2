@@ -57,16 +57,34 @@
 <!-- Toggle Button -->
 <div id="toggle-container" class="fixed right-1 bottom-[45%] z-50">
     <button id="open-btn" title="Display Settings"
-        class="{{ $setting->transition ? 'transition-transform duration-300 ease-in-out transform hover:scale-110' : '' }} {{ $setting->darkMode ? 'bg-gray-500 hover:bg-gray-600' : 'bg-blue-400 hover:bg-blue-300' }} shadow-xl toggle-button px-3 py-2 text-white font-bold rounded-full">
+        class="{{ $setting->transition ? 'transition-transform duration-300 ease-in-out transform hover:scale-110' : '' }} {{ $setting->darkMode ? 'bg-gray-500 hover:bg-gray-600' : 'bg-blue-400 hover:bg-blue-300' }} shadow-xl toggle-button px-[15px] py-[10px] text-white font-bold rounded-full">
         <i id="btn" class="fa-solid fa-arrow-left"></i>
     </button>
 </div>
 
 <script>
-    document.getElementById('open-btn').addEventListener('click', function () {
-        document.getElementById('sidebar-right').classList.toggle('translate-x-full');
-        document.getElementById('open-btn').classList.toggle('mr-[260px]');
-        document.getElementById('btn').classList.toggle('fa-arrow-left');
-        document.getElementById('btn').classList.toggle('fa-arrow-right');
+    const rightbar = document.getElementById('sidebar-right');
+    const toggleBtn = document.getElementById('open-btn');
+    const buttonIcon = document.getElementById('btn');
+
+    toggleBtn.addEventListener('click', function () {
+        rightbar.classList.toggle('translate-x-full');
+        toggleBtn.classList.toggle('mr-[260px]');
+        buttonIcon.classList.toggle('fa-arrow-left');
+        buttonIcon.classList.toggle('fa-arrow-right');
+    });
+
+    function closeSidebar() {
+        rightbar.classList.add('translate-x-full');
+        toggleBtn.classList.remove('mr-[260px]');
+        buttonIcon.classList.remove('fa-arrow-right');
+        buttonIcon.classList.add('fa-arrow-left');
+    }
+
+    document.addEventListener('click', function (event) {
+        // Check if the click is outside the sidebar and toggle button
+        if (!rightbar.contains(event.target) && !toggleBtn.contains(event.target)) {
+            closeSidebar();
+        }
     });
 </script>
