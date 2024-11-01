@@ -54,7 +54,7 @@ class RenteeTransactionController extends Controller
             $transaction = Transaction::create([
                 'rentee_id' => $fetchedRentee->id,
                 'tracking_code' => $trackingCode,
-                'status' => 'pending',
+
             ]);
 
             // Process each item in the transaction

@@ -36,5 +36,32 @@
         </div>
     @endif
 </section>
+<section>
+    <div title=" Click here to redirect"
+        class="flex flex-col items-center cursor-pointer  m-4 p-4 bg-gray-400 w-[200px] rounded-lg shadow-lg transition-transform transform hover:scale-105">
+        <h1 class="text-center text-lg font-semibold text-white mb-2">No. of Pending Reservations:</h1>
+        <span class="text-3xl font-bold text-white">
+            {{ count($reservations) }}
+        </span>
+
+    </div>
+
+
+    <div class="m-2 p-2 bg-green-400 w-[200px] rounded-lg">
+        <h1>No. of successful transactions</h1>
+        <span>
+            {{count($reservations)}}
+        </span>
+
+    </div>
+
+    <div class="m-2 p-2 bg-red-400 w-[200px] rounded-lg">
+        <h1>No. of declined transactions</h1>
+        <span>
+            {{count($reservations)}}
+        </span>
+
+    </div>
+</section>
 
 @endsection

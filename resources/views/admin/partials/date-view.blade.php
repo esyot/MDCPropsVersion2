@@ -53,8 +53,10 @@
                                 {{ \Carbon\Carbon::parse($transaction->rent_return_time)->format('g:i A') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                @if($transaction->approvedByAdmin_at == null && $transaction->approvedByCashier_at == null)
-                                    <span class="text-yellow-500">Pending</span>
+                                @if($transaction->approvedByAdmin_at == null)
+                                    <span class="text-yellow-500">Pending Admin Approval</span>
+                                @elseif($transaction->approvedByAdmin_at && $transaction->approvedByCashier_at == null)
+                                    <span class="text-yellow-500">Pending Payment Approval</span>
                                 @elseif($transaction->approvedByAdmin_at && $transaction->approvedByCashier_at)
                                     <span class="text-green-500">Approved</span>
                                 @endif

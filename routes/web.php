@@ -88,7 +88,7 @@ Route::get('/cashier/start-session', [CashierController::class, 'sessionStart'])
 
 Route::get('/cashier/reservation-search', [CashierController::class, 'search'])->name('cashier.reservation-search');
 
-
+Route::post('/cashier/reservation-payment', [CashierController::class, 'payment'])->name('cashier.reservation-payment');
 
 
 

@@ -17,7 +17,7 @@
             </div>
             <input type="month" id="month-input-{{$item->id}}"
                 class="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value="2024-10" onchange="updateCalendar('{{$item->id}}')">
+                value="{{ now()->format('Y-m') }}" onchange="updateCalendar('{{$item->id}}')">
         </div>
         <div class="grid grid-cols-7 gap-1 mb-2 text-center">
 

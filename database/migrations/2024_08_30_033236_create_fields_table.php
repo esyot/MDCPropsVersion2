@@ -107,7 +107,8 @@ return new class extends Migration {
             $table->id();
             $table->string('tracking_code')->nullable(false);
             $table->foreignId('rentee_id')->constrained()->onDelete('cascade');
-            $table->string('status')->default('pending');
+            $table->datetime('approved_at')->nullable(true);
+            $table->string('user_id')->nullable(true);
             $table->timestamps();
         });
 

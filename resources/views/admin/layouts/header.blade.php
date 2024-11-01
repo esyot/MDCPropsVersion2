@@ -27,6 +27,84 @@
 
 </head>
 <style>
+    .animation-open {
+        animation-name: fadeIn, zoomIn;
+        animation-duration: 400ms, 400ms;
+        animation-timing-function: ease, ease;
+        animation-fill-mode: forwards;
+    }
+
+
+    .animation-close {
+        animation-name: fadeOut, zoomOut;
+        animation-duration: 150ms, 150ms;
+        animation-timing-function: ease, ease;
+        animation-fill-mode: forwards;
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeOut {
+        0% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+        }
+
+    }
+
+    @keyframes zoomIn {
+        0% {
+            transform: scale(0.1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes zoomOut {
+        0% {
+            transform: scale(1);
+        }
+
+        100% {
+            transform: scale(0.9);
+        }
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    .placeholder-center::placeholder {
+
+        text-align: center;
+    }
+
     @media(orientation:landscape) {
 
         #footer {

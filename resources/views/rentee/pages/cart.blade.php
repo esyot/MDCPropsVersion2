@@ -31,7 +31,7 @@
                     <div class="flex justify-between p-4 mx-4 bg-white items-center">
                         <div class="flex space-x-2 items-center">
                             <input type="checkbox" name="items[]" value="{{ $item->id }}" id="item-{{ $item->id }}"
-                                class="w-6 h-6 border-gray-300 rounded cursor-pointer focus:outline-none shadow-md">
+                                class="w-6 h-6 border-gray-300 rounded cursor-pointer focus:outline-none shadow-md" checked>
 
                             <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
                                 alt="{{ $item->name }}" class="w-[50px] h-[50px] object-cover border border-gray-300 shadow-md">

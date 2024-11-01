@@ -18,7 +18,13 @@
         </div>
 
         <div class="flex space-x-2">
-            <p>Status: </p> <span>{{ $transaction->status }}</span>
+            <p>Status: </p>
+            @if ($transaction->approved_at == null)
+                <span>Pending</span>
+            @elseif ($transaction->approved_at)
+                <span>Approved</span>
+            @endif
+
 
         </div>
         @php

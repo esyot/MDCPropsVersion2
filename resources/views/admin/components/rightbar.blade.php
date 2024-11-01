@@ -1,4 +1,51 @@
-<!-- Sidebar -->
+@if ($setting->daskMode == true)
+
+    <style>
+
+    </style>
+
+@endif
+
+
+
+<style>
+    .slider {
+        position: relative;
+        width: 60px;
+        height: 32px;
+    }
+
+    .slider-track {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: background-color 0.3s;
+        border-radius: 9999px;
+    }
+
+    .slider-thumb {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 28px;
+        height: 28px;
+        background-color: white;
+        border-radius: 9999px;
+        transition: transform 0.3s;
+    }
+
+    .slider input:checked+.slider-track {
+        background-color: #2196F3;
+    }
+
+    .slider input:checked+.slider-track .slider-thumb {
+        transform: translateX(26px);
+    }
+</style>
 <div id="sidebar-right"
     class="shadow-md fixed top-0 right-0 w-64 bg-white transform translate-x-full z-50 h-full {{ $setting->transition ? 'transition-transform duration-[500ms] ease-in-out' : '' }} sm:w-56 md:w-64">
     <div class="p-4 flex flex-col flex-grow">

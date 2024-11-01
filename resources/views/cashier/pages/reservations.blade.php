@@ -47,6 +47,23 @@
             </div>
         </div>
     </div>
+    @if (session()->has('success'))
+
+
+        <div id="successModal" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50">
+            <div class="flex flex-col bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-circle-check fa-3x text-green-500"></i>
+                    <h1 class="text-lg font-semibold ml-4">Payment Done Successfully!</h1>
+                </div>
+                <p class="text-gray-600">{{ session('success') }}</p>
+                <button onclick="document.getElementById('successModal').classList.add('hidden')"
+                    class="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition">
+                    Close
+                </button>
+            </div>
+        </div>
+    @endif
 
 </section>
 
