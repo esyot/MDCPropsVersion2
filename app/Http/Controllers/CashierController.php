@@ -4,24 +4,39 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\ItemsTransaction;
+use App\Models\Message;
+use App\Models\Notification;
 use App\Models\Setting;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Carbon\Carbon;
 class CashierController extends Controller
 {
-
-    public function welcome()
-    {
-
-    }
-
     public function home()
     {
-        $reservations = Transaction::all();
+        $page_title = 'Home';
+        $current_user_name = Auth::user()->name;
+        // Messages
+        $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
+        $unreadMessages = $messages->count();
+        $contacts = Message::where('receiver_name', $current_user_name)
+            ->latest()
+            ->get()
+            ->groupBy('sender_name')
+            ->map(fn($group) => $group->first())
+            ->values();
+
+
+
+        $notifications = Notification::all();
+
+        $reservationsPending = Transaction::where('approved_at', null)->get()->count();
+
+
+
         $setting = Setting::where('user_id', Auth::user()->id)->first();
-        return view('cashier.pages.index', compact('setting', 'reservations'));
+        return view('cashier.pages.index', compact('contacts', 'unreadMessages', 'setting', 'reservationsPending', 'notifications', 'page_title'));
 
     }
 
@@ -35,6 +50,22 @@ class CashierController extends Controller
 
     public function reservations()
     {
+        $page_title = 'Reservations';
+        $current_user_name = Auth::user()->name;
+        // Messages
+        $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
+        $unreadMessages = $messages->count();
+        $contacts = Message::where('receiver_name', $current_user_name)
+            ->latest()
+            ->get()
+            ->groupBy('sender_name')
+            ->map(fn($group) => $group->first())
+            ->values();
+
+
+
+        $notifications = Notification::all();
+
         $setting = Setting::where('user_id', Auth::user()->id)->first();
 
 
@@ -50,7 +81,7 @@ class CashierController extends Controller
         $items = ItemsTransaction::whereIn('transaction_id', $reservations->pluck('id'))->get();
 
 
-        return view('cashier.pages.reservations', compact('reservations', 'items', 'setting'));
+        return view('cashier.pages.reservations', compact('notifications', 'contacts', 'reservations', 'items', 'setting'));
     }
 
     public function reservationDetails($tracking_code)
@@ -100,6 +131,35 @@ class CashierController extends Controller
         Transaction::find($itemIds[0])->update(['approved_at' => now()]);
 
         return redirect()->back()->with('success', 'Reservation has been processed successfully.');
+    }
+
+
+    public function transactions()
+    {
+        $page_title = 'Transactions';
+        $current_user_name = Auth::user()->name;
+        // Messages
+        $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
+        $unreadMessages = $messages->count();
+        $contacts = Message::where('receiver_name', $current_user_name)
+            ->latest()
+            ->get()
+            ->groupBy('sender_name')
+            ->map(fn($group) => $group->first())
+            ->values();
+
+
+
+        $notifications = Notification::all();
+
+
+
+
+        $setting = Setting::where('user_id', Auth::user()->id)->first();
+
+        $transactions = ItemsTransaction::all();
+        return view('cashier.pages.transactions', compact('transactions', 'contacts', 'unreadMessages', 'setting', 'notifications', 'page_title'));
+
     }
 
 

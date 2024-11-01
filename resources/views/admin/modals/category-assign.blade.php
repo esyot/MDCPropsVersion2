@@ -24,13 +24,13 @@
             @endforeach
         </div>
         <div class="flex p-2 justify-end space-x-1">
-            <button
-                class="px-4 py-2 shadow-md bg-green-100 text-green-800 hover:bg-green-500 hover:text-green-100 rounded"
-                type="submit">Save</button>
+
             <button type="button"
-                class="px-4 py-2 shadow-md bg-red-100 text-red-800 hover:bg-red-500 hover:text-red-100 rounded"
+                class="px-4 py-2 border border-blue-300 text-blue-500 hover:opacity-50 shadow-md rounded"
                 onclick="document.getElementById('category-{{$category->id}}').classList.add('hidden')">Cancel
             </button>
+            <button class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 shadow-md  rounded"
+                type="submit">Save</button>
         </div>
 
     </form>

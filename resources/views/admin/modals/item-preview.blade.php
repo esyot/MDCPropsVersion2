@@ -68,15 +68,16 @@
 
             <!-- Modal Footer -->
             <div class="flex justify-end p-4 border-t border-gray-300 space-x-2">
-                <button type="submit"
-                    class="shadow-md px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    Update
-                </button>
+
                 <button type="button" onclick="document.getElementById('item-{{$item->id}}').classList.add('hidden')"
                     class="shadow-md px-4
-                py-2 text-white bg-gray-600 hover:bg-gray-700 rounded-md focus:outline-none focus:ring-2
+                py-2 border border-blue-300 text-blue-500 hover:opacity-50 rounded-md focus:outline-none focus:ring-2
                 focus:ring-gray-500">
                     Close
+                </button>
+                <button type="submit"
+                    class="shadow-md px-4 py-2 text-white bg-blue-600 hover:opacity-50 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Update
                 </button>
             </div>
 

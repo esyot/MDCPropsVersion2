@@ -90,7 +90,7 @@ Route::get('/cashier/reservation-search', [CashierController::class, 'search'])-
 
 Route::post('/cashier/reservation-payment', [CashierController::class, 'payment'])->name('cashier.reservation-payment');
 
-
+Route::get('/cashier/transactions', [Cashiercontroller::class, 'transactions'])->name('cashier.transactions');
 
 
 
@@ -108,7 +108,7 @@ Route::get('/admin/users-filter', [UserController::class, 'filter'])->name('user
 
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/admin', [DashboardController::class, 'index']);
+    Route::get('/admin', [DashboardController::class, 'index'])->name('admin.home');
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/admin/logout', [AuthController::class, 'logout'])->name('logout');
 

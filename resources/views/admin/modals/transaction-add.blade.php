@@ -61,7 +61,7 @@
             </button>
 
             <!-- Form Title -->
-            <h2 class="text-2xl font-bold mb-4 text-gray-800">Add a New Transaction in
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Add Transaction in
                 <span class="text-red-500 font-bold">{{ $currentCategory->title }}</span>
             </h2>
 
@@ -71,10 +71,13 @@
                 <!-- Item Selection -->
                 <div>
                     <label for="item_id" class="block text-gray-700 font-semibold mb-1">Item</label>
-                    <input type="text" title="Items" id="item-{{$day}}"
-                        onclick="document.getElementById('itemListModal-{{$day}}').classList.remove('hidden')"
-                        class="block p-2 border border-gray-300 cursor-pointer rounded" placeholder="Select an item"
-                        readonly required>
+                    <div onclick="document.getElementById('itemListModal-{{$day}}').classList.remove('hidden')"
+                        class="flex items-center justify-between block p-2 border border-gray-300 cursor-pointer rounded">
+                        <input type="text" title="Items" id="item-{{$day}}" class="focus:outline-none cursor-pointer"
+                            placeholder="Select an item" readonly required><i class="fa-solid fa-chevron-down"></i>
+
+                    </div>
+
                 </div>
 
                 <!-- Hidden Item ID -->
@@ -126,6 +129,7 @@
                 <div>
                     <label for="rent_return" class="block text-gray-700 font-semibold mb-1">Rent Return Date</label>
                     <input id="rent_return" name="rent_return" type="date"
+                        value="{{ $currentDate->copy()->day($day)->format('Y-m-d') }}"
                         class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
@@ -153,15 +157,16 @@
             </div>
 
             <!-- Submit and Cancel Buttons -->
-            <div class="col-span-2 flex justify-end mt-4 space-x-2 sticky">
-                <button type="submit"
-                    class="bg-blue-500 text-white px-4 py-2 rounded shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    Submit
-                </button>
+            <div class="col-span-2 flex justify-end mt-4 space-x-1 sticky">
+
 
                 <button type="button" onclick="closeModalTransaction('{{$day}}')"
-                    class="px-4 py-2 bg-gray-500 hover:bg-gray-800 text-gray-100 rounded">
+                    class="px-4 py-2 border border-blue-300 text-blue-500 hover:opacity-50 rounded">
                     Close
+                </button>
+
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 shadow-md rounded">
+                    Submit
                 </button>
             </div>
         </form>
