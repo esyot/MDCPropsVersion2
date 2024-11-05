@@ -99,6 +99,8 @@ Route::get('/notifications/read-all', [NotificationController::class, 'readAll']
 Route::get('/notifications/delete-all', [NotificationController::class, 'deleteAll'])->name('notifications.delete-all');
 
 
+Route::get('/admin/search-items-for-return', [ReturnItemController::class, 'search'])->name('admin.search-items-for-return');
+
 // Public Routes
 Route::get('/admin/login', [LoginController::class, 'index'])->name('loginPage');
 Route::post('/admin.login', [AuthController::class, 'login'])->name('login');

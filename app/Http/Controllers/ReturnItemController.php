@@ -128,4 +128,17 @@ class ReturnItemController extends Controller
             'categoriesIsNull',
         ));
     }
+
+    public function search(Request $request)
+    {
+        if ($request->search_value == null) {
+            $transactions = Transaction::where('status', 'in progress')->get();
+            return view('admin.partials.items-for-return', compact('transactions'));
+
+        }
+
+        $transactions = Transaction::where('tracking_code', 'LIKE', '%' . $request->search_value . '%')->where('status', 'in progress')->get();
+        return view('admin.partials.items-for-return', compact('transactions'));
+
+    }
 }

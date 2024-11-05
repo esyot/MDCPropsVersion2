@@ -105,6 +105,10 @@
             background-color: #1d1d1d;
         }
 
+        #items-for-return-header {
+            background-color: #1d1d1d;
+        }
+
         #calendar {}
 
         #user-dropdown {
@@ -124,6 +128,10 @@
         }
 
         #calendar-header {
+            background-color: #BBDEFB;
+        }
+
+        #items-for-return-header {
             background-color: #BBDEFB;
         }
 
