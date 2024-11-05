@@ -11,11 +11,13 @@
     <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
     <script src="{{ asset('asset/js/jsQR.min.js') }}"></script>
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
-    <style>
-        .hidden {
-            display: none;
-        }
-    </style>
+
+    @hasrole('admin|superadmin|staff')
+    <script>
+        window.location.href = "{{ route('admin.home') }}"; 
+    </script>
+    @endhasrole
+
 </head>
 
 <body>
@@ -43,10 +45,18 @@
             </div>
             <div class="flex items-center space-x-4">
                 <div class="">
-                    <button id="notificationIcon" class="text-white cursor-pointer hover:opacity-50">
+                    <button id="notificationIcon" class="text-white cursor-pointer hover:opacity-50 relative">
                         <i class="fas fa-bell fa-lg"></i>
                         <span>Notifications</span>
+                        @if($unreadNotifications > 0)
+                            <span id="notification-count"
+                                class="absolute top-0 left-0 flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2">
+                                {{ $unreadNotifications }}
+                            </span>
+                        @endif
                     </button>
+
+
 
                     <!-- Notification Dropdown -->
                     <div id="notificationsDropdown"
@@ -56,17 +66,38 @@
                         </div>
                         <div class="flex justify-between items-center">
                             <div class="font-medium p-2">
-                                <button id="all" class="px-2 rounded-full bg-gray-300 hover:bg-gray-200">All</button>
-                                <button id="unread" class="px-2 rounded-full hover:bg-gray-200">Unread</button>
+                                <button
+                                    onclick="this.classList.toggle('bg-gray-300'); document.getElementById('unread').classList.toggle('bg-gray-300');"
+                                    id="all" class="px-2 rounded-full bg-gray-300 hover:bg-gray-200">All</button>
+                                <button
+                                    onclick="this.classList.toggle('bg-gray-300'); document.getElementById('all').classList.toggle('bg-gray-300');"
+                                    id="unread" class="px-2 rounded-full hover:bg-gray-200">Unread</button>
                             </div>
                             <div id="loader"
                                 class="rounded bg-gray-400 bg-opacity-50 absolute inset-0 flex items-center justify-center hidden">
                                 <img src="{{asset('asset/loader/loading.gif')}}" alt="Loading..." class="w-16 h-16">
                             </div>
+                            <div class="relative inline-block text-left">
+                                <button id="notificationOptionButton" class="focus:outline-none">
+                                    <i class="text-gray-500 hover:bg-gray-200 p-2 fas fa-ellipsis rounded-full"></i>
+                                </button>
+                                <div id="notificationOptionDropdown"
+                                    class="dropdown-content absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg hidden">
+                                    <a href="{{ route('notifications.read-all') }}"
+                                        class="block px-4 py-2 rounded hover:bg-gray-100">
+                                        <i class="text-blue-500 fas fa-check-circle mr-2"></i> Mark as all read
+                                    </a>
+                                    <a href="{{ route('notifications.delete-all') }}"
+                                        class="block px-4 py-2 rounded hover:bg-gray-100">
+                                        <i class="text-blue-500 fas fa-trash mr-2"></i> Delete All
+                                    </a>
+                                </div>
+
+                            </div>
                         </div>
-                        <div id="notification-list"
+                        <div id="notifications-list"
                             class="z-10 flex flex-col max-h-[200px] overflow-y-auto custom-scrollbar">
-                            @include('admin.partials.notification-list')
+                            @include('cashier.partials.notification-list')
                             @if(count($notifications) > 5)
                                 <button id="see-more-btn"
                                     class="w-full p-2 text-blue-600 cursor-pointer hover:bg-blue-100 transition duration-150 ease-in-out">See
@@ -74,27 +105,7 @@
                             @endif
                         </div>
                     </div>
-
                     <script>
-
-                        // Notification buttons
-                        document.getElementById('all').addEventListener('click', () => {
-                            showLoader();
-                            htmx.ajax('GET', '{{ route('notificationList', ['filter' => 'all']) }}', {
-                                target: '#notification-list',
-                                swap: 'innerHTML'
-                            });
-                        });
-
-                        document.getElementById('unread').addEventListener('click', () => {
-                            showLoader();
-                            htmx.ajax('GET', '{{ route('notificationList', ['filter' => 'unread']) }}', {
-                                target: '#notification-list',
-                                swap: 'innerHTML'
-                            });
-                        });
-
-                        // Loader functions
                         function showLoader() {
                             document.getElementById('loader').classList.remove('hidden');
                         }
@@ -103,13 +114,47 @@
                             document.getElementById('loader').classList.add('hidden');
                         }
 
-                        document.body.addEventListener('htmx:afterRequest', hideLoader);
+                        document.getElementById('all').addEventListener('click', function () {
+                            showLoader();
+
+                            htmx.ajax('GET', '{{ route('cashier.notifications-filter', ['action' => 'all']) }}', {
+                                target: '#notifications-list',
+                                swap: 'innerHTML'
+                            });
+                        });
+
+                        document.getElementById('unread').addEventListener('click', function () {
+                            showLoader();
+
+                            htmx.ajax('GET', '{{ route('cashier.notifications-filter', ['action' => 'unread']) }}', {
+                                target: '#notifications-list',
+                                swap: 'innerHTML'
+                            });
+                        });
+
+
+                        document.body.addEventListener('htmx:afterRequest', function () {
+                            hideLoader();
+                        });
+
+                        notificationOptionButton.addEventListener('click', (event) => {
+                            event.stopPropagation();
+                            notificationOptionDropdown.classList.toggle('hidden');
+                        });
+
+
                     </script>
 
 
-                    <button id="messageIcon" class="text-white cursor-pointer hover:opacity-50">
+                    <button id="messageIcon" class="text-white cursor-pointer hover:opacity-50 relative">
                         <i class="fas fa-inbox fa-lg"></i>
                         <span>Messages</span>
+
+                        <span id="notification-count"
+                            class="absolute top-0 left-0 flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2">
+                            {{ $unreadNotifications }}
+                        </span>
+
                     </button>
 
                     <!-- Messages Dropdown -->
@@ -128,7 +173,7 @@
                                         src="{{ Storage::exists('public/images/users/' . Auth::user()->img) ? asset('storage/images/users/' . Auth::user()->img) : asset('asset/photos/user.png') }}"
                                         alt="User Image">
                                     <div
-                                        class="absolute bottom-0 right-0 transform translate-x-1 translate-y-1 text-gray-200">
+                                        class="absolute bottom-0 right-0 transform translate-x-1 translate-y-1 text-gray-300 shadow-md">
                                         <i class="fas fa-chevron-circle-down "></i>
                                     </div>
 

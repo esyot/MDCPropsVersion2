@@ -49,7 +49,7 @@
                 <i class="fa-solid fa-circle-question fa-2xl text-blue-500"></i>
                 <div class="flex flex-col">
                     <h1 class="text-2xl font-medium">Confirmation</h1>
-                    <span>Already received the payment.</span>
+                    <span>Already received the payment?</span>
 
                 </div>
 

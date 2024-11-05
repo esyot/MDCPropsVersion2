@@ -36,12 +36,23 @@
         </div>
     @endif
 </section>
-<section>
+<section class="flex p-2 space-x-2">
     <div title=" Click here to redirect"
-        class="flex flex-col items-center cursor-pointer  m-4 p-4 bg-gray-400 w-[200px] rounded-lg shadow-lg transition-transform transform hover:scale-105">
+        class="flex flex-col items-center cursor-pointer p-4 bg-blue-400 w-[200px] rounded-lg shadow-lg transition-transform transform hover:scale-105">
         <h1 class="text-center text-lg font-semibold text-white mb-2">No. of Pending Reservations:</h1>
         <span class="text-3xl font-bold text-white">
             {{ $reservationsPending }}
+        </span>
+
+    </div>
+
+
+    <div title=" Click here to redirect"
+        class="flex flex-col items-center cursor-pointer p-4 bg-green-400 w-[200px] rounded-lg shadow-lg transition-transform transform hover:scale-105">
+        <h1 class="text-center text-lg font-semibold text-white mb-2">No. of Transactions Made:
+        </h1>
+        <span class="text-3xl font-bold text-white">
+            {{ $transactionMade }}
         </span>
 
     </div>

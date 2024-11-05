@@ -138,6 +138,7 @@ class TransactionController extends Controller
 
         $transaction->update([
             'approvedByAdmin_at' => now(),
+            'admin_id' => Auth::user()->id,
         ]);
 
         if ($transaction) {
@@ -145,10 +146,10 @@ class TransactionController extends Controller
             Notification::create([
                 'icon' => Auth::user()->img,
                 'category_id' => $transaction->category_id,
-                'title' => 'Approved Transaction',
-                'description' => Auth::user()->name . ' approved a new transaction, check it now!',
-                'redirect_link' => 'transactions',
-                'for' => 'admin'
+                'title' => 'Approved Reservation',
+                'description' => Auth::user()->name . ' approved a new reservation, check it now!',
+                'redirect_link' => 'reservations',
+                'for' => 'cashier',
             ]);
 
             return redirect()->back()->with('success', 'Transaction has been successfuly approved!');

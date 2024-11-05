@@ -29,14 +29,28 @@ class CashierController extends Controller
 
 
 
-        $notifications = Notification::all();
+        $notifications = Notification::where('for', 'cashier')
+            ->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
+            ->get();
 
-        $reservationsPending = Transaction::where('approved_at', null)->get()->count();
+        $unreadNotifications = Notification::where('for', 'cashier')
+            ->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
+            ->whereJsonDoesntContain('isReadBy', Auth::user()->id)
+            ->count();
+
+        $reservationsPending = ItemsTransaction::where('approvedByCashier_at', null)
+            ->whereNot('approvedByAdmin_at', null)
+            ->get()
+            ->count();
+
+        $transactionMade = ItemsTransaction::where('cashier_id', Auth::user()->id)
+            ->get()
+            ->count();
 
 
 
         $setting = Setting::where('user_id', Auth::user()->id)->first();
-        return view('cashier.pages.index', compact('contacts', 'unreadMessages', 'setting', 'reservationsPending', 'notifications', 'page_title'));
+        return view('cashier.pages.index', compact('unreadNotifications', 'transactionMade', 'contacts', 'unreadMessages', 'setting', 'reservationsPending', 'notifications', 'page_title'));
 
     }
 
@@ -64,7 +78,14 @@ class CashierController extends Controller
 
 
 
-        $notifications = Notification::all();
+        $notifications = Notification::where('for', 'cashier')
+            ->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
+            ->get();
+
+        $unreadNotifications = Notification::where('for', 'cashier')
+            ->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
+            ->whereJsonDoesntContain('isReadBy', Auth::user()->id)
+            ->count();
 
         $setting = Setting::where('user_id', Auth::user()->id)->first();
 
@@ -81,7 +102,7 @@ class CashierController extends Controller
         $items = ItemsTransaction::whereIn('transaction_id', $reservations->pluck('id'))->get();
 
 
-        return view('cashier.pages.reservations', compact('notifications', 'contacts', 'reservations', 'items', 'setting'));
+        return view('cashier.pages.reservations', compact('unreadNotifications', 'notifications', 'contacts', 'reservations', 'items', 'setting'));
     }
 
     public function reservationDetails($tracking_code)
@@ -126,9 +147,21 @@ class CashierController extends Controller
 
         ItemsTransaction::whereIn('item_id', $itemIds)->update([
             'approvedByCashier_at' => now(),
+            'cashier_id' => Auth::user()->id,
         ]);
 
-        Transaction::find($itemIds[0])->update(['approved_at' => now()]);
+        Transaction::find($itemIds[0])->update([
+            'approved_at' => now(),
+            'status' => 'in progress'
+        ]);
+
+        Notification::create([
+            'icon' => Auth::user()->img,
+            'title' => 'Approved Transaction',
+            'description' => Auth::user()->name . ' approved a new transaction, check it now!',
+            'redirect_link' => 'transactions',
+            'for' => 'admin',
+        ]);
 
         return redirect()->back()->with('success', 'Reservation has been processed successfully.');
     }
@@ -150,16 +183,44 @@ class CashierController extends Controller
 
 
 
-        $notifications = Notification::all();
+        $notifications = Notification::where('for', 'cashier')
+            ->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
+            ->get();
 
-
-
+        $unreadNotifications = Notification::where('for', 'cashier')
+            ->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
+            ->whereJsonDoesntContain('isReadBy', Auth::user()->id)
+            ->count();
 
         $setting = Setting::where('user_id', Auth::user()->id)->first();
 
-        $transactions = ItemsTransaction::all();
-        return view('cashier.pages.transactions', compact('transactions', 'contacts', 'unreadMessages', 'setting', 'notifications', 'page_title'));
+        $transactions = ItemsTransaction::where('cashier_id', Auth::user()->id)->get();
 
+        return view('cashier.pages.transactions', compact('unreadNotifications', 'notifications', 'transactions', 'contacts', 'unreadMessages', 'setting', 'notifications', 'page_title'));
+
+    }
+
+
+    public function notificationsFilter($action)
+    {
+
+        if ($action == 'unread') {
+
+            $notifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)
+                ->where('for', 'cashier')
+                ->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
+                ->get();
+
+            return view('cashier.partials.notification-list', compact('notifications'));
+        }
+
+        if ($action == 'all') {
+            $notifications = Notification::where('for', 'cashier')
+                ->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
+                ->get();
+
+            return view('cashier.partials.notification-list', compact('notifications'));
+        }
     }
 
 

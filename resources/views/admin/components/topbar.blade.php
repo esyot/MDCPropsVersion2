@@ -117,10 +117,12 @@
                             </button>
                             <div id="dropdownMenu"
                                 class="dropdown-content absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg hidden">
-                                <a href="{{ route('readAll') }}" class="block px-4 py-2 rounded hover:bg-gray-100">
+                                <a href="{{ route('notifications.read-all') }}"
+                                    class="block px-4 py-2 rounded hover:bg-gray-100">
                                     <i class="text-blue-500 fas fa-check-circle mr-2"></i> Mark as all read
                                 </a>
-                                <a href="{{ route('deleteAll') }}" class="block px-4 py-2 rounded hover:bg-gray-100">
+                                <a href="{{ route('notifications.delete-all') }}"
+                                    class="block px-4 py-2 rounded hover:bg-gray-100">
                                     <i class="text-blue-500 fas fa-trash mr-2"></i> Delete All
                                 </a>
                             </div>

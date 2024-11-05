@@ -84,7 +84,7 @@ class RenteeTransactionController extends Controller
                 Notification::create([
                     'icon' => 'user.png',
                     'title' => 'Added new transaction',
-                    'description' => 'A rentee added a new transaction, check it now.',
+                    'description' => 'A rentee requested a new reservation, check it now.',
                     'redirect_link' => 'transactions',
                     'category_id' => $item->category_id,
                 ]);

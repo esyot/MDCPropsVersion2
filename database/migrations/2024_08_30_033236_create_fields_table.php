@@ -43,7 +43,7 @@ return new class extends Migration {
             $table->string('title');
             $table->string('description');
             $table->string('redirect_link');
-            $table->enum('for', ['superadmin', 'admin', 'staff', 'all']);
+            $table->enum('for', ['superadmin', 'admin', 'staff', 'cashier', 'all']);
             $table->string('category_id')->nullable();
             $table->json('isReadBy')->default(json_encode([]));
             $table->json('isDeletedBy')->default(json_encode([]));
@@ -108,7 +108,7 @@ return new class extends Migration {
             $table->string('tracking_code')->nullable(false);
             $table->foreignId('rentee_id')->constrained()->onDelete('cascade');
             $table->datetime('approved_at')->nullable(true);
-            $table->string('user_id')->nullable(true);
+            $table->enum('status', ['pending', 'approved', 'in progress', 'rejected', 'completed']);
             $table->timestamps();
         });
 
@@ -142,6 +142,11 @@ return new class extends Migration {
             $table->datetime('declinedByAdmin_at')->nullable(true);
             $table->datetime('approvedByAdmin_at')->nullable(true);
             $table->datetime('approvedByCashier_at')->nullable(true);
+            $table->string('admin_id')->nullable(true);
+            $table->string('cashier_id')->nullable(true);
+            $table->datetime('claimed_at')->nullable(true);
+            $table->datetime('returned_at')->nullable(true);
+            $table->string('receivedBy_id')->nullable(true);
             $table->timestamps();
         });
 

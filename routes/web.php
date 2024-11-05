@@ -3,6 +3,7 @@ use App\Http\Controllers\CashierController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\RenteeTrackingController;
 use App\Http\Controllers\RenteeTransactionController;
+use App\Http\Controllers\ReturnItemController;
 use Illuminate\Support\Facades\Route;
 
 //admin
@@ -92,7 +93,10 @@ Route::post('/cashier/reservation-payment', [CashierController::class, 'payment'
 
 Route::get('/cashier/transactions', [Cashiercontroller::class, 'transactions'])->name('cashier.transactions');
 
+Route::get('/cashier/notifications-filter/{action}', [CashierController::class, 'notificationsFilter'])->name('cashier.notifications-filter');
 
+Route::get('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
+Route::get('/notifications/delete-all', [NotificationController::class, 'deleteAll'])->name('notifications.delete-all');
 
 
 // Public Routes
@@ -108,6 +112,9 @@ Route::get('/admin/users-filter', [UserController::class, 'filter'])->name('user
 
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
+
+    Route::get('/admin/return-item', [ReturnItemController::class, 'index'])->name('admin.return-item');
+
     Route::get('/admin', [DashboardController::class, 'index'])->name('admin.home');
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/admin/logout', [AuthController::class, 'logout'])->name('logout');
@@ -119,9 +126,7 @@ Route::middleware('auth')->group(function () {
 
     // Notifications
     Route::get('/admin/notification-list/{filter}', [NotificationController::class, 'notificationList'])->name('notificationList');
-    Route::get('/admin/isRead/{id}/{redirect_link}', [NotificationController::class, 'isRead'])->name('isRead');
-    Route::get('/admin/notification/read/all', [NotificationController::class, 'readAll'])->name('readAll');
-    Route::get('/admin/notification/delete/all', [NotificationController::class, 'deleteAll'])->name('deleteAll');
+    Route::get('/admin/isRead/{id}/{redirect_link}/{role}', [NotificationController::class, 'isRead'])->name('isRead');
 
     // Messages
     Route::get('/admin/messages', [MessageController::class, 'index'])->name('messages');

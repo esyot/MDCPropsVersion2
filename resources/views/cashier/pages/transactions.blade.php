@@ -1,7 +1,7 @@
 @extends('cashier.layouts.header')
 @section('content')
-<nav class="flex items-center justify-between p-2 bg-gray-300">
-    <h1 class="text-2xl font-medium">
+<nav class="flex items-center justify-between p-2 bg-blue-200">
+    <h1 class="text-xl font-medium">
         {{ $page_title }}
     </h1>
     <div class="relative inline-block text-left">
@@ -56,7 +56,7 @@
         </thead>
         <tbody>
             @foreach ($transactions as $transaction)
-                <tr class="hover:bg-gray-200 border-b">
+                <tr class="hover:bg-gray-100 border-b cursor-pointer">
                     <td class="p-2">
                         {{$transaction->item->name}}
                     </td>

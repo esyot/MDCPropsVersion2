@@ -72,18 +72,17 @@
                     </section>
                 </a>
             @endcan
-            @hasrole('cashier')
-            <a href="{{ route('payments') }}"
-                class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
-                title="Transactions">
+            <a href="{{ route('admin.return-item') }}"
+                class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
+                title="Users">
                 <section
-                    class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Transactions' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
+                    class="flex justify-center items-center rounded-lg p-4  {{ $page_title == 'Return Item' ? 'bg-gray-100 text-blue-500' : '' }}">
                     <i
-                        class="fas fa-cash-register fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
-                    <span class="pl-2 pr-[100px] text-sm hidden">Payments</span>
+                        class="fas fa-truck fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                    <span class="pl-2 pr-[130px] text-sm hidden">Return</span>
                 </section>
             </a>
-            @endhasrole
+
             @hasrole('superadmin')
             <a href="{{ route('users') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
@@ -96,6 +95,8 @@
                 </section>
             </a>
             @endhasrole
+
+
 
         </div>
 

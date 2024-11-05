@@ -10,7 +10,7 @@ use Auth;
 
 class NotificationController extends Controller
 {
-    public function isRead($id, $redirect_link)
+    public function isRead($id, $redirect_link, $role)
     {
         $notification = Notification::find($id);
 
@@ -19,8 +19,11 @@ class NotificationController extends Controller
         }
 
 
-        if (in_array(Auth::user()->id, $notification->isReadBy ?? [])) {
+        if ($role == 'admin' && in_array(Auth::user()->id, $notification->isReadBy ?? [])) {
             return redirect('/admin/' . $redirect_link);
+        } else if ($role == 'cashier' && in_array(Auth::user()->id, $notification->isReadBy ?? [])) {
+            return redirect('/cashier/' . $redirect_link);
+
         }
 
 
@@ -31,8 +34,12 @@ class NotificationController extends Controller
             'isReadBy' => $isReadBy,
         ]);
 
+        if ($role == 'cashier') {
+            return redirect('cashier/' . $redirect_link);
+        } else if ($role == 'admin') {
+            return redirect('admin/' . $redirect_link);
+        }
 
-        return redirect('/admin/' . $redirect_link);
     }
 
 
@@ -48,8 +55,10 @@ class NotificationController extends Controller
 
             if ($roles->contains('superadmin')) {
 
-                $notifications = Notification::whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->
-                    whereJsonDoesntContain('isReadBy', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
+                $notifications = Notification::whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
+                    ->whereIn('for', ['superadmin', 'all'])
+                    ->whereJsonDoesntContain('isReadBy', Auth::user()->id)
+                    ->orderBy('created_at', 'DESC')->get();
 
 
             } else if ($roles->contains('admin')) {
@@ -118,47 +127,33 @@ class NotificationController extends Controller
     }
 
 
-
     public function deleteAll()
     {
-        // Get all notifications for the authenticated user
-        $notifications = Notification::whereJsonContains('isReadBy', Auth::user()->id)->get();
+        $userId = Auth::user()->id;
+        $notifications = Notification::whereJsonDoesntContain('isDeletedBy', $userId)->get();
 
-        // Initialize the array to hold IDs of users who deleted the notifications
-        $deletedCount = 0;
+        if ($notifications->isEmpty()) {
+            return redirect()->back()->with('message', 'No notifications to delete.');
+        }
 
-        // Loop through each notification and gather existing isDeletedBy data
         foreach ($notifications as $notification) {
-            // Ensure isDeletedBy is an array
-            $existingDeletedBy = $notification->isDeletedBy ?? [];
+            // Get the current 'isDeletedBy' field, it might be an array or null.
+            $isDeletedBy = $notification->isDeletedBy ? json_decode($notification->isDeletedBy, true) : [];
 
-            // If $existingDeletedBy is not an array, reset it to an empty array
-            if (!is_array($existingDeletedBy)) {
-                $existingDeletedBy = [];
+            // Ensure it's an array.
+            if (!is_array($isDeletedBy)) {
+                $isDeletedBy = [];
             }
 
-            // Merge the current user ID into the array if not already present
-            if (!in_array(Auth::user()->id, $existingDeletedBy)) {
-                $existingDeletedBy[] = Auth::user()->id; // Add user ID if not already in the array
+            // If the user ID is not already in the array, add it.
+            if (!in_array($userId, $isDeletedBy)) {
+                $isDeletedBy[] = $userId;
             }
 
-            // Update the notification with the new isDeletedBy array
-            $notification->isDeletedBy = $existingDeletedBy;
-            $notification->save();
-
-            // Increment deleted count
-            $deletedCount++;
+            // Update the 'isDeletedBy' field.
+            $notification->update(['isDeletedBy' => json_encode($isDeletedBy)]);
         }
 
-        // Check if any records were updated
-        if ($deletedCount > 0) {
-            return redirect()->back()->with('success', 'Notifications deleted successfully.');
-        }
-
-        // If no records were updated, handle that case
-        return redirect()->back()->with('info', 'There were no notifications to delete.');
+        return redirect()->back()->with('success', 'Notifications marked as deleted.');
     }
-
-
-
 }

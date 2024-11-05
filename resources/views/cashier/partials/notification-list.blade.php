@@ -42,7 +42,7 @@
 
         <div class="flex flex-col">
             <a
-                href="{{ route('isRead', ['id' => $notification->id, 'redirect_link' => $notification->redirect_link, 'role' => 'admin']) }}">
+                href="{{ route('isRead', ['id' => $notification->id, 'redirect_link' => $notification->redirect_link, 'role' => 'cashier']) }}">
                 <h1 class="text-xs font-bold">{{ $notification->title }}</h1>
                 <span class="text-sm">
                     {{ $notification->description }}<br> <small class="font-normal text-red-500">{{ $timeAgo }}</small>
