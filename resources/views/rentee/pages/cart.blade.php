@@ -87,7 +87,9 @@
 
             <div class="flex fixed bottom-0 right-0 left-0 justify-center">
                 <div>
-                    <button type="submit" class="px-4 py-2 bg-yellow-500 text-yellow-100 m-2 rounded">Proceed to
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-500 text-blue-100 m-2 hover:opacity-50 rounded shadow-md">Proceed
+                        to
                         checkout</button>
                 </div>
             </div>

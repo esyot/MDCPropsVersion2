@@ -136,24 +136,65 @@
 
                         <div>
                             <label>Date Rent:</label>
-                            <input type="date" name="items[{{ $item->id }}][rent_date]"
-                                class="p-2 border border-gray-300 rounded" required>
+                            <input type="date" value="{{ today()->toDateString() }}"
+                                name="items[{{ $item->id }}][rent_date]" class="p-2 border border-gray-300 rounded" required
+                                id="rent_date_{{ $item->id }}">
                         </div>
                         <div>
-                            <label>Time Rent:</label>
+                            <label>Time Item Pickup:</label>
                             <input type="time" name="items[{{ $item->id }}][rent_time]"
                                 class="p-2 border border-gray-300 rounded" required>
                         </div>
                         <div>
                             <label>Date Return:</label>
-                            <input type="date" name="items[{{ $item->id }}][rent_return]"
-                                class="p-2 border border-gray-300 rounded" required>
+                            <input type="date" value="{{ today()->toDateString() }}"
+                                name="items[{{ $item->id }}][rent_return]" class="p-2 border border-gray-300 rounded"
+                                required id="return_date_{{ $item->id }}">
                         </div>
                         <div>
-                            <label>Time Return:</label>
+                            <label>Time Item To Return:</label>
                             <input type="time" name="items[{{ $item->id }}][rent_return_time]"
                                 class="p-2 border border-gray-300 rounded" required>
                         </div>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                // Select the rent and return date inputs
+                                const rentDateInput = document.getElementById('rent_date_{{ $item->id }}');
+                                const returnDateInput = document.getElementById('return_date_{{ $item->id }}');
+
+                                // Get today's date in YYYY-MM-DD format
+                                const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+                                // Set the min attribute for both Date Rent and Date Return
+                                rentDateInput.setAttribute('min', today); // Disable past dates for Date Rent
+                                returnDateInput.setAttribute('min', today); // Disable past dates for Date Return
+
+                                // Function to validate and update Date Return (ensure it's after or equal to Date Rent)
+                                function validateDateReturn() {
+                                    const rentDate = new Date(rentDateInput.value);
+                                    const returnDate = new Date(returnDateInput.value);
+
+                                    // If return date is before rent date, update the return date to match rent date
+                                    if (returnDate < rentDate) {
+                                        returnDateInput.value = rentDateInput.value; // Set return date to rent date
+                                        returnDateInput.setCustomValidity("The return date must be the same or after the rent date.");
+                                    } else {
+                                        returnDateInput.setCustomValidity(""); // Clear custom validity if valid
+                                    }
+                                }
+
+                                // Add event listeners to validate Date Rent and Date Return on change
+                                rentDateInput.addEventListener('change', function () {
+                                    // Update the min value for Date Return when Date Rent is changed
+                                    returnDateInput.setAttribute('min', rentDateInput.value); // Date Return cannot be earlier than Date Rent
+
+                                    // Validate the Date Return after Date Rent change
+                                    validateDateReturn();
+                                });
+
+                                returnDateInput.addEventListener('change', validateDateReturn);
+                            });
+                        </script>
                     </div>
                 </div>
             @endforeach

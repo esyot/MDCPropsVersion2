@@ -22,7 +22,13 @@ class TransactionController extends Controller
     {
         $current_user_name = Auth::user()->name;
 
-        $transactions = ItemsTransaction::where('category_id', 1)->where('approvedByAdmin_at', null)->where('approvedByCashier_at', null)->get();
+        $category = Category::first();
+
+        $transactions = ItemsTransaction::where('category_id', $category->id)
+            ->where('approvedByAdmin_at', null)
+            ->where('approvedByCashier_at', null)
+            ->where('declinedByAdmin_at', null)
+            ->get();
 
         $categories = Category::all();
 
@@ -116,12 +122,15 @@ class TransactionController extends Controller
 
     }
 
-    public function decline($id)
+    public function decline(Request $request, $id)
     {
 
-        $transaction = Transaction::findOrFail($id);
+        $transaction = ItemsTransaction::findOrFail($id);
 
-        $transaction->delete();
+        $transaction->update([
+            'message' => $request->message,
+            'declinedByAdmin_at' => now(),
+        ]);
 
         if ($transaction) {
 

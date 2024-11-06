@@ -147,6 +147,7 @@ return new class extends Migration {
             $table->datetime('claimed_at')->nullable(true);
             $table->datetime('returned_at')->nullable(true);
             $table->string('receivedBy_id')->nullable(true);
+            $table->text('message')->nullable(true);
             $table->timestamps();
         });
 

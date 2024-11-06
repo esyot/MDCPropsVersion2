@@ -162,7 +162,7 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
 // Moderator and Admin Role Routes
 Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
     Route::post('/admin/category-add', [CategoryController::class, 'create'])->name('category-add');
-    Route::get('/admin/transaction-decline/{id}', action: [TransactionController::class, 'decline'])->name('transactionDecline');
+    Route::post('/admin/transaction-decline/{id}', action: [TransactionController::class, 'decline'])->name('transactionDecline');
     Route::get('/admin/pending-approve/{id}', [TransactionController::class, 'approve'])->name('transactionApprove');
     //Category
 
