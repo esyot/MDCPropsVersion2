@@ -110,3 +110,11 @@
         @endforeach
     </div>
 @endforeach
+
+@if (count($transactions) == 0)
+    <div class="flex justify-center">
+        <h1>
+            No match found!
+        </h1>
+    </div>
+@endif

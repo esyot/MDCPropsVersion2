@@ -8,7 +8,7 @@
 </style>
 
 <div id="sidebar"
-    class="flex flex-col text-white w-20 {{ $setting->transition == true ? 'transition-all duration-[300ms] ease-in-out' : '' }} z-40">
+    class="flex flex-col text-white w-20 {{ $setting->transition == true ? 'transition-all duration-[300ms] ease-in-out' : '' }} z-40 shadow-md">
 
     <div class="first:mt-3 last:mb-12 flex flex-col flex-grow justify-between relative">
         <!-- Logo and Label -->
@@ -38,7 +38,7 @@
 
                 <a href="{{ route('items') }}"
                     class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
-                    title="Items">
+                    title="Manage Items">
                     <section
                         class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Items' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
                         <i
@@ -51,7 +51,7 @@
             @can('can manage categories')
                 <a href="{{ route('categories') }}"
                     class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
-                    title="Categories">
+                    title="Manage Categories">
                     <section
                         class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Categories' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
                         <i
@@ -63,7 +63,7 @@
             @can('can view transactions')
                 <a href="{{ route('transactions') }}"
                     class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
-                    title="Transactions">
+                    title="Manage Transactions">
                     <section
                         class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Transactions' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
                         <i
@@ -74,7 +74,7 @@
             @endcan
             <a href="{{ route('admin.return-item') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
-                title="Users">
+                title="Return Items">
                 <section
                     class="flex justify-center items-center rounded-lg p-4  {{ $page_title == 'Return Item' ? 'bg-gray-100 text-blue-500' : '' }}">
                     <i
@@ -86,7 +86,7 @@
             @hasrole('superadmin')
             <a href="{{ route('users') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
-                title="Users">
+                title="manage Users">
                 <section
                     class="flex justify-center items-center rounded-lg p-4  {{ $page_title == 'Manage Users' ? 'bg-gray-100 text-blue-500' : '' }}">
                     <i
@@ -95,6 +95,17 @@
                 </section>
             </a>
             @endhasrole
+
+            <a href="{{ route('admin.analytics-index') }}"
+                class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
+                title="Analytics">
+                <section
+                    class="flex justify-center items-center rounded-lg p-4  {{ $page_title == 'Analytics' ? 'bg-gray-100 text-blue-500' : '' }}">
+                    <i
+                        class="fas fa-chart-line fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                    <span class="pl-2 pr-[130px] text-sm hidden">Analytics</span>
+                </section>
+            </a>
 
 
 

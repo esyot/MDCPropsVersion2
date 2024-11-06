@@ -108,7 +108,8 @@ return new class extends Migration {
             $table->string('tracking_code')->nullable(false);
             $table->foreignId('rentee_id')->constrained()->onDelete('cascade');
             $table->datetime('approved_at')->nullable(true);
-            $table->enum('status', ['pending', 'approved', 'in progress', 'rejected', 'completed']);
+            $table->datetime('canceled_at')->nullable(true);
+            $table->enum('status', ['pending', 'canceled', 'approved', 'in progress', 'declined ', 'completed']);
             $table->timestamps();
         });
 
@@ -139,6 +140,7 @@ return new class extends Migration {
             $table->time('rent_time');
             $table->date('rent_return');
             $table->time('rent_return_time');
+            $table->datetime('canceledByRentee_at')->nullable(true);
             $table->datetime('declinedByAdmin_at')->nullable(true);
             $table->datetime('approvedByAdmin_at')->nullable(true);
             $table->datetime('approvedByCashier_at')->nullable(true);

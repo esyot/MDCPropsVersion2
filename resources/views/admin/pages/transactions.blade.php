@@ -24,6 +24,7 @@
                     <option value="approved">Approved</option>
                     <option value="pending">Pending</option>
                     <option value="declined">Declined</option>
+                    <option value="canceled">Canceled</option>
                 </select>
 
             </form>
@@ -87,6 +88,9 @@
                         </div>
                         <div class="flex justify-center space-x-2 mt-2">
                             @can('can approve transactions')
+                            @if ($currentStatus == 'pending')
+                            
+                           
                             <button
                                     onclick="document.getElementById('delete-confirmation-{{$transaction->id}}').classList.remove('hidden')"
                                     class="shadow px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 flex items-center">
@@ -99,7 +103,7 @@
                                         <i class="fas fa-check mr-2"></i> Approve
                                     </button>
                               
-                              
+                                    @endif
                             @endcan
                         </div>
                     </div>

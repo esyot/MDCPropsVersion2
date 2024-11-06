@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\RenteeTrackingController;
@@ -74,8 +75,9 @@ Route::get('/rentee/tracking', [RenteeTrackingController::class, 'fetch']);
 
 Route::get('/rentee/transaction-done/{transaction}', [RenteeTransactionController::class, 'transactionDone'])->name('transactionDone');
 
-//Cashier Routes
 
+Route::get('/rentee/reservation-cancel/{tracking_code}', [RenteeTransactionController::class, 'reservationCancel'])->name('rentee.reservation-cancel');
+//Cashier Routes
 
 Route::get('/cashier/welcome', [CashierController::class, 'welcome'])->name('cashier.welcome');
 
@@ -114,6 +116,8 @@ Route::get('/admin/users-filter', [UserController::class, 'filter'])->name('user
 
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
+
+    Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('admin.analytics-index');
 
     Route::get('/admin/return-item', [ReturnItemController::class, 'index'])->name('admin.return-item');
 

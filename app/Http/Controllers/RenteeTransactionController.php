@@ -104,4 +104,20 @@ class RenteeTransactionController extends Controller
 
         return redirect()->route('welcome', compact('transaction'))->with('success', 'Transaction has been saved successfully, please wait');
     }
+
+    public function reservationCancel($tracking_code)
+    {
+        $reservation = Transaction::where('tracking_code', $tracking_code)->first();
+
+        $reservation->update([
+            'status' => 'canceled',
+            'canceled_at' => now()
+        ]);
+
+        ItemsTransaction::where('transaction_id', $reservation->id)->update([
+            'canceledByRentee_at' => now()
+        ]);
+
+        return redirect()->back()->with('success', 'Reservation has been canceled successfully!');
+    }
 }

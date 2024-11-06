@@ -11,7 +11,6 @@ use App\Models\Category;
 use App\Models\Message;
 use App\Models\User;
 use App\Models\ManagedCategory;
-
 use Illuminate\Support\Facades\Auth;
 use Log;
 
@@ -27,6 +26,7 @@ class TransactionController extends Controller
         $transactions = ItemsTransaction::where('category_id', $category->id)
             ->where('approvedByAdmin_at', null)
             ->where('approvedByCashier_at', null)
+            ->where('canceledByRentee_at', null)
             ->where('declinedByAdmin_at', null)
             ->get();
 
@@ -152,6 +152,11 @@ class TransactionController extends Controller
 
         if ($transaction) {
 
+            Transaction::where('id', $transaction->transaction->id)
+                ->update([
+                    'status' => 'in progress'
+                ]);
+
             Notification::create([
                 'icon' => Auth::user()->img,
                 'category_id' => $transaction->category_id,
@@ -169,10 +174,26 @@ class TransactionController extends Controller
     public function filter(Request $request)
     {
         if ($request->status == 'pending') {
-            $transactions = ItemsTransaction::where('declinedByAdmin_at', null)->where('approvedByCashier_at', null)->whereNot('approvedByAdmin_at', null)->where('category_id', $request->category)->get();
+            $transactions = ItemsTransaction::where('declinedByAdmin_at', null)
+                ->where('approvedByCashier_at', null)
+                ->where('approvedByAdmin_at', null)
+                ->where('canceledByRentee_at', null)
+                ->where('category_id', $request->category)
+                ->get();
 
         } else if ($request->status == 'approved') {
-            $transactions = ItemsTransaction::where('declinedByAdmin_at', null)->whereNot('approvedByCashier_at', null)->whereNot('approvedByAdmin_at', null)->where('category_id', $request->category)->get();
+            $transactions = ItemsTransaction::where('declinedByAdmin_at', null)
+                ->whereNot('approvedByCashier_at', null)
+                ->whereNot('approvedByAdmin_at', null)
+                ->where('canceledByRentee_at', null)
+                ->where('category_id', $request->category)
+                ->get();
+        } else if ($request->status == 'canceled') {
+            $transactions = ItemsTransaction::where('declinedByAdmin_at', null)
+                ->whereNot('canceledByRentee_at', null)
+                ->where('category_id', $request->category)
+                ->get();
+
 
         } else if ($request->status == 'declined') {
             $transactions = ItemsTransaction::whereNot('declinedByAdmin_at', null)->where('category_id', $request->category)->get();

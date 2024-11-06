@@ -28,8 +28,7 @@
     </header>
 
     <section class="mt-4 flex justify-center space-x-2">
-        <form id="searchbar" hx-get="{{ route('transactionTrack') }}" hx-trigger="input" hx-target="#transaction"
-            hx-swap="innerHTML" class="flex items-center space-x-1 bg-white px-4 py-2 rounded-full shadow-md w-96">
+        <form id="searchbar" class="flex items-center space-x-1 bg-white px-4 py-2 rounded-full shadow-md w-96">
             <i class="fas fa-magnifying-glass"></i>
             <input type="text" name="search_val" class="bg-transparent focus:outline-none w-full"
                 placeholder="Input tracking no.">
@@ -37,7 +36,7 @@
         </form>
         <button id="scan-qr-button" class="px-3 py-2 bg-blue-500 text-blue-100 rounded hover:opacity-50 shadow-md"
             title="Scan QR Code">
-            <i class="fa-solid fa-qrcode fa-lg"></i>
+            <i class="fa-solid fa-camera fa-lg"></i>
         </button>
     </section>
 
@@ -79,10 +78,16 @@
                                 <i class="fa-solid fa-hourglass-start text-orange-500"></i>
 
                             </div>
+                        @elseif ($transaction->status == 'canceled')
+                            <div class="flex items-center space-x-2">
+                                <span class="text-red-500">Canceled</span>
+                                <i class="fa-solid fa-ban text-red-500"></i>
+
+                            </div>
                         @elseif ($transaction->status == 'in progress')
                             <div class="flex items-center space-x-2">
-                                <span class="text-green-500">Occuppied</span>
-                                <i class="fa-solid fa-business-time text-green-500"></i>
+                                <span class="text-blue-500">In Progress</span>
+                                <i class="fa-solid fa-business-time text-blue-500"></i>
 
                             </div>
 
@@ -112,35 +117,58 @@
                             $formattedRentTime = \Carbon\Carbon::parse($transaction->rent_time)->format('h:i A');
                             $formattedRentReturnTime = \Carbon\Carbon::parse($transaction->rent_return_time)->format('h:i A');
                         @endphp
-                        <div class="flex flex-col border border-gray-300 p-2 space-x-6 justify-between">
-                            Reserve {{ $item->item->name }}
-                            for this {{$formattedItemRentDate}} {{$formattedRentTime}} to {{$formattedItemRentReturnDate}}
-                            {{$formattedRentReturnTime}}.
+                        <div class="flex flex-col border border-gray-300 p-2">
+                            <p>Request <strong>{{ $item->item->name }}</strong>
+                                for this {{$formattedItemRentDate}} {{$formattedRentTime}} to {{$formattedItemRentReturnDate}}
+                                {{$formattedRentReturnTime}}.
+                            </p>
 
 
-                            @if ($item->approvedByAdmin_at != null && $item->approvedByCashier_at != null)
+
+                            @if ($item->approvedByAdmin_at != null && $item->approvedByCashier_at != null && $item->canceledByRentee_at == null)
                                 <span>
 
                                     <span class="text-green-500">Approved</span>
                                     <i class="fas fa-check-circle text-green-500"></i>
                                 </span>
-                            @elseif ($item->approvedByAdmin_at != null && $item->approvedByCashier_at == null)
-                                <span>
+                            @elseif ($item->approvedByAdmin_at != null && $item->approvedByCashier_at == null && $item->canceledByRentee_at == null)
+                                <div class="flex items-center space-x-1 items-center">
+                                    <h1>Status:</h1>
+                                    <div class="flex items-center space-x-1">
+                                        <span class="text-blue-500">Waiting for payment</span>
+                                        <i class="fa-solid fa-credit-card text-blue-500"></i>
+                                    </div>
 
-                                    <span class="text-orange-500">Waiting for payment</span>
-                                    <i class="fa-solid fa-credit-card text-orange-500"></i>
-                                </span>
-                            @elseif ($item->approvedByAdmin_at == null && $item->declinedByAdmin_at == null)
-                                <span>
 
-                                    <span class="text-orange-500">Pending admin approval</span>
-                                    <i class="fa-solid fa-hourglass-start text-orange-500"></i>
-                                </span>
-                            @elseif ($item->declinedByAdmin_at != null)
+
+                                </div>
+                            @elseif ($item->canceledByRentee_at != null)
+                                <div class="flex items-center space-x-1 items-center">
+                                    <h1>Status:</h1>
+                                    <div class="flex items-center space-x-1">
+                                        <span class="text-red-500">Canceled</span>
+                                        <i class="fa-solid fa-ban text-red-500"></i>
+                                    </div>
+
+
+
+                                </div>
+                            @elseif ($item->approvedByAdmin_at == null && $item->declinedByAdmin_at == null && $item->canceledByRentee_at == null)
+                                <div class="flex items-center space-x-1 items-center">
+                                    <h1>Status:</h1>
+                                    <div class="flex items-center space-x-1">
+                                        <span class="text-orange-500">Pending Admin Approval</span>
+                                        <i class="fas fa-hourglass-start text-orange-500"></i>
+                                    </div>
+
+
+
+                                </div>
+                            @elseif ($item->declinedByAdmin_at != null && $item->canceledByRentee_at == null)
                                 <div class="flex items-center space-x-1">
                                     <h1>Status:</h1>
-                                    <div class="flex items-center">
-                                        <span class="text-red-500">Declined</span>
+                                    <div class="flex items-center space-x-1">
+                                        <span class="text-red-500">Declined Request</span>
                                         <i class="fa-solid fa-ban text-red-500"></i>
                                     </div>
                                     <div class="flex space-x-1">
@@ -158,7 +186,44 @@
 
                         </div>
                     @endforeach
+                    @if($transaction->status != 'canceled' && $transaction->status != 'occupied')
+                        <div onclick="document.getElementById('reservation-cancel-confirm-{{$transaction->id}}').classList.remove('hidden')"
+                            class="flex justify-end">
+                            <button class="px-4 py-2 bg-red-500 text-red-100 hover:opacity-50 rounded">Cancel Reservation</button>
+                        </div>
+                    @endif
                 </div>
+
+                <!-- Cancel reservation confirmation modal  -->
+
+                <div id="reservation-cancel-confirm-{{$transaction->id}}"
+                    class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 hidden">
+                    <div class="bg-white rounded shadow-md">
+                        <div class="bg-red-500 py-1 rounded-t">
+
+                        </div>
+                        <div class="flex p-2 border-b-2">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-exclamation-circle fa-2xl text-red-500"></i>
+                                <div class="flex flex-col">
+                                    <h1 class="text-xl font-medium">Cancelation</h1>
+                                    <span>Are you sure to cancel your reservation?</span>
+                                    <small>Note: This action cannot be undone.</small>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="flex justify-end p-2 space-x-1 bg-gray-100 rounded-b">
+                            <button
+                                onclick="document.getElementById('reservation-cancel-confirm-{{$transaction->id}}').classList.add('hidden')"
+                                class="px-4 py-2 border border-red-300 text-red-500 hover:opacity-50 rounded">No</button>
+
+                            <a href="{{ route('rentee.reservation-cancel', ['tracking_code' => $transaction->tracking_code]) }}"
+                                class="px-4 py-2 bg-red-500 text-red-100 hover:opacity-50 rounded">Yes</a>
+                        </div>
+                    </div>
+                </div>
+
             @endforeach
 
             @if(count($transactions) == 0)

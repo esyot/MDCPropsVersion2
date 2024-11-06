@@ -97,7 +97,10 @@ class CashierController extends Controller
 
         $reservationIds = $itemsTransactions->pluck('transaction_id');
 
-        $reservations = Transaction::whereIn('id', $reservationIds)->get();
+        $reservations = Transaction::whereIn('id', $reservationIds)
+            ->whereNot('status', 'canceled')
+            ->where('status', 'in progress')
+            ->get();
 
         $items = ItemsTransaction::whereIn('transaction_id', $reservations->pluck('id'))->get();
 
