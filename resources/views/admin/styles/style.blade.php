@@ -118,11 +118,19 @@
         #user-dropdown-content {
             background-color: #1d1d1d;
         }
+
+        #analytics-header {
+            background-color: #1d1d1d;
+        }
     </style>
 
 @else
 
     <style>
+        #analytics-header {
+            background-color: #BBDEFB;
+        }
+
         #user-dropdown-content {
             background-color: #fff;
         }

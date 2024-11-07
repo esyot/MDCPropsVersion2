@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\CashierController;
+use App\Http\Controllers\ClaimItemController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\RenteeTrackingController;
 use App\Http\Controllers\RenteeTransactionController;
@@ -101,7 +102,9 @@ Route::get('/notifications/read-all', [NotificationController::class, 'readAll']
 Route::get('/notifications/delete-all', [NotificationController::class, 'deleteAll'])->name('notifications.delete-all');
 
 
-Route::get('/admin/search-items-for-return', [ReturnItemController::class, 'search'])->name('admin.search-items-for-return');
+Route::get('/admin/search-reservation-for-return', [ReturnItemController::class, 'searchReservationForReturn'])->name('admin.search-reservation-for-return');
+
+Route::get('/admin/search-reservation-for-claim', [ClaimItemController::class, 'searchReservationForClaim'])->name('admin.search-reservation-for-claim');
 
 // Public Routes
 Route::get('/admin/login', [LoginController::class, 'index'])->name('loginPage');
@@ -117,9 +120,21 @@ Route::get('/admin/users-filter', [UserController::class, 'filter'])->name('user
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
 
+    Route::get('/admin/reseved-items-claimed/{transaction_id}', [ClaimItemController::class, 'reservedItemsClaimed'])->name('admin.reserved-items-claimed');
+
+    Route::get('/admin/reseved-items-returned/{transaction_id}', [ReturnItemController::class, 'reservedItemsReturned'])->name('admin.reserved-items-returned');
+
+    Route::get('/admin/reserved-items-to-claim/{transaction_id}', [ClaimItemController::class, 'reservedItemsToClaim'])->name('admin.reserved-items-to-claim');
+
+    Route::get('/admin/reserved-items-to-return/{transaction_id}', [ReturnItemController::class, 'reservedItemsToReturn'])->name('admin.reserved-items-to-return');
+
+    Route::get('/admin/claim-items', [ClaimItemController::class, 'index'])->name('admin.claim-items');
+
     Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('admin.analytics-index');
 
-    Route::get('/admin/return-item', [ReturnItemController::class, 'index'])->name('admin.return-item');
+    Route::get('/admin/analytics-charts-custom-year', [AnalyticsController::class, 'index'])->name('admin.analytics-charts-custom-year');
+
+    Route::get('/admin/return-items', [ReturnItemController::class, 'index'])->name('admin.return-items');
 
     Route::get('/admin', [DashboardController::class, 'index'])->name('admin.home');
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');

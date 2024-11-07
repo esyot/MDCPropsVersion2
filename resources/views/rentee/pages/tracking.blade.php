@@ -66,7 +66,7 @@
 
                     <div class="flex space-x-2">
                         <p>Status: </p>
-                        @if ($transaction->approved_at != null && $transaction->status == 'pending')
+                        @if ($transaction->approved_at != null && $transaction->status == 'approved')
                             <div class="flex items-center space-x-2">
                                 <span class="text-green-500">Approved</span>
                                 <i class="fas fa-check-circle text-green-500"></i>
@@ -84,10 +84,30 @@
                                 <i class="fa-solid fa-ban text-red-500"></i>
 
                             </div>
+                        @elseif ($transaction->status == 'declined')
+                            <div class="flex items-center space-x-2">
+                                <span class="text-red-500">Declined</span>
+                                <i class="fa-solid fa-ban text-red-500"></i>
+
+                            </div>
                         @elseif ($transaction->status == 'in progress')
                             <div class="flex items-center space-x-2">
                                 <span class="text-blue-500">In Progress</span>
                                 <i class="fa-solid fa-business-time text-blue-500"></i>
+
+                            </div>
+
+                        @elseif ($transaction->status == 'occupied')
+                            <div class="flex items-center space-x-2">
+                                <span class="text-green-500">Occupied</span>
+                                <i class="fa-solid fa-check-circle text-green-500"></i>
+
+                            </div>
+
+                            @elseif ($transaction->status == 'completed')
+                            <div class="flex items-center space-x-2">
+                                <span class="text-green-500">Completed</span>
+                                <i class="fa-solid fa-check-circle text-green-500"></i>
 
                             </div>
 
@@ -110,83 +130,130 @@
                             $formattedItemRentDate = \Carbon\Carbon::parse($item->rent_date)->format('F j, Y');
                             $formattedItemRentReturnDate = \Carbon\Carbon::parse($item->rent_return)->format('F j, Y');
 
-
-
                         @endphp
                         @php
                             $formattedRentTime = \Carbon\Carbon::parse($transaction->rent_time)->format('h:i A');
                             $formattedRentReturnTime = \Carbon\Carbon::parse($transaction->rent_return_time)->format('h:i A');
                         @endphp
                         <div class="flex flex-col border border-gray-300 p-2">
-                            <p>Request <strong>{{ $item->item->name }}</strong>
+                            <p>Request {{$item->qty}} pc/s of <strong>{{ $item->item->name }}</strong>
                                 for this {{$formattedItemRentDate}} {{$formattedRentTime}} to {{$formattedItemRentReturnDate}}
                                 {{$formattedRentReturnTime}}.
                             </p>
 
+                            <div class="flex space-x-2">
 
 
-                            @if ($item->approvedByAdmin_at != null && $item->approvedByCashier_at != null && $item->canceledByRentee_at == null)
-                                <span>
 
-                                    <span class="text-green-500">Approved</span>
-                                    <i class="fas fa-check-circle text-green-500"></i>
-                                </span>
-                            @elseif ($item->approvedByAdmin_at != null && $item->approvedByCashier_at == null && $item->canceledByRentee_at == null)
-                                <div class="flex items-center space-x-1 items-center">
-                                    <h1>Status:</h1>
+                                @if ($item->approvedByAdmin_at != null && $item->approvedByCashier_at != null && $item->canceledByRentee_at == null)
+                                    <span>
+
+                                        <span class="text-green-500">Approved</span>
+                                        <i class="fas fa-check-circle text-green-500"></i>
+                                    </span>
+                                @elseif ($item->approvedByAdmin_at != null && $item->approvedByCashier_at == null && $item->canceledByRentee_at == null)
+                                    <div class="flex items-center space-x-1 items-center">
+                                        <h1>Status:</h1>
+                                        <div class="flex items-center space-x-1">
+                                            <span class="text-blue-500">Waiting for payment</span>
+                                            <i class="fa-solid fa-credit-card text-blue-500"></i>
+                                        </div>
+
+
+
+                                    </div>
+                                @elseif ($item->canceledByRentee_at != null)
+                                    <div class="flex items-center space-x-1 items-center">
+                                        <h1>Status:</h1>
+                                        <div class="flex items-center space-x-1">
+                                            <span class="text-red-500">Canceled</span>
+                                            <i class="fa-solid fa-ban text-red-500"></i>
+                                        </div>
+
+
+
+                                    </div>
+                                @elseif ($item->approvedByAdmin_at == null && $item->declinedByAdmin_at == null && $item->canceledByRentee_at == null)
+                                    <div class="flex items-center space-x-1 items-center">
+                                        <h1>Status:</h1>
+                                        <div class="flex items-center space-x-1">
+                                            <span class="text-orange-500">Pending Admin Approval</span>
+                                            <i class="fas fa-hourglass-start text-orange-500"></i>
+                                        </div>
+
+
+
+                                    </div>
+                                @elseif ($item->declinedByAdmin_at != null && $item->canceledByRentee_at == null)
                                     <div class="flex items-center space-x-1">
-                                        <span class="text-blue-500">Waiting for payment</span>
-                                        <i class="fa-solid fa-credit-card text-blue-500"></i>
+                                        <h1>Status:</h1>
+                                        <div class="flex items-center space-x-1">
+                                            <span class="text-red-500">Declined Request</span>
+                                            <i class="fa-solid fa-ban text-red-500"></i>
+                                        </div>
+                                        <div class="flex space-x-1">
+                                            <h1>Message:</h1>
+                                            <span>{{$item->message}}</span>
+                                        </div>
+
+
                                     </div>
 
 
 
-                                </div>
-                            @elseif ($item->canceledByRentee_at != null)
-                                <div class="flex items-center space-x-1 items-center">
-                                    <h1>Status:</h1>
-                                    <div class="flex items-center space-x-1">
-                                        <span class="text-red-500">Canceled</span>
-                                        <i class="fa-solid fa-ban text-red-500"></i>
+                                @endif
+
+                                @if($item->claimed_at == null && $item->approvedByCashier_at != null)
+
+                                    <div class="flex items-center space-x-1 items-center">
+                                        <div class="flex items-center space-x-1">
+                                            <span class="text-orange-500">Waiting to claim</span>
+                                            <i class="fas fa-hourglass-start text-orange-500"></i>
+                                        </div>
                                     </div>
+                                @elseif($item->claimed_at != null && $item->approvedByCashier_at != null)
 
-
-
-                                </div>
-                            @elseif ($item->approvedByAdmin_at == null && $item->declinedByAdmin_at == null && $item->canceledByRentee_at == null)
-                                <div class="flex items-center space-x-1 items-center">
-                                    <h1>Status:</h1>
-                                    <div class="flex items-center space-x-1">
-                                        <span class="text-orange-500">Pending Admin Approval</span>
-                                        <i class="fas fa-hourglass-start text-orange-500"></i>
+                                    <div class="flex items-center space-x-1 items-center">
+                                        <div class="flex items-center space-x-1">
+                                            <span class="text-green-500">Claimed</span>
+                                            <i class="fas fa-check-circle text-green-500"></i>
+                                        </div>
                                     </div>
+                                @endif
+
+                                @if($item->returned_at != null)
+
+<div class="flex items-center space-x-1 items-center">
+    <div class="flex items-center space-x-1">
+        <span class="text-green-500">Returned   </span>
+        <i class="fas fa-check-circle text-green-500"></i>
+    </div>
+</div>
+@endif
+
+                                @php
+    $dateToday = now()->format('m:d:Y');
+
+    if ($item->rent_return) {
+    $rentReturnDate = \Carbon\Carbon::parse($item->rent_return)->format('m:d:Y');
+} else {
+    $rentReturnDate = null;
+}
+@endphp
 
 
-
-                                </div>
-                            @elseif ($item->declinedByAdmin_at != null && $item->canceledByRentee_at == null)
-                                <div class="flex items-center space-x-1">
-                                    <h1>Status:</h1>
-                                    <div class="flex items-center space-x-1">
-                                        <span class="text-red-500">Declined Request</span>
-                                        <i class="fa-solid fa-ban text-red-500"></i>
-                                    </div>
-                                    <div class="flex space-x-1">
-                                        <h1>Message:</h1>
-                                        <span>{{$item->message}}</span>
-                                    </div>
+@if($rentReturnDate === $dateToday && $item->approvedByCashier_at != null && $item->claimed_at != null)
+    <div class="flex items-center space-x-1">
+        <span class="text-orange-500">Waiting for return</span>
+        <i class="fas fa-hourglass-start text-orange-500"></i>
+    </div>
+@endif
 
 
-                                </div>
-
-
-                            @endif
-
-
-
+                            </div>
                         </div>
                     @endforeach
-                    @if($transaction->status != 'canceled' && $transaction->status != 'occupied')
+                    @if($transaction->status != 'completed' && $transaction->status != 'approved' && $transaction->status != 'canceled' && $transaction->status != 'occupied' && $transaction->status != 'declined')
                         <div onclick="document.getElementById('reservation-cancel-confirm-{{$transaction->id}}').classList.remove('hidden')"
                             class="flex justify-end">
                             <button class="px-4 py-2 bg-red-500 text-red-100 hover:opacity-50 rounded">Cancel Reservation</button>

@@ -12,8 +12,8 @@
                     <span class="font-medium text-red-500">
                 @elseif ($transaction->status === 'in progress')
                     <span class="font-medium text-yellow-500">
-                @elseif ($transaction->status === 'occupied')
-                    <span class="font-medium text-green-500">
+                @else
+                    <span class="font-medium text-gray-500">
                 @endif
                                 {{ ucfirst($transaction->status) }}
                             </span>
@@ -28,14 +28,14 @@
         </div>
         <div class="flex justify-end bg-gray-50 p-4 border-t border-gray-200">
             <button
-                onclick="document.getElementById('reserved-items-to-return-modal-{{$transaction->id}}').classList.remove('hidden')"
-                hx-get="{{ route('admin.reserved-items-to-return', ['transaction_id' => $transaction->id]) }}"
-                hx-swap="innerHTML" hx-trigger="click" hx-target="#reserved-items-to-return-modal-{{$transaction->id}}"
+                onclick="document.getElementById('reserved-items-to-claim-modal-{{$transaction->id}}').classList.remove('hidden')"
+                hx-get="{{ route('admin.reserved-items-to-claim', ['transaction_id' => $transaction->id]) }}"
+                hx-swap="innerHTML" hx-trigger="click" hx-target="#reserved-items-to-claim-modal-{{$transaction->id}}"
                 class="text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer">View
                 Items</button>
         </div>
     </div>
-    <div id="reserved-items-to-return-modal-{{$transaction->id}}"
+    <div id="reserved-items-to-claim-modal-{{$transaction->id}}"
         class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
     </div>
 @endforeach

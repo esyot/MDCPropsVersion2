@@ -8,30 +8,32 @@
     <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
-    <title>Dashboard</title>
-
+    <title>Checkout Dashboard</title>
 </head>
-<div id="error-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
-    <!-- Modal Container -->
-    <div class="bg-white rounded-lg shadow-lg max-w-sm w-full p-6">
-        <h2 class="text-xl font-semibold text-red-600 mb-4">Error</h2>
-        <p class="text-gray-700 mb-4">Please complete the inputs first before proceeding to checkout.</p>
-        <div class="flex justify-end">
-            <button class="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600"
-                onclick="document.getElementById('error-modal').classList.add('hidden')">Close</button>
+
+<body class="bg-gray-100">
+
+    <!-- Error Modal -->
+    <div id="error-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg max-w-sm w-full p-6">
+            <h2 class="text-xl font-semibold text-red-600 mb-4">Error</h2>
+            <p class="text-gray-700 mb-4">Please complete the inputs first before proceeding to checkout.</p>
+            <div class="flex justify-end">
+                <button class="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600"
+                    onclick="document.getElementById('error-modal').classList.add('hidden')">Close</button>
+            </div>
         </div>
     </div>
-</div>
 
-
-<body class="bg-gray-200">
-    <header class="flex items-center p-4 space-x-2 bg-blue-500 shadow-md">
+    <!-- Header Section -->
+    <header class="flex py-4 items-center space-x-1 px-2 bg-blue-500">
         <a href="{{ route('backToHome', ['rentee' => $rentee]) }}" class="hover:opacity-50">
             <i class="fas fa-arrow-circle-left fa-xl text-white"></i>
         </a>
         <h1 class="text-xl text-white font-bold">Checkout</h1>
     </header>
 
+    <!-- Error Messages -->
     @if ($errors->any())
         <div class="bg-red-500 text-white p-4">
             <ul>
@@ -42,170 +44,147 @@
         </div>
     @endif
 
-    <!-- <input type="text" value="{{ $rentee }}" name="rentee"> -->
+    <!-- Checkout Form -->
     <form action="{{ route('renteeCreateTransaction', ['rentee' => $rentee]) }}" method="POST">
         @csrf
 
+        <!-- Rentee Details Modal -->
         <div id="rentee-details"
             class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
-            <div class="bg-white p-6 rounded-lg shadow-lg">
-                <div>
-                    <h1 class="text-xl font-bold mb-4 text-center col-span-2">Input Details</h1>
+            <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+                <div class="flex items-center justify-between mb-4">
+                    <h1 class="text-xl font-bold">Input Details</h1>
+                    <button class="text-2xl font-bold hover:opacity-50"
+                        onclick="document.getElementById('rentee-details').classList.add('hidden')">&times;</button>
                 </div>
-                <div class="w-96 grid grid-cols-2 gap-4">
-                    <div class="mb-4">
+
+                <!-- Rentee Details Form -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="mb-2">
                         <label for="first_name" class="block text-sm font-medium text-gray-700">First Name:</label>
                         <input type="text" name="first_name" placeholder="Enter First Name"
                             class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
                     </div>
-                    <div class="mb-4">
+                    <div class="mb-2">
                         <label for="last_name" class="block text-sm font-medium text-gray-700">Last Name:</label>
                         <input type="text" name="last_name" placeholder="Enter Last Name"
                             class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
                     </div>
-                    <div class="mb-4">
+                    <div class="mb-2">
                         <label for="middle_name" class="block text-sm font-medium text-gray-700">Middle Name:</label>
                         <input type="text" name="middle_name" placeholder="Enter Middle Name"
                             class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
                     </div>
-                    <div class="mb-4">
+                    <div class="mb-2">
                         <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
                         <input type="email" name="email" placeholder="Enter Email"
                             class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
                     </div>
-                </div>
-                <div>
-                    <div class="mb-4">
+
+                    <div class="mb-2">
                         <label for="contact" class="block text-sm font-medium text-gray-700">Contact #:</label>
                         <input type="text" name="contact_no" placeholder="Enter Contact #"
                             class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
                     </div>
-                    <div class="mb-4">
+                    <div class="mb-2">
                         <label for="address1" class="block text-sm font-medium text-gray-700">Address Line 1:</label>
                         <input type="text" name="address_1" placeholder="Enter Address Line 1"
                             class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
                     </div>
-                    <div class="mb-4">
+                    <div class="mb-2">
                         <label for="address2" class="block text-sm font-medium text-gray-700">Address Line 2:</label>
                         <input type="text" name="address_2" placeholder="Enter Address Line 2"
                             class="mt-1 block w-full border border-gray-300 rounded-md p-2">
                     </div>
-                    <div class="flex justify-end">
-                        <button type="submit" class="px-4 py-2 bg-blue-500 text-blue-100 rounded">Checkout</button>
-                    </div>
+
+                </div>
+                <div class="p-2 flex justify-end">
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Checkout</button>
                 </div>
             </div>
         </div>
 
-        <section id="item-details" class="mt-2 overflow-y-auto space-y-2 p-4">
+        <!-- Item Details Section -->
+        <div class="flex overflow-x-auto">
+
+
             @foreach ($items as $item)
-                <input type="hidden" name="items[{{ $item->id }}][item_id]" value="{{ $item->id }}">
+                <div class="p-2 m-2 border border-gray-300 bg-white rounded">
 
-                <div class="flex p-4 bg-white justify-between items-center">
-                    <div class="flex items-center">
-                        <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
-                            alt="{{ $item->name }}" class="w-[50px] h-[50px] object-cover mr-2">
-                        <p>{{$item->name}}</p>
-                    </div>
 
-                    <div class="flex items-center">
-                        <div>
-                            <label>Destination:</label>
-                            <select class="p-2 border border-gray-300 rounded" name="items[{{ $item->id }}][destination]">
-                                @foreach ($destinations as $destination)
+                    <input type="hidden" name="items[{{ $item->id }}][item_id]" value="{{ $item->id }}">
 
-                                    <option value="{{$destination->id}}">{{$destination->municipality}}</option>
-
-                                @endforeach
-                            </select>
+                    <div class="">
+                        <div class="flex items-center justify-between">
+                            <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
+                                alt="{{ $item->name }}"
+                                class="w-16 h-16 object-cover rounded-md border border-gray-300 shadow-md">
+                            <p class="text-gray-800 text-lg font-medium">{{ $item->name }}</p>
                         </div>
-                        <div>
-                            <label>Quantity:</label>
-                            <input type="number" max="{{ $item->qty }}" name="items[{{ $item->id }}][quantity]"
-                                class="p-2 border border-gray-300 rounded" placeholder="Available items: {{ $item->qty }}"
-                                required>
-                        </div>
-                        <script>
-                            document.querySelector('input[name="items[{{ $item->id }}][quantity]"]').addEventListener('input', function () {
-                                const max = parseInt(this.getAttribute('max'));
-                                if (this.value > max) {
-                                    this.value = max;
-                                }
-                            });
-                        </script>
 
-                        <div>
-                            <label>Date Rent:</label>
-                            <input type="date" value="{{ today()->toDateString() }}"
-                                name="items[{{ $item->id }}][rent_date]" class="p-2 border border-gray-300 rounded" required
-                                id="rent_date_{{ $item->id }}">
-                        </div>
-                        <div>
-                            <label>Time Item Pickup:</label>
-                            <input type="time" name="items[{{ $item->id }}][rent_time]"
-                                class="p-2 border border-gray-300 rounded" required>
-                        </div>
-                        <div>
-                            <label>Date Return:</label>
-                            <input type="date" value="{{ today()->toDateString() }}"
-                                name="items[{{ $item->id }}][rent_return]" class="p-2 border border-gray-300 rounded"
-                                required id="return_date_{{ $item->id }}">
-                        </div>
-                        <div>
-                            <label>Time Item To Return:</label>
-                            <input type="time" name="items[{{ $item->id }}][rent_return_time]"
-                                class="p-2 border border-gray-300 rounded" required>
-                        </div>
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function () {
-                                // Select the rent and return date inputs
-                                const rentDateInput = document.getElementById('rent_date_{{ $item->id }}');
-                                const returnDateInput = document.getElementById('return_date_{{ $item->id }}');
-
-                                // Get today's date in YYYY-MM-DD format
-                                const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-
-                                // Set the min attribute for both Date Rent and Date Return
-                                rentDateInput.setAttribute('min', today); // Disable past dates for Date Rent
-                                returnDateInput.setAttribute('min', today); // Disable past dates for Date Return
-
-                                // Function to validate and update Date Return (ensure it's after or equal to Date Rent)
-                                function validateDateReturn() {
-                                    const rentDate = new Date(rentDateInput.value);
-                                    const returnDate = new Date(returnDateInput.value);
-
-                                    // If return date is before rent date, update the return date to match rent date
-                                    if (returnDate < rentDate) {
-                                        returnDateInput.value = rentDateInput.value; // Set return date to rent date
-                                        returnDateInput.setCustomValidity("The return date must be the same or after the rent date.");
-                                    } else {
-                                        returnDateInput.setCustomValidity(""); // Clear custom validity if valid
+                        <div class="">
+                            <div class="flex flex-col">
+                                <label for="quantity" class="text-sm font-medium text-gray-700">Quantity:</label>
+                                <input type="number" max="{{ $item->qty }}" name="items[{{ $item->id }}][quantity]"
+                                    class="p-2 border border-gray-300 rounded" placeholder="Available: {{ $item->qty }}"
+                                    required>
+                            </div>
+                            <script>
+                                document.querySelector('input[name="items[{{ $item->id }}][quantity]"]').addEventListener('input', function () {
+                                    const max = parseInt(this.getAttribute('max'));
+                                    if (this.value > max) {
+                                        this.value = max;
                                     }
-                                }
-
-                                // Add event listeners to validate Date Rent and Date Return on change
-                                rentDateInput.addEventListener('change', function () {
-                                    // Update the min value for Date Return when Date Rent is changed
-                                    returnDateInput.setAttribute('min', rentDateInput.value); // Date Return cannot be earlier than Date Rent
-
-                                    // Validate the Date Return after Date Rent change
-                                    validateDateReturn();
                                 });
-
-                                returnDateInput.addEventListener('change', validateDateReturn);
-                            });
-                        </script>
+                            </script>
+                        </div>
                     </div>
                 </div>
             @endforeach
+        </div>
+        <section id="item-details" class="p-2 bg-white m-2 shadow-md rounded">
 
-            <div class="flex fixed bottom-0 right-0 left-0 justify-center">
+            <!-- Destination & Date Inputs -->
+            <div class="space-y-4">
                 <div>
-                    <button type="button" onclick="validateInputs()"
-                        class="px-4 py-2 bg-blue-500 text-blue-100 m-2 rounded">Next</button>
+                    <label for="destination" class="block text-sm font-medium text-gray-700">Destination:</label>
+                    <select class="p-2 w-full border border-gray-300 rounded" name="destination" required>
+                        @foreach ($destinations as $destination)
+                            <option value="{{ $destination->id }}">{{ $destination->municipality }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label for="rent_date" class="block text-sm font-medium text-gray-700">Date Rent:</label>
+                    <input type="date" value="{{ today()->toDateString() }}" name="rent_date"
+                        class="p-2 w-full border border-gray-300 rounded" required>
+                </div>
+
+                <div>
+                    <label for="rent_time" class="block text-sm font-medium text-gray-700">Time Item Pickup:</label>
+                    <input type="time" name="rent_time" class="p-2 w-full border border-gray-300 rounded" required>
+                </div>
+
+                <div>
+                    <label for="return_date" class="block text-sm font-medium text-gray-700">Date Return:</label>
+                    <input type="date" value="{{ today()->toDateString() }}" name="rent_return"
+                        class="p-2 w-full border border-gray-300 rounded" required>
+                </div>
+
+                <div>
+                    <label for="return_time" class="block text-sm font-medium text-gray-700">Time Item Return:</label>
+                    <input type="time" name="rent_return_time" class="p-2 w-full border border-gray-300 rounded"
+                        required>
                 </div>
             </div>
         </section>
+
+        <div class="flex justify-center mt-6">
+            <button type="button" onclick="validateInputs()"
+                class="px-6 py-3 bg-blue-500 text-blue-100 shadow-md rounded hover:opacity-50">Next</button>
+        </div>
     </form>
 
     <script>

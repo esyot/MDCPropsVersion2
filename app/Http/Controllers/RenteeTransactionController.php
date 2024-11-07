@@ -41,11 +41,11 @@ class RenteeTransactionController extends Controller
             $validatedData = $request->validate([
                 'items.*.item_id' => 'required|exists:items,id',
                 'items.*.quantity' => 'required|integer|min:1',
-                'items.*.destination' => 'required',
-                'items.*.rent_date' => 'required|date',
-                'items.*.rent_time' => 'required|date_format:H:i',
-                'items.*.rent_return' => 'required|date',
-                'items.*.rent_return_time' => 'required|date_format:H:i',
+                'destination' => 'required',
+                'rent_date' => 'required|date',
+                'rent_time' => 'required|date_format:H:i',
+                'rent_return' => 'required|date',
+                'rent_return_time' => 'required|date_format:H:i',
             ]);
 
             // Create transaction
@@ -70,13 +70,13 @@ class RenteeTransactionController extends Controller
                 // Create ItemsTransaction entry for each item
                 ItemsTransaction::create([
                     'transaction_id' => $transaction->id,
-                    'destination_id' => $data['destination'],
+                    'destination_id' => $validatedData['destination'],
                     'category_id' => $item->category_id,
                     'item_id' => $data['item_id'],
-                    'rent_date' => $data['rent_date'],
-                    'rent_time' => $data['rent_time'],
-                    'rent_return' => $data['rent_return'],
-                    'rent_return_time' => $data['rent_return_time'],
+                    'rent_date' => $validatedData['rent_date'],
+                    'rent_time' => $validatedData['rent_time'],
+                    'rent_return' => $validatedData['rent_return'],
+                    'rent_return_time' => $validatedData['rent_return_time'],
                     'qty' => $data['quantity']
                 ]);
 

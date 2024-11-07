@@ -72,7 +72,18 @@
                     </section>
                 </a>
             @endcan
-            <a href="{{ route('admin.return-item') }}"
+            <a href="{{ route('admin.claim-items') }}"
+                class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
+                title="Claim Items">
+                <section
+                    class="flex justify-center items-center rounded-lg p-4  {{ $page_title == 'Claim Items' ? 'bg-gray-100 text-blue-500' : '' }}">
+                    <i
+                        class="fas fa-hands fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                    <span class="pl-2 pr-[130px] text-sm hidden">Claim</span>
+                </section>
+            </a>
+
+            <a href="{{ route('admin.return-items') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
                 title="Return Items">
                 <section
@@ -95,7 +106,7 @@
                 </section>
             </a>
             @endhasrole
-
+            @hasrole('admin|superadmin')
             <a href="{{ route('admin.analytics-index') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
                 title="Analytics">
@@ -106,7 +117,7 @@
                     <span class="pl-2 pr-[130px] text-sm hidden">Analytics</span>
                 </section>
             </a>
-
+            @endhasrole
 
 
         </div>

@@ -17,4 +17,10 @@ class Transaction extends Model
     }
 
 
+    // Relationship with ItemsTransaction
+    public function itemsTransactions()
+    {
+        return $this->hasMany(ItemsTransaction::class);
+    }
+
 }

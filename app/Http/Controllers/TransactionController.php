@@ -121,23 +121,56 @@ class TransactionController extends Controller
         return view('admin.pages.transactions', compact('users', 'categoriesIsNull', 'currentStatus', 'contacts', 'unreadMessages', 'setting', 'page_title', 'currentCategory', 'categories', 'transactions', 'unreadNotifications', 'notifications'));
 
     }
-
     public function decline(Request $request, $id)
     {
+        // Find the reservation
+        $reservation = ItemsTransaction::find($id);
 
-        $transaction = ItemsTransaction::findOrFail($id);
+        if (!$reservation) {
+            return redirect()->back()->with('error', 'Reservation not found.');
+        }
 
-        $transaction->update([
+        // Find the transaction associated with the reservation
+        $transaction = Transaction::find($reservation->transaction->id);
+
+        if (!$transaction) {
+            return redirect()->back()->with('error', 'Transaction not found.');
+        }
+
+        // Get all reservations for the transaction
+        $reservations = ItemsTransaction::where('transaction_id', $transaction->id)->get();
+
+        // Update the current reservation's decline status
+        $reservation->update([
             'message' => $request->message,
             'declinedByAdmin_at' => now(),
         ]);
 
-        if ($transaction) {
+        Transaction::where('id', $transaction->id)
+            ->update([
+                'status' => 'in progress'
+            ]);
 
-            return redirect()->back()->with('success', 'Transaction has been successfully declined!');
+
+        $declinedReservations = ItemsTransaction::where('transaction_id', $transaction->id)->whereNot('declinedByAdmin_at', null)->count();
+
+        $allDeclined = false;
+
+
+        if ($declinedReservations == count($reservations)) {
+            $allDeclined = true;
         }
 
 
+        // If all reservations are declined, update the transaction status
+        if ($allDeclined == true) {
+            $transaction->update([
+                'status' => 'declined',
+            ]);
+        }
+
+        // Return a success message
+        return redirect()->back()->with('success', 'Transaction has been successfully declined!');
     }
 
     public function approve($id)

@@ -109,7 +109,7 @@ return new class extends Migration {
             $table->foreignId('rentee_id')->constrained()->onDelete('cascade');
             $table->datetime('approved_at')->nullable(true);
             $table->datetime('canceled_at')->nullable(true);
-            $table->enum('status', ['pending', 'canceled', 'approved', 'in progress', 'declined ', 'completed']);
+            $table->enum('status', ['pending', 'canceled', 'approved', 'in progress', 'declined ', 'occupied', 'completed']);
             $table->timestamps();
         });
 

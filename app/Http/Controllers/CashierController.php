@@ -40,6 +40,7 @@ class CashierController extends Controller
 
         $reservationsPending = ItemsTransaction::where('approvedByCashier_at', null)
             ->whereNot('approvedByAdmin_at', null)
+            ->where('canceledByRentee_at', null)
             ->get()
             ->count();
 
@@ -113,7 +114,9 @@ class CashierController extends Controller
 
         $reservation = Transaction::where('tracking_code', $tracking_code)->first();
 
-        $items = ItemsTransaction::where('transaction_id', $reservation->id)->get();
+        $items = ItemsTransaction::where('transaction_id', $reservation->id)
+            ->where('declinedByAdmin_at', null)
+            ->get();
 
         return view('cashier.modals.reservation-details', compact('reservation', 'items'));
 
@@ -142,7 +145,10 @@ class CashierController extends Controller
         $request->validate([
             'itemsInArray' => 'required|array',
             'itemsInArray.*' => 'integer|exists:items,id',
+            'reservation_id' => 'integer|required'
+
         ]);
+
 
 
         $itemIds = $request->input('itemsInArray');
@@ -153,10 +159,12 @@ class CashierController extends Controller
             'cashier_id' => Auth::user()->id,
         ]);
 
-        Transaction::find($itemIds[0])->update([
+
+        Transaction::where('id', $request->reservation_id)->update([
             'approved_at' => now(),
-            'status' => 'in progress'
+            'status' => 'approved'
         ]);
+
 
         Notification::create([
             'icon' => Auth::user()->img,

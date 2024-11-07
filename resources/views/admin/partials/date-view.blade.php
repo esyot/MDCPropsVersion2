@@ -55,10 +55,14 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 @if($transaction->declinedByAdmin_at != null)
                                     <span class="text-red-500">Declined</span>
+                                @elseif($transaction->canceledByRentee_at != null)
+                                    <span class="text-red-500">Canceled</span>
                                 @elseif($transaction->approvedByAdmin_at && $transaction->approvedByCashier_at == null && $transaction->declinedByAdmin_at == null)
                                     <span class="text-yellow-500">Pending Payment Approval</span>
-                                @elseif($transaction->approvedByAdmin_at && $transaction->approvedByCashier_at)
+                                @elseif($transaction->approvedByAdmin_at && $transaction->approvedByCashier_at && $transaction->returned_at == null)
                                     <span class="text-green-500">Approved</span>
+                                @elseif($transaction->returned_at != null)
+                                    <span class="text-green-500">Completed</span>
                                 @endif
                             </td>
                         </tr>

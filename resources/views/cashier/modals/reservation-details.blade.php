@@ -4,6 +4,7 @@
         <h1 class="text-xl font-medium">Reservation Details</h1>
         <form id="reservationForm" action="{{ route('cashier.reservation-payment') }}" method="POST">
             @csrf
+            <input type="hidden" name="reservation_id" value="{{$reservation->id}}">
             <div class="mt-2 flex flex-col border-b-2">
                 <label for="" class="font-medium">Rentee:</label>
                 <span>
