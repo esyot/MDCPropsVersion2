@@ -25,11 +25,59 @@
 
     </form>
 
-    <div>
-        <button class="px-4 hover:opacity-50" title="Options">
+
+
+    <!-- Hidden Form -->
+
+    <form id="exportPdfForm" action="{{ route('admin.analytics-export-to-pdf') }}" method="POST">
+        @csrf
+        <input type="hidden" name="action" id="action">
+        <input type="hidden" name="barChartImageInput" id="barChartImageInput" />
+        <input type="hidden" name="pieChartImageInput" id="pieChartImageInput" />
+        <input type="hidden" name="currentYear" value="{{ $currentYear }}" />
+    </form>
+    <div class="relative inline-block">
+        <button class="px-4 hover:opacity-50" title="Options" id="optionsBtn">
             <i class="fas fa-ellipsis-vertical"></i>
         </button>
+        <div id="pdfOptionsMenu" class="hidden absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg z-10">
+            <ul class="text-sm">
+                <li>
+                    <button type="button" onclick="triggerSubmitForm('view')"
+                        class="flex justify-center px-4 py-2 text-gray-800 hover:bg-gray-100 rounded-t w-full">
+                        View as .pdf
+                    </button>
+                </li>
+                <li>
+                    <button type="button" onclick="triggerSubmitForm('download')"
+                        class="flex justify-center px-4 py-2 text-gray-800 hover:bg-gray-100 rounded-b w-full">
+                        Download as .pdf
+                    </button>
+                </li>
+            </ul>
+        </div>
     </div>
+
+    <script>
+
+        const optionsBtn = document.getElementById('optionsBtn');
+        const pdfOptionsMenu = document.getElementById('pdfOptionsMenu');
+
+        optionsBtn.addEventListener('click', function (event) {
+            pdfOptionsMenu.classList.toggle('hidden');
+
+            event.stopPropagation();
+        });
+
+        document.addEventListener('click', function (event) {
+
+            if (!optionsBtn.contains(event.target) && !pdfOptionsMenu.contains(event.target)) {
+                pdfOptionsMenu.classList.add('hidden');
+            }
+        });
+
+    </script>
+
 </header>
 
 <section>
@@ -44,7 +92,6 @@
 
                 </div>
             </div>
-
 
             <canvas id="transactionChart" class="w-full h-full"></canvas>
         </div>
@@ -185,13 +232,57 @@
             data: data,
             options: options
         });
+
+
+        function triggerSubmitForm(action) {
+            const transactionCanvas = document.getElementById('transactionChart');
+            const pieChartCanvas = document.getElementById('myPieChart');
+
+            // Ensure both canvases are present
+            if (transactionCanvas && pieChartCanvas) {
+                // Check if both canvases are rendered properly (i.e., have non-zero dimensions)
+                if (transactionCanvas.width > 0 && transactionCanvas.height > 0 &&
+                    pieChartCanvas.width > 0 && pieChartCanvas.height > 0) {
+
+                    // Capture the base64 image representation of the canvas
+                    const barChartImage = transactionCanvas.toDataURL('image/png');
+                    const pieChartImage = pieChartCanvas.toDataURL('image/png');
+
+                    // Check that the base64 image data is valid
+                    if (barChartImage && pieChartImage &&
+                        barChartImage.startsWith('data:image/png;base64,') &&
+                        pieChartImage.startsWith('data:image/png;base64,')) {
+
+                        // Set the base64 images into the hidden form inputs
+                        document.getElementById('barChartImageInput').value = barChartImage;
+                        document.getElementById('pieChartImageInput').value = pieChartImage;
+
+                        document.getElementById('action').value = action;
+
+                        document.getElementById('exportPdfForm').submit();
+                    } else {
+                        console.error("Canvas conversion to image failed or invalid base64 string.");
+                    }
+                } else {
+                    console.error("Canvas elements have invalid dimensions or are empty.");
+                }
+            } else {
+                console.error("Canvas elements not found.");
+            }
+        }
+
     </script>
 
+    <div class="">
+        <h1 class="text-xl font-medium px-4">Overall Counts</h1>
 
+    </div>
 
     <div class="flex p-2">
+
         <div
             class="flex m-2 flex-col bg-white border w-[200px] rounded-xl transition-transform duration-300 ease-in-out hover:scale-90">
+
             <div class="p-2">
                 <div class="flex items-center justify-between">
                     <span class="text-2xl font-bold">{{ $usersCount }}</span>

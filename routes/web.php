@@ -2,6 +2,7 @@
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\ClaimItemController;
+use App\Http\Controllers\ExportPDFController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\RenteeTrackingController;
 use App\Http\Controllers\RenteeTransactionController;
@@ -31,6 +32,12 @@ use App\Http\Controllers\ContactController;
 //User Controller
 
 use App\Http\Controllers\UserHomeController;
+
+
+
+//Export PDF Routes
+Route::post('/admin/analytics-export-to-pdf', [ExportPDFController::class, 'analyticsExportPDF'])->name('admin.analytics-export-to-pdf');
+
 
 //Rentee Routes
 Route::get('/', function () {
@@ -156,7 +163,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/message-send', [MessageController::class, 'messageSend'])->name('messageSend');
     Route::get('/admin/contacts', [MessageController::class, 'contacts'])->name('contacts');
     Route::post('/admin/message-new-send', [MessageController::class, 'messageNewSend'])->name('messageNewSend');
-    Route::get('/admin/message-bubble/{receiver_name}', [MessageController::class, 'messageBubble'])->name('messageBubble');
+    Route::get('/admin/message-bubble/{receiver_id}', [MessageController::class, 'messageBubble'])->name('messageBubble');
 
     // Settings
     Route::post('/admin/dark-mode/{id}', [SettingController::class, 'darkMode'])->name('darkMode');

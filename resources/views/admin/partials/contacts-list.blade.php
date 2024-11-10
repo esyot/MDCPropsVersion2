@@ -1,12 +1,14 @@
 @foreach ($users as $user)
-       <p class="p-2 hover:bg-gray-300" onclick="handleUserClick('{{ $user->name }}');">
+       <p class="p-2 hover:bg-gray-300" onclick="handleUserClick('{{ $user->id }}', ' {{ $user->name }}');">
                  {{ $user->name }}
        </p>
 @endforeach
 
 <script>
-       function handleUserClick(userId) {
-              document.getElementById('userName').value = userId;
+       function handleUserClick(userId, userName) {
+
+              document.getElementById('userId').value = userId;
+              document.getElementById('userName').value = userName;
               document.getElementById('results').classList.add('hidden');
        }
 </script>

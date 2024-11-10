@@ -11,8 +11,9 @@
             <h1>Chats</h1>
         </div>
         <div>
-            <div class="relative my-2 mx-1 mb-4">
-                <form hx-get="{{ route('contacts') }}" hx-trigger="input" hx-swap="innerHTML" hx-target="#contact-list"
+            <div class="relative">
+                <form hx-get="{{ route('contacts') }}" hx-trigger="input, every 1s" hx-swap="innerHTML"
+                    hx-target="#messsages-contact-list"
                     class="flex justiify-around px-2 items-center bg-white rounded-full">
 
                     <div class="p-2">
@@ -26,8 +27,8 @@
             </div>
 
         </div>
-        <div id="contacts" class="mb-2 flex p-2 overflow-y-auto custom-scrollbar">
-            <ul id="contact-list" class="list-none">
+        <div id="contacts" class="p-2 overflow-y-auto custom-scrollbar">
+            <ul id="messsages-contact-list" class="list-none">
 
                 @include('admin.partials.contact-list')
 
@@ -44,7 +45,7 @@
             <div class="items-center flex ">
                 <img class="w-12 h-12 p-2 drop-shadow-md" src="{{ asset('asset/photos/user.png') }}" alt="">
                 <h1 class="text-xl text-white font-semibold">
-                    {{ $receiver_name }}
+                    {{ $sender_name }}
                 </h1>
 
             </div>
@@ -64,7 +65,8 @@
             @include('admin.partials.message-bubble')
         </div>
         @if(count($allMessages) > 0)
-            <a hx-get="{{ route('messageBubble', ['receiver_name' => $receiver_name])}}" hx-swap="innerHTML"
+            <a href="{{ route('messageBubble', ['receiver_id' => $receiver_id]) }}"
+                hx-get="{{ route('messageBubble', ['receiver_id' => $receiver_id]) }}" hx-swap="innerHTML"
                 hx-trigger="every 1s" hx-target="#messages-container"></a>
 
 
@@ -75,7 +77,7 @@
                         <div class="flex justify-between">
 
 
-                            @if($message->sender_name == $current_user_name)
+                            @if($message->sender_id == $current_user_id)
                                 <h1 class="font-semibold">Replying to yourself</h1>
                             @else
                                 <h1 class="font-semibold">Replying to {{$message->sender_name}}</h1>
@@ -116,14 +118,11 @@
                             <i class="fa-solid fa-image"></i>
                         </button>
 
-
-
-
                         <input type="hidden" name="replied_message_id" id="replied-message-id">
-                        <input type="hidden" name="replied_message_name" id="replied-message-name">
+                        <input type="hidden" name="replied_message_by_id" id="replied-sender-id">
                         <input type="hidden" name="replied_message_type" id="replied-message-type">
-                        <input type="hidden" value="{{$sender_name}}" name="sender_name" id="sender_name">
-                        <input type="hidden" value="{{$receiver_name}}" name="receiver_name" id="receiver_name">
+                        <input type="hidden" value="{{$sender_id}}" name="sender_id" id="sender_name">
+                        <input type="hidden" value="{{$receiver_id}}" name="receiver_id" id="receiver_name">
                         <input type="hidden" id="image-data" name="image-data" />
 
                         <div class="relative w-full">
@@ -154,8 +153,8 @@
 
                                     <div class="flex flex-col p-2 bg-white rounded-full">
 
-                                        <input autocomplete="off" type="text" id="content" name="content"
-                                            class="w-full px-2 focus:outline-none" placeholder="Aa">
+                                        <input autocomplete="off" type="text" id="message-content" name="content"
+                                            class="w-full px-2 focus:outline-none bg-transparent" placeholder="Aa">
 
                                     </div>
 
@@ -183,15 +182,16 @@
 
 <script>
 
-    function scrollToBottom() {
-        const messagesContainer = document.getElementById('messages-container');
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
+
 
 
     window.onload = function () {
+        function scrollToBottom() {
+            const messagesContainer = document.getElementById('messages-container');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
         scrollToBottom();
-        document.getElementById('content').focus();
+        document.getElementById('message-content').focus();
     }
 
 
@@ -202,12 +202,12 @@
         document.getElementById('img-preview-x').classList.add('hidden');
         document.getElementById('sendIcon').classList.remove('fa-paper-plane');
         document.getElementById('sendIcon').classList.add('fa-thumbs-up');
-        document.getElementById('content').focus();
+        document.getElementById('message-content').focus();
 
     }
 
     function updateIcon() {
-        const contentInput = document.getElementById('content');
+        const contentInput = document.getElementById('message-content');
         const sendIcon = document.getElementById('sendIcon');
 
 
@@ -224,7 +224,7 @@
     }
 
     // Attach the updateIcon function to the input's input event
-    document.getElementById('content').addEventListener('input', updateIcon);
+    document.getElementById('message-content').addEventListener('input', updateIcon);
 
 
     updateIcon();
@@ -238,15 +238,13 @@
         const messageView = `message-to-reply-${id}`;
 
         document.getElementById('replied-message-id').value = '';
-        document.getElementById('replied-message-name').value = '';
+        document.getElementById('replied-sender-id').value = '';
         document.getElementById('replied-message-type').value = '';
         document.getElementById(messageView).classList.add('hidden');
 
         //changes icon
 
-
-
-        document.getElementById('content').focus();
+        document.getElementById('message-content').focus();
 
         document.getElementById('sendIcon').classList.remove('fa-paper-plane');
         document.getElementById('sendIcon').classList.add('fa-thumbs-up');
@@ -305,10 +303,10 @@
     }
 
     // Handle paste event for image files
-    document.getElementById('content').addEventListener('paste', function (event) {
+    document.getElementById('message-content').addEventListener('paste', function (event) {
         event.preventDefault();
 
-        document.getElementById('content').focus();
+        document.getElementById('message-content').focus();
 
         if (event.clipboardData && event.clipboardData.items) {
             const items = event.clipboardData.items;
@@ -353,7 +351,7 @@
     // Global variable to track the currently open element
     let currentlyVisibleElementId = null;
 
-    function handleButtonClick(currentMessageId, replied_message_name, replied_message_type) {
+    function handleButtonClick(currentMessageId, replied_sender_id, replied_message_type) {
 
 
 
@@ -371,7 +369,7 @@
         const newElement = document.getElementById(newElementId);
         if (newElement) {
             newElement.classList.remove('hidden');
-            document.getElementById('content').focus()
+            document.getElementById('message-content').focus()
         }
 
         // Update the currently visible element ID
@@ -379,9 +377,9 @@
 
         // Optionally, update form fields
         document.getElementById('replied-message-id').value = currentMessageId;
-        document.getElementById('replied-message-name').value = replied_message_name;
+        document.getElementById('replied-sender-id').value = replied_sender_id;
         document.getElementById('replied-message-type').value = replied_message_type;
-        document.getElementById('content').focus();
+        document.getElementById('message-content').focus();
     }
 
 

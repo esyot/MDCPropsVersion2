@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Item;
@@ -19,19 +20,25 @@ class ItemController extends Controller
 {
     public function index()
     {
-        $current_user_name = Auth::user()->name;
+        $current_user_id = Auth::user()->id;
         $page_title = "Items";
         $categories = Category::all();
         $setting = Setting::findOrFail(1);
-        $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
+        $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
         $unreadMessages = $messages->count();
 
-        $contacts = Message::where('receiver_name', $current_user_name)
-            ->latest()
-            ->get()
-            ->groupBy('sender_name')
-            ->map(fn($group) => $group->first())
-            ->values();
+        $contacts = DB::table('messages')
+            ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
+            ->join('users', 'users.id', '=', 'messages.sender_id')
+            ->where(function ($query) {
+                $query->where('messages.receiver_id', Auth::user()->id);
+            })
+            ->whereIn('messages.id', function ($query) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from('messages')
+                    ->groupBy('sender_id', 'receiver_id');
+            })
+            ->get();
 
         // Settings and roles
         $setting = Setting::find(1);

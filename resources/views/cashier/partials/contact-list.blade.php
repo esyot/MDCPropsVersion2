@@ -1,7 +1,7 @@
 @foreach($contacts as $contact)
     <a href="{{ route('chatSelected', ['contact' => $contact->sender_name]) }}">
         <li
-            class="list-none bg-gray-100 {{ $contact->isRead == false ? 'font-bold bg-gray-300 text-black' : '' }} hover:bg-gray-300 p-3 rounded-lg mb-2 cursor-pointer duration-300">
+            class="list-none bg-gray-100 {{ $contact->isReadByReceiver == false ? 'font-bold bg-gray-300 text-black' : '' }} hover:bg-gray-300 p-3 rounded-lg mb-2 cursor-pointer duration-300">
             <div class="flex justify-between mx-2 items-center">
                 <div class="flex items-center space-x-2">
                     <div class="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden">
@@ -35,7 +35,7 @@
                     @endphp
                     <div>
                         <h1>{{ $contact->sender_name }}</h1>
-                        <h1 class="{{ $contact->isRead == false ? 'font-bold' : '' }} w-[200px] truncate">
+                        <h1 class="{{ $contact->isReadByReceiver == false ? 'font-bold' : '' }} w-[200px] truncate">
                             {{ $contact->content }}
                         </h1>
                         <small class="text-red-500">{{$timeAgo}} </small>

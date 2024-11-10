@@ -53,14 +53,16 @@ return new class extends Migration {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
             $table->text('replied_message')->nullable(true);
-            $table->text('replied_message_name')->nullable(true);
+            $table->text('replied_message_by_id')->nullable(true);
             $table->text('replied_message_type')->nullable(true);
-            $table->string('sender_name');
-            $table->string('receiver_name');
+            $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('receiver_id')->constrained('users')->onDelete('cascade');
             $table->text('content')->nullable(true)->default('like');
             $table->text('img')->nullable(true);
-            $table->boolean('isReacted')->default(false);
-            $table->boolean('isRead')->default(false);
+            $table->boolean('isReactedBySender')->default(false);
+            $table->boolean('isReactedByReceiver')->default(false);
+            $table->boolean('isReadBySender')->default(false);
+            $table->boolean('isReadByReceiver')->default(false);
             $table->string('type')->default('like');
             $table->timestamps();
         });

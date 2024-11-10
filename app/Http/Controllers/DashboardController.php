@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItemsTransaction;
+use DB;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\Category;
@@ -22,18 +23,27 @@ class DashboardController extends Controller
     public function index()
     {
         $current_user_name = Auth::user()->name;
+        $current_user_id = Auth::user()->id;
         $currentDate = now();
         $page_title = 'Dashboard';
 
-        // Messages
-        $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
-        $unreadMessages = $messages->count();
-        $contacts = Message::where('receiver_name', $current_user_name)
-            ->latest()
-            ->get()
-            ->groupBy('sender_name')
-            ->map(fn($group) => $group->first())
-            ->values();
+        $contacts = DB::table('messages')
+            ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
+            ->join('users', 'users.id', '=', 'messages.sender_id')
+            ->where(function ($query) {
+                $query->where('messages.receiver_id', Auth::user()->id);
+            })
+            ->whereIn('messages.id', function ($query) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from('messages')
+                    ->groupBy('sender_id', 'receiver_id');
+            })
+            ->get();
+
+
+        $unreadMessages = Message::where('receiver_id', Auth::user()->id)
+            ->where('isReadByReceiver', false)
+            ->count();
 
         $setting = Setting::where('user_id', Auth::user()->id)->first();
 

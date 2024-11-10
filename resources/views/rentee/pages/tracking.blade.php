@@ -242,7 +242,7 @@
 @endphp
 
 
-@if($rentReturnDate === $dateToday && $item->approvedByCashier_at != null && $item->claimed_at != null)
+@if($rentReturnDate === $dateToday && $item->approvedByCashier_at != null && $item->claimed_at != null  && $item->return_at != null)
     <div class="flex items-center space-x-1">
         <span class="text-orange-500">Waiting for return</span>
         <i class="fas fa-hourglass-start text-orange-500"></i>

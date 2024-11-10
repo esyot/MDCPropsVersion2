@@ -55,6 +55,8 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 @if($transaction->declinedByAdmin_at != null)
                                     <span class="text-red-500">Declined</span>
+                                @elseif($transaction->approvedByAdmin_at == null)
+                                    <span class="text-orange-500">Pending Admin Approval</span>
                                 @elseif($transaction->canceledByRentee_at != null)
                                     <span class="text-red-500">Canceled</span>
                                 @elseif($transaction->approvedByAdmin_at && $transaction->approvedByCashier_at == null && $transaction->declinedByAdmin_at == null)

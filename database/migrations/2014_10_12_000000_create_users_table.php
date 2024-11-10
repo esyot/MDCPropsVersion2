@@ -21,6 +21,8 @@ return new class extends Migration {
             $table->string('password');
             $table->boolean('isActive')->default(false);
             $table->boolean('isPasswordChanged')->default(false);
+            $table->datetime('isLoggedIn_at')->nullable(true);
+            $table->datetime('isLoggedOut_at')->nullable(true);
             $table->rememberToken();
             $table->timestamps();
         });

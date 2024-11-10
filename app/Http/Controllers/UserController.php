@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItemsTransaction;
+use DB;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
@@ -21,8 +22,30 @@ class UserController extends Controller
 {
     public function index()
     {
-        $currentUser = Auth::user();
-        $currentUserName = $currentUser->name;
+
+        $current_user_id = Auth::user()->id;
+
+
+
+        $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
+        $unreadMessagesCount = $messages->count();
+
+        $contacts = DB::table('messages')
+            ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
+            ->join('users', 'users.id', '=', 'messages.sender_id')
+            ->where(function ($query) {
+                $query->where('messages.receiver_id', Auth::user()->id);
+            })
+            ->whereIn('messages.id', function ($query) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from('messages')
+                    ->groupBy('sender_id', 'receiver_id');
+            })
+            ->get();
+
+
+
+
         $defaultCategoryId = 1;
 
         $users = User::whereNot('id', Auth::user()->id)->get();
@@ -34,15 +57,6 @@ class UserController extends Controller
         $items = Item::where('category_id', $defaultCategoryId)->get();
 
 
-        $messages = Message::where('receiver_name', $currentUserName)->where('isRead', false)->get();
-        $unreadMessagesCount = $messages->count();
-
-        $contacts = Message::where('receiver_name', $currentUserName)
-            ->latest()
-            ->get()
-            ->groupBy('sender_name')
-            ->map(fn($group) => $group->first())
-            ->values();
 
 
         $categories = Category::all();
@@ -73,7 +87,7 @@ class UserController extends Controller
             'roles' => $roles,
             'users' => $users,
             'setting' => $setting,
-            'current_user_name' => $currentUserName,
+            'current_user_id' => $current_user_id,
             'contacts' => $contacts,
             'unreadMessages' => $unreadMessagesCount,
             'page_title' => 'Manage Users',

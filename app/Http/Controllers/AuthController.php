@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -15,6 +16,10 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        User::where('id', Auth::user()->id)->update([
+            'isLoggedOut_at' => now(),
+        ]);
+
         Auth::logout();
 
         $request->session()->invalidate();
@@ -42,6 +47,11 @@ class AuthController extends Controller
                     'user_id' => $user->id
                 ]);
             }
+
+            User::where('id', Auth::user()->id)->update([
+                'isLoggedIn_at' => now(),
+            ]);
+
             return redirect()->intended('/admin/dashboard');
         } else {
 

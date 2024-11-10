@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
 use App\Models\Message;
 use App\Models\Notification;
@@ -153,20 +154,44 @@ class MessageController extends Controller
     }
 
 
-    public function messageBubble($receiver_name)
+    public function messageBubble($receiver_id)
     {
-        $current_user_name = Auth::user()->name;
-        $sender_name = Auth::user()->name;
+        $current_user_id = Auth::user()->id;
+        $sender_id = Auth::user()->id;
 
-        $messagesByCurrentUser = Message::where('sender_name', $current_user_name)->where('receiver_name', $receiver_name)->orderBy('created_at', 'ASC')->get();
-        $messagesFromOtherUser = Message::where('sender_name', $receiver_name)->where('receiver_name', $sender_name)->orderBy('created_at', 'ASC')->get();
+        $messagesByCurrentUser = Message::where('sender_id', $current_user_id)->where('receiver_id', $receiver_id)->orderBy('created_at', 'ASC')->get();
+        $messagesFromOtherUser = Message::where('sender_id', $receiver_id)->where('receiver_id', $sender_id)->orderBy('created_at', 'ASC')->get();
 
+        $receiver_name = User::where('id', Auth::user()->id)->first()->pluck('name');
 
         $allMessages = $messagesByCurrentUser->concat($messagesFromOtherUser)->sortBy('created_at');
 
+        $message = Message::where('sender_id', $receiver_id)
+            ->where('receiver_id', Auth::user()->id)
+            ->first();
+
+        // Check if a message is found before proceeding
+        if ($message) {
+            // Get the sender_id from the message
+            $contactId = $message->sender_id;
+
+            // Retrieve the user with the corresponding sender_id
+            $user = User::find($contactId);
+
+            // Check if the user exists before trying to access their name
+            if ($user) {
+                $sender_name = $user->name;
+            } else {
+                // Handle the case where no user is found
+                $sender_name = 'Unknown User';
+            }
+        } else {
+            // Handle the case where no message is found
+            $sender_name = 'No messages found';
+        }
         return view(
             'admin.partials.message-bubble',
-            compact('allMessages', 'sender_name', 'current_user_name', 'receiver_name')
+            compact('allMessages', 'sender_id', 'current_user_id', 'receiver_id', 'receiver_name', 'sender_name')
         );
     }
     public function messageReacted($id)
@@ -190,13 +215,13 @@ class MessageController extends Controller
     public function messageNewSend(Request $request)
     {
         $validatedData = $request->validate([
-            'receiver_name' => ['string', 'required'],
+            'receiver_id' => ['string', 'required'],
             'content' => ['string', 'required']
         ]);
 
         Message::create([
-            'sender_name' => Auth::user()->name,
-            'receiver_name' => $validatedData['receiver_name'],
+            'sender_id' => Auth::user()->id,
+            'receiver_id' => $validatedData['receiver_id'],
             'content' => $validatedData['content'],
             'type' => 'text',
         ]);
@@ -209,10 +234,10 @@ class MessageController extends Controller
     {
         $validatedData = $request->validate([
             'replied_message_id' => 'nullable',
-            'replied_message_name' => 'nullable',
+            'replied_message_by_id' => 'nullable',
             'replied_message_type' => 'nullable',
-            'sender_name' => 'required|string|max:255',
-            'receiver_name' => 'required|string|max:255',
+            'sender_id' => 'required|string|max:255',
+            'receiver_id' => 'required|string|max:255',
             'content' => 'nullable',
             'image-data' => '',
         ]);
@@ -220,7 +245,7 @@ class MessageController extends Controller
         $repliedMessage = null;
         $repliedMessageContent = null;
         $repliedMessageImg = null;
-        $repliedMessageName = $validatedData['replied_message_name'];
+        $repliedSenderId = $validatedData['replied_message_by_id'];
         $repliedMessageType = $validatedData['replied_message_type'];
 
         if ($validatedData['replied_message_id']) {
@@ -264,11 +289,11 @@ class MessageController extends Controller
             if ($imageFileName) {
 
                 $messageData = [
-                    'replied_message_name' => $repliedMessageName,
+                    'replied_message_by_id' => $repliedSenderId,
                     'replied_message' => $repliedMessageType == 'image' ? $repliedMessageImg : $repliedMessageContent,
                     'replied_message_type' => $repliedMessageType,
-                    'sender_name' => $validatedData['sender_name'],
-                    'receiver_name' => $validatedData['receiver_name'],
+                    'sender_id' => $validatedData['sender_id'],
+                    'receiver_id' => $validatedData['receiver_id'],
                     'content' => $validatedData['content'],
                     'type' => 'image',
                     'img' => $imageFileName,
@@ -276,11 +301,11 @@ class MessageController extends Controller
             } else {
 
                 $messageData = [
-                    'replied_message_name' => $repliedMessageName,
+                    'replied_message_by_id' => $repliedSenderId,
                     'replied_message' => $repliedMessageType == 'image' ? $repliedMessageImg : $repliedMessageContent,
                     'replied_message_type' => $repliedMessageType,
-                    'sender_name' => $validatedData['sender_name'],
-                    'receiver_name' => $validatedData['receiver_name'],
+                    'sender_id' => $validatedData['sender_id'],
+                    'receiver_id' => $validatedData['receiver_id'],
                     'content' => $validatedData['content'],
                     'type' => 'text',
                 ];
@@ -289,11 +314,11 @@ class MessageController extends Controller
             if ($imageFileName) {
 
                 $messageData = [
-                    'replied_message_name' => $repliedMessageName,
+                    'replied_message_by_id' => $repliedSenderId,
                     'replied_message' => $repliedMessageType == 'image' ? $repliedMessageImg : $repliedMessageContent,
                     'replied_message_type' => $repliedMessageType,
-                    'sender_name' => $validatedData['sender_name'],
-                    'receiver_name' => $validatedData['receiver_name'],
+                    'sender_id' => $validatedData['sender_id'],
+                    'receiver_id' => $validatedData['receiver_id'],
                     'content' => null,
                     'type' => 'image',
                     'img' => $imageFileName,
@@ -301,11 +326,11 @@ class MessageController extends Controller
             } else {
 
                 $messageData = [
-                    'replied_message_name' => $repliedMessageName,
+                    'replied_message_by_id' => $repliedSenderId,
                     'replied_message' => $repliedMessageType == 'image' ? $repliedMessageImg : $repliedMessageContent,
                     'replied_message_type' => $repliedMessageType,
-                    'sender_name' => $validatedData['sender_name'],
-                    'receiver_name' => $validatedData['receiver_name'],
+                    'sender_id' => $validatedData['sender_id'],
+                    'receiver_id' => $validatedData['receiver_id'],
                     'content' => 'like',
                     'type' => 'sticker',
                 ];
@@ -325,25 +350,22 @@ class MessageController extends Controller
 
     public function chatSelected($contact)
     {
-        $user = Auth::user();
-        $current_user_name = $user->name;
 
-        $messageNotRead = Message::where('sender_name', $contact)->where('receiver_name', $current_user_name);
-
-        $messageNotRead->update([
-            'isRead' => true
-        ]);
+        $messageNotRead = Message::where('sender_id', $contact)
+            ->where('receiver_id', Auth::user()->id)
+            ->update([
+                'isReadByReceiver' => true
+            ]);
 
 
-        $messagesByCurrentUser = Message::where('sender_name', $current_user_name)->where('receiver_name', $contact)->orderBy('created_at', 'ASC')->get();
-        $messagesFromOtherUser = Message::where('sender_name', $contact)->where('receiver_name', $current_user_name)->orderBy('created_at', 'ASC')->get();
+        $messagesByCurrentUser = Message::where('sender_id', Auth::user()->id)->where('receiver_id', $contact)->orderBy('created_at', 'ASC')->get();
+        $messagesFromOtherUser = Message::where('sender_id', $contact)->where('receiver_id', Auth::user()->id)->orderBy('created_at', 'ASC')->get();
 
         $allMessages = $messagesByCurrentUser->concat($messagesFromOtherUser)->sortBy('created_at');
 
 
-
-        $messages = Message::where('receiver_name', $current_user_name)
-            ->orWhere('sender_name', $current_user_name)
+        $messages = Message::where('receiver_id', Auth::user()->id)
+            ->orWhere('sender_id', Auth::user()->id)
             ->latest()
             ->get();
 
@@ -352,16 +374,47 @@ class MessageController extends Controller
             dd('No messages found.');
         }
 
+        $message = Message::where('sender_id', $contact)
+            ->where('receiver_id', Auth::user()->id)
+            ->first();
 
-        $contacts = Message::where('receiver_name', $current_user_name)
-            ->latest()
-            ->get()
-            ->groupBy('sender_name')
-            ->map(fn($group) => $group->first())
-            ->values();
+        // Check if a message is found before proceeding
+        if ($message) {
+            // Get the sender_id from the message
+            $contactId = $message->sender_id;
 
-        $receiver_name = $contact;
-        $sender_name = $current_user_name;
+            // Retrieve the user with the corresponding sender_id
+            $user = User::find($contactId);
+
+            // Check if the user exists before trying to access their name
+            if ($user) {
+                $sender_name = $user->name;
+            } else {
+                // Handle the case where no user is found
+                $sender_name = 'Unknown User';
+            }
+        } else {
+            // Handle the case where no message is found
+            $sender_name = 'No messages found';
+        }
+
+        $receiver_name = User::where('id', Auth::user()->id)->first()->pluck('name');
+
+        $contacts = DB::table('messages')
+            ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
+            ->join('users', 'users.id', '=', 'messages.sender_id')
+            ->where(function ($query) {
+                $query->where('messages.receiver_id', Auth::user()->id);
+            })
+            ->whereIn('messages.id', function ($query) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from('messages')
+                    ->groupBy('sender_id', 'receiver_id');
+            })
+            ->get();
+
+        $receiver_id = $contact;
+        $sender_id = Auth::user()->id;
 
         $page_title = "Messages";
 
@@ -436,26 +489,29 @@ class MessageController extends Controller
             $categoriesIsNull = true;
         }
 
-        $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
+        $messages = Message::where('receiver_id', Auth::user()->id)->where('isReadByReceiver', false)->get();
 
         $unreadMessages = $messages->count();
         $setting = Setting::findOrFail(1);
 
         $users = User::whereNot('name', Auth::user()->id)->get();
 
+        $current_user_id = Auth::user()->id;
         return view('admin.pages.messages', compact(
             'setting',
             'currentCategory',
             'users',
             'unreadMessages',
             'contacts',
-            'current_user_name',
-            'receiver_name',
-            'sender_name',
+            'current_user_id',
+            'receiver_id',
+            'sender_id',
             'notifications',
             'unreadNotifications',
             'page_title',
-            'allMessages'
+            'allMessages',
+            'sender_name',
+            'receiver_name'
         ));
 
 
@@ -464,37 +520,51 @@ class MessageController extends Controller
 
     public function contacts(Request $request)
     {
+        $current_user_id = Auth::user()->id;
+        $receiver_id = Auth::user()->id;
 
-        $current_user_name = Auth::user()->name;
-        $receiver_name = Auth::user()->name;
         if ($request->searchValue == null) {
 
-            $contacts = Message::where('receiver_name', $current_user_name)
-                ->latest()
-                ->get()
-                ->groupBy('sender_name')
-                ->map(fn($group) => $group->first())
-                ->values();
+
+            $contacts = DB::table('messages')
+                ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
+                ->join('users', 'users.id', '=', 'messages.sender_id')
+                ->where(function ($query) {
+                    $query->where('messages.receiver_id', Auth::user()->id);
+                })
+                ->whereIn('messages.id', function ($query) {
+                    $query->select(DB::raw('MAX(id)'))
+                        ->from('messages')
+                        ->groupBy('sender_id', 'receiver_id');
+                })
+                ->get();
 
 
-            return view('admin.partials.contact-list', compact('receiver_name', 'contacts'));
+            return view('admin.partials.contact-list', compact('receiver_id', 'contacts'));
 
 
 
         } else {
-
-            $contacts = Message::where('receiver_name', $current_user_name)
-                ->where('sender_name', 'like', '%' . $request->searchValue . '%')
-                ->latest()
-                ->get()
-                ->groupBy('sender_name')
-                ->map(function ($group) {
-                    return $group->first();
+            $contacts = DB::table('messages')
+                ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
+                ->join('users', 'users.id', '=', 'messages.sender_id')
+                ->where(function ($query) {
+                    $query->where('messages.receiver_id', Auth::user()->id);
                 })
-                ->values();
+                ->where(function ($query) use ($request) {
+
+                    $query->where('users.name', 'LIKE', '%' . $request->searchValue . '%');
+
+                })
+                ->whereIn('messages.id', function ($query) {
+                    $query->select(DB::raw('MAX(id)'))
+                        ->from('messages')
+                        ->groupBy('sender_id', 'receiver_id');
+                })
+                ->get();
 
 
-            return view('admin.partials.contact-list', compact('receiver_name', 'contacts'));
+            return view('admin.partials.contact-list', compact('receiver_id', 'contacts'));
 
 
         }
