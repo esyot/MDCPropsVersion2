@@ -11,7 +11,11 @@
     <title>Checkout Dashboard</title>
 </head>
 
-<body class="bg-gray-100">
+<style>
+    @media(orientation:landscape) {}
+</style>
+
+<body class="bg-gray-100 h-screen">
 
     <!-- Error Modal -->
     <div id="error-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
@@ -51,15 +55,15 @@
         <!-- Rentee Details Modal -->
         <div id="rentee-details"
             class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
-            <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
-                <div class="flex items-center justify-between mb-4">
+            <div class="bg-white rounded-lg shadow-lg max-w-lg w-[500px] mx-2">
+                <div class="flex items-center justify-between bg-blue-500 rounded-t-lg px-2 text-white">
                     <h1 class="text-xl font-bold">Input Details</h1>
                     <button class="text-2xl font-bold hover:opacity-50"
                         onclick="document.getElementById('rentee-details').classList.add('hidden')">&times;</button>
                 </div>
 
-                <!-- Rentee Details Form -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 border-b-2">
                     <div class="mb-2">
                         <label for="first_name" class="block text-sm font-medium text-gray-700">First Name:</label>
                         <input type="text" name="first_name" placeholder="Enter First Name"
@@ -98,9 +102,66 @@
                     </div>
 
                 </div>
+                <div class="p-2 border-b-2">
+                    <div>
+                        <h1 class="text-xl font-bold">Terms & Conditions</h1>
+                    </div>
+                    <div class="flex text-xs space-x-1">
+                        <input type="checkbox" name="" id="" required>
+                        <div class="">I have read & accept the website's <button type="button"
+                                onclick="document.getElementById('terms-and-conditions').classList.remove('hidden')"
+                                class="text-blue-500 hover:opacity-50 underline">Terms &
+                                Conditions.</button></div>
+                    </div>
+                </div>
                 <div class="p-2 flex justify-end">
-                    <button type="submit"
-                        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Checkout</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Submit
+                        Reservation</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="terms-and-conditions"
+            class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
+            <div class="bg-white w-[600px] rounded shadow-md mx-2">
+                <div class="border-b-2 p-2">
+
+
+                    <h1 class="text-xl font-bold">Terms & Conditions</h1>
+                    <p class="text-justify"> By accessing or using this website, you agree to comply with and be bound
+                        by these Terms and Conditions. All content, products, and services available on this site are
+                        provided "as is" without any warranties, express or implied. We reserve the right to modify,
+                        suspend, or discontinue any part of this website or its services at any time, without notice.
+                        You
+                        are responsible for ensuring that any information you submit through this site is accurate, and
+                        you
+                        agree to indemnify and hold
+                        harmless the website owner and its affiliates from any claims, losses, or damages resulting from
+                        your use of the site.
+
+                    </p>
+                    <h1 class="text-xl font-bold mt-2">Privacy Notice</h1>
+                    <p>
+                        We value your privacy and are committed to protecting your personal data in accordance with the
+                        Data
+                        Privacy Act of 2012 (Republic Act No. 10173). By using this website, you consent to the
+                        collection,
+                        use, and processing of your personal information as described in our Privacy Policy. We will
+                        take
+                        all reasonable steps to protect your personal data and ensure it is handled securely. For
+                        further
+                        details on how we collect, use, and safeguard your personal information, please review our
+                        Privacy
+                        Policy.
+
+                        This agreement is governed by the laws of the Philippines, and any disputes will be resolved in
+                        the
+                        appropriate courts located within the Philippines.</p>
+                </div>
+                <div class="flex justify-end p-2 bg-gray-100 rounded-b-lg">
+                    <button type="button"
+                        onclick="document.getElementById('terms-and-conditions').classList.add('hidden')"
+                        class="px-4 py-2 border border-gray-300 hover:opacity-50 shadow-md rounded">Close</button>
                 </div>
             </div>
         </div>
@@ -143,45 +204,50 @@
                 </div>
             @endforeach
         </div>
-        <section id="item-details" class="p-2 bg-white m-2 shadow-md rounded">
+        <section id="item-details" class="p-4 bg-white m-4 shadow-md rounded-lg">
 
             <!-- Destination & Date Inputs -->
-            <div class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
                 <div>
-                    <label for="destination" class="block text-sm font-medium text-gray-700">Destination:</label>
-                    <select class="p-2 w-full border border-gray-300 rounded" name="destination" required>
-                        @foreach ($destinations as $destination)
-                            <option value="{{ $destination->id }}">{{ $destination->municipality }}</option>
-                        @endforeach
-                    </select>
+                    @include('map')
                 </div>
 
+
+                <!-- Rent Date and Time -->
                 <div>
                     <label for="rent_date" class="block text-sm font-medium text-gray-700">Date Rent:</label>
                     <input type="date" value="{{ today()->toDateString() }}" name="rent_date"
-                        class="p-2 w-full border border-gray-300 rounded" required>
+                        class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
                 </div>
 
                 <div>
                     <label for="rent_time" class="block text-sm font-medium text-gray-700">Time Item Pickup:</label>
-                    <input type="time" name="rent_time" class="p-2 w-full border border-gray-300 rounded" required>
+                    <input type="time" name="rent_time"
+                        class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
                 </div>
 
+                <!-- Return Date and Time -->
                 <div>
                     <label for="return_date" class="block text-sm font-medium text-gray-700">Date Return:</label>
                     <input type="date" value="{{ today()->toDateString() }}" name="rent_return"
-                        class="p-2 w-full border border-gray-300 rounded" required>
+                        class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
                 </div>
 
                 <div>
                     <label for="return_time" class="block text-sm font-medium text-gray-700">Time Item Return:</label>
-                    <input type="time" name="rent_return_time" class="p-2 w-full border border-gray-300 rounded"
+                    <input type="time" name="rent_return_time"
+                        class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
+
             </div>
         </section>
 
-        <div class="flex justify-center mt-6">
+        <div class="flex fixed right-0 left-0 m-2 bottom-0 items-center justify-center">
             <button type="button" onclick="validateInputs()"
                 class="px-6 py-3 bg-blue-500 text-blue-100 shadow-md rounded hover:opacity-50">Next</button>
         </div>

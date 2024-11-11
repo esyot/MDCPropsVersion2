@@ -18,7 +18,8 @@
                     <img id="img-preview" src="" alt="Image Preview" class="mt-2 h-[150px] object-cover hidden">
 
                     <small class="font-bold">Note:
-                        <i class="font-normal">Make sure the selected file is in "jpg", "png", or "jpeg" format.</i>
+                        <i class="text-sm font-normal">Make sure the selected file is in "jpg", "png", or "jpeg"
+                            format.</i>
                     </small>
                 </div>
 
@@ -33,6 +34,8 @@
                     <input type="number" name="qty" placeholder="Quantity" title="Title"
                         class="block p-2 border border-gray-300 rounded w-full" required>
                 </div>
+
+
 
                 <div class="mt-2">
                     <label for="category" class="font-medium">Category:</label>
@@ -49,6 +52,71 @@
 
                 </div>
 
+                <div class="mt-2 flex items-center space-x-1">
+                    <input id="isAvailableForRentingCheckbox" type="checkbox" name="isAvailableForRenting">
+                    <span>Available for renting</span>
+                </div>
+                <small id="rentNote" class="font-bold">Note:
+                    <i class="text-sm font-normal">If unchecked, this item will be set for borrowing only.</i>
+                </small>
+
+
+                <div id="rentingOptions" class="flex space-x-2 items-center hidden">
+                    <div>
+                        <label for="">Price:</label>
+                        <input type="number" name="price" class="block p-2 border border-gray-300 rounded"
+                            placeholder="0." step="any" min="0">
+                        <label for="">Ext:</label>
+                        <input type="number" name="ext" class="block p-2 border border-gray-300 rounded"
+                            placeholder=".00" step="any" min="0" max="99">
+                    </div>
+
+
+                    <span class="text-2xl">
+                        &times;
+                    </span>
+
+                    <div>
+                        <label for="">By:</label>
+                        <select type="text" name="by" class="block p-2 border border-gray-300 rounded" placeholder="">
+                            <option value="pcs">Pieces (pcs)</option>
+                            <option value="km">Kilometer (km)</option>
+                            <option value="mi">Miles (mi)</option>
+                            <option value="m">Meters (m)</option>
+                            <option value="kg">Kilogram (kg)</option>
+                            <option value="g">Grams (g)</option>
+                            <option value="mg">Milligrams (mg)</option>
+                            <option value="cm">Centimeters (cm)</option>
+                            <option value="mm">Millimeters (mm)</option>
+                            <option value="lbs">Pounds (lbs)</option>
+                            <option value="oz">Ounces (oz)</option>
+                            <option value="l">Liters (l)</option>
+                            <option value="ml">Milliliters (ml)</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <script>
+
+                    var checkbox = document.getElementById('isAvailableForRentingCheckbox');
+                    var rentingOptions = document.getElementById('rentingOptions');
+                    var rentingOptions = document.getElementById('rentingOptions');
+                    var rentNote = document.getElementById('rentNote');
+
+
+                    checkbox.addEventListener('change', function () {
+                        if (this.checked) {
+                            rentingOptions.classList.remove('hidden');
+                            rentNote.classList.add('hidden');
+                        } else {
+                            rentingOptions.classList.add('hidden');
+                            rentNote.classList.remove('hidden');
+                        }
+                    });
+                </script>
 
             </div>
 

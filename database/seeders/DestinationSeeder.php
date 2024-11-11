@@ -39,7 +39,7 @@ class DestinationSeeder extends Seeder
             ['municipality' => 'Maribojoc', 'kilometers' => 14.00],
             ['municipality' => 'Panglao', 'kilometers' => 38.00],
             ['municipality' => 'Pilar', 'kilometers' => 40.00],
-            ['municipality' => 'President Carlos P. Garcia', 'kilometers' => 42.00],
+            ['municipality' => 'P. Carlos Garcia', 'kilometers' => 42.00],
             ['municipality' => 'Sagbayan', 'kilometers' => 43.00],
             ['municipality' => 'San Isidro', 'kilometers' => 41.00],
             ['municipality' => 'San Miguel', 'kilometers' => 39.00],

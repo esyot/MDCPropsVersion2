@@ -26,6 +26,8 @@ return new class extends Migration {
             $table->string('img');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->integer('qty');
+            $table->decimal('price', 10, 2)->nullable(true);
+            $table->enum('by', ['pcs', 'km', 'mi', 'm', 'kg', 'g', 'mg', 'cm', 'mm', 'lbs', 'oz', 'l', 'ml'])->nullable(true);
             $table->timestamps();
         });
         Schema::create('destinations', function (Blueprint $table) {

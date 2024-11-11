@@ -1,3 +1,23 @@
+<style>
+    @media(orientation:landscape) {
+        #item-description {
+            display: flex;
+            justify-content: center;
+
+        }
+
+        #item-description #name,
+        #price,
+        #qty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-inline: 6px;
+
+        }
+    }
+</style>
+
 @if(count($items) > 0)
     @foreach($items as $item)
         <div onclick="openCalendar({{ $item->id }})"
@@ -7,11 +27,27 @@
                     <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
                         alt="Image" class="absolute top-0 left-0 w-full h-full object-contain z-0">
                 </div>
-                <div class="bg-blue-500 text-blue-100 p-2 flex flex-col justify-center text-center relative z-10"
-                    style="height: 60px;">
-                    <h2 class="font-semibold text-[calc(1.5rem + 1vw)] leading-[1] max-w-full break-words">
-                        {{ $item->name }}
-                    </h2>
+                <div id="item-description" class="p-2 text-blue-100 text-xs bg-blue-500">
+                    <div id="name">
+                        <h1 class="font-bold">Name:</h1>
+                        <span class="text-yellow-300">{{$item->name}}</span>
+                    </div>
+                    <div id="price">
+                        <h1 class="font-bold">Price:</h1>
+                        <div class="text-yellow-300 flex space-x-1">
+                            <span>₱{{$item->price}}</span>
+
+                            <h1>by</h1>
+                            <span>
+                                {{ $item->by }}
+                            </span>
+                        </div>
+
+                    </div>
+                    <div id="qty">
+                        <h1 class="font-bold">Quantity:</h1>
+                        <span class="text-yellow-300">{{$item->qty}} pc/s</span>
+                    </div>
                 </div>
             </div>
         </div>

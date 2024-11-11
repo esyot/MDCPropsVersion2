@@ -17,7 +17,8 @@
                     <input type="file" name="files[]" class="file-upload-input" accept="image/*" multiple required
                         onchange="previewImages(event)">
                     <small class="font-bold">Note:
-                        <i class="font-normal">Make sure the selected files are in "jpg", "png", or "jpeg" format.</i>
+                        <i class="text-xs font-normal">Make sure the selected files are in "jpg", "png", or "jpeg"
+                            format.</i>
                     </small>
                 </div>
 

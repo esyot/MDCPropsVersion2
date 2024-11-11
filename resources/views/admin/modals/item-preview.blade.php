@@ -7,7 +7,7 @@
     <div id="item-{{$item->id}}"
         class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-70 hidden">
         <!-- Modal Content -->
-        <div class="bg-white w-full max-w-[50%] rounded-lg shadow-lg overflow-hidden">
+        <div class="bg-white w-[500px] mx-2 rounded-lg shadow-lg overflow-hidden">
             <!-- Modal Header -->
             <div class="flex items-center justify-between p-4 border-b border-gray-300">
                 <h1 class="text-xl font-semibold text-gray-900">Item Preview</h1>
@@ -34,7 +34,8 @@
                     <input type="file" name="update_img" accept="image/*" id="update_img"
                         class="block mt-2 w-full border border-gray-300 p-2 bg-white rounded">
                     <small class="font-bold">Note:
-                        <i class="font-normal">Make sure the selected file is in "jpg", "png", or "jpeg" format.</i>
+                        <i class="text-xs font-normal">Make sure the selected file is in "jpg", "png", or "jpeg"
+                            format.</i>
                     </small>
 
                 </div>
@@ -61,6 +62,33 @@
 
                             @endforeach
                         </select>
+
+                        <label for="qty" class="block text-gray-700 font-medium">Price:</label>
+                        <input type="string" name="update_price" value="{{ $item->price }}"
+                            class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                        <div>
+                            <label for="">By:</label>
+                            <select type="text" name="update_by" class="block p-2 border border-gray-300 rounded"
+                                placeholder="">
+                                <option value="{{$item->by}}">{{$item->by}}</option>
+                                <option value="pcs">Pieces (pcs)</option>
+                                <option value="km">Kilometer (km)</option>
+                                <option value="mi">Miles (mi)</option>
+                                <option value="m">Meters (m)</option>
+                                <option value="kg">Kilogram (kg)</option>
+                                <option value="g">Grams (g)</option>
+                                <option value="mg">Milligrams (mg)</option>
+                                <option value="cm">Centimeters (cm)</option>
+                                <option value="mm">Millimeters (mm)</option>
+                                <option value="lbs">Pounds (lbs)</option>
+                                <option value="oz">Ounces (oz)</option>
+                                <option value="l">Liters (l)</option>
+                                <option value="ml">Milliliters (ml)</option>
+                            </select>
+
+                        </div>
+
 
                     </div>
                 </div>

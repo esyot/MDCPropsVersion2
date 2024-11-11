@@ -163,7 +163,10 @@ class ItemController extends Controller
         $item->category_id = $validatedData['category'];
         $item->img = $imageFileName;
         $item->qty = $validatedData['qty'];
+        $item->price = (float) ($request->price . '.' . $request->ext);
+        $item->by = $request->by;
         $item->save();
+
 
         Notification::create([
             'icon' => Auth::user()->img,
@@ -283,6 +286,8 @@ class ItemController extends Controller
         $validatedData = $request->validate([
             'update_name' => 'string',
             'update_qty' => 'string',
+            'update_price' => 'string',
+            'update_by' => 'string',
             'update_category' => 'required|integer|exists:categories,id',
             'update_img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
@@ -323,6 +328,8 @@ class ItemController extends Controller
         $item->update([
             'name' => $validatedData['update_name'],
             'qty' => $validatedData['update_qty'],
+            'by' => $validatedData['update_by'],
+            'price' => (float) $validatedData['update_price'],
             'img' => $imageFileName,
             'category_id' => $validatedData['update_category'],
         ]);

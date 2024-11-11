@@ -2,9 +2,9 @@
 @section('content')
 @if ($categoriesIsNull == false)
 
-    <div id="items-header" class="p-4 z-30">
+    <div id="items-header" class="p-2 z-30">
         <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center">
 
 
                 <form action="{{ route('itemsFilter') }}"
@@ -29,17 +29,19 @@
                     </select>
                 </form>
 
-                <div onclick="document.getElementById('item-add-modal').classList.remove('hidden')">
-                    <button class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 shadow-md rounded">Add Item</button>
+                <div title="Add Item" onclick="document.getElementById('item-add-modal').classList.remove('hidden')"
+                    class="flex items-center bg-blue-500 text-blue-100 hover:opacity-50 shadow-md rounded m-2 px-4 py-2">
+                    <button class="font-bold">+</button>
                 </div>
 
             </div>
 
             <div>
                 <form hx-get="{{ route('adminItemSearch', ['category_id' => $currentCategory])}}" hx-target="#items"
-                    hx-swap="innerHTML" hx-trigger="input" class="rounded-full bg-white p-2 shadow-inner">
+                    hx-swap="innerHTML" hx-trigger="input"
+                    class="flex w-[150px] items-center rounded-full bg-white p-2 space-x-1 shadow-inner">
 
-                    <i class="fas fa-magnifying-glass"></i>
+                    <i class="fas fa-magnifying-glass fa-lg"></i>
                     <input type="text" name="search_value" class="bg-transparent focus:outline-none"
                         placeholder="Search items...">
                 </form>

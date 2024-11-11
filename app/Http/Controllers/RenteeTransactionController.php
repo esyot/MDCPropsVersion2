@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Destination;
 use App\Models\Item;
 use App\Models\ItemsTransaction;
 use App\Models\Notification;
@@ -67,10 +68,10 @@ class RenteeTransactionController extends Controller
                     throw new \Exception("Item not found: " . $data['item_id']);
                 }
 
-                // Create ItemsTransaction entry for each item
+                $destination = Destination::where('municipality', 'LIKE', '%' . $validatedData['destination'] . '%')->first();
                 ItemsTransaction::create([
                     'transaction_id' => $transaction->id,
-                    'destination_id' => $validatedData['destination'],
+                    'destination_id' => $destination->id,
                     'category_id' => $item->category_id,
                     'item_id' => $data['item_id'],
                     'rent_date' => $validatedData['rent_date'],

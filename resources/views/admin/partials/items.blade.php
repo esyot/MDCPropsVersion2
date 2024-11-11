@@ -1,3 +1,41 @@
+<style>
+    @media(orientation:portrait) {
+        #item-description {
+            display: flex;
+            justify-content: center;
+            height: 100%;
+            align-items: center;
+
+        }
+
+        #item-description #name,
+        #price,
+        #qty {
+            display: flex;
+            margin-inline: 3px;
+        }
+
+    }
+
+    @media(orientation:landscape) {
+        #item-description {
+            display: flex;
+            justify-content: center;
+
+        }
+
+        #item-description #name,
+        #price,
+        #qty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-inline: 2px;
+            margin: 2px;
+        }
+
+    }
+</style>
 @foreach ($items as $item)
 
     <div id="card" title="Click to preview"
@@ -8,10 +46,41 @@
             <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
                 alt="{{ $item->name }}" class="w-full h-full object-cover">
         </div>
-        <!-- Name Container -->
-        <div class="bg-blue-500 w-full h-1/4 shadow-md text-center flex flex-col items-center justify-center">
-            <h1 class="text-lg font-semibold truncate">{{ $item->name }}</h1>
+        @if ($item->price == 0.00)
+            <div class="border border-red-500 bg-white text-center text-black">
+                <small class="text-red-500">Available for Borrowing only</small>
+            </div>
+        @else
+            <div class="border border-red-500 bg-white text-center text-black">
+                <small class="text-red-500">Available for Borrowing & Renting</small>
+            </div>
+        @endif
+        <div id="item-description" class="p-2 text-blue-100 text-xs bg-blue-500">
+            <div id="name" class="flex space-x-1">
+                <h1 class="font-bold">Name</h1>
+                <span class="text-yellow-300 truncate">{{$item->name}}</span>
+            </div>
+            @if ($item->price != 0.00)
+                <div id="price" class="space-x-1">
+                    <h1 class="font-bold">Price</h1>
+                    <div class="truncate text-yellow-300 flex space-x-1">
+                        <span>₱{{$item->price}}</span>
+
+                        <h1>by</h1>
+                        <span>
+                            {{ $item->by }}
+                        </span>
+                    </div>
+
+                </div>
+            @endif
+            <div id="qty" class="space-x-1">
+                <h1 class="font-bold">Quantity</h1>
+                <span class="truncate text-yellow-300">{{$item->qty}} pc/s</span>
+            </div>
         </div>
+
+
     </div>
     @include('admin.modals.item-preview')
 @endforeach

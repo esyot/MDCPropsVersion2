@@ -30,16 +30,16 @@
 
 
         <div id="QR" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50">
-            <div class="bg-white p-4 rounded">
+            <div class="bg-white p-4 rounded mx-2">
                 <div class="flex justify-center">
-                    <h1 class="text-2xl font-bold">Your reservation has been successfully saved!</h1>
+                    <h1 class="text-2xl text-center font-bold">Your reservation has been successfully submitted!</h1>
                 </div>
 
-                <div class="flex mt-2 justify-center ">
+                <div class="flex mt-2 justify-center">
                     <canvas id="canvas" class=""></canvas>
 
                 </div>
-                <div class="flex space-x-2 justify-center">
+                <div class="flex space-x-2 p-2 justify-center">
                     <h1>Tracking Code: </h1>
                     <span class="font-bold">
                         {{ $transaction->tracking_code }}
@@ -47,11 +47,19 @@
 
                 </div>
 
-                <div class="flex flex-col mt-2 items-center space-x-1">
+                <div class="flex justify-center">
 
-                    <small class="border border-red-500 p-2">Note: Please save this QR code; it will be used to track your
-                        reservation on the tracking page <br> and for payment at the cashier once your reservation is
-                        confirmed.</small>
+                    <small class="w-80 text-justify border border-red-500 p-2">
+                        <span class="font-bold">
+                            Note:
+                        </span>
+                        <i class="text-justify">Save this QR code; it will be used to track your
+                            reservation on the tracking page and for payment at the cashier once your reservation is
+                            approved, or just <a
+                                href="{{ route('tracking', ['search_val' => $transaction->tracking_code]) }}"
+                                class="text-blue-500 hover:opacity-50 underline" title="Click me to redirect">click
+                                here</a> to monitor your request.</i>
+                    </small>
                 </div>
                 <div class="flex justify-center mt-2">
                     <button onclick="document.getElementById('QR').classList.add('hidden')"

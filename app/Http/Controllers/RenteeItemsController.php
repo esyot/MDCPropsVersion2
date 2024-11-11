@@ -36,7 +36,9 @@ class RenteeItemsController extends Controller
         }
 
 
-        $items = Item::where('category_id', $category_id)->get();
+        $items = Item::where('category_id', $category_id)
+            ->whereNot('price', 0.00)
+            ->get();
 
         return view('rentee.pages.items', compact('items', 'category_id', 'rentee', 'cartedItems'));
     }
@@ -82,12 +84,6 @@ class RenteeItemsController extends Controller
         // Return the unique unavailable dates
         return response()->json($uniqueUnavailableDates);
     }
-
-
-
-
-
-
 
     public function renteeItemsFilter(Request $request, $category_id, $rentee)
     {

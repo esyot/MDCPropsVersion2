@@ -90,13 +90,13 @@
     @media(orientation:portrait) {
         #add-new-category-card {
             width: 100%;
-            height: 200px;
+            height: 300px;
 
         }
 
         #card {
             width: 100%;
-            height: 200px;
+            height: 300px;
 
         }
 
@@ -146,8 +146,8 @@
         @foreach ($categories as $category)  
 
                 <div id="card"
-                    class="flex flex-col text-white rounded-lg w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-90' : '' }}">
-                    <div class="relative w-full max-w-3xl overflow-hidden slide-container ">
+                    class="flex flex-col text-white rounded-lg overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-90' : '' }}">
+                    <div class="relative w-full overflow-hidden slide-container">
                         <div class="slide-wrapper shadow-md z-50">
                             @php
                                 $directory = storage_path('app/public/images/categories/' . $category->folder_name);
@@ -170,17 +170,17 @@
                             <h1 class="text-lg font-semibold drop-shadow">{{ $category->title }}</h1>
                         </div>
 
-                        <div class="space-y-1">
+                        <div class="w-full space-y-2">
                             <button title="Edit Details"
                                 onclick="document.getElementById('category-update-{{$category->id}}').classList.remove('hidden')"
-                                class="w-full shadow-md px-4 py-2 bg-blue-100 text-blue-800 hover:opacity-50 rounded">Edit
+                                class="py-2 w-full shadow-md bg-blue-100 text-blue-800 hover:opacity-50 rounded">Edit
                                 Details
                             </button>
 
                             @hasrole('superadmin|admin')
                             <button title="Assign Users"
                                 onclick="document.getElementById('category-{{$category->id}}').classList.remove('hidden')"
-                                class="w-full shadow-md px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 hover:text-green-100 rounded">Assign
+                                class="py-2 w-full bg-blue-500 text-blue-100 hover:opacity-50 hover:text-green-100 rounded">Assign
                                 Users
                             </button>
                             @endhasrole
