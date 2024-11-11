@@ -1,11 +1,29 @@
 @extends('admin.layouts.messenger-header')
 @section('content')
 
+<style>
+    @media(orientation:portrait) {
+
+        #chats {
+            display: none;
+        }
+    }
+
+    @media(orientation:landscape) {
+
+        #chats {
+            display: block;
+        }
+
+
+    }
+</style>
 <!-- Main Content -->
 
-<div id="contacts" class="main-content flex flex-1 overflow-y-auto transition-all duration-300 ease-in-out">
 
-    <div id="chats" class="flex w-80 items-center flex-col shadow">
+<div id="contacts" class="main-content flex flex-1 overflow-x-hidden transition-all duration-300 ease-in-out">
+
+    <div id="chats" class="flex w-[500px] p-2 items-center  overflow-x-hidden flex-col shadow ">
 
         <div id="title" class="mt-2 text-2xl font-bold">
             <h1>Chats</h1>
@@ -27,8 +45,8 @@
             </div>
 
         </div>
-        <div id="contacts" class="p-2 overflow-y-auto custom-scrollbar">
-            <ul id="messsages-contact-list" class="list-none">
+        <div id="contacts" class="p-2 overflow-y-auto  overflow-x-hidden custom-scrollbar">
+            <ul id="messsages-contact-list" class="list-none space-y-2">
 
                 @include('admin.partials.contact-list')
 
@@ -38,12 +56,33 @@
 
 
     </div>
+
+    <script>
+        function openContactContainer() {
+            const chats = document.getElementById('chats');
+
+            // Toggle the display between 'block' and 'none'
+            if (chats.style.display === 'block') {
+                chats.style.display = 'none';
+            } else {
+                chats.style.display = 'block';
+            }
+
+            document.getElementById('openContactContainerBtn').classList.toggle('fa-chevron-left');
+            document.getElementById('openContactContainerBtn').classList.toggle('fa-chevron-right');
+        }
+    </script>
     <!-- Box C -->
-    <div class="w-full flex flex-col">
+    <div class="w-full flex flex-col transition-all duration-300 ease-in-out">
 
         <div id="header-messenger" class="bg-blue-500 shadow-md p-2">
             <div class="items-center flex ">
+                <button onclick="openContactContainer()" class="hover:opacity-50 px-2">
+                    <i id="openContactContainerBtn" class="fas fa-chevron-right text-white"></i>
+                </button>
+
                 <img class="w-12 h-12 p-2 drop-shadow-md" src="{{ asset('asset/photos/user.png') }}" alt="">
+
                 <h1 class="text-xl text-white font-semibold">
                     {{ $sender_name }}
                 </h1>
@@ -61,7 +100,8 @@
         </div>
 
 
-        <div id="messages-container" class="flex flex-1 overflow-y-auto flex-col custom-scrollbar h-64">
+        <div id="messages-container"
+            class="flex flex-1 overflow-y-auto flex-col custom-scrollbar h-64 overflow-x-hidden  #555">
             @include('admin.partials.message-bubble')
         </div>
         @if(count($allMessages) > 0)

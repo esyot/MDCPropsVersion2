@@ -4,7 +4,19 @@
     <div id="navbar" class="flex items-center justify-between p-4 shadow-md relative">
         <!-- App Name -->
         <div id="pageTitle" class="flex items-center space-x-2">
+            @hasrole('super|admin|staff')
             <span class="text-lg font-semibold"> {{ $page_title }}</span>
+            @endhasrole
+            @hasrole('cashier')
+            <div class="">
+
+                <a href="{{route('cashier.home')}}" class="hover:opacity-50" title="Back to home"
+                    class="flex items-center">
+                    <i class="fas fa-chevron-circle-left fa-2xl text-blue-500"></i>
+                    <span>Back to home</span>
+                </a>
+            </div>
+            @endhasrole
         </div>
 
         <!-- Right-side icons -->

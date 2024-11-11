@@ -6,16 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analytics Report - {{ $currentYear }}</title>
     <style>
-        /* General Body Styles */
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #F3F4F6;
             color: #4B5563;
-            margin: 0;
-            padding: 2rem;
+
         }
 
-        /* Heading Styles */
+
         h1 {
             font-size: 2.25rem;
             font-weight: 700;
@@ -143,10 +140,166 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* General container for the chart and statistics */
+
+
+        .pie-chart-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+        }
+
+        .pie-chart-container img {
+            width: 100%;
+
+            display: block;
+        }
+
+        .pie-chart {
+            display: block;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Container for overall statistics */
+        .statistics-container {
+            margin-top: 30px;
+        }
+
+        /* Title for the overall statistics section */
+        .statistics-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Individual statistics item */
+        .statistics-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+
+        }
+
+        /* Styling for the status squares (color indicators) */
+        .status-square {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 15px;
+
+        }
+
+        /* Green square for completed reservations */
+        #status-square-green {
+            background-color: #28a745;
+            padding: 10px;
+            color: #28a745;
+            margin: 10px;
+        }
+
+        /* Red square for declined reservations */
+        #status-square-red {
+            background-color: #dc3545;
+            padding: 10px;
+            color: #dc3545;
+            margin: 10px;
+        }
+
+        /* Yellow square for canceled reservations */
+        #status-square-yellow {
+            background-color: #ffc107;
+            padding: 10px;
+            color: #ffc107;
+            margin: 10px;
+
+        }
+
+        /* Text for each statistics item */
+        .statistics-text {
+            font-size: 18px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .chart-container {
+                width: 95%;
+                padding: 15px;
+            }
+
+            .statistics-title {
+                font-size: 24px;
+            }
+
+            .statistics-text {
+                font-size: 16px;
+            }
+        }
+
+        /* Header Section Styles */
+        header {
+            padding: 20px;
+            border-bottom: 2px solid #ccc;
+            margin-bottom: 100px;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .logo {
+            margin-right: 15px;
+            width: 100px;
+        }
+
+        .school-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: center;
+
+            color: #333;
+        }
+
+
+        .school-info h1 {
+            margin: 0;
+        }
+
+        .school-info small {
+            font-size: 0.9em;
+            color: #666;
+        }
     </style>
 </head>
 
 <body>
+    <header>
+        <div class="header-content">
+
+            <div class="school-info">
+                <img src="asset/logo/logo.png" alt="Mater Dei College Logo" class="logo">
+                <h1>MDC Property Management System</h1>
+                <small>Mater Dei College</small>
+                <small>Brgy. Cabulijan, Tubigon, Bohol</small>
+            </div>
+        </div>
+    </header>
+
+
 
     <div class="container">
         <h1>Analytics Report for Year {{ $currentYear }}</h1>
@@ -154,22 +307,46 @@
 
         <!-- Reservation Data Section -->
         <section>
-            <h2>Reservation Data</h2>
+
 
             <!-- Bar Chart Section -->
-            <div>
+            <div class="chart-container">
                 <h3>Bar Chart</h3>
                 <div>
                     <img src="temp/{{$barChartImage}}" alt="Bar Chart">
                 </div>
             </div>
 
+
+
+
             <!-- Pie Chart Section -->
-            <div>
-                <h3>Pie Chart</h3>
-                <img src="temp/{{$pieChartImage}}" alt="Pie Chart">
+            <div class="chart-container">
+                <div class="pie-chart-container">
+                    <h3 class="chart-title">Pie Chart</h3>
+                    <img src="temp/{{$pieChartImage}}" alt="Pie Chart">
+
+                </div>
+
+                <div class="statistics-container">
+                    <div class="statistics-item">
+                        <i id="status-square-green">&times;</i>
+                        <span class="statistics-text">{{$itemsCompletedCount}} Completed Reservations</span>
+                    </div>
+
+                    <div class="statistics-item">
+                        <i id="status-square-red">&times;</i>
+                        <span class="statistics-text">{{$itemsDeclinedCount}} Declined Reservations</span>
+                    </div>
+
+                    <div class="statistics-item">
+                        <i id="status-square-yellow">&times;</i>
+                        <span class="statistics-text">{{$itemsCanceledCount}} Canceled Reservations</span>
+                    </div>
+                </div>
             </div>
         </section>
+
 
         <!--  -->
         <!-- Statistics Section -->
@@ -178,7 +355,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Statistic</th>
+                        <th>Name</th>
                         <th>Total</th>
                     </tr>
                 </thead>

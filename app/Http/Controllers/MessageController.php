@@ -19,46 +19,42 @@ class MessageController extends Controller
     {
 
         $page_title = "Messages";
-        $current_user_name = Auth::user()->name;
-        $sender_name = Auth::user()->name;
+        $current_user_id = Auth::user()->id;
 
-
-        $latestMessage = Message::where('receiver_name', $current_user_name)->latest()->first();
+        $latestMessage = Message::where('receiver_id', $current_user_id)->latest()->first();
 
         if ($latestMessage) {
 
             $receiver_name = $latestMessage->sender_name;
         }
 
-        $latestContact = Message::where('receiver_name', Auth::user()->name)->first();
-
+        $latestContact = Message::where('receiver_id', Auth::user()->id)->first();
+        $sender_name = $latestContact->sender_id;
         $receiver_name = $latestContact ? $latestContact->sender_name : null;
 
-        $messagesByCurrentUser = Message::where('sender_name', $current_user_name)->where('receiver_name', $receiver_name)->orderBy('created_at', 'ASC')->get();
-        $messagesFromOtherUser = Message::where('sender_name', $receiver_name)->where('receiver_name', $sender_name)->orderBy('created_at', 'ASC')->get();
-
-        $receivers = Message::where('receiver_name', $sender_name)->get();
+        $receiver_id = Message::where('receiver_id', $current_user_id)->first();
+        $sender_id = Message::where('sender_id', $current_user_id)->first();
 
 
-        $contacts = $receivers->map(function ($receiver) {
-            return Message::where('receiver_name', $receiver->receiver_name)
-                ->latest()
-                ->first();
-        });
+        $receiver_name = User::where('id', Auth::user()->id)->first()->pluck('name');
+
+        $contacts = DB::table('messages')
+            ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
+            ->join('users', 'users.id', '=', 'messages.sender_id')
+            ->where(function ($query) {
+                $query->where('messages.receiver_id', Auth::user()->id);
+            })
+            ->whereIn('messages.id', function ($query) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from('messages')
+                    ->groupBy('sender_id', 'receiver_id');
+            })
+            ->get();
 
 
-        $allMessages = $messagesByCurrentUser->concat($messagesFromOtherUser)->sortBy('created_at');
+        $unreadMessages = Message::where('receiver_id', Auth::user()->id)->where('isReadByReceiver', false)->count();
+        $allMessages = Message::where('receiver_id', Auth::user()->id)->get();
 
-        $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
-
-        $unreadMessages = $messages->count();
-
-        $contacts = Message::where('receiver_name', $current_user_name)
-            ->latest()
-            ->get()
-            ->groupBy('sender_name')
-            ->map(fn($group) => $group->first())
-            ->values();
 
         $setting = Setting::where('user_id', Auth::user()->id)->first();
 
@@ -139,16 +135,17 @@ class MessageController extends Controller
             compact(
                 'users',
                 'setting',
-                'unreadMessages',
                 'contacts',
-                'current_user_name',
-                'receiver_name',
-                'sender_name',
+                'current_user_id',
+                'receiver_id',
+                'sender_id',
                 'notifications',
                 'unreadNotifications',
                 'page_title',
+                'currentCategory',
+                'sender_name',
                 'allMessages',
-                'currentCategory'
+                'unreadMessages'
             )
         );
     }

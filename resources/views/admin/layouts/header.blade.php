@@ -176,25 +176,48 @@
     <footer id="footer-portrait" class="flex bg-blue-500 p-2 justify-center z-50 shadow-md">
 
 
-        <div class="items-center flex p-2 space-x-8">
-            <a href="{{ route('categories') }}">
-                <i class="fa-solid fa-th-large text-white drop-shadow-lg"></i>
-
+        <div class="flex items-center space-x-8 overflow-x-auto transition-transform duration-300 ease-in-out">
+            <a href="{{ route('dashboard') }}" class="flex flex-col items-center">
+                <i class="fa-solid fa-calendar-days text-white drop-shadow-lg"></i>
+                <small class="text-white">Dashboard</small>
             </a>
-            <a href="{{ route('items') }}">
+
+            <a href="{{ route('items') }}" class="flex flex-col items-center">
                 <i class="fa-solid fa-boxes-stacked text-white drop-shadow-lg"></i>
+                <small class="text-white">Items</small>
+            </a>
+            <a href="{{ route('categories') }}" class="flex flex-col items-center">
+                <i class="fa-solid fa-th-large  text-white drop-shadow-lg"></i>
+                <small class="text-white">Categories</small>
+
+            </a>
+            <a href="{{ route('transactions') }}" class="flex flex-col items-center">
+                <i class="fa-solid fa-business-time  text-white drop-shadow-lg"></i>
+                <small class="text-white">Transactions</small>
             </a>
 
 
-            <a href="{{ route('dashboard') }}">
-                <i class="fas fa-home text-white fa-2xl drop-shadow-lg"></i>
+            <a href="{{ route('admin.claim-items') }}" class="flex flex-col items-center">
+                <i class="fas fa-hands  text-white drop-shadow-lg"></i>
+                <small class="text-white">Claim</small>
             </a>
 
 
-            <a href="{{ route('transactions') }}">
-                <i class="fa-solid fa-business-time text-white drop-shadow-lg"></i>
+
+            <a href="{{ route('admin.return-items') }}" class="flex flex-col items-center">
+                <i class="fas fa-truck text-white drop-shadow-lg"></i>
+                <small class="text-white">Return</small>
             </a>
-            <a href="{{ route('users') }}"> <i class="fa-solid fa-users-gear text-white drop-shadow-lg"></i>
+
+            <a href="{{ route('users') }}" class="flex flex-col items-center">
+                <i class="fa-solid fa-users-gear text-white drop-shadow-lg"></i>
+                <small class="text-white">Users</small>
+            </a>
+
+
+            <a href="{{ route('admin.analytics-index') }}" class="flex flex-col items-center">
+                <i class="fas fa-chart-line text-white drop-shadow-lg"></i>
+                <small class="text-white">Analytics</small>
             </a>
 
         </div>

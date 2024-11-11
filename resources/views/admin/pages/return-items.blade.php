@@ -1,7 +1,21 @@
 @extends('admin.layouts.header')
 @section('content')
+
+<style>
+    @media(orientation:portrait) {
+
+        #return-items-header-content {
+            display: flex;
+            justify-content: center;
+        }
+
+        #return-items-header-content form {
+            width: 100%;
+        }
+    }
+</style>
 <nav id="items-for-return-header" class="p-2 w-full shadow-md">
-    <div class="flex space-x-2 justify-end">
+    <div id="return-items-header-content" class="flex space-x-2 justify-end">
         <form hx-get="{{ route('admin.search-reservation-for-return') }}" hx-target="#items-for-return-list"
             hx-swap="innerHTML" hx-trigger="input" class="p-2 focus:outline bg-white shadow-inner rounded-full">
             <i class="fas fa-magnifying-glass"></i>

@@ -133,14 +133,14 @@ class UserController extends Controller
         $role = Role::findByName('staff');
         $user->assignRole($role);
 
-        Notification::create([
-            'icon' => Auth::user()->img,
-            'title' => 'Added a new user',
-            'description' => Auth::user()->name . ' added a new user ' . $request->name,
-            'redirect_link' => 'users',
-            'for' => 'both',
+        // Notification::create([
+        //     'icon' => Auth::user()->img,
+        //     'title' => 'Added a new user',
+        //     'description' => Auth::user()->name . ' added a new user ' . $request->name,
+        //     'redirect_link' => 'users',
+        //     'for' => 'both',
 
-        ]);
+        // ]);
 
         $newuser = User::latest()->first();
 

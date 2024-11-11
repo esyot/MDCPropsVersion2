@@ -80,6 +80,25 @@
 
 </header>
 
+<style>
+    @media(orientation:portrait) {
+
+        #analytics-charts {
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        #container-counts {
+            display: flex;
+            overflow-x: auto;
+        }
+
+    }
+</style>
+
 <section>
     <div id="analytics-charts" class="flex justify-between space-x-2 p-4">
 
@@ -273,12 +292,14 @@
 
     </script>
 
+
+
     <div class="">
         <h1 class="text-xl font-medium px-4">Overall Counts</h1>
 
     </div>
 
-    <div class="flex p-2">
+    <div id="container-counts" class="flex p-2">
 
         <div
             class="flex m-2 flex-col bg-white border w-[200px] rounded-xl transition-transform duration-300 ease-in-out hover:scale-90">
@@ -413,8 +434,8 @@
         </div>
     </div>
 
-
 </section>
+
 
 
 

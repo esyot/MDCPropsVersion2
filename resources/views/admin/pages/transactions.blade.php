@@ -1,10 +1,18 @@
 @extends('admin.layouts.header')
 @section('content')
 
+<style>
+@media(orientation:portrait){
+    #transactions-header-content{
+
+    }
+}
+</style>
+
 @if ($categoriesIsNull == false)
 
     <div id="transactions-header" class="flex items-center justify-between p-4 shadow-md">
-        <div class="flex items-center space-x-2 ">
+        <div id="transactions-header-content" class="flex items-center space-x-2 ">
             <form onchange="this.submit()" action="{{ route('transactionsFilter') }}" class="flex justify-around space-x-4"
                 method="GET">
                 @csrf
@@ -19,7 +27,7 @@
                     @endforeach
                 </select>
 
-                <select title="Status" name="status" id="" class="block p-2 border border-gray-500 rounded cursor-pointer">
+                <select title="Status" name="status" id="" class="shadow-inner block px-4 py-2 border border-gray-500 rounded cursor-pointer">
                     <option value="{{ $currentStatus }}" class="text-red-500">{{ ucfirst($currentStatus) }}</option>
                     <option value="approved">Approved</option>
                     <option value="pending">Pending</option>

@@ -65,6 +65,57 @@
         .placeholder-center::placeholder {
             text-align: center;
         }
+
+        @media(orientation:landscape) {
+
+            #footer {
+                display: none;
+            }
+
+            #see-more-btn {
+                display: none;
+            }
+
+            #footer-portrait {
+                display: none;
+            }
+
+        }
+
+        @media (orientation: portrait) {
+
+
+            #sidebar {
+                display: none;
+            }
+
+            #topbar-content {
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            #notificationTitle {
+                display: none;
+            }
+
+            #messageTitle {
+                display: none;
+            }
+
+            #calendar-controls {
+                display: none;
+            }
+
+            #custom-date-form {
+                margin-right: 12px;
+            }
+
+            #footer-landscape {
+                display: none;
+            }
+
+
+        }
     </style>
 
 </head>
@@ -72,7 +123,13 @@
 <body class="font-verdana flex h-screen overflow-hidden bg-gray-100 text-gray-800">
 
     @include('admin.components.rightbar')
+
+    @hasrole('superadmin|admin|staff')
+
     @include('admin.components.leftbar')
+
+    @endhasrole
+
     @include('admin.components.topbar')
 
     <!-- contents -->

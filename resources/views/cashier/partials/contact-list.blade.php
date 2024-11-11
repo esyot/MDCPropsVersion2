@@ -1,5 +1,5 @@
 @foreach($contacts as $contact)
-    <a href="{{ route('chatSelected', ['contact' => $contact->sender_name]) }}">
+    <a href="{{ route('chatSelected', ['contact' => $contact->sender_id]) }}">
         <li
             class="list-none bg-gray-100 {{ $contact->isReadByReceiver == false ? 'font-bold bg-gray-300 text-black' : '' }} hover:bg-gray-300 p-3 rounded-lg mb-2 cursor-pointer duration-300">
             <div class="flex justify-between mx-2 items-center">
@@ -59,5 +59,8 @@
 
 @endif
 </div>
-<button class="w-full p-2 text-blue-600 cursor-pointer hover:bg-blue-100 transition duration-150 ease-in-out">See
-    All Messages</button>
+<div class="flex justify-center items-center w-full">
+    <a href="{{ route('messages') }}"
+        class="p-2 text-blue-600 cursor-pointer hover:opacity-50 transition duration-150 ease-in-out">See
+        All Messages</a>
+</div>

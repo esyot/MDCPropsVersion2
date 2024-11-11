@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Item;
+use App\Models\ItemsTransaction;
 use App\Models\Rentee;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -53,6 +54,18 @@ class ExportPDFController extends Controller
         $cashiersCount = User::role('cashier')->count();
         $staffsCount = User::role('staff')->count();
 
+        $itemsCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            ->whereYear('canceledByRentee_at', $currentYear)
+            ->count();
+
+        $itemsDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            ->whereYear('declinedByAdmin_at', $currentYear)
+            ->count();
+
+        $itemsCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            ->whereYear('returned_at', $currentYear)
+            ->count();
+
         $pdfData = [
             'usersCount' => $usersCount,
             'renteesCount' => $renteesCount,
@@ -65,6 +78,9 @@ class ExportPDFController extends Controller
             'barChartImage' => $barChartFilename,
             'pieChartImage' => $pieChartFilename,
             'currentYear' => $currentYear,
+            'itemsCanceledCount' => $itemsCanceledCount,
+            'itemsDeclinedCount' => $itemsDeclinedCount,
+            'itemsCompletedCount' => $itemsCompletedCount,
         ];
 
         $pdf = PDF::loadView('admin.exports.analytics-pdf', $pdfData);
