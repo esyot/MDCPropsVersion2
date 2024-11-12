@@ -1,16 +1,17 @@
 <div class="flex flex-col">
-    <label class="block text-gray-700 font-semibold mb-1" for="destination">Destination</label>
+    <label class="block text-gray-700 font-semibold mb-1" for="destination">Destination:</label>
     <div class="flex items-center space-x-2">
         <select class="flex-grow p-2 border border-gray-300 rounded" id="destinationList" name="destination">
-            <option value="" class="hidden" id="destination"></option>
+            <option value="" class="" id="destination">
+            </option>
             @foreach ($destinations as $destination)
                 <option value="{{ $destination->municipality }}">{{ $destination->municipality }}</option>
             @endforeach
         </select>
-        <button type="button" onclick="document.getElementById('map').classList.remove('hidden')" type="button"
-            class="flex-shrink-0 px-4 py-2 bg-green-500 rounded text-green-100 hover:bg-green-800">
+        <button title="Open map" type="button" onclick="document.getElementById('map').classList.remove('hidden')"
+            type="button" class="flex-shrink-0 px-4 py-2 bg-green-500 rounded text-green-100 hover:bg-green-800">
             <i class="fa-solid fa-map-location-dot"></i>
-            <span>Open Map</span>
+
         </button>
     </div>
 </div>

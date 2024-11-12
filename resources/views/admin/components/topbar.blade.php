@@ -56,7 +56,7 @@
                 <div id="notification-dropdown"
                     class="rounded mt-2 mx-4 hidden bg-white p-2 shadow-lg border border-gray-200 z-50">
                     <div>
-                        <h1 class="text-2xl font-bold">Notifications</h1>
+                        <h1 id="title" class="text-2xl font-bold">Notifications</h1>
                     </div>
 
                     <div class="flex justify-between items-center">
@@ -125,17 +125,17 @@
 
                         <div class="relative inline-block text-left">
                             <button id="dropdownButton" class="focus:outline-none">
-                                <i class="text-gray-500 hover:bg-gray-200 p-2 fas fa-ellipsis rounded-full"></i>
+                                <i class=" hover:bg-gray-200 p-2 fas fa-ellipsis rounded-full"></i>
                             </button>
                             <div id="dropdownMenu"
                                 class="dropdown-content absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg hidden">
                                 <a href="{{ route('notifications.read-all') }}"
-                                    class="block px-4 py-2 rounded hover:bg-gray-100">
-                                    <i class="text-blue-500 fas fa-check-circle mr-2"></i> Mark as all read
+                                    class="block px-4 py-2 rounded hover:opacity-50">
+                                    <i class="fas fa-check-circle mr-2"></i> Mark as all read
                                 </a>
                                 <a href="{{ route('notifications.delete-all') }}"
-                                    class="block px-4 py-2 rounded hover:bg-gray-100">
-                                    <i class="text-blue-500 fas fa-trash mr-2"></i> Delete All
+                                    class="block px-4 py-2 rounded hover:opacity-50">
+                                    <i class="fas fa-trash mr-2"></i> Delete All
                                 </a>
                             </div>
 
@@ -145,7 +145,7 @@
 
 
                     <div id="notification-list"
-                        class="z-10 flex flex-col max-h-[200px] overflow-y-auto custom-scrollbar">
+                        class="z-10 flex flex-col max-h-[500px] overflow-y-auto custom-scrollbar">
 
                         @include('admin.partials.notification-list')
 
@@ -205,8 +205,8 @@
 
                         <div class="p-2">
                             <div class="flex justify-between items-center">
-                                <div id="dropdown-title" class="py-2">
-                                    <h1 class="text-2xl font-bold">Chats</h1>
+                                <div class="py-2">
+                                    <h1 id="title" class="text-2xl font-bold">Chats</h1>
                                 </div>
 
 
@@ -286,11 +286,11 @@
                     <!-- User Dropdown Menu -->
                     <div id="user-dropdown" class="flex absolute right-0 hidden z-50 justify-center items-center z-50">
 
-                        <div id="user-dropdown-content" class="w-64 rounded-lg shadow-xl">
+                        <div id="user-dropdown-content" class="w-[150px] rounded-lg shadow-xl border border-gray-300">
                             <div class="flex flex-col space-y-2">
                                 <a href="{{ route('profile') }}" title="{{Auth::user()->name}}">
 
-                                    <div class="p-2 cursor-pointer hover:bg-gray-200 hover:text-gray-500 rounded-t-lg">
+                                    <div class="p-2 cursor-pointer hover:opacity-50 rounded-t-lg">
 
                                         <i class="text-blue-500 fas fa-user mr-2"></i>
                                         <span>{{ Auth::user()->name }}</span>
@@ -298,8 +298,7 @@
                                     </div>
                                 </a>
 
-                                <div class="p-2 cursor-pointer hover:bg-gray-200 hover:text-gray-500 rounded-b-lg"
-                                    title="Logout"
+                                <div class="p-2 cursor-pointer hover:opacity-50 rounded-b-lg" title="Logout"
                                     onclick="document.getElementById('logoutConfirm').classList.remove('hidden')">
 
 
@@ -408,7 +407,7 @@
                 }
                 dropdownButton.addEventListener('click', (event) => {
                     event.stopPropagation();
-                    console.log('Dropdown button clicked');
+
                     dropdownMenu.classList.toggle('hidden');
                 });
 

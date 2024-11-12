@@ -1,12 +1,11 @@
 @extends('admin.layouts.header')
 @section('content')
-<header id="analytics-header" class="flex items-center justify-between p-2 ">
+<header id="analytics-header" class="flex items-center justify-between p-2 shadow-md">
     <form action="{{ route('admin.analytics-charts-custom-year') }}" action="GET">
         @csrf
         <div class="flex items-center space-x-2">
-            <label for="">Select Year:</label>
-            <select onchange="this.form.submit()" name="year"
-                class="block p-2 border border-gray-300 shadow-inner rounded">
+            <label for="" class="{{$setting->darkMode ? 'text-white' : ''}}">Select Year:</label>
+            <select onchange="this.form.submit()" name="year" class="block border border-gray-300 shadow-inner rounded">
 
                 <option class="text-red-500" value="{{$currentYear}}">{{$currentYear}}</option>
                 <option value="2024">2024</option>
@@ -86,10 +85,17 @@
         #analytics-charts {
             display: flex;
             flex-direction: column;
+            align-items: end;
             height: 500px;
             overflow-y: auto;
-            overflow-x: hidden;
+
         }
+
+        #analytics-charts>*+* {
+            margin-top: 1rem;
+
+        }
+
 
         #container-counts {
             display: flex;
@@ -102,11 +108,10 @@
 <section>
     <div id="analytics-charts" class="flex justify-between space-x-2 p-4">
 
-        <div class="flex flex-col items-center w-full h-96 bg-gray-100 rounded">
+        <div
+            class="flex flex-col items-center w-full h-96 bg-gray-100 rounded {{ $setting->darkMode ? 'bg-gray-300' : 'bg-white border shadow-md'}}">
             <div class="flex items-center w-full justify-between">
-                <h2 class="text-xl font-semibold text-gray-800 text-center">
-                    Monthly Reservation Counts of year {{$currentYear}}
-                </h2>
+
                 <div class="flex items-center space-x-1">
 
                 </div>
@@ -115,13 +120,25 @@
             <canvas id="transactionChart" class="w-full h-full"></canvas>
         </div>
 
-        <div class="flex flex-col items-center w-full h-96 bg-gray-100 rounded">
-            <h2 class="text-xl font-semibold text-gray-800 text-center mb-4">Overall Reservation Counts of year
-                {{$currentYear}}
-            </h2>
+        <div
+            class="flex justify-center items-center w-full h-96 rounded {{ $setting->darkMode ? 'bg-gray-300' : 'bg-white border shadow-md' }}">
 
             <div class="relative">
                 <canvas id="myPieChart"></canvas>
+            </div>
+            <div class="space-y-1">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-square text-yellow-500"></i>
+                    <small> {{ $itemsCanceledCount }} </small>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-square text-red-500"></i>
+                    <small> {{ $itemsDeclinedCount }} </small>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-square text-green-500"></i>
+                    <small> {{ $itemsCompletedCount }} </small>
+                </div>
             </div>
         </div>
     </div>
@@ -257,22 +274,21 @@
             const transactionCanvas = document.getElementById('transactionChart');
             const pieChartCanvas = document.getElementById('myPieChart');
 
-            // Ensure both canvases are present
             if (transactionCanvas && pieChartCanvas) {
-                // Check if both canvases are rendered properly (i.e., have non-zero dimensions)
+
                 if (transactionCanvas.width > 0 && transactionCanvas.height > 0 &&
                     pieChartCanvas.width > 0 && pieChartCanvas.height > 0) {
 
-                    // Capture the base64 image representation of the canvas
+
                     const barChartImage = transactionCanvas.toDataURL('image/png');
                     const pieChartImage = pieChartCanvas.toDataURL('image/png');
 
-                    // Check that the base64 image data is valid
+
                     if (barChartImage && pieChartImage &&
                         barChartImage.startsWith('data:image/png;base64,') &&
                         pieChartImage.startsWith('data:image/png;base64,')) {
 
-                        // Set the base64 images into the hidden form inputs
+
                         document.getElementById('barChartImageInput').value = barChartImage;
                         document.getElementById('pieChartImageInput').value = pieChartImage;
 
@@ -295,14 +311,14 @@
 
 
     <div class="">
-        <h1 class="text-xl font-medium px-4">Overall Counts</h1>
+        <h1 class="text-xl font-medium px-4 {{ $setting->darkMode ? 'text-white' : ''}}">Overall Counts</h1>
 
     </div>
 
     <div id="container-counts" class="flex p-2">
 
         <div
-            class="flex m-2 flex-col bg-white border w-[200px] rounded-xl transition-transform duration-300 ease-in-out hover:scale-90">
+            class="flex m-2 flex-col bg-white border shadow-md w-[200px] rounded-xl cursor-pointer {{ $setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : ''}} ">
 
             <div class="p-2">
                 <div class="flex items-center justify-between">
@@ -319,7 +335,7 @@
         </div>
 
         <div
-            class="flex m-2 flex-col bg-white border w-[200px] rounded-xl transition-transform duration-300 ease-in-out hover:scale-90">
+            class="flex m-2 flex-col bg-white border shadow-md w-[200px] rounded-xl cursor-pointer {{ $setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : ''}} ">
             <div class="p-2">
                 <div class="flex items-center justify-between">
                     <span class="text-2xl font-bold">{{ $renteesCount }}</span>
@@ -337,7 +353,7 @@
         </div>
 
         <div
-            class="flex m-2 flex-col bg-white border w-[200px] rounded-xl transition-transform duration-300 ease-in-out hover:scale-90">
+            class="flex m-2 flex-col bg-white border shadow-md w-[200px] rounded-xl cursor-pointer {{ $setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : ''}} ">
             <div class="p-2">
                 <div class="flex items-center justify-between">
                     <span class="text-2xl font-bold">{{ $itemsCount }}</span>
@@ -353,7 +369,7 @@
         </div>
 
         <div
-            class="flex m-2 flex-col bg-white border w-[200px] rounded-xl transition-transform duration-300 ease-in-out hover:scale-90">
+            class="flex m-2 flex-col bg-white border shadow-md w-[200px] rounded-xl cursor-pointer {{ $setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : ''}} ">
             <div class="p-2">
                 <div class="flex items-center justify-between">
                     <span class="text-2xl font-bold">{{ $categoriesCount }}</span>
@@ -368,7 +384,7 @@
             </div>
         </div>
         <div
-            class="flex m-2 flex-col bg-white border w-[200px] rounded-xl transition-transform duration-300 ease-in-out hover:scale-90">
+            class="flex m-2 flex-col bg-white border shadow-md w-[200px] rounded-xl cursor-pointer {{ $setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : ''}} ">
             <div class="p-2">
                 <div class="flex items-center justify-between">
                     <span class="text-2xl font-bold">{{ $superadminsCount }}</span>
@@ -384,7 +400,7 @@
         </div>
 
         <div
-            class="flex m-2 flex-col bg-white border w-[200px] rounded-xl transition-transform duration-300 ease-in-out hover:scale-90">
+            class="flex m-2 flex-col bg-white border shadow-md w-[200px] rounded-xl cursor-pointer {{ $setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : ''}} ">
             <div class="p-2">
                 <div class="flex items-center justify-between">
                     <span class="text-2xl font-bold">{{ $adminsCount }}</span>
@@ -400,7 +416,7 @@
         </div>
 
         <div
-            class="flex m-2 flex-col bg-white border w-[200px] rounded-xl transition-transform duration-300 ease-in-out hover:scale-90">
+            class="flex m-2 flex-col bg-white border shadow-md w-[200px] rounded-xl cursor-pointer {{ $setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : ''}} ">
             <div class="p-2">
                 <div class="flex items-center justify-between">
                     <span class="text-2xl font-bold">{{ $staffsCount }}</span>
@@ -418,7 +434,7 @@
 
 
         <div
-            class="flex m-2 flex-col bg-white border w-[200px] rounded-xl transition-transform duration-300 ease-in-out hover:scale-90">
+            class="flex m-2 flex-col bg-white border shadow-md w-[200px] rounded-xl cursor-pointer {{ $setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : ''}} ">
             <div class="p-2">
                 <div class="flex items-center justify-between">
                     <span class="text-2xl font-bold">{{ $cashiersCount }}</span>

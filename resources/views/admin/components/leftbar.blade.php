@@ -16,7 +16,7 @@
             <img class="w-12 h-12" src="{{asset('asset/photos/logo.png')}}" alt="Logo">
             <div class="flex mb-4">
                 <span id="logoLabel" class="ml-4 text-sm text-center hidden">MDC - Property Rental & <br>Reservation
-                    System</span>
+                    Management System</span>
             </div>
         </div>
 
@@ -28,8 +28,7 @@
                     title="Dashboard">
                     <section
                         class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Dashboard' ? 'bg-gray-100 text-blue-500 ' : '' }}  ">
-                        <i
-                            class="fa-solid fa-calendar-days fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                        <i class="fa-solid fa-calendar-days fa-lg"></i>
                         <span class="pl-2 pr-[100px] text-sm hidden">Dashboard</span>
                     </section>
                 </a>
@@ -37,12 +36,11 @@
             @can('can view items')
 
                 <a href="{{ route('items') }}"
-                    class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
+                    class="flex items-center justify-center text-white hover:text-blue-300 rounded-lg "
                     title="Manage Items">
                     <section
                         class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Items' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
-                        <i
-                            class="fa-solid fa-boxes-stacked fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                        <i class="fa-solid fa-boxes-stacked fa-lg"></i>
                         <span class="pl-2 pr-[130px] text-sm hidden">Items</span>
                     </section>
                 </a>
@@ -54,8 +52,7 @@
                     title="Manage Categories">
                     <section
                         class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Categories' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
-                        <i
-                            class="fa-solid fa-th-large fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                        <i class="fa-solid fa-th-large fa-lg"></i>
                         <span class="pl-2 pr-[100px] text-sm hidden">Categories</span>
                     </section>
                 </a>
@@ -66,8 +63,7 @@
                     title="Manage Transactions">
                     <section
                         class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Transactions' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
-                        <i
-                            class="fa-solid fa-business-time fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                        <i class="fa-solid fa-business-time fa-lg"></i>
                         <span class="pl-2 pr-[100px] text-sm hidden">Transactions</span>
                     </section>
                 </a>
@@ -77,8 +73,7 @@
                 title="Claim Items">
                 <section
                     class="flex justify-center items-center rounded-lg p-4  {{ $page_title == 'Claim Items' ? 'bg-gray-100 text-blue-500' : '' }}">
-                    <i
-                        class="fas fa-hands fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                    <i class="fas fa-hands fa-lg"></i>
                     <span class="pl-2 pr-[130px] text-sm hidden">Claim</span>
                 </section>
             </a>
@@ -88,8 +83,7 @@
                 title="Return Items">
                 <section
                     class="flex justify-center items-center rounded-lg p-4  {{ $page_title == 'Return Item' ? 'bg-gray-100 text-blue-500' : '' }}">
-                    <i
-                        class="fas fa-truck fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                    <i class="fas fa-truck fa-lg"></i>
                     <span class="pl-2 pr-[130px] text-sm hidden">Return</span>
                 </section>
             </a>
@@ -100,8 +94,7 @@
                 title="manage Users">
                 <section
                     class="flex justify-center items-center rounded-lg p-4  {{ $page_title == 'Manage Users' ? 'bg-gray-100 text-blue-500' : '' }}">
-                    <i
-                        class="fa-solid fa-users-gear fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                    <i class="fa-solid fa-users-gear fa-lg"></i>
                     <span class="pl-2 pr-[130px] text-sm hidden">Users</span>
                 </section>
             </a>
@@ -112,8 +105,7 @@
                 title="Analytics">
                 <section
                     class="flex justify-center items-center rounded-lg p-4  {{ $page_title == 'Analytics' ? 'bg-gray-100 text-blue-500' : '' }}">
-                    <i
-                        class="fas fa-chart-line fa-lg transition-transform duration-300 ease-in-out transform hover:scale-110"></i>
+                    <i class="fas fa-chart-line fa-lg"></i>
                     <span class="pl-2 pr-[130px] text-sm hidden">Analytics</span>
                 </section>
             </a>
@@ -124,8 +116,8 @@
 
         <div class="flex justify-center">
             <button title="Expand | Shrink" id="toggle-button"
-                class="px-2 py-2 flex items-center justify-center bg-white hover:bg-gray-400 rounded-full transition duration-200 transform hover:scale-110">
-                <i class="fa-solid fa-arrow-right text-black"></i>
+                class="hover:opacity-50 px-2 py-2 flex items-center justify-center">
+                <i class="fas fa-chevron-circle-right text-[30px] text-white"></i>
             </button>
         </div>
     </div>
@@ -151,8 +143,8 @@
     toggleButton.addEventListener('click', () => {
         sidebar.classList.toggle('w-64');
         sidebar.classList.toggle('w-20');
-        toggleButton.querySelector('i').classList.toggle('fa-arrow-left');
-        toggleButton.querySelector('i').classList.toggle('fa-arrow-right');
+        toggleButton.querySelector('i').classList.toggle('fa-chevron-circle-left');
+        toggleButton.querySelector('i').classList.toggle('fa-chevron-circle-right');
         logoLabel.classList.toggle('hidden');
         menuItems.classList.toggle('ml-12');
 

@@ -184,24 +184,29 @@ class ItemController extends Controller
 
     public function itemsFilter(Request $request)
     {
-        $current_user_name = "Reinhard Esteban";
+        $current_user_id = Auth::user()->id;
         $page_title = "Items";
         $currentCategory = Category::find($request->category);
         $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : Item::all();
         $categories = Category::all();
-        $setting = Setting::findOrFail(1);
+        $setting = Setting::where('user_id', $current_user_id)->first();
 
-        $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
+        $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
         $unreadMessages = $messages->count();
-        $contacts = Message::where('receiver_name', $current_user_name)
-            ->latest()
-            ->get()
-            ->groupBy('sender_name')
-            ->map(fn($group) => $group->first())
-            ->values();
+        $contacts = DB::table('messages')
+            ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
+            ->join('users', 'users.id', '=', 'messages.sender_id')
+            ->where(function ($query) {
+                $query->where('messages.receiver_id', Auth::user()->id);
+            })
+            ->whereIn('messages.id', function ($query) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from('messages')
+                    ->groupBy('sender_id', 'receiver_id');
+            })
+            ->get();
 
-        // Settings and roles
-        $setting = Setting::find(1);
+
         $roles = Auth::user()->getRoleNames();
 
         if ($roles->contains('superadmin')) {
@@ -255,15 +260,15 @@ class ItemController extends Controller
         }
 
         if ($currentCategory) {
-            // You can safely access $currentCategory->id here
+
             $currentCategoryId = $currentCategory->id;
             $categoriesIsNull = false;
         } else {
-            // Handle the case where no categories are found
-            $categoriesIsNull = true; // or set a default value
+
+            $categoriesIsNull = true;
         }
 
-        $users = User::all();
+        $users = User::whereNot('id', Auth::user()->id)->get();
 
         return view('admin.pages.items', compact(
             'users',

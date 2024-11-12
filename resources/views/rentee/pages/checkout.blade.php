@@ -161,7 +161,7 @@
                 <div class="flex justify-end p-2 bg-gray-100 rounded-b-lg">
                     <button type="button"
                         onclick="document.getElementById('terms-and-conditions').classList.add('hidden')"
-                        class="px-4 py-2 border border-gray-300 hover:opacity-50 shadow-md rounded">Close</button>
+                        class="px-4 py-2 border border-gray-300 hover:opacity-50 shadow-md rounded">Done</button>
                 </div>
             </div>
         </div>

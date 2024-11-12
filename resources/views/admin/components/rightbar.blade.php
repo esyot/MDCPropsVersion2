@@ -104,8 +104,8 @@
 <!-- Toggle Button -->
 <div id="toggle-container" class="fixed right-1 bottom-[45%] z-50">
     <button id="open-btn" title="Display Settings"
-        class="{{ $setting->transition ? 'transition-transform duration-300 ease-in-out transform hover:scale-110' : '' }} {{ $setting->darkMode ? 'bg-gray-500 hover:bg-gray-600' : 'bg-blue-400 hover:bg-blue-300' }} shadow-xl toggle-button px-[15px] py-[10px] text-white font-bold rounded-full">
-        <i id="btn" class="fa-solid fa-arrow-left"></i>
+        class="hover:opacity-50  rounded-full {{ $setting->darkMode ? 'bg-black text-white' : 'bg-white text-blue-500' }}  shadow-md  toggle-button font-bold rounded-full">
+        <i id="btn" class=" fas fa-chevron-circle-left text-[40px]"></i>
     </button>
 </div>
 
@@ -117,15 +117,15 @@
     toggleBtn.addEventListener('click', function () {
         rightbar.classList.toggle('translate-x-full');
         toggleBtn.classList.toggle('mr-[260px]');
-        buttonIcon.classList.toggle('fa-arrow-left');
-        buttonIcon.classList.toggle('fa-arrow-right');
+        buttonIcon.classList.toggle('fa-chevron-circle-left');
+        buttonIcon.classList.toggle('fa-chevron-circle-right');
     });
 
     function closeSidebar() {
         rightbar.classList.add('translate-x-full');
         toggleBtn.classList.remove('mr-[260px]');
-        buttonIcon.classList.remove('fa-arrow-right');
-        buttonIcon.classList.add('fa-arrow-left');
+        buttonIcon.classList.remove('fa-chevron-circle-right');
+        buttonIcon.classList.add('fa-chevron-circle-left');
     }
 
     document.addEventListener('click', function (event) {

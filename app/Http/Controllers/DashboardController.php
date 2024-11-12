@@ -110,22 +110,20 @@ class DashboardController extends Controller
         }
 
         if ($currentCategory) {
-            // You can safely access $currentCategory->id here
             $currentCategoryId = $currentCategory->id;
             $categoriesIsNull = false;
         } else {
-            // Handle the case where no categories are found
-            $categoriesIsNull = true; // or set a default value
+
+            $categoriesIsNull = true;
         }
 
-        // Safely get items only if currentCategory exists
         $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : collect();
 
-        // Transactions and records
+
         $daysWithRecords = ItemsTransaction::all()->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))->unique()->values()->toArray();
 
-        // Users and destinations
-        $users = User::where('name', '!=', $current_user_name)->get();
+
+        $users = User::where('id', '!=', $current_user_id)->get();
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
 
         $transactions = ItemsTransaction::all();
@@ -165,7 +163,7 @@ class DashboardController extends Controller
     public function dateCustom(Request $request)
     {
         $page_title = "Dashboard";
-        $current_user_name = Auth::user()->name;
+        $current_user_id = Auth::user()->id;
 
         $year = $request->year;
         $month = $request->month;
@@ -175,7 +173,7 @@ class DashboardController extends Controller
 
         $transactions = ItemsTransaction::where('category_id', $category)->get();
 
-        $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
+        $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
         $unreadMessages = $messages->count();
 
         $daysWithRecords = $transactions->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))
@@ -185,12 +183,18 @@ class DashboardController extends Controller
 
         $items = Item::where('category_id', $category)->orderBy('name', 'ASC')->get();
 
-        $contacts = Message::where('receiver_name', $current_user_name)
-            ->latest()
-            ->get()
-            ->groupBy('sender_name')
-            ->map(fn($group) => $group->first())
-            ->values();
+        $contacts = DB::table('messages')
+            ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
+            ->join('users', 'users.id', '=', 'messages.sender_id')
+            ->where(function ($query) {
+                $query->where('messages.receiver_id', Auth::user()->id);
+            })
+            ->whereIn('messages.id', function ($query) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from('messages')
+                    ->groupBy('sender_id', 'receiver_id');
+            })
+            ->get();
 
 
         $setting = Setting::find(1);
@@ -254,22 +258,22 @@ class DashboardController extends Controller
 
         }
         if ($currentCategory) {
-            // You can safely access $currentCategory->id here
+
             $currentCategoryId = $currentCategory->id;
             $categoriesIsNull = false;
         } else {
-            // Handle the case where no categories are found
-            $categoriesIsNull = true; // or set a default value
+
+            $categoriesIsNull = true;
         }
 
-        // Safely get items only if currentCategory exists
+
         $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : collect();
 
-        // Transactions and records
+
         $daysWithRecords = ItemsTransaction::all()->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))->unique()->values()->toArray();
 
-        // Users and destinations
-        $users = User::where('name', '!=', $current_user_name)->get();
+
+        $users = User::where('name', '!=', $current_user_id)->get();
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
 
         $transactions = ItemsTransaction::all();
@@ -302,7 +306,6 @@ class DashboardController extends Controller
 
     public function calendarMove($action, $category, $year, $month)
     {
-        //date
         $currentDate = Carbon::create($year, $month, 1);
 
         if ($action === 'left') {
@@ -312,19 +315,24 @@ class DashboardController extends Controller
         } elseif ($action === 'today') {
             $currentDate = now();
         }
-        $current_user_name = Auth::user()->name;
+        $current_user_id = Auth::user()->id;
 
         $page_title = 'Dashboard';
 
-        // Messages
-        $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
+        $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
         $unreadMessages = $messages->count();
-        $contacts = Message::where('receiver_name', $current_user_name)
-            ->latest()
-            ->get()
-            ->groupBy('sender_name')
-            ->map(fn($group) => $group->first())
-            ->values();
+        $contacts = DB::table('messages')
+            ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
+            ->join('users', 'users.id', '=', 'messages.sender_id')
+            ->where(function ($query) {
+                $query->where('messages.receiver_id', Auth::user()->id);
+            })
+            ->whereIn('messages.id', function ($query) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from('messages')
+                    ->groupBy('sender_id', 'receiver_id');
+            })
+            ->get();
 
         $setting = Setting::where('user_id', Auth::user()->id)->first();
 
@@ -394,22 +402,19 @@ class DashboardController extends Controller
         }
 
         if ($currentCategory) {
-            // You can safely access $currentCategory->id here
+
             $currentCategoryId = $currentCategory->id;
             $categoriesIsNull = false;
         } else {
-            // Handle the case where no categories are found
-            $categoriesIsNull = true; // or set a default value
+
+            $categoriesIsNull = true;
         }
 
-        // Safely get items only if currentCategory exists
         $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : collect();
 
-        // Transactions and records
         $daysWithRecords = ItemsTransaction::all()->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))->unique()->values()->toArray();
 
-        // Users and destinations
-        $users = User::where('name', '!=', $current_user_name)->get();
+        $users = User::where('name', '!=', $current_user_id)->get();
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
 
         $transactions = ItemsTransaction::all();
@@ -421,7 +426,7 @@ class DashboardController extends Controller
             'currentCategory',
             'roles',
             'setting',
-            'current_user_name',
+            'current_user_id',
             'contacts',
             'unreadMessages',
             'page_title',

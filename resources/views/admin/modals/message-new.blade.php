@@ -44,9 +44,9 @@
                 </div>
 
                 <div class="mt-2">
-                    <label for="content">Message:</label>
-                    <textarea id="content" name="content" placeholder="Input text here..."
-                        class="block h-[300px] border border-gray-300 w-full" required></textarea>
+                    <label for="message-content">Message:</label>
+                    <textarea id="message-content" name="content" placeholder="Input text here..."
+                        class="block h-[300px]  border border-gray-300 w-full" required></textarea>
                 </div>
                 <div id="no-content-error" class="hidden text-red-500">
                     <h1>Message field cannot be empty</h1>
@@ -63,7 +63,7 @@
                 <script>
                     function handleSubmit() {
                         var userName = document.getElementById('userName').value;
-                        var content = document.getElementById('content').value;
+                        var content = document.getElementById('message-content').value;
 
                         // Clear previous error messages
                         document.getElementById('no-user-selected-error').classList.add('hidden');

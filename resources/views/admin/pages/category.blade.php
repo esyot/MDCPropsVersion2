@@ -106,18 +106,15 @@
 
 <div id="main-content" class="w-full h-full relative p-4 overflow-y-auto custom-scrollbar">
     <div class="flex flex-wrap flex-grow gap-2">
-        <!-- Add Category Button -->
+
         @can('can manage categories')
             <div id="add-new-category-card" title="Add a new category"
-                class="flex flex-col bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-90' : '' }}">
+                class="flex flex-col bg-gray-300 rounded-lg hover:bg-gray-500 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-90' : '' }}">
                 <div class="h-full flex items-center justify-center cursor-pointer hover:text-gray-800 text-gray-400 "
                     onclick="document.getElementById('category-add-modal').classList.remove('hidden')">
                     <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
                 </div>
-                <div
-                    class="bg-gradient-to-b p-2 from-blue-500 to-blue-800 w-full h-full shadow-md text-center flex items-center justify-center">
-                    <h1 class="text-white py-2 font-bold">Add a new category</h1>
-                </div>
+
             </div>
         @endcan
 
@@ -141,8 +138,6 @@
             });
         </script>
 
-
-        <!-- Category Items -->
         @foreach ($categories as $category)  
 
                 <div id="card"
@@ -164,13 +159,12 @@
                         <button class="prev-slide">&#10094;</button>
                         <button class="next-slide">&#10095;</button>
                     </div>
-                    <div
-                        class="flex-col bg-gradient-to-b from-blue-500 to-blue-800 w-full h-full shadow-md text-center p-2 flex items-center justify-center">
+                    <div class="p-2 bg-gradient-to-b from-blue-500 to-blue-800">
                         <div class="flex items-center justify-center">
                             <h1 class="text-lg font-semibold drop-shadow">{{ $category->title }}</h1>
                         </div>
 
-                        <div class="w-full space-y-2">
+                        <div class="w-full h-full space-y-2">
                             <button title="Edit Details"
                                 onclick="document.getElementById('category-update-{{$category->id}}').classList.remove('hidden')"
                                 class="py-2 w-full shadow-md bg-blue-100 text-blue-800 hover:opacity-50 rounded">Edit

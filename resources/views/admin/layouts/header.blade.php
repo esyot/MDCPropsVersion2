@@ -11,7 +11,7 @@
     <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
     <script src="{{ asset('asset/js/jsQR.min.js') }}"></script>
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
-    @include('admin.styles.style')
+    @include('admin.styles.dark-mode')
 
     @if (!Auth::user()->isPasswordChanged && $page_title != 'Profile')
         <script>

@@ -130,24 +130,22 @@ class TransactionController extends Controller
     }
     public function decline(Request $request, $id)
     {
-        // Find the reservation
+
         $reservation = ItemsTransaction::find($id);
 
         if (!$reservation) {
             return redirect()->back()->with('error', 'Reservation not found.');
         }
 
-        // Find the transaction associated with the reservation
         $transaction = Transaction::find($reservation->transaction->id);
 
         if (!$transaction) {
             return redirect()->back()->with('error', 'Transaction not found.');
         }
 
-        // Get all reservations for the transaction
+
         $reservations = ItemsTransaction::where('transaction_id', $transaction->id)->get();
 
-        // Update the current reservation's decline status
         $reservation->update([
             'message' => $request->message,
             'declinedByAdmin_at' => now(),
@@ -168,15 +166,13 @@ class TransactionController extends Controller
             $allDeclined = true;
         }
 
-
-        // If all reservations are declined, update the transaction status
         if ($allDeclined == true) {
             $transaction->update([
                 'status' => 'declined',
             ]);
         }
 
-        // Return a success message
+
         return redirect()->back()->with('success', 'Transaction has been successfully declined!');
     }
 
@@ -241,27 +237,32 @@ class TransactionController extends Controller
         }
 
 
-        $current_user_name = Auth::user()->name;
+        $current_user_id = Auth::user()->id;
 
         $category = $request->category;
 
         $categories = Category::all();
 
-
         $page_title = 'Transactions';
 
         $setting = Setting::findOrFail(1);
 
-        $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
+        $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
 
         $unreadMessages = $messages->count();
 
-        $contacts = Message::where('receiver_name', $current_user_name)
-            ->latest()
-            ->get()
-            ->groupBy('sender_name')
-            ->map(fn($group) => $group->first())
-            ->values();
+        $contacts = DB::table('messages')
+            ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
+            ->join('users', 'users.id', '=', 'messages.sender_id')
+            ->where(function ($query) {
+                $query->where('messages.receiver_id', Auth::user()->id);
+            })
+            ->whereIn('messages.id', function ($query) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from('messages')
+                    ->groupBy('sender_id', 'receiver_id');
+            })
+            ->get();
 
         $currentCategory = Category::find($request->category);
 
@@ -324,7 +325,7 @@ class TransactionController extends Controller
 
             $categoriesIsNull = true;
         }
-        $users = User::whereNot('name', Auth::user()->name)->get();
+        $users = User::whereNot('id', Auth::user()->id)->get();
 
 
         return view('admin.pages.transactions', compact('users', 'categoriesIsNull', 'currentStatus', 'contacts', 'unreadMessages', 'setting', 'page_title', 'currentCategory', 'categories', 'transactions', 'unreadNotifications', 'notifications'));

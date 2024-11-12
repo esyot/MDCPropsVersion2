@@ -61,6 +61,15 @@
             color: white;
         }
 
+        #notification-dropdown #title {
+
+            color: white;
+        }
+
+        #topbar-content i {
+            color: white;
+        }
+
         #messages-dropdown {
             background-color: #6b7280;
             color: black;
@@ -69,8 +78,6 @@
         #contact-list {
             color: white;
         }
-
-
 
         #main-content {
             background-color: #000000;
@@ -109,14 +116,17 @@
             background-color: #1d1d1d;
         }
 
-        #calendar {}
+        #messages-dropdown #title {
+            color: #fff;
+        }
+
 
         #user-dropdown {
             color: #fff;
         }
 
         #user-dropdown-content {
-            background-color: #1d1d1d;
+            background-color: #6b7280;
         }
 
         #analytics-header {

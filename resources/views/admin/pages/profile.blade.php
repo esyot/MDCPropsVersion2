@@ -61,19 +61,25 @@
 
 
 <div class="flex justify-center h-full bg-gray-100 pt-4 ">
-    <div class="bg-white w-full max-w-4xl flex p-6 rounded-lg shadow-lg overflow-y-auto">
+    <div class="bg-white w-full mx-4 flex p-6 rounded-lg shadow-lg overflow-y-auto">
         <!-- Sidebar -->
         <nav class="w-1/4 border-r border-gray-300 pr-4">
             <h2 class="text-lg font-semibold mb-4">Account Details</h2>
             <ul>
-                <li title="Profile" onclick="
-                document.getElementById('form-1').classList.remove('hidden');
-                document.getElementById('form-2').classList.add('hidden');
-                
-                " class="rounded-xl p-3 hover:bg-gray-200 cursor-pointer flex items-center space-x-2">
+                <li title="Profile" onclick="toggleForm()"
+                    class="rounded-xl p-3 hover:bg-gray-200 cursor-pointer flex items-center space-x-2">
                     <i class="fa-solid fa-user text-gray-600"></i>
                     <span>Profile</span>
                 </li>
+
+                <script>
+
+                    function toggleForm() {
+                        document.getElementById('form-1').classList.remove('hidden');
+                        document.getElementById('form-2').classList.add('hidden');
+                    }
+
+                </script>
             </ul>
             <h2 class="text-lg font-semibold mt-6 mb-4">Account Settings</h2>
             <ul>
@@ -108,7 +114,7 @@
                     const fileInput = document.getElementById('img');
                     const profileImage = document.getElementById('profile-image');
 
-                    // Set the existing profile image as the preview on page load
+
                     window.onload = function () {
                         profileImage.src = "{{ asset('storage/images/users/' . Auth::user()->img) }}";
                     };
@@ -118,9 +124,9 @@
                         if (file) {
                             const reader = new FileReader();
                             reader.onload = function (event) {
-                                profileImage.src = event.target.result; // Set the preview image source
+                                profileImage.src = event.target.result;
                             }
-                            reader.readAsDataURL(file); // Read the file as a data URL
+                            reader.readAsDataURL(file);
                         }
                     });
                 </script>
