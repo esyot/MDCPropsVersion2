@@ -108,7 +108,7 @@ Route::get('/cashier/notifications-filter/{action}', [CashierController::class, 
 Route::get('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
 Route::get('/notifications/delete-all', [NotificationController::class, 'deleteAll'])->name('notifications.delete-all');
 
-
+Route::get('admin/calendar-select-month/{year}/{month}');
 Route::get('/admin/search-reservation-for-return', [ReturnItemController::class, 'searchReservationForReturn'])->name('admin.search-reservation-for-return');
 
 Route::get('/admin/search-reservation-for-claim', [ClaimItemController::class, 'searchReservationForClaim'])->name('admin.search-reservation-for-claim');

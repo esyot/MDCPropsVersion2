@@ -169,9 +169,9 @@
         @yield('content')
     </div>
 
-    <footer id="footer-landscape" class="flex p-2 justify-center">
+    <!-- <footer id="" class="bg-white">
         All rights reserved &copy; 2024
-    </footer>
+    </footer> -->
 
     <footer id="footer-portrait" class="flex bg-blue-500 p-2 justify-center z-50 shadow-md">
 

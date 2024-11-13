@@ -3,27 +3,27 @@
     <div id="calendar-header" class="p-2">
 
         <div class="flex items-center">
-            <div id="calendar-controls" class="flex space-x-2 p-2 ">
+        <div id="calendar-controls" class="flex space-x-2 p-2">
+    <a id="today-btn" title="Today"
+        hx-get="{{ route('calendarMove', ['action' => 'today', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
+        hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
+        class="hidden cursor-pointer px-4 py-2 rounded-lg shadow-md text-teal-100 bg-teal-500 hover:bg-teal-800 hover:text-teal-100">
+        Today
+    </a>
 
-                <a title="Today"
-                    hx-get="{{ route('calendarMove', ['action' => 'today', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
-                    hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
-                    class="hidden cursor-pointer px-4 py-2 rounded-lg shadow-md text-teal-100 bg-teal-500 hover:bg-teal-800 hover:text-teal-100">
-                    Today
-                </a>
+    <a id="slide-left-btn" title="Slide to left"
+        hx-get="{{ route('calendarMove', ['action' => 'left', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
+        hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
+        class="hidden shadow-md text-white fa-solid fa-chevron-left hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full">
+    </a>
 
-                <a title="Slide to left"
-                    hx-get="{{ route('calendarMove', ['action' => 'left', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
-                    hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
-                    class="hidden shadow-md text-white fa-solid fa-chevron-left hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full"></a>
-                </a>
+    <a id="slide-right-btn" title="Slide to right"
+        hx-get="{{ route('calendarMove', ['action' => 'right', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
+        hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
+        class="hidden shadow-md text-white fa-solid fa-chevron-right hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full">
+    </a>
+</div>
 
-                <a title="Slide to right"
-                    hx-get="{{ route('calendarMove', ['action' => 'right', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
-                    hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
-                    class="hidden shadow-md text-white fa-solid fa-chevron-right hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full">
-                </a>
-            </div>
 
             <div class="flex space-x-2 justify-center hidden">
 
@@ -225,8 +225,8 @@
     $currentYear = $currentDate->year;
 @endphp
 
-<div id="calendar" class="p-2 flex h-full">
-    <div class="grid grid-cols-6 gap-1">
+<div id="calendar" class="flex px-1 pt-1">
+    <div class="grid grid-cols-6 gap-1" >
         {{-- Loop through each month --}}
         @foreach(range(1, 12) as $month)
                 @php
@@ -236,9 +236,11 @@
                     $firstDayOfWeek = $monthStart->dayOfWeek; // 0 = Sunday, 1 = Monday, etc.
                 @endphp
 
-                <div onclick="calendarSelectMonth({{$month}})"
-                    class="border shadow-md transition-transform duration-300 ease-in-out hover:scale-90">
-                    <div class="text-center bg-blue-600 text-white py-2">
+                <div hx-get="{{ route('selectMonth', ['year'=>$currentDate->format('Y'), 'month'=>$month, 'category'=> $currentCategory]) }}"
+                
+                onclick="calendarSelectMonth({{$month}})"
+                    class="border h-full shadow-md transition-transform duration-300 ease-in-out hover:scale-90">
+                    <div class="text-xs text-center bg-blue-600 text-white">
                         <span class="">{{ $monthStart->format('F') }}</span>
                     </div>
 
@@ -279,13 +281,9 @@
 
     function calendarSelectMonth(month) {
 
-        const calendar = document.getElementById('calendar');
-
-        [...caldendar.children].forEach(item => {
-            item.querySelector('a').classList.toggle('hidden');
-        });
-
-
+       
+document.getElementById('slide-right-btn').classList.remove('hidden');
+document.getElementById('slide-left-btn').classList.remove('hidden');
 
 
         document.getElementById('calendar-month').classList.remove('hidden');
