@@ -1,4 +1,4 @@
-<form id="filter-form" class="" action="{{ route('dateCustom')}}" method="GET">
+<form id="filter-form" action="{{ route('dateCustom')}}" method="GET" class="select-none">
     @csrf
     <div id="calendar-header" class="p-2">
 
@@ -8,37 +8,33 @@
                 <a title="Today"
                     hx-get="{{ route('calendarMove', ['action' => 'today', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
                     hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
-                    class="cursor-pointer px-4 py-2 rounded-lg shadow-md text-teal-100 bg-teal-500 hover:bg-teal-800 hover:text-teal-100">
+                    class="hidden cursor-pointer px-4 py-2 rounded-lg shadow-md text-teal-100 bg-teal-500 hover:bg-teal-800 hover:text-teal-100">
                     Today
                 </a>
 
                 <a title="Slide to left"
                     hx-get="{{ route('calendarMove', ['action' => 'left', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
-                    hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard">
-
-                    <i
-                        class="shadow-md text-white fa-solid fa-chevron-left hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full"></i>
+                    hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
+                    class="hidden shadow-md text-white fa-solid fa-chevron-left hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full"></a>
                 </a>
 
                 <a title="Slide to right"
                     hx-get="{{ route('calendarMove', ['action' => 'right', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
-                    hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard">
-                    <i
-                        class="shadow-md text-white fa-solid fa-chevron-right hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full"></i>
+                    hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
+                    class="hidden shadow-md text-white fa-solid fa-chevron-right hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full">
                 </a>
-
             </div>
 
             <div class="flex space-x-2 justify-center hidden">
 
-                <a title="Today"
+                <a title="Today" class="hidden"
                     hx-get="{{ route('calendarMove', ['action' => 'today', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
                     hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
                     class="cursor-pointer px-4 py-2 rounded-lg shadow-md text-teal-100 bg-teal-400 hover:bg-teal-600">
                     Today
                 </a>
 
-                <a title="Slide to left"
+                <a title="Slide to left" class="hidden"
                     hx-get="{{ route('calendarMove', ['action' => 'left', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
                     hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard">
 
@@ -46,7 +42,7 @@
                         class="shadow-md text-white fa-solid fa-chevron-left hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full"></i>
                 </a>
 
-                <a title="Slide to right"
+                <a title="Slide to right" class="hidden"
                     hx-get="{{ route('calendarMove', ['action' => 'right', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
                     hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard">
                     <i
@@ -57,11 +53,11 @@
 
             <div class="flex space-x-1">
 
-                <div title="Month" class="flex items-center bg-white shadow-md p-2 rounded-lg">
+                <div title="Month" class="hidden flex items-center bg-white shadow-md p-2 rounded-lg">
 
                     <i id="month-icon" class="fas fa-calendar text-gray-500"></i>
                     <select name="month" class="bg-transparent focus:outline-none">
-                        <option class="text-red-500 font-semibold" value="{{ $currentDate->format('n') }}">
+                        <option class="text-red-500 font-semibold" value="">
                             {{ $currentDate->format('F') }}
                         </option>
                         <option value="1">January</option>
@@ -87,13 +83,13 @@
                             <option class="text-red-500 font-semibold" value="{{ $currentDate->format('Y') }}">
                                 {{ $currentDate->format('Y') }}
                             </option>
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                            <option value="2026">2026</option>
-                            <option value="2027">2027</option>
-                            <option value="2028">2028</option>
-                            <option value="2029">2029</option>
-                            <option value="2030">2030</option>
+                            @php
+                                $years = range(2024, 2050); 
+                            @endphp
+
+                            @foreach ($years as $year)
+                                <option value="{{ $year }}">{{ $year }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -119,7 +115,6 @@
                 </div>
             </div>
 
-
 </form>
 </div>
 </div>
@@ -142,11 +137,8 @@
     }
 
     .calendar-cell {
-        /* You can adjust padding, margin, etc. */
         flex-grow: 1;
-        /* This will not have an effect in grid layout */
         display: flex;
-        /* Retain flex for centering contents */
         align-items: center;
         justify-content: center;
     }
@@ -155,8 +147,10 @@
 
 <div id="modal-item"></div>
 
-<div id="calendar" class="w-full h-full mb-20 flex justify-center items-center overflow-hidden">
-    <!-- Calendar Grid -->
+<div id="calendar-month" class="hidden w-full h-full mb-20 flex flex-col justify-center items-center overflow-hidden">
+    <header class="flex justify-center p-2 w-full bg-blue-500 ">
+        <span class="text-white text-2xl text-center"> selectedMonth</span>
+    </header>
     <div id="calendar-grid" class="grid grid-cols-7 gap-2 p-4 shadow-lg w-full h-full">
 
         <div
@@ -225,7 +219,79 @@
 
 </form>
 
+@php
+    // Assuming $currentDate is a Carbon instance or a date string
+    $currentDate = \Carbon\Carbon::parse($currentDate);
+    $currentYear = $currentDate->year;
+@endphp
+
+<div id="calendar" class="p-2 flex h-full">
+    <div class="grid grid-cols-6 gap-1">
+        {{-- Loop through each month --}}
+        @foreach(range(1, 12) as $month)
+                @php
+                    // Create a Carbon instance for the first day of the current month
+                    $monthStart = \Carbon\Carbon::createFromDate($currentYear, $month, 1);
+                    $daysInMonth = $monthStart->daysInMonth;
+                    $firstDayOfWeek = $monthStart->dayOfWeek; // 0 = Sunday, 1 = Monday, etc.
+                @endphp
+
+                <div onclick="calendarSelectMonth({{$month}})"
+                    class="border shadow-md transition-transform duration-300 ease-in-out hover:scale-90">
+                    <div class="text-center bg-blue-600 text-white py-2">
+                        <span class="">{{ $monthStart->format('F') }}</span>
+                    </div>
+
+                    <div class="grid grid-cols-7 gap-2 text-center bg-gray-100 p-2">
+                        {{-- Days of the week header --}}
+                        @foreach(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $day)
+                            <div class="font-bold text-sm text-gray-700">{{ $day }}</div>
+                        @endforeach
+                    </div>
+
+                    <div class="grid grid-cols-7 gap-2 p-2">
+                        {{-- Render empty days at the beginning of the month --}}
+                        @for ($i = 0; $i < $firstDayOfWeek; $i++)
+                            <div class=""></div>
+                        @endfor
+
+                        {{-- Render the days of the month --}}
+                        @for ($day = 1; $day <= $daysInMonth; $day++)
+                            <div
+                                class="flex justify-center items-center rounded-full hover:bg-blue-100 cursor-pointer {{ $currentDate->isToday() && $currentDate->day == $day && $monthStart->month == $currentDate->month ? 'bg-yellow-500 text-white' : 'text-gray-700' }}">
+                                {{ $day }}
+                            </div>
+                        @endfor
+
+                        {{-- Render empty days at the end of the month --}}
+                        @for ($i = $monthStart->addDays($daysInMonth)->dayOfWeek; $i < 7; $i++)
+                            <div class=""></div>
+                        @endfor
+                    </div>
+                </div>
+        @endforeach
+    </div>
+</div>
+
+
+
 <script>
+
+    function calendarSelectMonth(month) {
+
+        const calendar = document.getElementById('calendar');
+
+        [...caldendar.children].forEach(item => {
+            item.querySelector('a').classList.toggle('hidden');
+        });
+
+
+
+
+        document.getElementById('calendar-month').classList.remove('hidden');
+        document.getElementById('calendar').classList.add('hidden');
+
+    }
 
     function toggleTransactionForm(day, transition) {
         const form = document.getElementById(`transaction-form-${day}`);

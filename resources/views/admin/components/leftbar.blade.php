@@ -15,8 +15,9 @@
         <div class="flex flex-col items-center relative drop-shadow-lg">
             <img class="w-12 h-12" src="{{asset('asset/photos/logo.png')}}" alt="Logo">
             <div class="flex mb-4">
-                <span id="logoLabel" class="ml-4 text-sm text-center hidden">MDC - Property Rental & <br>Reservation
+                <span id="logoLabel" class="ml-4 text-sm text-center hidden">MDC Property <br>Reservation
                     Management System</span>
+                <span id="logoLabel2" class="text-sm text-center mt-2">MDC PRMS</span>
             </div>
         </div>
 
@@ -153,6 +154,8 @@
             item.classList.toggle('justify-center', !isExpanded);
             item.classList.toggle('pl-4', isExpanded);
             item.querySelector('span').classList.toggle('hidden', !isExpanded);
+            document.getElementById('logoLabel').classList.toggle('hidden', !isExpanded);
+            document.getElementById('logoLabel2').classList.toggle('hidden', isExpanded);
         });
     });
 </script>
