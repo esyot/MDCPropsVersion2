@@ -1,7 +1,7 @@
 @extends('admin.layouts.header')
 @section('content')
 
-<div id="dashboard">
+<div id="dashboard" class="">
 
     @if ($categoriesIsNull == false)
         @include('admin.partials.calendar')

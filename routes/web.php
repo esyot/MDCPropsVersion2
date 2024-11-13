@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\ClaimItemController;
 use App\Http\Controllers\ExportPDFController;
@@ -108,7 +109,8 @@ Route::get('/cashier/notifications-filter/{action}', [CashierController::class, 
 Route::get('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
 Route::get('/notifications/delete-all', [NotificationController::class, 'deleteAll'])->name('notifications.delete-all');
 
-Route::get('admin/calendar-select-month/{year}/{month}');
+Route::get('admin/calendar-select-month/{year}/{month}/{category}', [CalendarController::class, 'selectMonth'])->name('admin.select-month');
+
 Route::get('/admin/search-reservation-for-return', [ReturnItemController::class, 'searchReservationForReturn'])->name('admin.search-reservation-for-return');
 
 Route::get('/admin/search-reservation-for-claim', [ClaimItemController::class, 'searchReservationForClaim'])->name('admin.search-reservation-for-claim');

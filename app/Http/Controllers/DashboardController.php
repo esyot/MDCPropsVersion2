@@ -120,16 +120,25 @@ class DashboardController extends Controller
         $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : collect();
 
 
-        $daysWithRecords = ItemsTransaction::all()->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))->unique()->values()->toArray();
 
+        $daysWithRecords = ItemsTransaction::where('category_id', $currentCategory->id)
+            ->whereYear('rent_date', $currentDate->format('Y'))
+            ->get()
+            ->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))
+            ->unique()
+            ->values()
+            ->toArray();
 
         $users = User::where('id', '!=', $current_user_id)->get();
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
 
         $transactions = ItemsTransaction::all();
 
+        $selectedMonth = '';
+
         return view('admin.pages.dashboard', compact(
             'categories',
+            'selectedMonth',
             'destinations',
             'users',
             'currentCategory',
@@ -169,6 +178,9 @@ class DashboardController extends Controller
         $month = $request->month;
         $category = $request->category;
 
+        $currentCategory = Category::find($category);
+
+
         $currentDate = Carbon::create($year, $month, 25);
 
         $transactions = ItemsTransaction::where('category_id', $category)->get();
@@ -176,10 +188,14 @@ class DashboardController extends Controller
         $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
         $unreadMessages = $messages->count();
 
-        $daysWithRecords = $transactions->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))
+        $daysWithRecords = ItemsTransaction::where('category_id', $category)
+            ->whereYear('rent_date', $currentDate->format('Y'))
+            ->get()
+            ->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))
             ->unique()
             ->values()
             ->toArray();
+
 
         $items = Item::where('category_id', $category)->orderBy('name', 'ASC')->get();
 
@@ -203,7 +219,7 @@ class DashboardController extends Controller
         if ($roles->contains('superadmin')) {
             $categories = Category::all();
 
-            $currentCategory = $categories->first();
+            $currentCategory = Category::find($category);
 
             $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
@@ -223,7 +239,7 @@ class DashboardController extends Controller
             $currentCategory = $categories->first();
 
             $categories = Category::all();
-            $currentCategory = $categories->first();
+            $currentCategory = Category::find($category);
 
             $notifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain(
                 'isDeletedBy',
@@ -240,7 +256,7 @@ class DashboardController extends Controller
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
             $categories = Category::whereIn('id', $categoryIds)->get();
-            $currentCategory = $categories->first();
+            $currentCategory = Category::find($category);
 
             $notifications = Notification::where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
@@ -258,7 +274,6 @@ class DashboardController extends Controller
 
         }
         if ($currentCategory) {
-
             $currentCategoryId = $currentCategory->id;
             $categoriesIsNull = false;
         } else {
@@ -269,8 +284,6 @@ class DashboardController extends Controller
 
         $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : collect();
 
-
-        $daysWithRecords = ItemsTransaction::all()->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))->unique()->values()->toArray();
 
 
         $users = User::where('name', '!=', $current_user_id)->get();

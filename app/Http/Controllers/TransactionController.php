@@ -347,7 +347,7 @@ class TransactionController extends Controller
             'rent_return_time' => 'required|date_format:H:i',
         ]);
 
-        $existingTransaction = Transaction::where('item_id', $request->item_id)
+        $existingTransaction = ItemsTransaction::where('item_id', $request->item_id)
             ->where('rentee_email', $request->rentee_email)
             ->where('status', 'pending')
             ->first();
@@ -357,7 +357,7 @@ class TransactionController extends Controller
         }
 
         try {
-            Transaction::create([
+            ItemsTransaction::create([
                 'item_id' => $validatedData['item_id'],
                 'category_id' => $validatedData['category_id'],
                 'rentee_name' => $validatedData['rentee_name'],

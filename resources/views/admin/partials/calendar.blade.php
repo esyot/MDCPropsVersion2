@@ -3,26 +3,26 @@
     <div id="calendar-header" class="p-2">
 
         <div class="flex items-center">
-        <div id="calendar-controls" class="flex space-x-2 p-2">
-    <a id="today-btn" title="Today"
-        hx-get="{{ route('calendarMove', ['action' => 'today', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
-        hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
-        class="hidden cursor-pointer px-4 py-2 rounded-lg shadow-md text-teal-100 bg-teal-500 hover:bg-teal-800 hover:text-teal-100">
-        Today
-    </a>
+            <div id="calendar-controls" class="flex space-x-2 p-2">
+                <a id="today-btn" title="Today"
+                    hx-get="{{ route('calendarMove', ['action' => 'today', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
+                    hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
+                    class="hidden cursor-pointer px-4 py-2 rounded-lg shadow-md text-teal-100 bg-teal-500 hover:bg-teal-800 hover:text-teal-100">
+                    Today
+                </a>
 
-    <a id="slide-left-btn" title="Slide to left"
-        hx-get="{{ route('calendarMove', ['action' => 'left', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
-        hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
-        class="hidden shadow-md text-white fa-solid fa-chevron-left hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full">
-    </a>
+                <a id="slide-left-btn" title="Slide to left"
+                    hx-get="{{ route('calendarMove', ['action' => 'left', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
+                    hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
+                    class="hidden shadow-md text-white fa-solid fa-chevron-left hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full">
+                </a>
 
-    <a id="slide-right-btn" title="Slide to right"
-        hx-get="{{ route('calendarMove', ['action' => 'right', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
-        hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
-        class="hidden shadow-md text-white fa-solid fa-chevron-right hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full">
-    </a>
-</div>
+                <a id="slide-right-btn" title="Slide to right"
+                    hx-get="{{ route('calendarMove', ['action' => 'right', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
+                    hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
+                    class="hidden shadow-md text-white fa-solid fa-chevron-right hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full">
+                </a>
+            </div>
 
 
             <div class="flex space-x-2 justify-center hidden">
@@ -147,77 +147,10 @@
 
 <div id="modal-item"></div>
 
-<div id="calendar-month" class="hidden w-full h-full mb-20 flex flex-col justify-center items-center overflow-hidden">
-    <header class="flex justify-center p-2 w-full bg-blue-500 ">
-        <span class="text-white text-2xl text-center"> selectedMonth</span>
-    </header>
-    <div id="calendar-grid" class="grid grid-cols-7 gap-2 p-4 shadow-lg w-full h-full">
+<div id="calendar-month" class="hidden w-full h-full flex flex-col justify-center items-center overflow-hidden">
 
-        <div
-            class="rounded-t-lg calendar-cell bg-red-500 p-2 flex items-center justify-center font-semibold text-gray-100">
-            Sun</div>
-        <div
-            class="rounded-t-lg calendar-cell bg-gray-500 p-2 flex items-center justify-center font-semibold text-gray-100">
-            Mon</div>
-        <div
-            class="rounded-t-lg calendar-cell bg-gray-500 p-2 flex items-center justify-center font-semibold text-gray-100">
-            Tue</div>
-        <div
-            class="rounded-t-lg calendar-cell bg-gray-500 p-2 flex items-center justify-center font-semibold text-gray-100">
-            Wed</div>
-        <div
-            class="rounded-t-lg calendar-cell bg-gray-500 p-2 flex items-center justify-center font-semibold text-gray-100">
-            Thu</div>
-        <div
-            class="rounded-t-lg calendar-cell bg-gray-500 p-2 flex items-center justify-center font-semibold text-gray-100">
-            Fri</div>
-        <div
-            class="rounded-t-lg calendar-cell bg-gray-500 p-2 flex items-center justify-center font-semibold text-gray-100">
-            Sat</div>
-
-        <!-- Calculate the starting position of the first day -->
-        @php
-            $firstDayOfMonth = $currentDate->copy()->startOfMonth();
-            $startDayOfWeek = $firstDayOfMonth->dayOfWeek; // 0 (Sun) - 6 (Sat)
-        @endphp
-
-        <!-- Add empty cells for days before the first of the month -->
-        @for ($i = 0; $i < $startDayOfWeek; $i++)
-            <div class="calendar-cell bg-gray-300 p-4"></div>
-        @endfor
-
-        <!-- Generate calendar days -->
-        @for ($day = 1; $day <= $currentDate->daysInMonth; $day++)
-                @php
-                    $currentDay = $currentDate->copy()->day($day)->format('Y-m-d');
-                    $hasRecord = in_array($currentDay, $daysWithRecords);
-                    $transactionItem = $transactions->firstWhere(function ($item) use ($currentDay) {
-                        return \Carbon\Carbon::parse($item->rent_date)->format('Y-m-d') === $currentDay;
-                    });
-                    $date = $transactionItem ? \Carbon\Carbon::parse($transactionItem->rent_date)->format('Y-m-d') : null;
-                    $isSunday = \Carbon\Carbon::parse($currentDay)->dayOfWeek === 0; // 0 for Sunday
-                @endphp
-
-                <button @if($hasRecord) hx-get="{{ $date ? route('dateView', ['date' => $date]) : '#' }}"
-                hx-target="#modal-item" hx-swap="innerHTML" hx-trigger="click" @endif
-                    class="{{ $setting->transition == true ? 'transition-transform duration-300 ease-in-out transform hover:scale-90' : '' }} relative cursor-auto calendar-cell {{ $hasRecord == true ? 'bg-blue-500 text-white cursor-pointer shadow-md' : 'bg-gray-300' }} p-4 flex flex-col items-center justify-center font-semibold overflow-hidden group">
-                    <div class="flex justify-center items-center">
-                        <h1 class="drop-shadow font-bold text-4xl {{ $isSunday ? 'text-red-500' : '' }}">{{ $day }}</h1>
-                    </div>
-                    @if(!$hasRecord && !$roles->contains('viewer'))
-                        <div onclick="toggleTransactionForm({{$day}}, {{$setting->transition}})" title="Add Transaction"
-                            class="absolute inset-0 flex items-center justify-center text-2xl font-bold text-white opacity-0 bg-gray-500 {{ $setting->transitiona == true ? '' : 'group-hover:opacity-100 transition-opacity duration-300 ease-in-out'}}">
-                            <h1 class="flex justify-center items-center text-4xl">+</h1>
-                        </div>
-
-                    @endif
-                </button>
-                @include('admin.modals.transaction-add')
-        @endfor
-    </div>
 </div>
 
-</form>
 
 @php
     // Assuming $currentDate is a Carbon instance or a date string
@@ -225,53 +158,69 @@
     $currentYear = $currentDate->year;
 @endphp
 
-<div id="calendar" class="flex px-1 pt-1">
-    <div class="grid grid-cols-6 gap-1" >
+<div id="calendar" class="">
+    <div id="calendar-content" class="grid grid-cols-4 gap-2 px-2 pt-2">
         {{-- Loop through each month --}}
         @foreach(range(1, 12) as $month)
                 @php
                     // Create a Carbon instance for the first day of the current month
                     $monthStart = \Carbon\Carbon::createFromDate($currentYear, $month, 1);
                     $daysInMonth = $monthStart->daysInMonth;
-                    $firstDayOfWeek = $monthStart->dayOfWeek; // 0 = Sunday, 1 = Monday, etc.
+                    $firstDayOfWeek = $monthStart->dayOfWeek;
+
                 @endphp
 
-                <div hx-get="{{ route('selectMonth', ['year'=>$currentDate->format('Y'), 'month'=>$month, 'category'=> $currentCategory]) }}"
-                
-                onclick="calendarSelectMonth({{$month}})"
-                    class="border h-full shadow-md transition-transform duration-300 ease-in-out hover:scale-90">
-                    <div class="text-xs text-center bg-blue-600 text-white">
-                        <span class="">{{ $monthStart->format('F') }}</span>
+                <div title="Click to select month"
+                    hx-get="{{ route('admin.select-month', ['year' => $currentYear, 'month' => $month, 'category' => $currentCategory]) }}"
+                    hx-target="#calendar-month" hx-swap="innerHTML" hx-trigger="click"
+                    onclick="calendarSelectMonth({{ $month }})"
+                    class="flex rounded-t-lg flex-col bg-white border h-[190px] shadow-md cursor-pointer {{$setting->transition ?  'transition-transform duration-300 ease-in-out hover:scale-90' : '' }}">
+
+                    <div class="text-center bg-blue-600 text-white rounded-t-lg">
+                        <span>{{ $monthStart->format('F') }}</span>
                     </div>
 
-                    <div class="grid grid-cols-7 gap-2 text-center bg-gray-100 p-2">
+                    <div class="grid grid-cols-7 gap-0 text-center bg-gray-100">
                         {{-- Days of the week header --}}
                         @foreach(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $day)
-                            <div class="font-bold text-sm text-gray-700">{{ $day }}</div>
+                            <div class="font-bold text-sm text-center {{ $day == 'Sun' ? 'text-red-500' : '' }}">
+                                {{ $day }}
+                            </div>
                         @endforeach
                     </div>
 
-                    <div class="grid grid-cols-7 gap-2 p-2">
+                    <div class="grid grid-cols-7 gap-0">
                         {{-- Render empty days at the beginning of the month --}}
                         @for ($i = 0; $i < $firstDayOfWeek; $i++)
                             <div class=""></div>
                         @endfor
 
-                        {{-- Render the days of the month --}}
+                     
                         @for ($day = 1; $day <= $daysInMonth; $day++)
-                            <div
-                                class="flex justify-center items-center rounded-full hover:bg-blue-100 cursor-pointer {{ $currentDate->isToday() && $currentDate->day == $day && $monthStart->month == $currentDate->month ? 'bg-yellow-500 text-white' : 'text-gray-700' }}">
-                                {{ $day }}
-                            </div>
+                                    @php
+                                        $date = \Carbon\Carbon::createFromDate($currentYear, $month, $day);
+                                        $currentDay = $date->format('Y-m-d');
+                                        $currentDayInMonth = $date->format('l'); 
+                                        $hasRecord = in_array($currentDay, $daysWithRecords); 
+                                    @endphp
+
+                                    <div class="{{ $hasRecord ? 'bg-blue-500 text-blue-100' : '' }} {{ $currentDayInMonth == 'Sunday' ? 'text-red-500' : '' }} text-center {{ \Carbon\Carbon::now()->isToday() && \Carbon\Carbon::now()->day == $day && $monthStart->month == \Carbon\Carbon::now()->month && $currentYear == \Carbon\Carbon::now()->format('Y') ? 'bg-yellow-500 text-white' : '' }}">
+<span>
+    {{$day}}
+</span>
+                                    </div>
+
+
                         @endfor
 
-                        {{-- Render empty days at the end of the month --}}
+                        
                         @for ($i = $monthStart->addDays($daysInMonth)->dayOfWeek; $i < 7; $i++)
                             <div class=""></div>
                         @endfor
                     </div>
                 </div>
         @endforeach
+
     </div>
 </div>
 
@@ -281,13 +230,11 @@
 
     function calendarSelectMonth(month) {
 
-       
-document.getElementById('slide-right-btn').classList.remove('hidden');
-document.getElementById('slide-left-btn').classList.remove('hidden');
 
+        document.getElementById('calendar-header').classList.toggle('hidden');
 
-        document.getElementById('calendar-month').classList.remove('hidden');
-        document.getElementById('calendar').classList.add('hidden');
+        document.getElementById('calendar-month').classList.toggle('hidden');
+        document.getElementById('calendar').classList.toggle('hidden');
 
     }
 
