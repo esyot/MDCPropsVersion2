@@ -35,6 +35,15 @@
                         class="block p-2 border border-gray-300 rounded w-full" required>
                 </div>
 
+                <div class="mt-2">
+                    <label for="" class="font-medium">Approval Level:</label>
+                    <select name="approval_level" class="block p-2 border border-gray-300 rounded w-full">
+                        <option value="admin">Admin Only</option>
+                        <option value="staff">Staff Only</option>
+                        <option value="both">Both</option>
+                    </select>
+                </div>
+
 
 
                 <div class="mt-2">

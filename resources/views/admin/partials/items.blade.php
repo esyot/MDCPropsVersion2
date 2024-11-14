@@ -46,6 +46,7 @@
             <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
                 alt="{{ $item->name }}" class="w-full h-full object-cover">
         </div>
+
         @if ($item->price == 0.00)
             <div class="border border-red-500 bg-white text-center text-black">
                 <small class="text-red-500">Available for Borrowing only</small>
@@ -55,30 +56,15 @@
                 <small class="text-red-500">Available for Borrowing & Renting</small>
             </div>
         @endif
-        <div id="item-description" class="p-2 text-blue-100 text-xs bg-blue-500">
-            <div id="name" class="flex space-x-1">
-                <h1 class="font-bold">Name</h1>
-                <span class="text-yellow-300 truncate">{{$item->name}}</span>
-            </div>
-            @if ($item->price != 0.00)
-                <div id="price" class="space-x-1">
-                    <h1 class="font-bold">Price</h1>
-                    <div class="truncate text-yellow-300 flex space-x-1">
-                        <span>₱{{$item->price}}</span>
 
-                        <h1>by</h1>
-                        <span>
-                            {{ $item->by }}
-                        </span>
-                    </div>
+        <div class="flex justify-center bg-blue-500 rounded-b-lg">
 
-                </div>
-            @endif
-            <div id="qty" class="space-x-1">
-                <h1 class="font-bold">Quantity</h1>
-                <span class="truncate text-yellow-300">{{$item->qty}} pc/s</span>
-            </div>
+            <h1>{{$item->name}}</h1>
+
         </div>
+
+
+
 
 
     </div>

@@ -22,10 +22,13 @@
                             Name
                         </th>
                         <th class="">
-                            Rent Pickup
+                            Pickup
                         </th>
                         <th class="">
-                            Rent Return
+                            Return
+                        </th>
+                        <th class="">
+                            Type
                         </th>
                         <th class="">
                             Status
@@ -46,6 +49,9 @@
                             <td class="">
                                 {{ \Carbon\Carbon::parse($transaction->rent_return)->format('F j, Y') }}
                                 {{ \Carbon\Carbon::parse($transaction->rent_return_time)->format('g:i A') }}
+                            </td>
+                            <td class="">
+                                {{ $transaction->transaction->reservation_type }}
                             </td>
                             <td class="">
                                 @if($transaction->declinedByAdmin_at != null)

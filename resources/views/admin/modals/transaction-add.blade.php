@@ -66,9 +66,10 @@
             </h2>
 
             <!-- Form Inputs -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
 
                 <!-- Item Selection -->
+
                 <div>
                     <label for="item_id" class="block text-gray-700 font-semibold mb-1">Item</label>
                     <div onclick="document.getElementById('itemListModal-{{$day}}').classList.remove('hidden')"
@@ -78,6 +79,11 @@
 
                     </div>
 
+                </div>
+                <div>
+                    <label for="" class="block text-gray-700 font-semibold mb-1">Quantity</label>
+                    <input type="number" id="item_qty" placeholder="Quantity" name="item_qty"
+                        class="block p-2 border border-gray-300 rounded w-full">
                 </div>
 
                 <!-- Hidden Item ID -->
@@ -93,10 +99,39 @@
                         placeholder="Rentee Contact No" required>
                 </div>
 
-                <!-- Rentee Name -->
+                <!-- Rentee First Name -->
                 <div>
-                    <label for="rentee_name" class="block text-gray-700 font-semibold mb-1">Rentee Name</label>
-                    <input id="rentee_name" name="rentee_name" type="text"
+                    <label for="" class="block text-gray-700 font-semibold mb-1">Rentee First Name</label>
+                    <input id="rentee_first_name" name="rentee_first_name" type="text"
+                        class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Rentee Name" required>
+                </div>
+                <!-- Rentee Middle Name -->
+                <div>
+                    <label for="" class="block text-gray-700 font-semibold mb-1">Rentee Middle Name</label>
+                    <input id="rentee_middle_name" name="rentee_middle_name" type="text"
+                        class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Rentee Name" required>
+                </div>
+                <!-- Rentee Last Name -->
+                <div>
+                    <label for="" class="block text-gray-700 font-semibold mb-1">Rentee Last Name</label>
+                    <input id="rentee_last_name" name="rentee_last_name" type="text"
+                        class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Rentee Name" required>
+                </div>
+                <!-- Rentee Address 1 -->
+                <div>
+                    <label for="" class="block text-gray-700 font-semibold mb-1">Rentee Address 1</label>
+                    <input id="rentee_address_1" name="rentee_address_1" type="text"
+                        class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Rentee Name" required>
+                </div>
+
+                <!-- Rentee Address 2 -->
+                <div>
+                    <label for="" class="block text-gray-700 font-semibold mb-1">Rentee Address 2</label>
+                    <input id="rentee_address_2" name="rentee_address_2" type="text"
                         class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Rentee Name" required>
                 </div>
@@ -154,6 +189,12 @@
                     </select>
                 </div>
 
+            </div>
+
+            <div>
+                <label for="" class="block text-gray-700 font-semibold mb-1">Purpose</label>
+                <textarea name="purpose" id="" placeholder="Input the purpose of reservation..."
+                    class="w-full border border-gray-300 rounded"></textarea>
             </div>
 
             <!-- Submit and Cancel Buttons -->

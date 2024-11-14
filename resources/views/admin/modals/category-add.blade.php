@@ -30,17 +30,18 @@
                         class="block p-2 border border-gray-300 rounded w-full" required>
                 </div>
 
-                <div class="flex flex-col mt-2">
-                    <label for="approval">Approval level:</label>
-                    <select name="approval_level" id="" class="block p-2 border border-gray-300 rounded" required>
-                        <option value="1"
+                <!-- <div class="flex flex-col mt-2">
+                    <label for="approval">Managed By:</label>
+                    <select name="managed_by" class="block p-2 border border-gray-300 rounded" required>
+                        <option value="admin"
                             title="Only the administrator can approve items that belong to this category.">Admin only
                         </option>
-                        <option value="2" title="Only the staff can approve items that belong to this category.">Staff
+                        <option value="staff" title="Only the staff can approve items that belong to this category.">
+                            Staff
                             only</option>
-                        <option value="3" title="Both roles can approve items within this category.">Both</option>
+                        <option value="both" title="Both roles can approve items within this category.">Both</option>
                     </select>
-                </div>
+                </div> -->
             </div>
 
             <div class="flex justify-end p-2 space-x-1">

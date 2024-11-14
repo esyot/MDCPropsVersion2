@@ -103,11 +103,6 @@ class ItemController extends Controller
 
 
         }
-
-
-
-
-
         if ($currentCategory) {
             // You can safely access $currentCategory->id here
             $currentCategoryId = $currentCategory->id;
@@ -134,7 +129,8 @@ class ItemController extends Controller
             'setting',
             'categories',
             'currentCategory',
-            'items'
+            'items',
+            'roles'
         ));
     }
 
@@ -144,6 +140,7 @@ class ItemController extends Controller
             'name' => 'required|string|max:255',
             'qty' => 'required|integer|min:1',
             'category' => 'required|exists:categories,id',
+            'approval_level' => ['required'],
             'img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
@@ -163,6 +160,7 @@ class ItemController extends Controller
         $item->category_id = $validatedData['category'];
         $item->img = $imageFileName;
         $item->qty = $validatedData['qty'];
+        $item->approval_level = $validatedData['approval_level'];
         $item->price = (float) ($request->price . '.' . $request->ext);
         $item->by = $request->by;
         $item->save();
@@ -241,7 +239,12 @@ class ItemController extends Controller
         } else if ($roles->contains('staff')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
-
+            $managedCategoriesId = $categoryIds->toArray();
+            if (in_array($currentCategory->id, $managedCategoriesId)) {
+                $categories = Category::whereIn('id', $categoryIds)->get();
+            } else {
+                return redirect()->back()->with('error', 'You are not granted to access this category!');
+            }
 
             $notifications = Notification::where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
@@ -257,12 +260,16 @@ class ItemController extends Controller
                 ->orderBy('created_at', 'DESC')
                 ->get()->count();
 
+
+
         }
 
         if ($currentCategory) {
 
             $currentCategoryId = $currentCategory->id;
             $categoriesIsNull = false;
+
+
         } else {
 
             $categoriesIsNull = true;
@@ -282,7 +289,8 @@ class ItemController extends Controller
             'setting',
             'categories',
             'currentCategory',
-            'items'
+            'items',
+            'roles'
         ));
     }
 
@@ -293,6 +301,7 @@ class ItemController extends Controller
             'update_qty' => 'string',
             'update_price' => 'string',
             'update_by' => 'string',
+            'update_approval_level' => 'required',
             'update_category' => 'required|integer|exists:categories,id',
             'update_img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
@@ -334,6 +343,7 @@ class ItemController extends Controller
             'name' => $validatedData['update_name'],
             'qty' => $validatedData['update_qty'],
             'by' => $validatedData['update_by'],
+            'approval_level' => $validatedData['update_approval_level'],
             'price' => (float) $validatedData['update_price'],
             'img' => $imageFileName,
             'category_id' => $validatedData['update_category'],

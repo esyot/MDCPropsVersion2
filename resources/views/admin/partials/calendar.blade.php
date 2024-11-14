@@ -174,7 +174,7 @@
                     hx-get="{{ route('admin.select-month', ['year' => $currentYear, 'month' => $month, 'category' => $currentCategory]) }}"
                     hx-target="#calendar-month" hx-swap="innerHTML" hx-trigger="click"
                     onclick="calendarSelectMonth({{ $month }})"
-                    class="flex rounded-t-lg flex-col bg-white border h-[190px] shadow-md cursor-pointer {{$setting->transition ?  'transition-transform duration-300 ease-in-out hover:scale-90' : '' }}">
+                    class="flex rounded-t-lg flex-col bg-white border h-[190px] shadow-md cursor-pointer {{$setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : '' }}">
 
                     <div class="text-center bg-blue-600 text-white rounded-t-lg">
                         <span>{{ $monthStart->format('F') }}</span>
@@ -195,25 +195,30 @@
                             <div class=""></div>
                         @endfor
 
-                     
+
                         @for ($day = 1; $day <= $daysInMonth; $day++)
                                     @php
                                         $date = \Carbon\Carbon::createFromDate($currentYear, $month, $day);
                                         $currentDay = $date->format('Y-m-d');
-                                        $currentDayInMonth = $date->format('l'); 
+                                        $currentDayInMonth = $date->format('l');
                                         $hasRecord = in_array($currentDay, $daysWithRecords); 
                                     @endphp
 
-                                    <div class="{{ $hasRecord ? 'bg-blue-500 text-blue-100' : '' }} {{ $currentDayInMonth == 'Sunday' ? 'text-red-500' : '' }} text-center {{ \Carbon\Carbon::now()->isToday() && \Carbon\Carbon::now()->day == $day && $monthStart->month == \Carbon\Carbon::now()->month && $currentYear == \Carbon\Carbon::now()->format('Y') ? 'bg-yellow-500 text-white' : '' }}">
-<span>
-    {{$day}}
-</span>
+                                    <div
+                                        class="{{ $hasRecord ? 'bg-gray-400 text-white' : '' }} {{ $currentDayInMonth == 'Sunday' ? 'text-red-500' : '' }} text-center ">
+                                        <span class="relative inline-block">
+                                            @if(\Carbon\Carbon::now()->isToday() && \Carbon\Carbon::now()->day == $day && $monthStart->month == \Carbon\Carbon::now()->month && $currentYear == \Carbon\Carbon::now()->format('Y'))
+                                                <i class="fas fa-circle text-green-500 text-[4px] absolute top-5 left-0 right-0 z-50"></i>
+                                            @endif
+                                            <span>{{$day}}</span>
+                                        </span>
+
                                     </div>
 
 
                         @endfor
 
-                        
+
                         @for ($i = $monthStart->addDays($daysInMonth)->dayOfWeek; $i < 7; $i++)
                             <div class=""></div>
                         @endfor

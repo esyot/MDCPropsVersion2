@@ -20,27 +20,7 @@
                         value="{{$category->title}}">
                 </div>
 
-                <div>
-                    <label for="">Approval level:</label>
-                    <select name="approval_level" class="w-full p-2 border border-gray-300 shadow-inner rounded"
-                        value="{{$category->title}}">
-                        <option value="{{ $category->approval_level }}">
-                            @if($category->approval_level == 3)
-                                Both
-                            @elseif($category->approval_level == 2)
-                                Staff Only
 
-                            @elseif($category->approval_level == 1)
-                                Admin Only
-                            @endif
-                        </option>
-                        <option value="1">Admin Only</option>
-                        <option value="2">Staff Only</option>
-                        <option value="3">Both</option>
-                    </select>
-
-
-                </div>
             </div>
 
             <div class="flex justify-end space-x-2 p-2">

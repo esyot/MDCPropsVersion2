@@ -30,13 +30,14 @@
                     <img id="update-img-preview" src="" alt="Image Preview"
                         class="mt-2 w-full h-64 object-cover rounded-lg border border-gray-200 shadow-md hidden">
 
-
+                    @hasrole('superadmin|admin')
                     <input type="file" name="update_img" accept="image/*" id="update_img"
                         class="block mt-2 w-full border border-gray-300 p-2 bg-white rounded">
                     <small class="font-bold">Note:
                         <i class="text-xs font-normal">Make sure the selected file is in "jpg", "png", or "jpeg"
                             format.</i>
                     </small>
+                    @endhasrole
 
                 </div>
 
@@ -45,15 +46,29 @@
                     <div>
                         <label for="name" class="block text-gray-700 font-medium">Name:</label>
                         <input type="text" name="update_name" value="{{ $item->name }}"
-                            class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            {{ $roles->contains('staff') ? 'disabled' : '' }}>
 
                         <label for="qty" class="block text-gray-700 font-medium">Quantity:</label>
                         <input type="number" name="update_qty" value="{{ $item->qty }}"
-                            class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            {{ $roles->contains('staff') ? 'disabled' : '' }}>
+
+                        <label for="qty" class="block text-gray-700 font-medium">Approval Level:</label>
+                        <select name="update_approval_level" value="{{ $item->qty }}"
+                            class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            {{ $roles->contains('staff') ? 'disabled' : '' }}>
+                            <option value="{{$item->approval_level}}">{{$item->approval_level}}</option>
+
+                            <option value="admin">Admin Only</option>
+                            <option value="staff">Staff Only</option>
+                            <option value="both">Both</option>
+                        </select>
 
                         <label for="update_category" class="font-medium">Category:</label>
                         <select name="update_category"
-                            class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            {{ $roles->contains('staff') ? 'disabled' : '' }}>
                             <option value="{{ $item->category->id }}">{{ $item->category->title }}</option>
 
                             @foreach ($categories as $category)
@@ -65,12 +80,13 @@
 
                         <label for="qty" class="block text-gray-700 font-medium">Price:</label>
                         <input type="string" name="update_price" value="{{ $item->price }}"
-                            class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            {{ $roles->contains('staff') ? 'disabled' : '' }}>
 
                         <div>
                             <label for="">By:</label>
-                            <select type="text" name="update_by" class="block p-2 border border-gray-300 rounded"
-                                placeholder="">
+                            <select type="text" name="update_by" class="block p-2 border border-gray-300 rounded "
+                                placeholder="" {{ $roles->contains('staff') ? 'disabled' : '' }}>
                                 <option value="{{$item->by}}">{{$item->by}}</option>
                                 <option value="pcs">Pieces (pcs)</option>
                                 <option value="km">Kilometer (km)</option>
@@ -103,10 +119,12 @@
                 focus:ring-gray-500">
                     Close
                 </button>
+                @hasrole('superadmin|admin')
                 <button type="submit"
                     class="shadow-md px-4 py-2 text-white bg-blue-600 hover:opacity-50 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     Update
                 </button>
+                @endhasrole
             </div>
 
         </div>

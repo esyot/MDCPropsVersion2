@@ -12,36 +12,13 @@
     <style>
         @media (orientation: portrait) {
             #rightbar {
-                flex-direction: column;
-                align-items: end;
-                justify-content: flex-end;
-            }
-
-            #rightbar button {
-                margin-top: 10px;
-                margin-bottom: 30px;
-            }
-
-            #toggleButton {
-                display: none;
-            }
-
-            #cart-icon {
-                display: none;
+                display:none;
             }
         }
 
         @media (orientation: landscape) {
-            #rightbar {
-                flex-direction: row;
-                align-items: start;
-                justify-content: flex-end;
-            }
-
-            #rightbar button {
-                margin-top: 10px;
-                margin-bottom: 30px;
-            }
+        
+            
         }
     </style>
 </head>
@@ -96,7 +73,7 @@
         </div>
     </div>
 
-    <div id="sidebar"
+    <!-- <div id="sidebar"
         class="fixed left-0 top-0 h-full bg-gradient-to-b from-blue-500 to-blue-800 shadow-md transform -translate-x-full transition-transform duration-300 z-50">
         <div class="flex flex-col justify-between h-full p-4 text-white">
             <div class="mt-2">
@@ -106,12 +83,12 @@
             </div>
 
             <div class="mt-auto">
-                <button onclick="confirmLogoutModal()" title="Log-out">
+                <button title="Log-out">
                     <i class="fa-solid fa-right-from-bracket fa-lg"></i>
                 </button>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <script>
         function confirmLogoutModal() {
@@ -120,33 +97,37 @@
     </script>
 
     <div class="container px-4 py-6">
-        <button id="toggleButton" class="hover:opacity-50 fixed z-40 bg-blue-500 text-white px-4 py-2 rounded"
+        <!-- <button id="toggleButton" class="hover:opacity-50 fixed z-40 bg-blue-500 text-white px-4 py-2 rounded"
             aria-label="Open Sidebar">
             <i class="fas fa-bars"></i>
-        </button>
+        </button> -->
 
-        <div id="rightbar" class="flex fixed right-0 justify-end z-50">
+        <div id="rightbar" class="fixed right-0">
+            <div class="flex flex-col items-center space-y-2">
 
-            <!-- <button title="Messages"
-                class="hover:opacity-50 mb-2 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
-                <i class="fab fa-facebook-messenger fa-2xl text-blue-400"></i>
-            </button> -->
 
-            <a id="cart-icon" href="{{ route('cart', ['rentee' => $rentee]) }}">
-                <button title="Cart"
-                    class="hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
-                    <span class="absolute bottom-4 right-1 bg-red-500 text-white rounded-full px-[5px] text-xs">
+                <a id="cart-icon" @if( $cartedItems!=0)href="{{ route('cart', ['rentee' => $rentee]) }}" @endif
+                    title="Cart" class="hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded mr-2">
+
+                    <span class="absolute top-0 right-1 bg-red-500 text-white rounded-full px-[5px] text-xs">
                         {{ $cartedItems }}
                     </span>
                     <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
 
+
+                </a>
+
+                <button onclick="confirmLogoutModal()" title="Cancel Reservation"
+                    class="hover:opacity-50 mb-2 z-40 drop-shadow px-4 py-2 rounded">
+                    <i class="fa-solid fa-right-from-bracket fa-2xl text-blue-400"></i>
                 </button>
-            </a>
+
+            </div>
 
         </div>
 
         <div>
-            <h1 class="text-2xl font-bold text-center mb-2">Categories</h1>
+            <h1 class="text-4xl font-bold text-center mb-2">Categories</h1>
         </div>
 
         <div class="flex flex-wrap -mx-2 overflow-y-auto ">
@@ -200,14 +181,9 @@
             sidebar.classList.toggle('-translate-x-full');
         }
 
-        button.addEventListener('click', toggleSidebar);
+        
 
-        document.addEventListener('click', (event) => {
-            const isClickInside = sidebar.contains(event.target) || button.contains(event.target);
-            if (!isClickInside) {
-                sidebar.classList.add('-translate-x-full');
-            }
-        });
+       
     </script>
 </body>
 

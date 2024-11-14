@@ -49,15 +49,8 @@ class CategoryController extends Controller
 
         $roles = Auth::user()->getRoleNames();
 
-        $categories_admin = Category::where('approval_level', 1)
-            ->orWhere('approval_level', 3)
-            ->orderBy('id')
-            ->get();
 
-        $categories_staff = Category::where('approval_level', 2)
-            ->orWhere('approval_level', 3)
-            ->orderBy('id')
-            ->get();
+
 
         $currentCategory = null;
         $categoriesIsNull = true;
@@ -102,7 +95,9 @@ class CategoryController extends Controller
         } else if ($roles->contains('staff')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
+
             $categories = Category::whereIn('id', $categoryIds)->get();
+
             $currentCategory = $categories->first();
 
             $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'all'])->whereJsonDoesntContain(
@@ -154,7 +149,6 @@ class CategoryController extends Controller
         $request->validate([
             'files.*' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'title' => 'required|string|max:255',
-            'approval_level' => 'required|integer|between:1,3',
         ]);
 
         $filePaths = [];
@@ -176,7 +170,6 @@ class CategoryController extends Controller
 
         Category::create([
             'title' => $request->title,
-            'approval_level' => $request->approval_level,
             'folder_name' => $imageFolderName,
         ]);
 
@@ -199,14 +192,14 @@ class CategoryController extends Controller
     {
         $request->validate([
             'title' => ['required', 'string'],
-            'approval_level' => ['required']
+
         ]);
 
         $category = Category::find($category_id);
 
         $category->update([
             'title' => $request->title,
-            'approval_level' => $request->approval_level
+
         ]);
 
         if ($category) {

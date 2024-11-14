@@ -55,6 +55,7 @@ class RenteeTransactionController extends Controller
             $transaction = Transaction::create([
                 'rentee_id' => $fetchedRentee->id,
                 'tracking_code' => $trackingCode,
+                'reservation_type' => 'rent'
 
             ]);
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItemsTransaction;
+use App\Models\Rentee;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
@@ -14,6 +16,7 @@ use App\Models\User;
 use App\Models\ManagedCategory;
 use Illuminate\Support\Facades\Auth;
 use Log;
+use Str;
 
 
 class TransactionController extends Controller
@@ -334,42 +337,71 @@ class TransactionController extends Controller
     }
     public function create(Request $request)
     {
+
         $validatedData = $request->validate([
             'item_id' => 'required|exists:items,id',
             'category_id' => 'required|exists:categories,id',
-            'rentee_name' => 'required|string|max:255',
+            'rentee_first_name' => 'required|string|max:255',
+            'rentee_middle_name' => 'nullable|string|max:255',
+            'rentee_last_name' => 'required|string|max:255',
             'rentee_contact_no' => 'required|string|max:255',
+            'rentee_address_1' => 'required|string|max:255',
+            'rentee_address_2' => 'nullable|string|max:255',
             'rentee_email' => 'required|string|email|max:255',
             'destination_id' => 'required|exists:destinations,id',
             'rent_date' => 'required|date',
             'rent_time' => 'required|date_format:H:i',
             'rent_return' => 'required|date|after_or_equal:rent_date',
             'rent_return_time' => 'required|date_format:H:i',
+            'purpose' => 'nullable|string|max:255',
+            'item_qty' => 'required|integer|min:1',
         ]);
 
-        $existingTransaction = ItemsTransaction::where('item_id', $request->item_id)
-            ->where('rentee_email', $request->rentee_email)
-            ->where('status', 'pending')
-            ->first();
-
-        if ($existingTransaction) {
-            return redirect()->back()->with('error', 'You already have a pending transaction for this item.');
-        }
-
         try {
+
+            $dateTime = Carbon::now()->format('Ymd');
+            $randomString = Str::random(8);
+            $code = $dateTime . '-' . $randomString;
+
+
+            $rentee = Rentee::create([
+                'rentee_code' => $code,
+                'first_name' => $validatedData['rentee_first_name'],
+                'middle_name' => $validatedData['rentee_middle_name'] ?? null,
+                'last_name' => $validatedData['rentee_last_name'],
+                'email' => $validatedData['rentee_email'],
+                'contact_no' => $validatedData['rentee_contact_no'],
+                'address_1' => $validatedData['rentee_address_1'],
+                'address_2' => $validatedData['rentee_address_2'] ?? null,
+            ]);
+
+            $renteeId = $rentee->id;
+
+
+            $trackingCode = now()->format('Ymd') . '-' . substr(bin2hex(random_bytes(4)), 0, 8);
+
+
+            $transaction = Transaction::create([
+                'tracking_code' => $trackingCode,
+                'rentee_id' => $renteeId,
+                'reservation_type' => 'borrow',
+                'purpose' => $validatedData['purpose'] ?? '',
+            ]);
+
+            $transactionId = $transaction->id;
+
             ItemsTransaction::create([
+                'transaction_id' => $transactionId,
                 'item_id' => $validatedData['item_id'],
-                'category_id' => $validatedData['category_id'],
-                'rentee_name' => $validatedData['rentee_name'],
-                'rentee_contact_no' => $validatedData['rentee_contact_no'],
-                'rentee_email' => $validatedData['rentee_email'],
                 'destination_id' => $validatedData['destination_id'],
+                'category_id' => $validatedData['category_id'],
+                'qty' => $validatedData['item_qty'],
                 'rent_date' => $validatedData['rent_date'],
                 'rent_time' => $validatedData['rent_time'],
                 'rent_return' => $validatedData['rent_return'],
-                'rent_return_time' => $validatedData['rent_return_time'],
-                'status' => 'pending',
+                'rent_return_time' => $validatedData['rent_return_time']
             ]);
+
 
             $isReadBy = [];
 
@@ -383,12 +415,15 @@ class TransactionController extends Controller
                 'isReadBy' => $isReadBy,
             ]);
 
+
             return redirect()->back()->with('success', 'Transaction created successfully.');
         } catch (\Exception $e) {
+
             Log::error('Transaction creation error: ' . $e->getMessage(), [
                 'user_id' => Auth::user()->id,
                 'data' => $request->all(),
             ]);
+
 
             return redirect()->back()->with('error', 'Error creating transaction. Please try again later.');
         }

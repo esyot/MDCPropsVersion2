@@ -14,7 +14,7 @@
 
 <style>
     @media(orientation:portrait) {
-        #cart-icon {
+        #rightbar {
             display: none;
         }
 
@@ -83,7 +83,8 @@
             <div id="searchContainer">
                 <form hx-get="{{ route('renteeItemsFilter', ['category_id' => $category_id, 'rentee' => $rentee]) }}"
                     hx-target="#item-single" hx-swap="innerHTML" hx-trigger="input" name="search" id="searchBar"
-                    onclick="expand()" class="flex space-x-1 items-center bg-white border border-gray-300 rounded-full">
+                    onclick="expand()"
+                    class="flex space-x-1 items-center bg-white border border-gray-300 rounded-full cursor-pointer">
                     <div class="flex items-center p-2 space-x-2">
                         <i class="fa-solid fa-magnifying-glass"></i>
                         <input type="text" name="search" placeholder="Search Items..."
@@ -115,21 +116,28 @@
             </script>
         </div>
 
-        <div id="rightbar" class="flex fixed right-0 top-[80px] justify-end z-50">
-            <!-- <button title="Messages"
-                                                                                                            class="hover:opacity-50 mb-2 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
-                                                                                                            <i class="fab fa-facebook-messenger fa-2xl text-blue-400"></i>
-                                                                                                        </button> -->
+        <div id="rightbar" class="fixed right-0 mt-4">
+            <div class="flex flex-col items-center space-y-2">
 
-            <a id="cart-icon" href="{{ route('cart', ['rentee' => $rentee]) }}">
-                <button title="Cart" class="hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded flex flex-col items-center">
-                    <span class="absolute bottom-4 right-1 bg-red-500 text-white rounded-full px-[5px] text-xs">
-                        {{ $cartedItems}}
+
+                <a id="cart-icon" @if( $cartedItems!=0)href="{{ route('cart', ['rentee' => $rentee]) }}" @endif
+                    title="Cart" class="hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded mr-2">
+
+                    <span class="absolute top-0 right-1 bg-red-500 text-white rounded-full px-[5px] text-xs">
+                        {{ $cartedItems }}
                     </span>
                     <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
 
+
+                </a>
+
+                <button onclick="confirmLogoutModal()" title="Cancel Reservation"
+                    class="hover:opacity-50 mb-2 z-40 drop-shadow px-4 py-2 rounded">
+                    <i class="fa-solid fa-right-from-bracket fa-2xl text-blue-400"></i>
                 </button>
-            </a>
+
+            </div>
+
         </div>
 
 

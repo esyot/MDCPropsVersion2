@@ -15,7 +15,6 @@ return new class extends Migration {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('approval_level');
             $table->string('folder_name');
             $table->timestamps();
         });
@@ -28,6 +27,7 @@ return new class extends Migration {
             $table->integer('qty');
             $table->decimal('price', 10, 2)->nullable(true);
             $table->enum('by', ['pcs', 'km', 'mi', 'm', 'kg', 'g', 'mg', 'cm', 'mm', 'lbs', 'oz', 'l', 'ml'])->nullable(true);
+            $table->enum('approval_level', ['admin', 'staff', 'both']);
             $table->timestamps();
         });
         Schema::create('destinations', function (Blueprint $table) {
@@ -113,6 +113,8 @@ return new class extends Migration {
             $table->foreignId('rentee_id')->constrained()->onDelete('cascade');
             $table->datetime('approved_at')->nullable(true);
             $table->datetime('canceled_at')->nullable(true);
+            $table->enum('reservation_type', ['rent', 'borrow'])->nullable(false);
+            $table->text('purpose')->nullable(true);
             $table->enum('status', ['pending', 'canceled', 'approved', 'in progress', 'declined ', 'occupied', 'completed']);
             $table->timestamps();
         });

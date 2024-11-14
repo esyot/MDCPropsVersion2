@@ -28,11 +28,12 @@
 
                     </select>
                 </form>
-
+                @hasrole('superadmin|admin')
                 <div title="Add Item" onclick="document.getElementById('item-add-modal').classList.remove('hidden')"
                     class="flex items-center bg-blue-500 text-blue-100 hover:opacity-50 shadow-md rounded m-2 px-4 py-2">
                     <button class="font-bold">+</button>
                 </div>
+                @endhasrole
 
             </div>
 

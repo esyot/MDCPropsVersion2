@@ -107,11 +107,21 @@
                         <h1 class="text-xl font-bold">Terms & Conditions</h1>
                     </div>
                     <div class="flex text-xs space-x-1">
-                        <input type="checkbox" name="" id="" required>
-                        <div class="">I have read & accept the website's <button type="button"
+                        <input id="terms-checkbox" type="checkbox" name="" id="" class="hidden" required>
+                        <div class="">
+                            <span id="terms-checkbox-label-1">
+                                Read first the
+                            </span>
+                            <span id="terms-checkbox-label-2" class="hidden">
+                                I have read & accept the website's
+                            </span>
+
+                            <button type="button"
                                 onclick="document.getElementById('terms-and-conditions').classList.remove('hidden')"
                                 class="text-blue-500 hover:opacity-50 underline">Terms &
-                                Conditions.</button></div>
+                                Conditions.
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="p-2 flex justify-end">
@@ -128,18 +138,13 @@
 
 
                     <h1 class="text-xl font-bold">Terms & Conditions</h1>
-                    <p class="text-justify"> By accessing or using this website, you agree to comply with and be bound
-                        by these Terms and Conditions. All content, products, and services available on this site are
-                        provided "as is" without any warranties, express or implied. We reserve the right to modify,
-                        suspend, or discontinue any part of this website or its services at any time, without notice.
-                        You
-                        are responsible for ensuring that any information you submit through this site is accurate, and
-                        you
-                        agree to indemnify and hold
-                        harmless the website owner and its affiliates from any claims, losses, or damages resulting from
-                        your use of the site.
-
-                    </p>
+                    <p class="text-justify">By using this website, you agree to these Terms and Conditions. All listed
+                        properties are for rent only, with no ownership rights conveyed. Services are provided "as is"
+                        without guarantees, and we reserve the right to modify or discontinue any part of the site at
+                        any time. You are responsible for accurate information and ensuring rented items are returned on
+                        time and in the same condition. Any damage or costs related to rented properties are the
+                        renter’s responsibility, and you agree to indemnify the website owner and its affiliates from
+                        any claims or losses arising from your use of the site.</p>
                     <h1 class="text-xl font-bold mt-2">Privacy Notice</h1>
                     <p>
                         We value your privacy and are committed to protecting your personal data in accordance with the
@@ -159,9 +164,12 @@
                         appropriate courts located within the Philippines.</p>
                 </div>
                 <div class="flex justify-end p-2 bg-gray-100 rounded-b-lg">
-                    <button type="button"
-                        onclick="document.getElementById('terms-and-conditions').classList.add('hidden')"
-                        class="px-4 py-2 border border-gray-300 hover:opacity-50 shadow-md rounded">Done</button>
+                    <button type="button" onclick="document.getElementById('terms-and-conditions').classList.add('hidden');
+                        document.getElementById('terms-checkbox').classList.remove('hidden');
+                        document.getElementById('terms-checkbox').checked = true;
+                        document.getElementById('terms-checkbox-label-1').classList.add('hidden');
+                        document.getElementById('terms-checkbox-label-2').classList.remove('hidden');
+                        " class="px-4 py-2 border border-gray-300 hover:opacity-50 shadow-md rounded">Done</button>
                 </div>
             </div>
         </div>
