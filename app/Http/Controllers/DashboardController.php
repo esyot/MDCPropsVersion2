@@ -112,22 +112,25 @@ class DashboardController extends Controller
         if ($currentCategory) {
             $currentCategoryId = $currentCategory->id;
             $categoriesIsNull = false;
+            $daysWithRecords = ItemsTransaction::where('category_id', $currentCategory->id)
+                ->whereYear('rent_date', $currentDate->format('Y'))
+                ->get()
+                ->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))
+                ->unique()
+                ->values()
+                ->toArray();
         } else {
 
             $categoriesIsNull = true;
+            $daysWithRecords = null;
         }
+
 
         $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : collect();
 
 
 
-        $daysWithRecords = ItemsTransaction::where('category_id', $currentCategory->id)
-            ->whereYear('rent_date', $currentDate->format('Y'))
-            ->get()
-            ->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))
-            ->unique()
-            ->values()
-            ->toArray();
+
 
         $users = User::where('id', '!=', $current_user_id)->get();
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
@@ -188,13 +191,7 @@ class DashboardController extends Controller
         $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
         $unreadMessages = $messages->count();
 
-        $daysWithRecords = ItemsTransaction::where('category_id', $category)
-            ->whereYear('rent_date', $currentDate->format('Y'))
-            ->get()
-            ->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))
-            ->unique()
-            ->values()
-            ->toArray();
+
 
 
         $items = Item::where('category_id', $category)->orderBy('name', 'ASC')->get();
@@ -231,6 +228,13 @@ class DashboardController extends Controller
                 Auth::user()->id
             )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
 
+            $daysWithRecords = ItemsTransaction::where('category_id', $category)
+                ->whereYear('rent_date', $currentDate->format('Y'))
+                ->get()
+                ->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))
+                ->unique()
+                ->values()
+                ->toArray();
 
         } else if ($roles->contains('admin')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
@@ -250,6 +254,13 @@ class DashboardController extends Controller
                 Auth::user()->id
             )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
 
+            $daysWithRecords = ItemsTransaction::where('category_id', $category)
+                ->whereYear('rent_date', $currentDate->format('Y'))
+                ->get()
+                ->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))
+                ->unique()
+                ->values()
+                ->toArray();
 
 
         } else if ($roles->contains('staff')) {
@@ -271,6 +282,21 @@ class DashboardController extends Controller
             })->whereIn('for', ['staff', 'both'])
                 ->orderBy('created_at', 'DESC')
                 ->get()->count();
+
+            $managedCategoryIds = $categoryIds->toArray();
+
+            if (in_array($category, $managedCategoryIds))
+
+                $daysWithRecords = ItemsTransaction::where('category_id', $category)
+                    ->whereYear('rent_date', $currentDate->format('Y'))
+                    ->get()
+                    ->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))
+                    ->unique()
+                    ->values()
+                    ->toArray();
+            else {
+                return redirect()->back()->with('error', 'You have not granted access to this category!');
+            }
 
         }
         if ($currentCategory) {
