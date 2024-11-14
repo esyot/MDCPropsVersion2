@@ -48,3 +48,13 @@
     @include('admin.modals.user-delete-confirm')
     </form>
 @endforeach
+
+
+@if(count($users) == 0)
+    <div class="flex w-full justify-center">
+        <span class="text-red-500">
+            No match found.
+        </span>
+
+    </div>
+@endif

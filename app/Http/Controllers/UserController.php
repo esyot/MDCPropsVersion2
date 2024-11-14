@@ -178,7 +178,8 @@ class UserController extends Controller
             return view('admin.partials.users', compact('users'));
         } else {
 
-            $users = User::whereNot('id', Auth::user()->id)->where('name', 'LIKE', '%' . $request->search . '%')->orwhere('email', 'LIKE', '%' . $request->search . '%')->get();
+            $users = User::where('name', 'LIKE', '%' . $request->search . '%')
+                ->whereNot('id', Auth::user()->id)->get();
 
             return view('admin.partials.users', compact('users'));
         }

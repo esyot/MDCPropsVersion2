@@ -9,7 +9,7 @@
         </button>
     </div>
     <div class="flex items-center">
-        <form hx-get="{{ route('usersFilter') }}" hx-trigger="input" hx-target="#users" hx-swap="innerHTML"
+        <form hx-get="{{ route('admin.users-search') }}" hx-trigger="input" hx-target="#users" hx-swap="innerHTML"
             class="flex space-x-1 items-center bg-white p-2 rounded-full shadow-md">
             @csrf
             <i class="fas fa-magnifying-glass"></i>

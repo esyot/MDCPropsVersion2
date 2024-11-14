@@ -103,7 +103,7 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
     Route::post('/admin/user-add', [UserController::class, 'create'])->name('userAdd');
     Route::post('/admin/user-delete/{id}', [UserController::class, 'delete'])->name('userDelete');
     Route::post('/admin/managed-categories/{category_id}', [RolePermissionController::class, 'managedCategoriesUpdate'])->name('managedCategoriesUpdate');
-    Route::get('/admin/users-filter', [UserController::class, 'filter'])->name('usersFilter');
+    Route::get('/admin/users-filter', [UserController::class, 'filter'])->name('admin.users-search');
 });
 
 // Moderator and Admin Role Routes
