@@ -1,7 +1,7 @@
 <style>
     @media(orientation: portrait) {
-        #transaction-form-{{$day}} {
-            height: 600px;
+        #transaction-form-fields-{{$day}} {
+            height: 500px;
             overflow-y: auto;
             margin-left: 16px;
             margin-right: 16px;
@@ -51,7 +51,7 @@
 
             </div>
         </div>
-        <form action="{{ route('transaction-create') }}" method="POST" class="">
+        <form  action="{{ route('transaction-create') }}" method="POST" class="">
             @csrf <!-- CSRF token for security -->
 
             <!-- Close Button -->
@@ -66,7 +66,7 @@
             </h2>
 
             <!-- Form Inputs -->
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div id="transaction-form-fields-{{$day}}" class="grid grid-cols-2 md:grid-cols-3 gap-4">
 
                 <!-- Item Selection -->
 

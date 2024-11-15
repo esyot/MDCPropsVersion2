@@ -4,7 +4,7 @@
 
     <div id="items-header" class="p-2 z-30">
         <div class="flex items-center justify-between">
-            <div class="flex items-center">
+            <div class="flex items-center space-x-2">
 
 
                 <form action="{{ route('itemsFilter') }}"
@@ -12,7 +12,7 @@
                     @csrf
                     <i class="fa-solid fa-list"></i>
                     <select name="category"
-                        class="bg-transparent focus:outline-none w-full overflow-hidden text-ellipsis whitespace-nowrap"
+                        class="bg-transparent focus:outline-none p-0.5 w-full overflow-hidden text-ellipsis whitespace-nowrap"
                         onchange="this.form.submit();">
 
                         <option class="text-red-500 font-semibold" value="{{ $currentCategory->id }}">
@@ -29,10 +29,10 @@
                     </select>
                 </form>
                 @hasrole('superadmin|admin')
-                <div title="Add Item" onclick="document.getElementById('item-add-modal').classList.remove('hidden')"
-                    class="flex items-center bg-blue-500 text-blue-100 hover:opacity-50 shadow-md rounded m-2 px-4 py-2">
-                    <button class="font-bold">+</button>
-                </div>
+                <button title="Add Item" onclick="document.getElementById('item-add-modal').classList.remove('hidden')"
+                    class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 shadow-md rounded">
+                    +
+                </button>
                 @endhasrole
 
             </div>
