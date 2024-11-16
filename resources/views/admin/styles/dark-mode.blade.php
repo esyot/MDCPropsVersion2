@@ -87,7 +87,7 @@
             background-color: #000;
         }
 
-        footer {
+        #footer-landscape {
             background-color: #000;
             color: #fff;
         }

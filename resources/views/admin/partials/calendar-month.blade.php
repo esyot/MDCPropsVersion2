@@ -1,12 +1,15 @@
-<div class="w-full p-4">
-    <header class="flex justify-between py-4 w-full bg-blue-500 shadow-md items-center px-2 rounded-t-lg">
+<div class="p-2 w-full">
+
+
+    <header class="flex justify-between py-4 w-full bg-blue-500  items-center px-4 rounded-t-lg">
         <span class="text-white text-2xl text-center font-bold"> {{$selectedMonth}}</span>
-        <button title="Expand" onclick="calendarExpand()" class="px-4">
+
+        <button title="Expand" onclick="calendarExpand()">
             <i class="fas fa-maximize fa-xl text-white hover:opacity-50"></i>
         </button>
     </header>
 
-    <div class="grid grid-cols-7 bg-white shadow-md w-full h-full">
+    <div class="grid grid-cols-7">
         @foreach(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $day)
             <div class="font-bold p-4 bg-gray-100 text-2xl text-center {{ $day == 'Sun' ? 'text-red-500' : '' }}">
                 {{ $day }}
@@ -19,7 +22,7 @@
         @endphp
 
         @for ($i = 0; $i < $startDayOfWeek; $i++)
-            <div class="calendar-cell p-4"></div>
+            <div class="p-4"></div>
         @endfor
 
         @for ($day = 1; $day <= $currentDate->daysInMonth; $day++)
@@ -36,9 +39,9 @@
 
                 <button @if($hasRecord) hx-get="{{ $date ? route('dateView', ['date' => $date]) : '#' }}"
                 hx-target="#modal-item" hx-swap="innerHTML" hx-trigger="click" @endif
-                    class="{{ $setting->transition == true ? 'transition-transform duration-300 ease-in-out transform hover:scale-90' : '' }} relative cursor-pointer {{ $hasRecord == true ? 'bg-gray-400 text-white ' : '' }} p-4 flex flex-col items-center justify-center font-semibold overflow-hidden group">
+                    class="{{ $setting->transition == true ? 'transition-transform duration-300 ease-in-out transform hover:scale-90' : '' }}  cursor-pointer {{ $hasRecord == true ? 'bg-gray-400 text-white ' : '' }} p-4 flex flex-col items-center justify-center font-semibold overflow-hidden group">
 
-                    <div class="flex justify-center items-center">
+                    <div class="">
                         <h1 class="drop-shadow text-4xl font-normal {{ $isSunday ? 'text-red-500' : '' }}">
                             {{ $day }}
                         </h1>
@@ -59,8 +62,10 @@
 
                 @include('admin.modals.transaction-add')
         @endfor
+
     </div>
 </div>
+
 
 <script>
     function calendarExpand() {

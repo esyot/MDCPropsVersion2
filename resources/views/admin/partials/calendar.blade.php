@@ -122,8 +122,26 @@
 <style>
     @media(orientation: portrait) {
 
-        #calendar {
-            height: 50%;
+        #calendar-month-header div {
+            font-size: 9px;
+        }
+
+        #calendar-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1;
+            text-align: center;
+
+        }
+
+        #calendar-month-content div {
+            font-size: 10px;
+
+        }
+
+        #calendar-months {
+            height: 100%;
+
         }
 
     }
@@ -159,7 +177,7 @@
 @endphp
 
 <div id="calendar" class="">
-    <div id="calendar-content" class="grid grid-cols-4 gap-2 px-2 pt-2">
+    <div id="calendar-content" class="grid grid-cols-4  gap-2 px-2 pt-2">
         {{-- Loop through each month --}}
         @foreach(range(1, 12) as $month)
                 @php
@@ -170,26 +188,26 @@
 
                 @endphp
 
-                <div title="Click to select month"
-                    hx-get="{{ route('admin.select-month', ['year' => $currentYear, 'month' => $month, 'category' => $currentCategory]) }}"
+                <div id="calendar-months" title="Click to select month"
+                    hx-get="{{ route('admin.select-month', ['year' => $currentYear, 'month' => $month, 'category' => $currentCategory->id]) }}"
                     hx-target="#calendar-month" hx-swap="innerHTML" hx-trigger="click"
                     onclick="calendarSelectMonth({{ $month }})"
-                    class="flex rounded-t-lg flex-col bg-white border h-[190px] shadow-md cursor-pointer {{$setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : '' }}">
+                    class="flex rounded-t-lg flex-col bg-white shadow-md border h-[190px]  cursor-pointer {{$setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : '' }}">
 
                     <div class="text-center bg-blue-600 text-white rounded-t-lg">
                         <span>{{ $monthStart->format('F') }}</span>
                     </div>
 
-                    <div class="grid grid-cols-7 gap-0 text-center bg-gray-100">
+                    <div id="calendar-month-header" class="grid grid-cols-7 gap-0 text-center bg-gray-100">
                         {{-- Days of the week header --}}
                         @foreach(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $day)
-                            <div class="font-bold text-sm text-center {{ $day == 'Sun' ? 'text-red-500' : '' }}">
+                            <div class="font-bold text-center {{ $day == 'Sun' ? 'text-red-500' : '' }}">
                                 {{ $day }}
                             </div>
                         @endforeach
                     </div>
 
-                    <div class="grid grid-cols-7 gap-0">
+                    <div id="calendar-month-content" class="grid grid-cols-7 gap-0 drop-shadow">
                         {{-- Render empty days at the beginning of the month --}}
                         @for ($i = 0; $i < $firstDayOfWeek; $i++)
                             <div class=""></div>

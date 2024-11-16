@@ -44,7 +44,7 @@
             @foreach($transactions as $transaction)
 
                 <div title="Click to preview details"
-                    class="mx-2 w-64 bg-white rounded-lg shadow-md overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-90' : '' }}">
+                    class="mx-2 w-64 bg-white rounded-lg shadow-md cursor-pointer overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-90' : '' }}">
                     <div onclick="document.getElementById('transaction-{{$transaction->id}}').classList.remove('hidden')">
 
 

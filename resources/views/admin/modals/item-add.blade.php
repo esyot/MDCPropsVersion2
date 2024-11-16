@@ -8,27 +8,27 @@
         <form action="{{ route('itemAdd') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="px-4 bg-gray-100 py-2">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto h-[450px]">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto h-[500px] custom-scrollbar">
                     <!-- Left Column: Image and Name -->
                     <div class="flex flex-col space-y-4">
                         <div class="flex flex-col justify-center items-center">
 
-                        <img id="img-preview" src="" alt="Image Preview" class="w-64 hidden">
+                            <img id="img-preview" src="" alt="Image Preview" class="w-64 hidden">
                             <div>
 
-                         
-                            <label for="img" class="font-medium">Image:</label>
-                            <input type="file" name="img" accept="image/*" id="img"
-                                class="block w-full p-2 border border-gray-300 bg-white rounded" required>
-                           <small class="font-bold">Note:
-                                <i class="text-sm font-normal">Make sure the selected file is in "jpg", "png", or "jpeg"
-                                    format.</i>
-                            </small>
+                                <label for="img" class="font-medium">Image:</label>
+                                <input type="file" name="img" accept="image/*" id="img"
+                                    class="block w-full p-2 border border-gray-300 bg-white rounded" required>
+                                <small class="font-bold">Note:
+                                    <i class="text-sm font-normal">Make sure the selected file is in "jpg", "png", or
+                                        "jpeg"
+                                        format.</i>
+                                </small>
                             </div>
                         </div>
 
                         <div class="mt-2">
-                            <label for="title" class="font-medium">Item name:</label>
+                            <label for="title" class="font-medium">Item Name:</label>
                             <input type="text" name="name" placeholder="Name" title="Title"
                                 class="block p-2 border border-gray-300 rounded w-full" required>
                         </div>
@@ -39,12 +39,12 @@
                                 class="block p-2 border border-gray-300 rounded w-full" required>
                         </div>
 
-                       
+
                     </div>
 
                     <!-- Right Column: Renting Options -->
                     <div class="flex flex-col space-y-4">
-                    <div class="mt-2">
+                        <div class="mt-2">
                             <label for="" class="font-medium">Approval Level:</label>
                             <select name="approval_level" class="block p-2 border border-gray-300 rounded w-full">
                                 <option value="admin">Admin Only</option>
@@ -55,7 +55,8 @@
 
                         <div class="mt-2">
                             <label for="category" class="font-medium">Category:</label>
-                            <select name="category" title="Category" class="block p-2 border border-gray-300 rounded" required>
+                            <select name="category" title="Category" class="block p-2 border border-gray-300 rounded"
+                                required>
                                 @if(count($categories) > 0)
                                     <option class="text-red-500 font-semibold" value="{{ $currentCategory->id }}">
                                         {{ $currentCategory->title }}
@@ -79,19 +80,17 @@
                             <div>
                                 <label for="">Price:</label>
                                 <input type="number" name="price" class="block p-2 border border-gray-300 rounded"
-                                    placeholder="0." step="any" min="0">
+                                    placeholder="0.00">
                             </div>
 
-                            <div>
-                                <label for="">Ext:</label>
-                                <input type="number" name="ext" class="block p-2 border border-gray-300 rounded"
-                                    placeholder=".00" step="any" min="0" max="99">
-                            </div>
+
 
                             <div>
-                                <label for="">By:</label>
-                                <select type="text" name="by" class="block p-2 border border-gray-300 rounded" placeholder="">
+                                <label for="">Per:</label>
+                                <select type="text" name="per" class="block p-2 border border-gray-300 rounded"
+                                    placeholder="">
                                     <option value="pcs">Pieces (pcs)</option>
+                                    <option value="hr">Hour (hr)</option>
                                     <option value="km">Kilometer (km)</option>
                                     <option value="mi">Miles (mi)</option>
                                     <option value="m">Meters (m)</option>
@@ -105,8 +104,20 @@
                                     <option value="l">Liters (l)</option>
                                     <option value="ml">Milliliters (ml)</option>
                                 </select>
+                                <small id="rentNote" class="font-bold">Note:
+                                    <i class="text-sm font-normal">The price will be multiplied for each day rental
+                                        period.</i>
+                                </small>
+
+
                             </div>
                         </div>
+                        <div>
+                            <label for="">Assigned Personel:</label>
+                            <input type="text" name="assigned_personel" class="block p-2 border border-gray-300 rounded"
+                                placeholder="Assigned personel">
+                        </div>
+                        </script>
                     </div>
                 </div>
 

@@ -105,7 +105,7 @@ class CashierController extends Controller
 
 
         $itemsTransactions = ItemsTransaction::whereNull('approvedByCashier_at')
-            ->whereNotNull('approvedByAdmin_at')
+            ->whereNot('approvedByAdmin_at', null)
             ->get();
 
 
@@ -126,6 +126,7 @@ class CashierController extends Controller
     {
 
         $reservation = Transaction::where('tracking_code', $tracking_code)->first();
+
 
         $items = ItemsTransaction::where('transaction_id', $reservation->id)
             ->where('declinedByAdmin_at', null)
@@ -164,19 +165,22 @@ class CashierController extends Controller
 
 
 
-        $itemIds = $request->input('itemsInArray');
 
-
-        ItemsTransaction::whereIn('item_id', $itemIds)->update([
-            'approvedByCashier_at' => now(),
-            'cashier_id' => Auth::user()->id,
-        ]);
 
 
         Transaction::where('id', $request->reservation_id)->update([
             'approved_at' => now(),
             'status' => 'approved'
         ]);
+
+        $itemIds = $request->input('itemsInArray');
+
+
+        ItemsTransaction::where('transaction_id', $request->reservation_id)
+            ->whereIn('item_id', $itemIds)->update([
+                    'approvedByCashier_at' => now(),
+                    'cashier_id' => Auth::user()->id,
+                ]);
 
 
         Notification::create([

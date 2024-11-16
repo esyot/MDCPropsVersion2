@@ -141,6 +141,9 @@ class ItemController extends Controller
             'qty' => 'required|integer|min:1',
             'category' => 'required|exists:categories,id',
             'approval_level' => ['required'],
+            'per' => ['string'],
+            'price' => ['nullable'],
+            'assigned_personel' => ['required', 'string'],
             'img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
@@ -161,8 +164,14 @@ class ItemController extends Controller
         $item->img = $imageFileName;
         $item->qty = $validatedData['qty'];
         $item->approval_level = $validatedData['approval_level'];
-        $item->price = (float) ($request->price . '.' . $request->ext);
-        $item->by = $request->by;
+
+        if ($validatedData['price'] == null) {
+            $item->price = null;
+        } else {
+            $item->price = $validatedData['price'];
+        }
+        $item->per = $validatedData['per'];
+        $item->assigned_personel = $validatedData['assigned_personel'];
         $item->save();
 
 
@@ -298,13 +307,15 @@ class ItemController extends Controller
     {
         $validatedData = $request->validate([
             'update_name' => 'string',
-            'update_qty' => 'string',
-            'update_price' => 'string',
-            'update_by' => 'string',
-            'update_approval_level' => 'required',
+            'update_img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'update_category' => 'required|integer|exists:categories,id',
-            'update_img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'update_qty' => 'integer',
+            'update_price' => ['nullable'],
+            'update_per' => 'string',
+            'update_approval_level' => 'required',
+            'update_assigned_personel' => 'string',
         ]);
+
 
         $item = Item::find($id);
 
@@ -339,15 +350,36 @@ class ItemController extends Controller
             }
         }
 
-        $item->update([
-            'name' => $validatedData['update_name'],
-            'qty' => $validatedData['update_qty'],
-            'by' => $validatedData['update_by'],
-            'approval_level' => $validatedData['update_approval_level'],
-            'price' => (float) $validatedData['update_price'],
-            'img' => $imageFileName,
-            'category_id' => $validatedData['update_category'],
-        ]);
+
+        if ($request->isAvailableForRenting == 'on') {
+            $item->update([
+                'name' => $validatedData['update_name'],
+                'qty' => $validatedData['update_qty'],
+                'per' => $validatedData['update_per'],
+                'approval_level' => $validatedData['update_approval_level'],
+                'price' => (float) $validatedData['update_price'],
+                'img' => $imageFileName,
+                'category_id' => $validatedData['update_category'],
+                'assigned_personel' => $validatedData['update_assigned_personel']
+            ]);
+
+
+        } else {
+            $item->update([
+                'name' => $validatedData['update_name'],
+                'qty' => $validatedData['update_qty'],
+                'approval_level' => $validatedData['update_approval_level'],
+                'img' => $imageFileName,
+                'category_id' => $validatedData['update_category'],
+                'price' => null,
+                'assigned_personel' => $validatedData['update_assigned_personel']
+            ]);
+
+
+        }
+
+
+
 
         return redirect()->back()->with('success', 'Item has been successfully updated!');
     }

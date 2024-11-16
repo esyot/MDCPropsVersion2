@@ -143,7 +143,7 @@
                 <div id="card"
                     class="flex flex-col text-white rounded-lg overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-90' : '' }}">
                     <div class="relative w-full overflow-hidden slide-container">
-                        <div class="slide-wrapper shadow-md z-50">
+                        <div class="slide-wrapper z-50">
                             @php
                                 $directory = storage_path('app/public/images/categories/' . $category->folder_name);
                                 $images = array_diff(scandir($directory), array('..', '.'));
@@ -161,7 +161,7 @@
                     </div>
                     <div class="p-2 bg-gradient-to-b from-blue-500 to-blue-800">
                         <div class="flex items-center justify-center">
-                            <h1 class="text-lg font-semibold drop-shadow">{{ $category->title }}</h1>
+                            <h1 class="text-lg font-semibold drop-shadow truncate">{{ $category->title }}</h1>
                         </div>
 
                         <div class="w-full h-full space-y-2">

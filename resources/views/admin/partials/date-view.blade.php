@@ -51,7 +51,7 @@
                                 {{ \Carbon\Carbon::parse($transaction->rent_return_time)->format('g:i A') }}
                             </td>
                             <td class="">
-                                {{ $transaction->transaction->reservation_type }}
+                                {{ ucfirst($transaction->transaction->reservation_type) }}
                             </td>
                             <td class="">
                                 @if($transaction->declinedByAdmin_at != null)

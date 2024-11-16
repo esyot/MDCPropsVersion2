@@ -11,13 +11,14 @@
                 <button onclick="changeMonth('{{$item->id}}', 'left')" class="hover:opacity-50">
                     <i class="fas fa-chevron-circle-left text-blue-500 fa-xl"></i>
                 </button>
-                <button onclick="changeMonth('{{$item->id}}', 'right')" class="hover:opacity-50">
-                    <i class="fas fa-chevron-circle-right text-blue-500 fa-xl"></i>
-                </button>
+
             </div>
             <input type="month" id="month-input-{{$item->id}}"
                 class="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value="{{ now()->format('Y-m') }}" onchange="updateCalendar('{{$item->id}}')">
+            <button onclick="changeMonth('{{$item->id}}', 'right')" class="hover:opacity-50">
+                <i class="fas fa-chevron-circle-right text-blue-500 fa-xl"></i>
+            </button>
         </div>
         <div class="grid grid-cols-7 gap-1 mb-2 text-center">
 

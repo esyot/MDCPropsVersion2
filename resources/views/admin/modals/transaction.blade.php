@@ -46,6 +46,20 @@
                 {{ \Carbon\Carbon::parse($transaction->rent_return_time)->format('h:i A') }}
             </span>
         </div>
+        <div class="flex items-center mt-1">
+            <span class="font-medium">Reservation Type:</span>
+            <span class="ml-2 text-blue-500">
+                {{ ucfirst($transaction->transaction->reservation_type) }}
+            </span>
+
+        </div>
+        <div class="flex items-center mt-1">
+            <span class="font-medium">Purpose:</span>
+            <span class="ml-2 text-blue-500">
+                {{ ucfirst($transaction->transaction->purpose) }}
+            </span>
+
+        </div>
 
         <div class="flex justify-center mt-2">
             <button type="button"

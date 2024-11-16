@@ -19,14 +19,20 @@ class CalendarController extends Controller
 
         $selectedMonth = $currentDate->format('F');
 
-        $daysWithRecords = ItemsTransaction::all()->map(fn($transaction) => Carbon::parse($transaction->rent_date)->format('Y-m-d'))->unique()->values()->toArray();
 
+        $daysWithRecords = ItemsTransaction::where('category_id', $category)
+            ->whereYear('date_start', $currentDate->format('Y'))
+            ->get()
+            ->map(fn($transaction) => Carbon::parse($transaction->date_start)->format('Y-m-d'))
+            ->unique()
+            ->values()
+            ->toArray();
         $currentCategory = Category::find($category);
 
         $setting = Setting::where('user_id', Auth::user()->id)->first();
         $transactions = ItemsTransaction::all();
 
-        $items = Item::all();
+        $items = Item::where('category_id', $category)->get();
 
         $destinations = Destination::all();
 

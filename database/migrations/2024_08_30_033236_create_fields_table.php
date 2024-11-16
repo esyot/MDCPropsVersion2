@@ -26,8 +26,9 @@ return new class extends Migration {
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->integer('qty');
             $table->decimal('price', 10, 2)->nullable(true);
-            $table->enum('by', ['pcs', 'km', 'mi', 'm', 'kg', 'g', 'mg', 'cm', 'mm', 'lbs', 'oz', 'l', 'ml'])->nullable(true);
+            $table->enum('per', ['pcs', 'hr', 'km', 'mi', 'm', 'kg', 'g', 'mg', 'cm', 'mm', 'lbs', 'oz', 'l', 'ml'])->nullable(true);
             $table->enum('approval_level', ['admin', 'staff', 'both']);
+            $table->string('assigned_personel')->nullable(true);
             $table->timestamps();
         });
         Schema::create('destinations', function (Blueprint $table) {
@@ -36,8 +37,6 @@ return new class extends Migration {
             $table->decimal('kilometers', 8, 2)->nullable(false);
             $table->timestamps();
         });
-
-
 
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
@@ -90,20 +89,17 @@ return new class extends Migration {
         Schema::create('managed_categories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId(column: 'user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
 
         Schema::create('rentees', function (Blueprint $table) {
             $table->id();
-            $table->string('rentee_code');
-            $table->string('first_name')->nullable(true);
-            $table->string('last_name')->nullable(true);
-            $table->string('middle_name')->nullable(true);
+            $table->string('code');
+            $table->string('name')->nullable(true);
             $table->string('email')->nullable(true);
             $table->string('contact_no')->nullable(true);
-            $table->string('address_1')->nullable(true);
-            $table->string('address_2')->nullable(true);
+            $table->string('address')->nullable(true);
             $table->timestamps();
 
         });
@@ -134,7 +130,6 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-
         Schema::create('items_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('transaction_id')->constrained()->onDelete('cascade');
@@ -142,10 +137,10 @@ return new class extends Migration {
             $table->foreignId('destination_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->integer('qty');
-            $table->date('rent_date');
-            $table->time('rent_time');
-            $table->date('rent_return');
-            $table->time('rent_return_time');
+            $table->date('date_start');
+            $table->time('time_start');
+            $table->date('date_end');
+            $table->time('time_end');
             $table->datetime('canceledByRentee_at')->nullable(true);
             $table->datetime('declinedByAdmin_at')->nullable(true);
             $table->datetime('approvedByAdmin_at')->nullable(true);
@@ -156,6 +151,7 @@ return new class extends Migration {
             $table->datetime('returned_at')->nullable(true);
             $table->string('receivedBy_id')->nullable(true);
             $table->text('message')->nullable(true);
+            $table->string('assigned_personel')->nullable(true);
             $table->timestamps();
         });
 

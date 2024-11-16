@@ -37,7 +37,7 @@
                         <div class="text-yellow-300 flex space-x-1">
                             <span>₱{{$item->price}}</span>
 
-                            <h1>by</h1>
+                            <h1>per</h1>
                             <span>
                                 {{ $item->by }}
                             </span>

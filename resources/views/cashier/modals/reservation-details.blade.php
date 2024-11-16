@@ -2,7 +2,9 @@
     class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50">
     <div class="bg-white p-2 rounded w-[500px] mx-2">
         <h1 class="text-xl font-medium">Reservation Details</h1>
-        <form id="reservationForm" action="{{ route('cashier.reservation-payment') }}" method="POST">
+
+        <form id="reservationForm-{{$reservation->id}}" action="{{ route('cashier.reservation-payment') }}"
+            method="POST">
             @csrf
             <input type="hidden" name="reservation_id" value="{{$reservation->id}}">
             <div class="mt-2 flex flex-col border-b-2">
@@ -32,14 +34,16 @@
                     class="px-4 py-2 border border-blue-300 text-blue-500 hover:opacity-50 rounded">Close</button>
 
 
-                <button onclick="document.getElementById('paymentConfirmationModal').classList.remove('hidden')"
+                <button
+                    onclick="document.getElementById('paymentConfirmationModal-{{$reservation->id}}').classList.remove('hidden')"
                     type="button" class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">Proceed to
                     Payment</button>
 
 
             </div>
     </div>
-    <div id="paymentConfirmationModal"
+
+    <div id="paymentConfirmationModal-{{$reservation->id}}"
         class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
         <div class="bg-white rounded w-[500px]">
             <div class="py-1 bg-blue-500 rounded-t">
@@ -57,11 +61,12 @@
             </div>
 
             <div class="flex justify-end space-x-1 p-2">
-                <button onclick="document.getElementById('paymentConfirmationModal').classList.add('hidden')"
+                <button
+                    onclick="document.getElementById('paymentConfirmationModal-{{$reservation->id}}').classList.add('hidden')"
                     type="button" class="px-4 py-2 border border-blue-300 text-blue-500 hover:opacity-50 rounded">
                     No
                 </button>
-                <button onclick="document.getElementById('reservationForm').submit()"
+                <button onclick="document.getElementById('reservationForm-{{$reservation->id}}').submit()"
                     class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">
                     Yes
                 </button>

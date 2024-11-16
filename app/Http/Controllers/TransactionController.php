@@ -338,24 +338,25 @@ class TransactionController extends Controller
     public function create(Request $request)
     {
 
+
         $validatedData = $request->validate([
             'item_id' => 'required|exists:items,id',
+            'qty' => 'required|integer|min:1',
             'category_id' => 'required|exists:categories,id',
-            'rentee_first_name' => 'required|string|max:255',
-            'rentee_middle_name' => 'nullable|string|max:255',
-            'rentee_last_name' => 'required|string|max:255',
-            'rentee_contact_no' => 'required|string|max:255',
-            'rentee_address_1' => 'required|string|max:255',
-            'rentee_address_2' => 'nullable|string|max:255',
-            'rentee_email' => 'required|string|email|max:255',
+            'name' => 'required|string|max:255',
+            'contact_no' => 'required|max:255',
+            'address' => 'required|string|max:500',
+            'email' => 'required|email|max:255',
             'destination_id' => 'required|exists:destinations,id',
-            'rent_date' => 'required|date',
-            'rent_time' => 'required|date_format:H:i',
-            'rent_return' => 'required|date|after_or_equal:rent_date',
-            'rent_return_time' => 'required|date_format:H:i',
+            'date_start' => 'required|date',
+            'time_start' => 'required|date_format:H:i',
+            'date_end' => 'required|date|after_or_equal:rent_date',
+            'time_end' => 'required|date_format:H:i',
             'purpose' => 'nullable|string|max:255',
-            'item_qty' => 'required|integer|min:1',
+            'assigned_personel' => ['string', 'nullable'],
+            'reservation_type' => ['string', 'required']
         ]);
+
 
         try {
 
@@ -365,14 +366,11 @@ class TransactionController extends Controller
 
 
             $rentee = Rentee::create([
-                'rentee_code' => $code,
-                'first_name' => $validatedData['rentee_first_name'],
-                'middle_name' => $validatedData['rentee_middle_name'] ?? null,
-                'last_name' => $validatedData['rentee_last_name'],
-                'email' => $validatedData['rentee_email'],
-                'contact_no' => $validatedData['rentee_contact_no'],
-                'address_1' => $validatedData['rentee_address_1'],
-                'address_2' => $validatedData['rentee_address_2'] ?? null,
+                'code' => $code,
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'contact_no' => $validatedData['contact_no'],
+                'address' => $validatedData['address']
             ]);
 
             $renteeId = $rentee->id;
@@ -384,8 +382,8 @@ class TransactionController extends Controller
             $transaction = Transaction::create([
                 'tracking_code' => $trackingCode,
                 'rentee_id' => $renteeId,
-                'reservation_type' => 'borrow',
-                'purpose' => $validatedData['purpose'] ?? '',
+                'reservation_type' => $validatedData['reservation_type'],
+                'purpose' => $validatedData['purpose'],
             ]);
 
             $transactionId = $transaction->id;
@@ -395,13 +393,12 @@ class TransactionController extends Controller
                 'item_id' => $validatedData['item_id'],
                 'destination_id' => $validatedData['destination_id'],
                 'category_id' => $validatedData['category_id'],
-                'qty' => $validatedData['item_qty'],
-                'rent_date' => $validatedData['rent_date'],
-                'rent_time' => $validatedData['rent_time'],
-                'rent_return' => $validatedData['rent_return'],
-                'rent_return_time' => $validatedData['rent_return_time']
+                'qty' => $validatedData['qty'],
+                'date_start' => $validatedData['date_start'],
+                'time_start' => $validatedData['time_start'],
+                'date_end' => $validatedData['date_end'],
+                'time_end' => $validatedData['time_end']
             ]);
-
 
             $isReadBy = [];
 

@@ -48,6 +48,7 @@ class RenteeItemsController extends Controller
         $transactions = ItemsTransaction::where('item_id', $id)
             ->whereNotNull('approvedByAdmin_at')
             ->whereNotNull('approvedByCashier_at')
+            ->where('returned_at', null)
             ->get();
 
         // Return an empty array if there are no transactions for the item

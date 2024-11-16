@@ -149,16 +149,14 @@
                     </div>
                 </form>
             </div>
-
             <!-- Container with the logo -->
             <div
                 class="shadow-md logo-container flex flex-col bg-gradient-to-b from-blue-500 to-teal-500 flex-1 rounded-t-lg md:rounded-l-lg overflow-auto p-4">
                 <div class="flex justify-center items-center flex-col h-full">
                     <img class="drop-shadow-md max-w-full h-auto mb-4" src="{{ asset('asset/logo/logo.png')}}"
                         height="200" width="200" alt="">
-                    <h1 id="app-title" class="text-xl text-white text-center font-serif mb-4">MDC Property Rental & <br>
-                        Reservation
-                        Management <br> System</h1>
+                    <h1 id="app-title" class="text-xl text-white text-center font-serif mb-4">MDC Property
+                        Reservation <br> Management System</h1>
                     <h1 id="app-copy" class="text-white text-sm">All rights reserved © 2024</h1>
                 </div>
             </div>

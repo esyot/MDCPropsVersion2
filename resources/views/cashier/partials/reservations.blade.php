@@ -22,8 +22,6 @@
     @endphp
 
 
-
-
     <li hx-get="{{ route('cashier.reservation-details', ['tracking_code' => $reservation->tracking_code]) }}"
         hx-trigger="click" hx-swap="innerHTML" hx-target="#reservation-details"
         class="p-2 m-2 bg-gray-100 hover:bg-gray-200 shadow-md" title="Click for preview">

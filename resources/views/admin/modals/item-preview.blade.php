@@ -42,8 +42,8 @@
                 </div>
 
                 <!-- Details Section -->
-                <div class="flex-1 space-y-4">
-                    <div>
+                <div class="flex-1  space-y-4">
+                    <div class="w-[200px]">
                         <label for="name" class="block text-gray-700 font-medium">Name:</label>
                         <input type="text" name="update_name" value="{{ $item->name }}"
                             class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -65,6 +65,8 @@
                             <option value="both">Both</option>
                         </select>
 
+
+
                         <label for="update_category" class="font-medium">Category:</label>
                         <select name="update_category"
                             class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -72,37 +74,88 @@
                             <option value="{{ $item->category->id }}">{{ $item->category->title }}</option>
 
                             @foreach ($categories as $category)
-
                                 <option value="{{ $category->id }}">{{ $category->title }}</option>
-
                             @endforeach
                         </select>
 
-                        <label for="qty" class="block text-gray-700 font-medium">Price:</label>
-                        <input type="string" name="update_price" value="{{ $item->price }}"
-                            class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            {{ $roles->contains('staff') ? 'disabled' : '' }}>
+                        <div class="flex items-center space-x-1">
+                            <input id="isAvailableForRentingCheckbox-{{$item->id}}" name="isAvailableForRenting"
+                                type="checkbox" {{$item->price ? 'checked' : ''}}>
+                            <span>
+                                Available for renting
+                            </span>
+
+                        </div>
+
+                        <small id="rentNoteAvailable-{{$item->id}}" class="hidden font-bold">Note:
+                            <i class="text-xs font-normal">if not checked, this item will be set for borrowing
+                                only.</i>
+                        </small>
+
+                        <script>
+
+
+
+                            document.getElementById('isAvailableForRentingCheckbox-{{$item->id}}').addEventListener('change', function () {
+
+                                if (document.getElementById('isAvailableForRentingCheckbox-{{$item->id}}').checked) {
+    document.getElementById('price-{{$item->id}}').required = true;
+} else {
+    document.getElementById('price-{{$item->id}}').required = false;
+}
+                                var updateRentingOptions = document.getElementById('rentingOptions-{{$item->id}}');
+                                var updateRentNoteUnavailable = document.getElementById('rentNoteAvailable-{{$item->id}}');
+
+
+                                if (this.checked) {
+                                    updateRentingOptions.classList.toggle('hidden');
+                                    updateRentNoteUnavailable.classList.toggle('hidden');
+                                } else {
+                                    updateRentingOptions.classList.toggle('hidden');
+                                    updateRentNoteUnavailable.classList.toggle('hidden');
+                                }
+                            });
+                        </script>
+
+                        <div id="rentingOptions-{{$item->id}}" class="{{ $item->price != null ? '' : 'hidden' }}">
+
+                            <label for="qty" class="block text-gray-700 font-medium">Price:</label>
+                            <input id="price-{{$item->id}}" type="number" name="update_price" value="{{ $item->price }}"
+                                class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                {{ $roles->contains('staff') ? 'disabled' : '' }} 
+                                
+                                
+                                >
+
+                            <div>
+                                <label for="">Per:</label>
+                                <select type="text" name="update_per" class="block p-2 w-full border border-gray-300 rounded "
+                                    placeholder="" {{ $roles->contains('staff') ? 'disabled' : '' }}>
+                                    <option value="{{$item->per}}">{{$item->per}}</option>
+                                    <option value="pcs">Piece/s (pc/s)</option>
+                                    <option value="pcs">Hour (hr)</option>
+                                    <option value="km">Kilometer (km)</option>
+                                    <option value="mi">Miles (mi)</option>
+                                    <option value="m">Meters (m)</option>
+                                    <option value="kg">Kilogram (kg)</option>
+                                    <option value="g">Grams (g)</option>
+                                    <option value="mg">Milligrams (mg)</option>
+                                    <option value="cm">Centimeters (cm)</option>
+                                    <option value="mm">Millimeters (mm)</option>
+                                    <option value="lbs">Pounds (lbs)</option>
+                                    <option value="oz">Ounces (oz)</option>
+                                    <option value="l">Liters (l)</option>
+                                    <option value="ml">Milliliters (ml)</option>
+                                </select>
+
+                            </div>
+                        </div>
+
 
                         <div>
-                            <label for="">By:</label>
-                            <select type="text" name="update_by" class="block p-2 border border-gray-300 rounded "
-                                placeholder="" {{ $roles->contains('staff') ? 'disabled' : '' }}>
-                                <option value="{{$item->by}}">{{$item->by}}</option>
-                                <option value="pcs">Pieces (pcs)</option>
-                                <option value="km">Kilometer (km)</option>
-                                <option value="mi">Miles (mi)</option>
-                                <option value="m">Meters (m)</option>
-                                <option value="kg">Kilogram (kg)</option>
-                                <option value="g">Grams (g)</option>
-                                <option value="mg">Milligrams (mg)</option>
-                                <option value="cm">Centimeters (cm)</option>
-                                <option value="mm">Millimeters (mm)</option>
-                                <option value="lbs">Pounds (lbs)</option>
-                                <option value="oz">Ounces (oz)</option>
-                                <option value="l">Liters (l)</option>
-                                <option value="ml">Milliliters (ml)</option>
-                            </select>
-
+                            <label for="">Assigned Personel:</label>
+                            <input type="text" name="update_assigned_personel" value="{{$item->assigned_personel}}"
+                                class="block p-2 border border-gray-300 rounded">
                         </div>
 
 
