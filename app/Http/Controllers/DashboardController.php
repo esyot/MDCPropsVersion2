@@ -180,9 +180,6 @@ class DashboardController extends Controller
         $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
         $unreadMessages = $messages->count();
 
-
-
-
         $properties = Property::where('category_id', $category)->orderBy('name', 'ASC')->get();
 
         $contacts = DB::table('messages')
@@ -307,7 +304,7 @@ class DashboardController extends Controller
         $reservations = PropertyReservation::all();
 
         return view(
-            'admin.pages.dashboard',
+            'admin.partials.calendar',
             compact(
                 'categoriesIsNull',
                 'destinations',
@@ -337,12 +334,13 @@ class DashboardController extends Controller
         $currentDate = Carbon::create($year, $month, 1);
 
         if ($action === 'left') {
-            $currentDate->subMonth();
+            $currentDate->subYear();
         } elseif ($action === 'right') {
-            $currentDate->addMonth();
+            $currentDate->addYear();
         } elseif ($action === 'today') {
             $currentDate = now();
         }
+
         $current_user_id = Auth::user()->id;
 
         $page_title = 'Dashboard';
@@ -362,19 +360,19 @@ class DashboardController extends Controller
             })
             ->get();
 
-        $setting = Setting::where('user_id', Auth::user()->id)->first();
 
-        $roles = Auth::user()->getRoleNames();
 
         $categories = [];
         $unreadNotifications = 0;
         $notifications = [];
-        $currentCategory = null;
+        $currentCategory = Category::find($category);
+        $setting = Setting::find(1);
+        $roles = Auth::user()->getRoleNames();
 
         if ($roles->contains('superadmin')) {
             $categories = Category::all();
 
-            $currentCategory = $categories->first();
+            $currentCategory = Category::find($category);
 
             $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
@@ -386,6 +384,13 @@ class DashboardController extends Controller
                 Auth::user()->id
             )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
 
+            $daysWithRecords = PropertyReservation::where('category_id', $category)
+                ->whereYear('date_start', $currentDate->format('Y'))
+                ->get()
+                ->map(fn($transaction) => Carbon::parse($transaction->date_start)->format('Y-m-d'))
+                ->unique()
+                ->values()
+                ->toArray();
 
         } else if ($roles->contains('admin')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
@@ -394,7 +399,7 @@ class DashboardController extends Controller
             $currentCategory = $categories->first();
 
             $categories = Category::all();
-            $currentCategory = $categories->first();
+            $currentCategory = Category::find($category);
 
             $notifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain(
                 'isDeletedBy',
@@ -405,13 +410,20 @@ class DashboardController extends Controller
                 Auth::user()->id
             )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
 
+            $daysWithRecords = PropertyReservation::where('category_id', $category)
+                ->whereYear('date_start', $currentDate->format('Y'))
+                ->get()
+                ->map(fn($transaction) => Carbon::parse($transaction->date_start)->format('Y-m-d'))
+                ->unique()
+                ->values()
+                ->toArray();
 
 
         } else if ($roles->contains('staff')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
             $categories = Category::whereIn('id', $categoryIds)->get();
-            $currentCategory = $categories->first();
+            $currentCategory = Category::find($category);
 
             $notifications = Notification::where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
@@ -427,10 +439,23 @@ class DashboardController extends Controller
                 ->orderBy('created_at', 'DESC')
                 ->get()->count();
 
+            $managedCategoryIds = $categoryIds->toArray();
+
+            if (in_array($category, $managedCategoryIds))
+
+                $daysWithRecords = PropertyReservation::where('category_id', $category)
+                    ->whereYear('date_start', $currentDate->format('Y'))
+                    ->get()
+                    ->map(fn($transaction) => Carbon::parse($transaction->date_start)->format('Y-m-d'))
+                    ->unique()
+                    ->values()
+                    ->toArray();
+            else {
+                return redirect()->back()->with('error', 'You have not granted access to this category!');
+            }
+
         }
-
         if ($currentCategory) {
-
             $currentCategoryId = $currentCategory->id;
             $categoriesIsNull = false;
         } else {
@@ -438,14 +463,15 @@ class DashboardController extends Controller
             $categoriesIsNull = true;
         }
 
-        $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : collect();
 
-        $daysWithRecords = PropertyReservation::all()->map(fn($transaction) => Carbon::parse($transaction->date_start)->format('Y-m-d'))->unique()->values()->toArray();
+        $properties = $currentCategory ? Property::where('category_id', $currentCategory->id)->get() : collect();
 
         $users = User::where('name', '!=', $current_user_id)->get();
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
 
         $transactions = PropertyReservation::all();
+
+        $currentCategory = Category::find($category);
 
         return view('admin.partials.calendar', compact(
             'categories',
@@ -460,11 +486,12 @@ class DashboardController extends Controller
             'page_title',
             'unreadNotifications',
             'notifications',
-            'items',
+            'properties',
             'currentDate',
             'daysWithRecords',
             'transactions',
-            'categoriesIsNull'
+            'categoriesIsNull',
+            'currentCategory'
         ));
     }
 }

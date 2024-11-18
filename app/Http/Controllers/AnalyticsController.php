@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Item;
-use App\Models\ItemsTransaction;
+use App\Models\PropertyReservation;
 use App\Models\ManagedCategory;
 use App\Models\Message;
 use App\Models\Notification;
+use App\Models\Property;
 use App\Models\Rentee;
 use App\Models\Setting;
 use App\Models\User;
@@ -124,7 +125,7 @@ class AnalyticsController extends Controller
 
         $usersCount = User::all()->count();
         $renteesCount = Rentee::all()->count();
-        $itemsCount = Item::all()->count();
+        $propertiesCount = Property::all()->count();
         $categoriesCount = Category::all()->count();
 
 
@@ -142,75 +143,75 @@ class AnalyticsController extends Controller
         // Calculate counts based on the presence of a specific year in the request
         if ($request->year) {
             // If the 'year' is set in the request, filter by year
-            $itemsCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $propertiesCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->count();
 
-            $itemsDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $propertiesDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->count();
 
-            $itemsCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $propertiesCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->count();
 
             //canceled reservation by months
-            $januaryCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $januaryCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 1)
                 ->count();
 
-            $februaryCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $februaryCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 2)
                 ->count();
 
-            $marchCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $marchCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 3)
                 ->count();
 
-            $aprilCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $aprilCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 4)
                 ->count();
 
-            $mayCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $mayCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 5)
                 ->count();
 
-            $juneCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $juneCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 6)
                 ->count();
 
-            $julyCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $julyCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 7)
                 ->count();
 
-            $augustCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $augustCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 8)
                 ->count();
 
-            $septemberCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $septemberCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 9)
                 ->count();
 
-            $octoberCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $octoberCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 10)
                 ->count();
 
-            $novemberCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $novemberCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 11)
                 ->count();
 
-            $decemberCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $decemberCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 12)
                 ->count();
@@ -218,259 +219,259 @@ class AnalyticsController extends Controller
             // declined reservations by month
 
 
-            $januaryDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $januaryDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 1)
                 ->count();
 
-            $februaryDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $februaryDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 2)
                 ->count();
 
-            $marchDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $marchDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 3)
                 ->count();
 
-            $aprilDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $aprilDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 4)
                 ->count();
 
-            $mayDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $mayDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 5)
                 ->count();
 
-            $juneDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $juneDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 6)
                 ->count();
 
-            $julyDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $julyDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 7)
                 ->count();
 
-            $augustDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $augustDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 8)
                 ->count();
 
-            $septemberDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $septemberDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 9)
                 ->count();
 
-            $octoberDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $octoberDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 10)
                 ->count();
 
-            $novemberDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $novemberDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 11)
                 ->count();
 
-            $decemberDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $decemberDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 12)
                 ->count();
 
 
             // Completed reservations by month
-            $januaryCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $januaryCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 1)
                 ->count();
 
-            $februaryCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $februaryCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 2)
                 ->count();
 
-            $marchCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $marchCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 3)
                 ->count();
 
-            $aprilCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $aprilCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 4)
                 ->count();
 
-            $mayCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $mayCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 5)
                 ->count();
 
-            $juneCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $juneCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 6)
                 ->count();
 
-            $julyCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $julyCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 7)
                 ->count();
 
-            $augustCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $augustCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 8)
                 ->count();
 
-            $septemberCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $septemberCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 9)
                 ->count();
 
-            $octoberCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $octoberCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 10)
                 ->count();
 
-            $novemberCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $novemberCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 11)
                 ->count();
 
-            $decemberCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $decemberCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 12)
                 ->count();
 
         } else {
 
-            $itemsCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $propertiesCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->count();
-            $itemsDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $propertiesDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->count();
-            $itemsCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $propertiesCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->count();
 
 
             //canceled reservation by months
-            $januaryCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $januaryCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 1)
                 ->count();
 
-            $februaryCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $februaryCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 2)
                 ->count();
 
-            $marchCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $marchCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 3)
                 ->count();
 
-            $aprilCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $aprilCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 4)
                 ->count();
 
-            $mayCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $mayCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 5)
                 ->count();
 
-            $juneCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $juneCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 6)
                 ->count();
 
-            $julyCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $julyCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 7)
                 ->count();
 
-            $augustCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $augustCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 8)
                 ->count();
 
-            $septemberCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $septemberCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 9)
                 ->count();
 
-            $octoberCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $octoberCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 10)
                 ->count();
 
-            $novemberCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $novemberCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 11)
                 ->count();
 
-            $decemberCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+            $decemberCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->whereMonth('canceledByRentee_at', 12)
                 ->count();
 
             // declined reseravtions by month
-            $januaryDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $januaryDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 1)
                 ->count();
 
-            $februaryDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $februaryDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 2)
                 ->count();
 
-            $marchDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $marchDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 3)
                 ->count();
 
-            $aprilDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $aprilDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 4)
                 ->count();
 
-            $mayDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $mayDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 5)
                 ->count();
 
-            $juneDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $juneDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 6)
                 ->count();
 
-            $julyDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $julyDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 7)
                 ->count();
 
-            $augustDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $augustDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 8)
                 ->count();
 
-            $septemberDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $septemberDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 9)
                 ->count();
 
-            $octoberDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $octoberDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 10)
                 ->count();
 
-            $novemberDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $novemberDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 11)
                 ->count();
 
-            $decemberDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+            $decemberDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
                 ->whereYear('declinedByAdmin_at', $currentYear)
                 ->whereMonth('declinedByAdmin_at', 12)
                 ->count();
@@ -478,62 +479,62 @@ class AnalyticsController extends Controller
 
 
             // Completed reservations by month
-            $januaryCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $januaryCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 1)
                 ->count();
 
-            $februaryCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $februaryCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 2)
                 ->count();
 
-            $marchCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $marchCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 3)
                 ->count();
 
-            $aprilCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $aprilCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 4)
                 ->count();
 
-            $mayCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $mayCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 5)
                 ->count();
 
-            $juneCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $juneCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 6)
                 ->count();
 
-            $julyCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $julyCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 7)
                 ->count();
 
-            $augustCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $augustCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 8)
                 ->count();
 
-            $septemberCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $septemberCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 9)
                 ->count();
 
-            $octoberCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $octoberCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 10)
                 ->count();
 
-            $novemberCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $novemberCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 11)
                 ->count();
 
-            $decemberCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+            $decemberCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
                 ->whereMonth('returned_at', 12)
                 ->count();
@@ -556,15 +557,15 @@ class AnalyticsController extends Controller
                 'users',
                 'usersCount',
                 'renteesCount',
-                'itemsCount',
+                'propertiesCount',
                 'categoriesCount',
                 'adminsCount',
                 'superadminsCount',
                 'cashiersCount',
                 'staffsCount',
-                'itemsCanceledCount',
-                'itemsDeclinedCount',
-                'itemsCompletedCount',
+                'propertiesCanceledCount',
+                'propertiesDeclinedCount',
+                'propertiesCompletedCount',
                 'currentYear',
                 'januaryCanceledCount',
                 'februaryCanceledCount',

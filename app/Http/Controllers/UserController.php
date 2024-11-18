@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItemsTransaction;
+use App\Models\Property;
+use App\Models\PropertyReservation;
 use DB;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -24,8 +26,6 @@ class UserController extends Controller
     {
 
         $current_user_id = Auth::user()->id;
-
-
 
         $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
         $unreadMessagesCount = $messages->count();
@@ -52,9 +52,9 @@ class UserController extends Controller
         $roles = Role::all();
         $setting = Setting::where('user_id', Auth::user()->id)->first();
         $currentCategory = Category::find($defaultCategoryId);
-        $transactions = ItemsTransaction::where('category_id', $defaultCategoryId)->get();
+        $transactions = PropertyReservation::where('category_id', $defaultCategoryId)->get();
         $categories = Category::orderBy('id')->get();
-        $items = Item::where('category_id', $defaultCategoryId)->get();
+        $properties = Property::where('category_id', $defaultCategoryId)->get();
 
 
 
@@ -93,7 +93,7 @@ class UserController extends Controller
             'page_title' => 'Manage Users',
             'unreadNotifications' => $unreadNotifications,
             'notifications' => $notifications,
-            'items' => $items,
+
             'currentCategory' => $currentCategory,
             'categories' => $categories,
             'currentDate' => now(),

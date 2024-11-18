@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    @if (request('transaction') != null)
+    @if (request('reservation') != null)
 
         <script src="{{ asset('asset/dist/qrious.js') }}"></script>
 

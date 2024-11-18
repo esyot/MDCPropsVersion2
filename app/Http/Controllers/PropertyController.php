@@ -21,7 +21,7 @@ class PropertyController extends Controller
     public function index()
     {
         $current_user_id = Auth::user()->id;
-        $page_title = "Items";
+        $page_title = "Properties";
         $categories = Category::all();
         $setting = Setting::findOrFail(1);
         $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();

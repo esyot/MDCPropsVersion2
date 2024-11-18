@@ -126,6 +126,11 @@ Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
     Route::get('/admin/analytics-charts-custom-year', [AnalyticsController::class, 'index'])->name('admin.analytics-charts-custom-year');
     Route::post('/admin/analytics-export-to-pdf', [ExportPDFController::class, 'analyticsExportPDF'])->name('admin.analytics-export-to-pdf');
 
+    //Reservations
+
+
+    Route::get('/admin/reservations', [ReservationController::class, 'index'])->name('admin.reservations');
+    Route::get('/admin/reservations-filter', [ReservationController::class, 'filter'])->name('admin.reservations-filter');
 });
 
 Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
@@ -140,8 +145,6 @@ Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
 
     // Transactions Routes
     Route::post('/admin/reservation-add', [ReservationController::class, 'create'])->name('admin.reservation-add');
-    Route::get('/admin/reservations', [ReservationController::class, 'index'])->name('admin.reservations');
-    Route::get('/admin/reservations-filter', [ReservationController::class, 'filter'])->name('admin.reservations-filter');
 
     //Item Return Routes
     Route::get('/admin/search-reservation-for-return', [ReturnPropertyController::class, 'searchReservationForReturn'])->name('admin.search-reservation-for-return');
@@ -157,8 +160,8 @@ Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
 
 
     //Calendar Routes
-    Route::get('/admin/calendar-move/{action}/{category}/{year}/{month}', [DashboardController::class, 'calendarMove'])->name('calendarMove');
-    Route::get('/admin/date-custom', [DashboardController::class, 'dateCustom'])->name('dateCustom');
+    Route::get('/admin/calendar-move/{action}/{category}/{year}/{month}', [DashboardController::class, 'calendarMove'])->name('admin.calendar-move');
+    Route::get('/admin/date-custom', [DashboardController::class, 'dateCustom'])->name('admin.date-custom');
     Route::get('admin/calendar-select-month/{year}/{month}/{category}', [CalendarController::class, 'selectMonth'])->name('admin.select-month');
     Route::get('/admin/calendar-day-view/{date}/{category_id}', [CalendarController::class, 'calendarDayView'])->name('admin.calendar-day-view');
 

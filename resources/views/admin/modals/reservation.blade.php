@@ -1,67 +1,67 @@
-<div id="transaction-{{$transaction->id}}"
+<div id="reservation-{{$reservation->id}}"
     class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 hidden z-50">
 
 
     <div class="bg-white p-4 rounded">
         <div class="flex items-center">
             <span class="font-medium">Item:</span>
-            <span class="ml-2 text-blue-500">{{ $transaction->item->name }}</span>
+            <span class="ml-2 text-blue-500">{{ $reservation->property->name }}</span>
         </div>
         <div class="flex items-center">
             <span class="font-medium">Quantity:</span>
-            <span class="ml-2 text-blue-500">{{ $transaction->qty }} pcs</span>
+            <span class="ml-2 text-blue-500">{{ $reservation->qty }} pcs</span>
         </div>
         <div class="flex items-center">
             <span class="font-medium">Rentee:</span>
             <span class="ml-2 text-blue-500">
-                {{ $transaction->transaction->rentee->name }}</span>
+                {{ $reservation->reservation->rentee->name }}</span>
         </div>
         <div class="flex items-center">
             <span class="font-medium">Contact #:</span>
-            <span class="ml-2 text-blue-500">{{ $transaction->transaction->rentee->contact_no }}</span>
+            <span class="ml-2 text-blue-500">{{ $reservation->reservation->rentee->contact_no }}</span>
         </div>
         <div class="flex items-center mt-1">
             <span class="font-medium">Date Pick-up:</span>
             <span class="ml-2 text-blue-500">
-                {{ \Carbon\Carbon::parse($transaction->rent_date)->format('F j, Y') }}
+                {{ \Carbon\Carbon::parse($reservation->rent_date)->format('F j, Y') }}
             </span>
         </div>
         <div class="flex items-center mt-1">
             <span class="font-medium">Time Pick-up:</span>
             <span class="ml-2 text-blue-500">
-                {{ \Carbon\Carbon::parse($transaction->rent_time)->format('h:i A') }}
+                {{ \Carbon\Carbon::parse($reservation->rent_time)->format('h:i A') }}
             </span>
         </div>
         <div class="flex items-center mt-1">
             <span class="font-medium">Date Return:</span>
             <span class="ml-2 text-blue-500">
-                {{ \Carbon\Carbon::parse($transaction->rent_return)->format('F j, Y') }}
+                {{ \Carbon\Carbon::parse($reservation->rent_return)->format('F j, Y') }}
             </span>
         </div>
         <div class="flex items-center mt-1">
             <span class="font-medium">Time Return:</span>
             <span class="ml-2 text-blue-500">
-                {{ \Carbon\Carbon::parse($transaction->rent_return_time)->format('h:i A') }}
+                {{ \Carbon\Carbon::parse($reservation->rent_return_time)->format('h:i A') }}
             </span>
         </div>
         <div class="flex items-center mt-1">
             <span class="font-medium">Reservation Type:</span>
             <span class="ml-2 text-blue-500">
-                {{ ucfirst($transaction->transaction->reservation_type) }}
+                {{ ucfirst($reservation->reservation->reservation_type) }}
             </span>
 
         </div>
         <div class="flex items-center mt-1">
             <span class="font-medium">Purpose:</span>
             <span class="ml-2 text-blue-500">
-                {{ ucfirst($transaction->transaction->purpose) }}
+                {{ ucfirst($reservation->reservation->purpose) }}
             </span>
 
         </div>
 
         <div class="flex justify-center mt-2">
             <button type="button"
-                onclick="document.getElementById('transaction-{{$transaction->id}}').classList.add('hidden')"
+                onclick="document.getElementById('reservation-{{$reservation->id}}').classList.add('hidden')"
                 class="px-4 py-2 bg-gray-500 rounded text-gray-100 hover:opacity-50">
                 Close
             </button>

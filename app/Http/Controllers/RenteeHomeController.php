@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Item;
+use App\Models\Property;
+use App\Models\Reservation;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -44,7 +46,7 @@ class RenteeHomeController extends Controller
             }
 
             // Fetch items based on the decoded IDs
-            $cartedItems = Item::whereIn('id', $itemIds)->get()->count();
+            $cartedItems = Property::whereIn('id', $itemIds)->get()->count();
 
             return view('rentee.pages.index', compact('cartedItems', 'rentee', 'categories'));
 
@@ -57,10 +59,10 @@ class RenteeHomeController extends Controller
 
         if ($request) {
 
-            $transaction = Transaction::find($request->transaction);
+            $reservation = Reservation::find($request->reservation);
 
 
-            return view('rentee.pages.welcome', compact('transaction'));
+            return view('rentee.pages.welcome', compact('reservation'));
 
 
         }

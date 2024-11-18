@@ -129,15 +129,15 @@
             <div class="space-y-1">
                 <div class="flex items-center space-x-2">
                     <i class="fa-solid fa-square text-yellow-500"></i>
-                    <small> {{ $itemsCanceledCount }} </small>
+                    <small> {{ $propertiesCanceledCount }} </small>
                 </div>
                 <div class="flex items-center space-x-2">
                     <i class="fa-solid fa-square text-red-500"></i>
-                    <small> {{ $itemsDeclinedCount }} </small>
+                    <small> {{ $propertiesDeclinedCount }} </small>
                 </div>
                 <div class="flex items-center space-x-2">
                     <i class="fa-solid fa-square text-green-500"></i>
-                    <small> {{ $itemsCompletedCount }} </small>
+                    <small> {{ $propertiesCompletedCount }} </small>
                 </div>
             </div>
         </div>
@@ -236,7 +236,7 @@
             labels: ['Canceled', 'Declined', 'Completed'],
             datasets: [{
                 label: 'My First Dataset',
-                data: [{{$itemsCanceledCount}}, {{$itemsDeclinedCount}}, {{$itemsCompletedCount}}],
+                data: [{{$propertiesCanceledCount}}, {{$propertiesDeclinedCount}}, {{$propertiesCompletedCount}}],
                 backgroundColor: [
                     'rgba(255, 193, 7, 0.6)',
                     'rgba(244, 67, 54, 0.6)',
@@ -356,7 +356,7 @@
             class="flex m-2 flex-col bg-white border shadow-md w-[200px] rounded-xl cursor-pointer {{ $setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : ''}} ">
             <div class="p-2">
                 <div class="flex items-center justify-between">
-                    <span class="text-2xl font-bold">{{ $itemsCount }}</span>
+                    <span class="text-2xl font-bold">{{ $propertiesCount }}</span>
                     <i class="fas fa-boxes text-blue-500"></i>
                 </div>
 

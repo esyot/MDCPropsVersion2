@@ -1,128 +1,3 @@
-<div id="calendar-day-view">
-
-</div>
-
-<form id="filter-form" action="{{ route('dateCustom')}}" method="GET" class="select-none">
-    @csrf
-    <div id="calendar-header" class="p-2">
-
-        <div class="flex items-center">
-            <div id="calendar-controls" class="flex space-x-2 p-2">
-                <a id="today-btn" title="Today"
-                    hx-get="{{ route('calendarMove', ['action' => 'today', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
-                    hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
-                    class="hidden cursor-pointer px-4 py-2 rounded-lg shadow-md text-teal-100 bg-teal-500 hover:bg-teal-800 hover:text-teal-100">
-                    Today
-                </a>
-
-                <a id="slide-left-btn" title="Slide to left"
-                    hx-get="{{ route('calendarMove', ['action' => 'left', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
-                    hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
-                    class="hidden shadow-md text-white fa-solid fa-chevron-left hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full">
-                </a>
-
-                <a id="slide-right-btn" title="Slide to right"
-                    hx-get="{{ route('calendarMove', ['action' => 'right', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
-                    hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
-                    class="hidden shadow-md text-white fa-solid fa-chevron-right hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full">
-                </a>
-            </div>
-
-
-            <div class="flex space-x-2 justify-center hidden">
-
-                <a title="Today" class="hidden"
-                    hx-get="{{ route('calendarMove', ['action' => 'today', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
-                    hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard"
-                    class="cursor-pointer px-4 py-2 rounded-lg shadow-md text-teal-100 bg-teal-400 hover:bg-teal-600">
-                    Today
-                </a>
-
-                <a title="Slide to left" class="hidden"
-                    hx-get="{{ route('calendarMove', ['action' => 'left', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
-                    hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard">
-
-                    <i
-                        class="shadow-md text-white fa-solid fa-chevron-left hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full"></i>
-                </a>
-
-                <a title="Slide to right" class="hidden"
-                    hx-get="{{ route('calendarMove', ['action' => 'right', 'category' => $currentCategory->id, 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('n')])}}"
-                    hx-trigger="click" hx-swap="innerHTML" hx-target="#dashboard">
-                    <i
-                        class="shadow-md text-white fa-solid fa-chevron-right hover:text-blue-300 cursor-pointer bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full"></i>
-                </a>
-
-            </div>
-
-            <div class="flex space-x-1">
-
-                <div title="Month" class="hidden flex items-center bg-white shadow-md p-2 rounded-lg">
-
-                    <i id="month-icon" class="fas fa-calendar text-gray-500"></i>
-                    <select name="month" class="bg-transparent focus:outline-none">
-                        <option class="text-red-500 font-semibold" value="">
-                            {{ $currentDate->format('F') }}
-                        </option>
-                        <option value="1">January</option>
-                        <option value="2">February</option>
-                        <option value="3">March</option>
-                        <option value="4">April</option>
-                        <option value="5">May</option>
-                        <option value="6">June</option>
-                        <option value="7">July</option>
-                        <option value="8">August</option>
-                        <option value="9">September</option>
-                        <option value="10">October</option>
-                        <option value="11">November</option>
-                        <option value="12">December</option>
-                    </select>
-                </div>
-
-                <div>
-
-                    <div title="Category" class="flex items-center bg-white shadow-md p-2 rounded-lg">
-                        <i id="category-icon" class="fa-solid fa-calendar-days text-gray-500"></i>
-                        <select name="year" class="bg-transparent focus:outline-none">
-                            <option class="text-red-500 font-semibold" value="{{ $currentDate->format('Y') }}">
-                                {{ $currentDate->format('Y') }}
-                            </option>
-                            @php
-                                $years = range(2024, 2050); 
-                            @endphp
-
-                            @foreach ($years as $year)
-                                <option value="{{ $year }}">{{ $year }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div title="Category" class="flex items-center bg-white shadow-md p-2 rounded-lg">
-                    <i id="category-icon" class="fa-solid fa-list text-gray-500"></i>
-
-                    <select name="category"
-                        class="bg-transparent focus:outline-none w-full overflow-hidden text-ellipsis whitespace-nowrap">
-
-                        <option class="text-red-500 font-semibold" value="{{ $currentCategory->id }}">
-                            {{ $currentCategory->title }}
-                        </option>
-
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">
-                                {{ $category->title }}
-                            </option>
-
-                        @endforeach
-
-                    </select>
-                </div>
-            </div>
-
-</form>
-</div>
-</div>
-
 <style>
     @media(orientation: portrait) {
 
@@ -166,8 +41,77 @@
     }
 </style>
 
+<div id="calendar-day-view">
+</div>
 
-<div id="calendar-month" class="hidden w-full h-full flex flex-col justify-center items-center overflow-hidden">
+<form id="filter-form" hx-get="{{ route('admin.date-custom')}}" hx-target="#dashboard" hx-swap="innerHTML"
+    hx-trigger="change" class="select-none shadow-md">
+
+    <div id="calendar-header" class="py-2">
+
+        <div class="flex items-center space-x-1">
+            <div class="flex items-center space-x-2 px-2">
+                <a hx-get="{{ route('admin.calendar-move', ['category' => $currentCategory->id, 'action' => 'today', 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('m')]) }}"
+                    hx-target="#dashboard" hx-swap="innerHTML"
+                    class="px-4 py-2 bg-teal-500 text-teal-100 hover:opacity-50 shadow-md rounded-lg">
+                    Today
+                </a>
+
+                <a hx-get="{{ route('admin.calendar-move', ['category' => $currentCategory->id, 'action' => 'left', 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('m')]) }}"
+                    hx-target="#dashboard" hx-swap="innerHTML" class="drop-shadow">
+                    <i class="fas fa-chevron-circle-left fa-2xl text-blue-500  hover:opacity-50"></i>
+                </a>
+                <a hx-get="{{ route('admin.calendar-move', ['category' => $currentCategory->id, 'action' => 'right', 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('m')]) }}"
+                    hx-target="#dashboard" hx-swap="innerHTML" class="drop-shadow">
+                    <i class="fas fa-chevron-circle-right fa-2xl text-blue-500  hover:opacity-50"></i>
+                </a>
+            </div>
+            <div class="flex items-center hover:opacity-50 bg-white shadow-md p-2 rounded-lg">
+
+                <i id="category-icon" class="fa-solid fa-calendar-days text-gray-500"></i>
+                <select name="year" class="bg-transparent focus:outline-none">
+                    <option class="text-red-500 font-semibold" value="{{ $currentDate->format('Y') }}">
+                        {{ $currentDate->format('Y') }}
+                    </option>
+                    @php
+                        $years = range(2024, 2050); 
+                    @endphp
+
+                    @foreach ($years as $year)
+                        <option value="{{ $year }}">{{ $year }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="flex items-center hover:opacity-50 bg-white shadow-md p-2 rounded-lg">
+                <i id="category-icon" class="fa-solid fa-list text-gray-500"></i>
+
+                <select name="category"
+                    class="bg-transparent focus:outline-none w-full overflow-hidden text-ellipsis whitespace-nowrap">
+
+                    <option class="text-red-500 font-semibold" value="{{ $currentCategory->id }}">
+                        {{ $currentCategory->title }}
+                    </option>
+
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">
+                            {{ $category->title }}
+                        </option>
+
+                    @endforeach
+
+                </select>
+            </div>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+
+<div id="calendar-month" class="hidden w-full h-full overflow-hidden">
 
 </div>
 
@@ -179,7 +123,7 @@
 @endphp
 
 <div id="calendar" class="">
-    <div id="calendar-content" class="grid grid-cols-4  gap-2 px-2 pt-2">
+    <div id="calendar-content" class="grid grid-cols-4 gap-1 m-1">
         {{-- Loop through each month --}}
         @foreach(range(1, 12) as $month)
                 @php
@@ -194,22 +138,22 @@
                     hx-get="{{ route('admin.select-month', ['year' => $currentYear, 'month' => $month, 'category' => $currentCategory->id]) }}"
                     hx-target="#calendar-month" hx-swap="innerHTML" hx-trigger="click"
                     onclick="calendarSelectMonth({{ $month }})"
-                    class="flex hover:opacity-50 rounded-t-lg flex-col bg-white shadow-md border h-[190px]  cursor-pointer {{$setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : '' }}">
+                    class="hover:opacity-50 rounded-t-lg bg-white shadow-md border cursor-pointer {{$setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : '' }}">
 
                     <div class="text-center bg-blue-600 text-white rounded-t-lg">
-                        <span>{{ $monthStart->format('F') }}</span>
+                        <span class="font-bold">{{ $monthStart->format('F') }}</span>
                     </div>
 
-                    <div id="calendar-month-header" class="grid grid-cols-7 gap-0 text-center bg-gray-100">
+                    <div id="calendar-month-header" class="grid grid-cols-7 text-center bg-gray-100">
                         {{-- Days of the week header --}}
                         @foreach(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $day)
-                            <div class="font-bold text-center {{ $day == 'Sun' ? 'text-red-500' : '' }}">
+                            <div class=" font-bold text-center {{ $day == 'Sun' ? 'text-red-500' : '' }}">
                                 {{ $day }}
                             </div>
                         @endforeach
                     </div>
 
-                    <div id="calendar-month-content" class="grid grid-cols-7 gap-0 drop-shadow">
+                    <div id="calendar-month-content" class="grid grid-cols-7">
                         {{-- Render empty days at the beginning of the month --}}
                         @for ($i = 0; $i < $firstDayOfWeek; $i++)
                             <div class=""></div>
@@ -225,7 +169,7 @@
                                     @endphp
 
                                     <div
-                                        class="{{ $hasRecord ? 'bg-gray-400 text-white' : '' }} {{ $currentDayInMonth == 'Sunday' ? 'text-red-500' : '' }} text-center ">
+                                        class=" {{ $hasRecord ? 'bg-gray-400 text-white' : '' }} {{ $currentDayInMonth == 'Sunday' ? 'text-red-500' : '' }} text-center ">
                                         <span class="relative inline-block">
                                             @if(\Carbon\Carbon::now()->isToday() && \Carbon\Carbon::now()->day == $day && $monthStart->month == \Carbon\Carbon::now()->month && $currentYear == \Carbon\Carbon::now()->format('Y'))
                                                 <i class="fas fa-circle text-green-500 text-[4px] absolute top-5 left-0 right-0 z-50"></i>
@@ -274,9 +218,5 @@
         addButton.classList.remove('hidden');
     }
 
-    document.querySelectorAll('#filter-form select').forEach(select => {
-        select.addEventListener('change', () => {
-            document.getElementById('filter-form').submit();
-        });
-    });
+
 </script>

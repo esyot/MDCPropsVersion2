@@ -8,6 +8,7 @@ use App\Models\PropertyReservation;
 use App\Models\ManagedCategory;
 use App\Models\Message;
 use App\Models\Notification;
+use App\Models\Reservation;
 use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
@@ -19,11 +20,11 @@ class ClaimPropertyController extends Controller
 {
     public function index()
     {
-        $page_title = "Claim Items";
+        $page_title = "Claim Properties";
 
         $current_user_id = Auth::user()->id;
 
-        $items = Item::all();
+        $properties = Property::all();
         // Messages
         $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
         $unreadMessages = $messages->count();
@@ -116,13 +117,13 @@ class ClaimPropertyController extends Controller
         }
 
 
-        $transactions = Transaction::where('status', 'approved')
+        $reservations = Reservation::where('status', 'approved')
             ->whereNot('approved_at', null)
             ->get();
 
 
-        return view('admin.pages.claim-items', compact(
-            'transactions',
+        return view('admin.pages.claim-properties', compact(
+            'reservations',
             'categories',
             'users',
             'currentCategory',
@@ -134,7 +135,7 @@ class ClaimPropertyController extends Controller
             'page_title',
             'unreadNotifications',
             'notifications',
-            'items',
+            'properties',
             'categoriesIsNull',
         ));
 

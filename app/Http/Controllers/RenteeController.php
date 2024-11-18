@@ -14,12 +14,15 @@ class RenteeController extends Controller
     {
         if (session()->has('rentee')) {
             $rentee = session('rentee');
+
         } else {
             try {
                 $rentee = $this->createNewRentee();
                 session(['rentee' => $rentee]);
             } catch (\Exception $e) {
                 return redirect()->back()->withErrors(['error' => 'Could not create rentee: ' . $e->getMessage()]);
+
+
             }
         }
         return redirect()->route('home', ['rentee' => $rentee->rentee_code]);

@@ -27,7 +27,7 @@ class ReservationController extends Controller
 
         $category = Category::all()->first();
 
-        $transactions = ItemsTransaction::where('category_id', $category->id)
+        $reservations = PropertyReservation::where('category_id', $category->id)
             ->where('approvedByAdmin_at', null)
             ->where('approvedByCashier_at', null)
             ->where('canceledByRentee_at', null)
@@ -128,49 +128,65 @@ class ReservationController extends Controller
         }
 
         $users = User::whereNot('name', Auth::user()->name)->get();
-        return view('admin.pages.transactions', compact('users', 'categoriesIsNull', 'currentStatus', 'contacts', 'unreadMessages', 'setting', 'page_title', 'currentCategory', 'categories', 'transactions', 'unreadNotifications', 'notifications'));
+        return view('admin.pages.reservations', compact(
+
+            'users',
+            'categoriesIsNull',
+            'currentStatus',
+            'contacts',
+            'unreadMessages',
+            'setting',
+            'page_title',
+            'currentCategory',
+            'categories',
+            'reservations',
+            'unreadNotifications',
+            'notifications'
+        ));
 
     }
     public function decline(Request $request, $id)
     {
 
-        $reservation = ItemsTransaction::find($id);
+        $reservation = PropertyReservation::find($id);
 
         if (!$reservation) {
             return redirect()->back()->with('error', 'Reservation not found.');
         }
 
-        $transaction = Transaction::find($reservation->transaction->id);
+        $reservation = Reservation::find($reservation->reservation->id);
 
-        if (!$transaction) {
-            return redirect()->back()->with('error', 'Transaction not found.');
+        if (!$reservation) {
+            return redirect()->back()->with('error', 'Reservation not found.');
         }
 
 
-        $reservations = ItemsTransaction::where('transaction_id', $transaction->id)->get();
+        $reservations = PropertyReservation::where('reservation_id', $reservation->id)
+            ->update([
+                'message' => $request->message,
+                'declinedByAdmin_at' => now(),
+            ]);
 
-        $reservation->update([
-            'message' => $request->message,
-            'declinedByAdmin_at' => now(),
-        ]);
-
-        Transaction::where('id', $transaction->id)
+        Reservation::where('id', $reservation->id)
             ->update([
                 'status' => 'in progress'
             ]);
 
+        $reservationsCount = PropertyReservation::where('reservation_id', $reservation->id)->count();
 
-        $declinedReservations = ItemsTransaction::where('transaction_id', $transaction->id)->whereNot('declinedByAdmin_at', null)->count();
+        $declinedReservations = PropertyReservation::where('reservation_id', $reservation->id)
+            ->whereNot('declinedByAdmin_at', null)
+            ->count();
 
         $allDeclined = false;
 
 
-        if ($declinedReservations == count($reservations)) {
+        if ($declinedReservations == $reservationsCount) {
             $allDeclined = true;
         }
 
         if ($allDeclined == true) {
-            $transaction->update([
+            $reservation->update([
                 'status' => 'declined',
             ]);
         }
@@ -182,23 +198,24 @@ class ReservationController extends Controller
     public function approve($id)
     {
 
-        $transaction = ItemsTransaction::find($id);
+        $reservation = PropertyReservation::find($id);
 
-        $transaction->update([
+        $reservation->update([
             'approvedByAdmin_at' => now(),
+            'approvedByCashier_at' => now(),
             'admin_id' => Auth::user()->id,
         ]);
 
-        if ($transaction) {
+        if ($reservation) {
 
-            Transaction::where('id', $transaction->transaction->id)
+            Reservation::where('id', $reservation->reservation->id)
                 ->update([
                     'status' => 'in progress'
                 ]);
 
             Notification::create([
                 'icon' => Auth::user()->img,
-                'category_id' => $transaction->category_id,
+                'category_id' => $reservation->category_id,
                 'title' => 'Approved Reservation',
                 'description' => Auth::user()->name . ' approved a new reservation, check it now!',
                 'redirect_link' => 'reservations',
@@ -213,7 +230,7 @@ class ReservationController extends Controller
     public function filter(Request $request)
     {
         if ($request->status == 'pending') {
-            $transactions = ItemsTransaction::where('declinedByAdmin_at', null)
+            $reservations = PropertyReservation::where('declinedByAdmin_at', null)
                 ->where('approvedByCashier_at', null)
                 ->where('approvedByAdmin_at', null)
                 ->where('canceledByRentee_at', null)
@@ -221,21 +238,21 @@ class ReservationController extends Controller
                 ->get();
 
         } else if ($request->status == 'approved') {
-            $transactions = ItemsTransaction::where('declinedByAdmin_at', null)
+            $reservations = PropertyReservation::where('declinedByAdmin_at', null)
                 ->whereNot('approvedByCashier_at', null)
                 ->whereNot('approvedByAdmin_at', null)
                 ->where('canceledByRentee_at', null)
                 ->where('category_id', $request->category)
                 ->get();
         } else if ($request->status == 'canceled') {
-            $transactions = ItemsTransaction::where('declinedByAdmin_at', null)
+            $reservations = PropertyReservation::where('declinedByAdmin_at', null)
                 ->whereNot('canceledByRentee_at', null)
                 ->where('category_id', $request->category)
                 ->get();
 
 
         } else if ($request->status == 'declined') {
-            $transactions = ItemsTransaction::whereNot('declinedByAdmin_at', null)->where('category_id', $request->category)->get();
+            $reservations = PropertyReservation::whereNot('declinedByAdmin_at', null)->where('category_id', $request->category)->get();
 
         }
 
@@ -331,7 +348,23 @@ class ReservationController extends Controller
         $users = User::whereNot('id', Auth::user()->id)->get();
 
 
-        return view('admin.pages.transactions', compact('users', 'categoriesIsNull', 'currentStatus', 'contacts', 'unreadMessages', 'setting', 'page_title', 'currentCategory', 'categories', 'transactions', 'unreadNotifications', 'notifications'));
+        return view(
+            'admin.pages.reservations',
+            compact(
+                'users',
+                'categoriesIsNull',
+                'currentStatus',
+                'contacts',
+                'unreadMessages',
+                'setting',
+                'page_title',
+                'currentCategory',
+                'categories',
+                'reservations',
+                'unreadNotifications',
+                'notifications'
+            )
+        );
 
 
     }

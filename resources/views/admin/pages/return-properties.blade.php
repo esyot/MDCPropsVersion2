@@ -1,22 +1,22 @@
 @extends('admin.layouts.header')
 @section('content')
+
 <style>
     @media(orientation:portrait) {
 
-        #claim-items-header-content {
+        #return-items-header-content {
             display: flex;
             justify-content: center;
         }
 
-        #claim-items-header-content form {
+        #return-items-header-content form {
             width: 100%;
         }
     }
 </style>
 <nav id="items-for-return-header" class="p-2 w-full shadow-md">
-
-    <div id="claim-items-header-content" class="flex space-x-2 justify-end">
-        <form hx-get="{{ route('admin.search-reservation-for-claim') }}" hx-target="#items-for-return-list"
+    <div id="return-items-header-content" class="flex space-x-2 justify-end">
+        <form hx-get="{{ route('admin.search-reservation-for-return') }}" hx-target="#items-for-return-list"
             hx-swap="innerHTML" hx-trigger="input" class="p-2 focus:outline bg-white shadow-inner rounded-full">
             <i class="fas fa-magnifying-glass"></i>
             <input type="text" onclick="document.getElementById().classList.add" name="search_value"
@@ -46,7 +46,7 @@
 </div>
 <section class="container mx-auto p-4">
     <div id="items-for-return-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        @include('admin.partials.items-for-claim')
+        @include('admin.partials.properties-for-return')
     </div>
 </section>
 <script>

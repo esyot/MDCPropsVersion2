@@ -37,6 +37,6 @@
         fetchNotifications();
 
 
-        setInterval(fetchNotifications, 1000);
+        setInterval(fetchNotifications, 5000);
     });
 </script>

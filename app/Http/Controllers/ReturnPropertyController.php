@@ -8,8 +8,9 @@ use App\Models\ItemsTransaction;
 use App\Models\ManagedCategory;
 use App\Models\Message;
 use App\Models\Notification;
+use App\Models\Property;
 use App\Models\Setting;
-use App\Models\Transaction;
+use App\Models\Reservation;
 use App\Models\User;
 use DB;
 use Illuminate\Http\Request;
@@ -19,11 +20,11 @@ class ReturnPropertyController extends Controller
 {
     public function index()
     {
-        $page_title = "Return Item";
+        $page_title = "Return Properties";
 
         $current_user_id = Auth::user()->id;
 
-        $items = Item::all();
+        $properties = Property::all();
         // Messages
         $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
         $unreadMessages = $messages->count();
@@ -116,11 +117,11 @@ class ReturnPropertyController extends Controller
         }
 
 
-        $transactions = Transaction::where('status', 'occupied')->get();
+        $reservations = Reservation::where('status', 'occupied')->get();
 
 
-        return view('admin.pages.return-items', compact(
-            'transactions',
+        return view('admin.pages.return-properties', compact(
+            'reservations',
             'categories',
             'users',
             'currentCategory',
@@ -132,7 +133,7 @@ class ReturnPropertyController extends Controller
             'page_title',
             'unreadNotifications',
             'notifications',
-            'items',
+            'properties',
             'categoriesIsNull',
         ));
     }

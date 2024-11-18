@@ -1,6 +1,6 @@
-@foreach($transactions as $transaction)
-    <form action="{{ route('transactionDecline', ['id' => $transaction->id]) }}" method="POST"
-        id="delete-confirmation-{{$transaction->id}}"
+@foreach($reservations as $reservation)
+    <form action="{{ route('admin.reservation-decline', ['id' => $reservation->id]) }}" method="POST"
+        id="delete-confirmation-{{$reservation->id}}"
         class="flex fixed inset-0 items-center justify-center z-50 bg-gray-800 bg-opacity-50 hidden">
         @csrf
 
@@ -24,14 +24,15 @@
 
             <div class="p-2">
                 @php
-                    $formattedRentDate = \Carbon\Carbon::parse($transaction->rent_date)->format('l, F j, Y');
-                    $formattedReturnDate = \Carbon\Carbon::parse($transaction->rent_return)->format('l, F j, Y');
-                    $formattedRentReturnTime = \Carbon\Carbon::parse($transaction->rent_return_time)->format('h:i A');
-                    $formattedRentTime = \Carbon\Carbon::parse($transaction->rent_time)->format('h:i A');
+                    $formattedRentDate = \Carbon\Carbon::parse($reservation->rent_date)->format('l, F j, Y');
+                    $formattedReturnDate = \Carbon\Carbon::parse($reservation->rent_return)->format('l, F j, Y');
+                    $formattedRentReturnTime = \Carbon\Carbon::parse($reservation->rent_return_time)->format('h:i A');
+                    $formattedRentTime = \Carbon\Carbon::parse($reservation->rent_time)->format('h:i A');
                 @endphp
 
-                <p><strong>{{ $transaction->transaction->rentee->name }}</strong> reserves
-                    <strong>{{ $transaction->qty }}</strong> item(s) <strong>"{{ $transaction->item->name }}"</strong> from
+                <p><strong>{{ $reservation->reservation->rentee->name }}</strong> reserves
+                    <strong>{{ $reservation->reservation->qty }}</strong> item(s)
+                    <strong>"{{ $reservation->property->name }}"</strong> from
                     <strong>{{ $formattedRentDate }} {{$formattedRentTime}}</strong> and will return it by
                     <strong>{{ $formattedReturnDate }} {{ $formattedRentReturnTime }}</strong>.
                 </p>
@@ -46,7 +47,7 @@
             <div class="flex justify-end p-2 space-x-2 bg-gray-100 rounded-b">
 
                 <button type="button"
-                    onclick="document.getElementById('delete-confirmation-{{$transaction->id}}').classList.add('hidden')"
+                    onclick="document.getElementById('delete-confirmation-{{$reservation->id}}').classList.add('hidden')"
                     class="font-medium px-4 py-2 border border-red-300 text-red-500 hover:opacity-50 rounded">
                     No, cancel.
                 </button>
