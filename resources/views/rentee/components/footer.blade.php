@@ -19,7 +19,7 @@
     <a href="{{ route('cart', ['rentee' => $rentee]) }}">
         <button title="Cart" class="hover:opacity-50 z-40 drop-shadow rounded flex flex-col items-center">
             <span class="absolute bottom-4 left-8 bg-red-500 text-white rounded-full px-[5px] text-xs">
-                {{ $cartedItems}}
+                {{ $cartedProperties}}
             </span>
             <i class="fas fa-shopping-cart fa-2xl text-white"></i>
 

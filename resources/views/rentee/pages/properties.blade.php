@@ -72,13 +72,13 @@
             </div>
         </div>
     @endif
-    @if(count($items) > 0)
+    @if(count($properties) > 0)
         <div class="flex items-center justify-between z-50 bg-gradient-to-r from-blue-500 to-blue-800 p-2 shadow-md">
             <div class="flex items-center">
                 <a href="{{ route('home', ['rentee' => $rentee]) }}" class="hover:opacity-50 z-40 px-4 py-2 rounded">
                     <i class="fas fa-arrow-circle-left fa-2xl text-white"></i>
                 </a>
-                <h1 class="text-white font-bold line-clamp-1">{{ $items->first()->category->title }}</h1>
+                <h1 class="text-white font-bold line-clamp-1">{{ $properties->first()->category->title }}</h1>
             </div>
             <div id="searchContainer">
                 <form hx-get="{{ route('renteeItemsFilter', ['category_id' => $category_id, 'rentee' => $rentee]) }}"
@@ -120,11 +120,11 @@
             <div class="flex flex-col items-center space-y-2">
 
 
-                <a id="cart-icon" @if( $cartedItems!=0)href="{{ route('cart', ['rentee' => $rentee]) }}" @endif
+                <a id="cart-icon" @if( $cartedProperties!=0)href="{{ route('cart', ['rentee' => $rentee]) }}" @endif
                     title="Cart" class="hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded mr-2">
 
                     <span class="absolute top-0 right-1 bg-red-500 text-white rounded-full px-[5px] text-xs">
-                        {{ $cartedItems }}
+                        {{ $cartedProperties}}
                     </span>
                     <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
 
@@ -158,7 +158,7 @@
 
         <div id="item-single" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 mt-4 mx-2">
 
-            @include('rentee.partials.item-single')
+            @include('rentee.partials.property-single')
 
         </div>
         </div>
@@ -246,8 +246,8 @@
 
 
             document.addEventListener('DOMContentLoaded', () => {
-                @foreach($items as $item)
-                    updateCalendar('{{$item->id}}');
+                @foreach($properties as $property)
+                    updateCalendar('{{$property->id}}');
                 @endforeach
             });
 

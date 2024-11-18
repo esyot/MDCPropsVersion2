@@ -19,7 +19,7 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                var trackingCode = '{{ $transaction->tracking_code }}';
+                var trackingCode = '{{ $reservation->tracking_code }}';
                 var qr = new QRious({
                     element: document.getElementById('canvas'),
                     value: trackingCode,
@@ -42,7 +42,7 @@
                 <div class="flex space-x-2 p-2 justify-center">
                     <h1>Tracking Code: </h1>
                     <span class="font-bold">
-                        {{ $transaction->tracking_code }}
+                        {{ $reservation->tracking_code }}
                     </span>
 
                 </div>
@@ -100,7 +100,7 @@
             </div>
 
             <footer class="flex justify-center p-2 mb-2">
-                <a href="{{ route('getStarted') }}"
+                <a href="{{ route('rentee.start-reservation') }}"
                     class="px-4 py-2 bg-blue-200 text-blue-800 rounded-lg hover:bg-blue-500 hover:text-blue-100 shadow">
                     {{ session()->has('rentee') ? 'Back to Home' : 'Get started' }}
                 </a>

@@ -22,7 +22,7 @@ class RenteeHomeController extends Controller
         $categories = Category::all();
 
         // Fetch the rentee by code
-        $fetchedRentee = Rentee::where('rentee_code', $rentee)->first();
+        $fetchedRentee = Rentee::where('code', $rentee)->first();
 
 
         // Fetch the cart for the rentee
@@ -75,7 +75,7 @@ class RenteeHomeController extends Controller
         $categories = Category::all();
 
         // Fetch the rentee by code
-        $fetchedRentee = Rentee::where('rentee_code', $rentee)->first();
+        $fetchedRentee = Rentee::where('code', $rentee)->first();
 
 
         // Fetch the cart for the rentee
@@ -91,17 +91,17 @@ class RenteeHomeController extends Controller
         } else {
 
             // Decode the JSON array of item IDs
-            $itemIds = json_decode($cart->items);
+            $propertyIds = json_decode($cart->properties);
 
             // Ensure itemIds is an array
-            if (!is_array($itemIds)) {
+            if (!is_array($propertyIds)) {
                 $itemIds = [];
             }
 
             // Fetch items based on the decoded IDs
-            $cartedItems = Item::whereIn('id', $itemIds)->get()->count();
+            $cartedProperties = Property::whereIn('id', $propertyIds)->get()->count();
 
-            return view('rentee.pages.index', compact('cartedItems', 'rentee', 'categories'));
+            return view('rentee.pages.index', compact('cartedProperties', 'rentee', 'categories'));
 
 
         }

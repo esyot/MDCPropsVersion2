@@ -25,7 +25,7 @@ class RenteeController extends Controller
 
             }
         }
-        return redirect()->route('home', ['rentee' => $rentee->rentee_code]);
+        return redirect()->route('home', ['rentee' => $rentee->code]);
     }
 
 
@@ -35,7 +35,7 @@ class RenteeController extends Controller
         $randomString = Str::random(8);
         $code = $dateTime . '-' . $randomString;
 
-        return Rentee::create(['rentee_code' => $code]);
+        return Rentee::create(['code' => $code]);
     }
 
     public function cancelOrder($rentee)

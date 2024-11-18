@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Destination;
 use App\Models\Item;
+use App\Models\Property;
 use App\Models\Rentee;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,7 @@ class RenteeCartController extends Controller
     public function index($rentee)
     {
 
-        $fetchedRentee = Rentee::where('rentee_code', $rentee)->first();
+        $fetchedRentee = Rentee::where('code', $rentee)->first();
 
 
         if (!$fetchedRentee) {
@@ -29,23 +30,23 @@ class RenteeCartController extends Controller
         }
 
 
-        $itemIds = json_decode($cart->items);
+        $propertyIds = json_decode($cart->properties);
 
 
-        if (!is_array($itemIds)) {
-            $itemIds = [];
+        if (!is_array($propertyIds)) {
+            $propertyIds = [];
         }
 
 
-        $items = Item::whereIn('id', $itemIds)->get();
+        $properties = Property::whereIn('id', $propertyIds)->get();
 
-        return view('rentee.pages.cart', compact('fetchedRentee', 'items', 'rentee'));
+        return view('rentee.pages.cart', compact('fetchedRentee', 'properties', 'rentee'));
     }
 
 
-    public function addToCart($rentee, $item)
+    public function addToCart($rentee, $property)
     {
-        $user = Rentee::where('rentee_code', $rentee)->first();
+        $user = Rentee::where('code', $rentee)->first();
 
         if (!$user) {
             return redirect()->back()->with('error', 'User does not exist.');
@@ -57,15 +58,15 @@ class RenteeCartController extends Controller
 
             Cart::create([
                 'rentee_id' => $user->id,
-                'items' => json_encode([$item])
+                'properties' => json_encode([$property])
             ]);
         } else {
 
-            $items = json_decode($cart->items, true);
-            $items[] = $item;
+            $properties = json_decode($cart->properties, true);
+            $properties[] = $property;
 
 
-            $cart->items = json_encode($items);
+            $cart->properties = json_encode($property);
             $cart->save();
         }
 
@@ -76,13 +77,13 @@ class RenteeCartController extends Controller
     public function checkout(Request $request, $rentee)
     {
 
-        $selectedItems = $request->input('items');
+        $selectedProperties = $request->input('properties');
 
-        $items = Item::whereIn('id', $selectedItems)->get();
+        $properties = Property::whereIn('id', $selectedProperties)->get();
 
         $destinations = Destination::all();
 
-        return view('rentee.pages.checkout', compact('rentee', 'items', 'destinations'));
+        return view('rentee.pages.checkout', compact('rentee', 'properties', 'destinations'));
 
     }
 

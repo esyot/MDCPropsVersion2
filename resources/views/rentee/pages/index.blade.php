@@ -106,11 +106,11 @@
             <div class="flex flex-col items-center space-y-2">
 
 
-                <a id="cart-icon" @if( $cartedItems!=0)href="{{ route('cart', ['rentee' => $rentee]) }}" @endif
+                <a id="cart-icon" @if( $cartedProperties!=0)href="{{ route('cart', ['rentee' => $rentee]) }}" @endif
                     title="Cart" class="hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded mr-2">
 
                     <span class="absolute top-0 right-1 bg-red-500 text-white rounded-full px-[5px] text-xs">
-                        {{ $cartedItems }}
+                        {{ $cartedProperties }}
                     </span>
                     <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
 
@@ -134,7 +134,7 @@
             @foreach($categories as $category)
                         <a onmouseout="document.getElementById('open-{{$category->id}}').classList.add('hidden')"
                             onmouseover="document.getElementById('open-{{$category->id}}').classList.remove('hidden')"
-                            href="{{ route('userItems', ['category_id' => $category->id, 'rentee' => $rentee]) }}"
+                            href="{{ route('rentee.properties', ['category_id' => $category->id, 'rentee' => $rentee]) }}"
                             title="{{ $category->title }}"
                             class="w-full md:w-1/3 px-2 mb-4 m-2 transition-transform ease-in-out duration-300 hover:scale-90">
                             <div class="shadow-lg rounded-lg overflow-hidden">

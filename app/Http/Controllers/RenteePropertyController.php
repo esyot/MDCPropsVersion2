@@ -14,7 +14,7 @@ class RenteePropertyController extends Controller
     public function index($category_id, $rentee)
     {
 
-        $fetchedRentee = Rentee::where('rentee_code', $rentee)->first();
+        $fetchedRentee = Rentee::where('code', $rentee)->first();
 
 
         if (!$fetchedRentee) {
@@ -25,21 +25,21 @@ class RenteePropertyController extends Controller
         $cart = Cart::where('rentee_id', $fetchedRentee->id)->first();
 
 
-        $cartedItems = 0;
+        $cartedProperties = 0;
 
 
         if ($cart) {
-            $itemsInCart = json_decode($cart->items, true); // Decode the JSON to an array
-            $cartedItems = is_array($itemsInCart) ? count($itemsInCart) : 0; // Count if it's an array
+            $propertiesInCart = json_decode($cart->properties, true); // Decode the JSON to an array
+            $cartedProperties = is_array($propertiesInCart) ? count($propertiesInCart) : 0; // Count if it's an array
 
         }
 
 
-        $items = Item::where('category_id', $category_id)
+        $properties = Property::where('category_id', $category_id)
             ->whereNot('price', 0.00)
             ->get();
 
-        return view('rentee.pages.items', compact('items', 'category_id', 'rentee', 'cartedItems'));
+        return view('rentee.pages.properties', compact('properties', 'category_id', 'rentee', 'cartedProperties'));
     }
     public function itemUnavailableDates($id)
     {

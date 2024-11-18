@@ -31,7 +31,7 @@
 
     <!-- Header Section -->
     <header class="flex py-4 items-center space-x-1 px-2 bg-blue-500">
-        <a href="{{ route('backToHome', ['rentee' => $rentee]) }}" class="hover:opacity-50">
+        <a href="{{ route('rentee.back-to-home', ['rentee' => $rentee]) }}" class="hover:opacity-50">
             <i class="fas fa-arrow-circle-left fa-xl text-white"></i>
         </a>
         <h1 class="text-xl text-white font-bold">Checkout</h1>
@@ -49,7 +49,7 @@
     @endif
 
     <!-- Checkout Form -->
-    <form action="{{ route('renteeCreateTransaction', ['rentee' => $rentee]) }}" method="POST">
+    <form action="{{ route('rentee.reservation-add', ['rentee' => $rentee]) }}" method="POST">
         @csrf
 
         <!-- Rentee Details Modal -->
@@ -65,20 +65,12 @@
 
                 <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 border-b-2">
                     <div class="mb-2">
-                        <label for="first_name" class="block text-sm font-medium text-gray-700">First Name:</label>
-                        <input type="text" name="first_name" placeholder="Enter First Name"
+                        <label for="name" class="block text-sm font-medium text-gray-700">Full Name:</label>
+                        <input type="text" name="name" placeholder="Enter First Name"
                             class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
                     </div>
-                    <div class="mb-2">
-                        <label for="last_name" class="block text-sm font-medium text-gray-700">Last Name:</label>
-                        <input type="text" name="last_name" placeholder="Enter Last Name"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="middle_name" class="block text-sm font-medium text-gray-700">Middle Name:</label>
-                        <input type="text" name="middle_name" placeholder="Enter Middle Name"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
-                    </div>
+
+
                     <div class="mb-2">
                         <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
                         <input type="email" name="email" placeholder="Enter Email"
@@ -91,15 +83,11 @@
                             class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
                     </div>
                     <div class="mb-2">
-                        <label for="address1" class="block text-sm font-medium text-gray-700">Address Line 1:</label>
-                        <input type="text" name="address_1" placeholder="Enter Address Line 1"
+                        <label for="address1" class="block text-sm font-medium text-gray-700">Address:</label>
+                        <input type="text" name="address" placeholder="Enter Address"
                             class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
                     </div>
-                    <div class="mb-2">
-                        <label for="address2" class="block text-sm font-medium text-gray-700">Address Line 2:</label>
-                        <input type="text" name="address_2" placeholder="Enter Address Line 2"
-                            class="mt-1 block w-full border border-gray-300 rounded-md p-2">
-                    </div>
+
 
                 </div>
                 <div class="p-2 border-b-2">
@@ -178,29 +166,30 @@
         <div class="flex overflow-x-auto">
 
 
-            @foreach ($items as $item)
+            @foreach ($properties as $property)
                 <div class="p-2 m-2 border border-gray-300 bg-white rounded">
 
 
-                    <input type="hidden" name="items[{{ $item->id }}][item_id]" value="{{ $item->id }}">
+                    <input type="hidden" name="properties[{{ $property->id }}][property_id]" value="{{ $property->id }}">
 
                     <div class="">
                         <div class="flex items-center justify-between">
-                            <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
-                                alt="{{ $item->name }}"
+                            <img src="{{ asset('storage/images/categories/' . $property->category->folder_name . '/' . $property->img) }}"
+                                alt="{{ $property->name }}"
                                 class="w-16 h-16 object-cover rounded-md border border-gray-300 shadow-md">
-                            <p class="text-gray-800 text-lg font-medium">{{ $item->name }}</p>
+                            <p class="text-gray-800 text-lg font-medium">{{ $property->name }}</p>
                         </div>
 
                         <div class="">
                             <div class="flex flex-col">
                                 <label for="quantity" class="text-sm font-medium text-gray-700">Quantity:</label>
-                                <input type="number" max="{{ $item->qty }}" name="items[{{ $item->id }}][quantity]"
-                                    class="p-2 border border-gray-300 rounded" placeholder="Available: {{ $item->qty }}"
+                                <input type="number" max="{{ $property->qty }}"
+                                    name="properties[{{ $property->id }}][quantity]"
+                                    class="p-2 border border-gray-300 rounded" placeholder="Available: {{ $property->qty }}"
                                     required>
                             </div>
                             <script>
-                                document.querySelector('input[name="items[{{ $item->id }}][quantity]"]').addEventListener('input', function () {
+                                document.querySelector('input[name="properties[{{ $property->id }}][quantity]"]').addEventListener('input', function () {
                                     const max = parseInt(this.getAttribute('max'));
                                     if (this.value > max) {
                                         this.value = max;
@@ -212,7 +201,7 @@
                 </div>
             @endforeach
         </div>
-        <section id="item-details" class="p-4 bg-white m-4 shadow-md rounded-lg">
+        <section id="property-details" class="p-4 bg-white m-4 shadow-md rounded-lg">
 
             <!-- Destination & Date Inputs -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -224,30 +213,30 @@
 
                 <!-- Rent Date and Time -->
                 <div>
-                    <label for="rent_date" class="block text-sm font-medium text-gray-700">Date Rent:</label>
-                    <input type="date" value="{{ today()->toDateString() }}" name="rent_date"
+                    <label for="date_start" class="block text-sm font-medium text-gray-700">Date Start:</label>
+                    <input type="date" value="{{ today()->toDateString() }}" name="date_start"
                         class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
 
                 <div>
-                    <label for="rent_time" class="block text-sm font-medium text-gray-700">Time Item Pickup:</label>
-                    <input type="time" name="rent_time"
+                    <label for="time_start" class="block text-sm font-medium text-gray-700">Time Start:</label>
+                    <input type="time" name="time_start"
                         class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
 
                 <!-- Return Date and Time -->
                 <div>
-                    <label for="return_date" class="block text-sm font-medium text-gray-700">Date Return:</label>
-                    <input type="date" value="{{ today()->toDateString() }}" name="rent_return"
+                    <label for="date_end" class="block text-sm font-medium text-gray-700">Date End:</label>
+                    <input type="date" value="{{ today()->toDateString() }}" name="date_end"
                         class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
 
                 <div>
-                    <label for="return_time" class="block text-sm font-medium text-gray-700">Time Item Return:</label>
-                    <input type="time" name="rent_return_time"
+                    <label for="time_end" class="block text-sm font-medium text-gray-700">Time End:</label>
+                    <input type="time" name="time_end"
                         class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
@@ -263,7 +252,7 @@
 
     <script>
         function validateInputs() {
-            const itemInputs = document.querySelectorAll('#item-details input');
+            const itemInputs = document.querySelectorAll('#property-details input');
             for (const input of itemInputs) {
                 if (input.value.trim() === '') {
                     document.getElementById('error-modal').classList.remove('hidden')

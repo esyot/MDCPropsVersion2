@@ -15,7 +15,7 @@
 <body class="bg-gray-200">
 
     <header class="flex items-center p-4 space-x-2 bg-blue-500 shadow-md">
-        <a href="{{ route('backToHome', ['rentee' => $rentee]) }}" class="hover:opacity-50">
+        <a href="{{ route('rentee.back-to-home', ['rentee' => $rentee]) }}" class="hover:opacity-50">
             <i class="fas fa-arrow-circle-left fa-xl text-white"></i>
         </a>
         <h1 class="text-xl text-white font-bold">Cart</h1>
@@ -26,26 +26,28 @@
             onsubmit="validateCheckout(event)" class="space-y-2">
             @csrf
 
-            @if (count($items) > 0)
-                @foreach ($items as $item)
+            @if (count($properties) > 0)
+                @foreach ($properties as $property)
                     <div class="flex justify-between p-4 mx-4 bg-white items-center">
                         <div class="flex space-x-2 items-center">
-                            <input type="checkbox" name="items[]" value="{{ $item->id }}" id="item-{{ $item->id }}"
+                            <input type="checkbox" name="properties[]" value="{{ $property->id }}"
+                                id="property-{{ $property->id }}"
                                 class="w-6 h-6 border-gray-300 rounded cursor-pointer focus:outline-none shadow-md" checked>
 
-                            <img src="{{ asset('storage/images/categories/' . $item->category->folder_name . '/' . $item->img) }}"
-                                alt="{{ $item->name }}" class="w-[50px] h-[50px] object-cover border border-gray-300 shadow-md">
-                            <p>{{$item->name}}</p>
+                            <img src="{{ asset('storage/images/categories/' . $property->category->folder_name . '/' . $property->img) }}"
+                                alt="{{ $property->name }}"
+                                class="w-[50px] h-[50px] object-cover border border-gray-300 shadow-md">
+                            <p>{{$property->name}}</p>
                         </div>
                         <div>
                             <button type="button" class="hover:opacity-50" title="Remove this item in cart"
-                                onclick="document.getElementById('remove-item-{{$item->id}}').classList.remove('hidden')">
+                                onclick="document.getElementById('remove-property-{{$property->id}}').classList.remove('hidden')">
                                 <i class="fas fa-trash fa-lg text-red-500"></i>
                             </button>
                         </div>
                     </div>
 
-                    <div id="remove-item-{{$item->id}}"
+                    <div id="remove-property-{{$property->id}}"
                         class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
                         <div class="bg-white rounded shadow-md w-[500px] mx-2">
                             <div class="bg-red-500 py-1 rounded-t">
@@ -59,7 +61,7 @@
                                     <h1 class="text-xl font-medium text-center">Confirmation</h1>
                                     <div class="flex space-x-1">
                                         <p class="font-normal">Are you sure to remove </p>
-                                        <p class="font-bold">{{$item->name}}</p>?
+                                        <p class="font-bold">{{$property->name}}</p>?
                                     </div>
                                 </div>
 
@@ -67,11 +69,11 @@
 
                             <div class="flex justify-end p-2 items-center space-x-1">
                                 <button type="button"
-                                    onclick="document.getElementById('remove-item-{{$item->id}}').classList.add('hidden')"
+                                    onclick="document.getElementById('remove-property-{{$property->id}}').classList.add('hidden')"
                                     class="px-4 py-2 border border-red-300 text-red-500 hover:opacity-50 rounded">
                                     No
                                 </button>
-                                <a href="{{route('removeItemInCart', ['id' => $item->id, 'rentee' => $rentee])}}"
+                                <a href="{{route('rentee.cart-remove-property', ['id' => $property->id, 'rentee' => $rentee])}}"
                                     class="px-4 p-2 bg-red-500 text-red-100 hover:opacity-50 rounded">Yes</a>
 
 
@@ -108,7 +110,7 @@
     </div>
     <script>
         function validateCheckout(event) {
-            const checkboxes = document.querySelectorAll('input[name="items[]"]:checked');
+            const checkboxes = document.querySelectorAll('input[name="properties[]"]:checked');
             if (checkboxes.length === 0) {
                 event.preventDefault();
                 document.getElementById('empty-cart-modal').classList.remove('hidden');
