@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Destination;
-use App\Models\Item;
-use App\Models\ItemsTransaction;
+use App\Models\Property;
+use App\Models\PropertyReservation;
 use App\Models\Notification;
 use App\Models\Rentee;
 use Illuminate\Http\Request;
-use App\Models\Transaction;
+use App\Models\Reservation;
 use Illuminate\Support\Facades\DB;
 
-class RenteeTransactionController extends Controller
+class RenteeReservationController extends Controller
 {
     public function store(Request $request, $rentee)
     {

@@ -1,6 +1,6 @@
 <style>
     @media(orientation: portrait) {
-        #transaction-form-fields-{{$day}} {
+        #reservation-form-fields-{{$day}} {
             height: 500px;
             overflow-y: auto;
             margin-left: 16px;
@@ -11,32 +11,31 @@
 
 
 <!-- Modal Items  -->
-<div id="itemListModal-{{$day}}"
+<div id="propertiesListModal-{{$day}}"
     class="flex fixed inset-0 bg-gray-800  justify-center items-center bg-opacity-50 z-50 hidden">
     <div class="bg-white px-4 rounded">
         <div class="flex items-center justify-between py-2">
-            <h1 class="text-xl font-medium">Select an Item</h1>
+            <h1 class="text-xl font-medium">Select a property</h1>
             <button type="button" class="text-4xl"
-                onclick="document.getElementById('itemListModal-{{$day}}').classList.add('hidden')">
+                onclick="document.getElementById('propertiesListModal-{{$day}}').classList.toggle('hidden')">
                 &times;
             </button>
-
         </div>
 
         <div>
-
             <div class="flex items-center space-x-1 p-2 border border-gray-300 rounded-full">
-                <form hx-get="{{ route('itemSearch', ['day' => $day, 'category_id' => $currentCategory->id]) }}"
-                    hx-trigger="input" hx-swap="innerHTML" hx-target="#item-list-{{$day}}">
+                <form
+                    hx-get="{{ route('admin.property-search', ['day' => $day, 'category_id' => $currentCategory->id]) }}"
+                    hx-trigger="input" hx-swap="innerHTML" hx-target="#property-list-{{$day}}">
                     <i class="fas fa-search"></i>
-                    <input type="text" class="focus:outline-none" name="input" placeholder="Search Item...">
+                    <input type="text" class="focus:outline-none" name="input" placeholder="Search a property...">
                 </form>
             </div>
 
             <div class="border border-gray-200 my-2 bg-gray-100">
                 <div>
-                    <ul id="item-list-{{$day}}">
-                        @include('admin.partials.item')
+                    <ul id="property-list-{{$day}}">
+                        @include('admin.partials.property')
                     </ul>
                 </div>
             </div>
@@ -49,39 +48,37 @@
 
 
 
-<div id="transaction-add-{{$day}}"
+<div id="reservation-add-{{$day}}"
     class="fixed inset-0 bg-gray-800 bg-opacity-75 select-none flex items-center justify-center z-40 hidden">
-    <form action="{{ route('transaction-create') }}" method="POST" id="transaction-form-{{$day}}"
+    <form action="{{ route('admin.reservation-add') }}" method="POST" id="reservation-form-{{$day}}"
         class="bg-white rounded shadow-md mx-2">
-
         @csrf
 
         <div class="flex justify-between px-4 py-2">
 
-
             <!-- Form Title -->
-            <h2 class="text-2xl font-bold mb-4 text-gray-800">Add Transaction in
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Add Reservation on
                 <span class="text-red-500 font-bold">{{ $currentCategory->title }}</span>
             </h2>
 
             <button type="button" class="flex justify-end text-gray-500 hover:text-gray-700 text-2xl font-bold"
-                onclick="closeModalTransaction('{{$day}}')">
+                onclick="closeModalReservation('{{$day}}')">
                 &times;
             </button>
         </div>
 
 
         <!-- Form Inputs -->
-        <div id="transaction-form-fields-{{$day}}" class="grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
+        <div id="reservation-form-fields-{{$day}}" class="grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
 
             <!-- Item Selection -->
 
             <div>
-                <label for="item_id" class="block text-gray-700 font-semibold mb-1">Item</label>
-                <div onclick="document.getElementById('itemListModal-{{$day}}').classList.remove('hidden')"
+                <label for="property_id" class="block text-gray-700 font-semibold mb-1">Item</label>
+                <div onclick="document.getElementById('propertiesListModal-{{$day}}').classList.remove('hidden')"
                     class="flex items-center justify-between block p-2 border border-gray-300 cursor-pointer rounded">
-                    <input type="text" title="Items" id="item-{{$day}}" class="focus:outline-none cursor-pointer"
-                        placeholder="Select an item" readonly required><i class="fa-solid fa-chevron-down"></i>
+                    <input type="text" title="Items" id="property-{{$day}}" class="focus:outline-none cursor-pointer"
+                        placeholder="Select a property" readonly required><i class="fa-solid fa-chevron-down"></i>
 
                 </div>
 
@@ -93,7 +90,7 @@
             </div>
 
             <!-- Hidden Item ID -->
-            <input type="hidden" name="item_id" id="item-id-{{$day}}">
+            <input type="hidden" name="property_id" id="property-id-{{$day}}">
             <input type="hidden" name="category_id" value="{{ $currentCategory->id }}">
 
             <!-- Rentee Contact No -->
@@ -201,7 +198,7 @@
         <div class="col-span-2 flex justify-end p-2 space-x-1">
 
 
-            <button type="button" onclick="closeModalTransaction('{{$day}}')"
+            <button type="button" onclick="closeModalReservation('{{$day}}')"
                 class="px-4 py-2 border border-blue-300 text-blue-500 hover:opacity-50 rounded">
                 Close
             </button>
@@ -231,10 +228,10 @@
 
 @if($setting->transition == true)
     <script>
-        function closeModalTransaction(day) {
+        function closeModalReservation(day) {
 
-            const modalId = 'transaction-add-' + day;
-            const modalContentId = 'transaction-form-' + day;
+            const modalId = 'reservation-add-' + day;
+            const modalContentId = 'reservation-form-' + day;
 
             const modal = document.getElementById(modalId);
             const content = document.getElementById(modalContentId);
@@ -251,10 +248,10 @@
     </script>
 @else
     <script>
-        function closeModalTransaction(day) {
+        function closeModalReservation(day) {
 
-            const modalId = 'transaction-add-' + day;
-            const modalContentId = 'transaction-form-' + day;
+            const modalId = 'reservation-add-' + day;
+            const modalContentId = 'reservation-form-' + day;
 
             const modal = document.getElementById(modalId);
             const content = document.getElementById(modalContentId);

@@ -1,11 +1,11 @@
 <div id="item-add-modal" class="fixed flex inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
     <div id="item-add-content" class="bg-white mx-2 shadow-md max-w-full rounded ">
         <div class="flex justify-between p-1 items-center space-x-6 border-b border-gray-300">
-            <h1 class="p-2 text-xl font-bold">Add Item</h1>
+            <h1 class="p-2 text-xl font-bold">Add Property</h1>
             <button onclick="document.getElementById('item-add-modal').classList.add('hidden')"
                 class="text-4xl hover:text-gray-400 px-2 font-medium">&times;</button>
         </div>
-        <form action="{{ route('itemAdd') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.property-add') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="px-4 bg-gray-100 py-2">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto h-[500px] custom-scrollbar">
@@ -28,7 +28,7 @@
                         </div>
 
                         <div class="mt-2">
-                            <label for="title" class="font-medium">Item Name:</label>
+                            <label for="title" class="font-medium">Name:</label>
                             <input type="text" name="name" placeholder="Name" title="Title"
                                 class="block p-2 border border-gray-300 rounded w-full" required>
                         </div>
@@ -144,7 +144,7 @@
                     <button onclick="document.getElementById('item-add-modal').classList.add('hidden')"
                         class="px-4 py-2 border border-blue-300 text-blue-500 hover:opacity-50 rounded">Close</button>
 
-                    <button class="px-4 py-2 bg-blue-500 text-blue-100 hover:bg-blue-800 rounded">Add</button>
+                    <button class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">Add</button>
                 </div>
             </div>
         </form>

@@ -1,3 +1,7 @@
+<div id="calendar-day-view">
+
+</div>
+
 <form id="filter-form" action="{{ route('dateCustom')}}" method="GET" class="select-none">
     @csrf
     <div id="calendar-header" class="p-2">
@@ -163,8 +167,6 @@
 </style>
 
 
-<div id="modal-item"></div>
-
 <div id="calendar-month" class="hidden w-full h-full flex flex-col justify-center items-center overflow-hidden">
 
 </div>
@@ -192,7 +194,7 @@
                     hx-get="{{ route('admin.select-month', ['year' => $currentYear, 'month' => $month, 'category' => $currentCategory->id]) }}"
                     hx-target="#calendar-month" hx-swap="innerHTML" hx-trigger="click"
                     onclick="calendarSelectMonth({{ $month }})"
-                    class="flex rounded-t-lg flex-col bg-white shadow-md border h-[190px]  cursor-pointer {{$setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : '' }}">
+                    class="flex hover:opacity-50 rounded-t-lg flex-col bg-white shadow-md border h-[190px]  cursor-pointer {{$setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : '' }}">
 
                     <div class="text-center bg-blue-600 text-white rounded-t-lg">
                         <span>{{ $monthStart->format('F') }}</span>
@@ -261,9 +263,9 @@
 
     }
 
-    function toggleTransactionForm(day, transition) {
-        const form = document.getElementById(`transaction-form-${day}`);
-        const addButton = document.getElementById(`transaction-add-${day}`);
+    function toggleReservationForm(day, transition) {
+        const form = document.getElementById(`reservation-form-${day}`);
+        const addButton = document.getElementById(`reservation-add-${day}`);
 
         if (transition) {
             form.classList.add('animation-open');

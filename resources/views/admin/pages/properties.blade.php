@@ -7,7 +7,7 @@
             <div class="flex items-center space-x-2">
 
 
-                <form action="{{ route('itemsFilter') }}"
+                <form action="{{ route('admin.properties-filter') }}"
                     class="flex space-x-1 items-center bg-white p-2 rounded shadow-md">
                     @csrf
                     <i class="fa-solid fa-list"></i>
@@ -38,8 +38,8 @@
             </div>
 
             <div>
-                <form hx-get="{{ route('adminItemSearch', ['category_id' => $currentCategory])}}" hx-target="#items"
-                    hx-swap="innerHTML" hx-trigger="input"
+                <form hx-get="{{ route('admin.property-page-search', ['category_id' => $currentCategory])}}"
+                    hx-target="#properties" hx-swap="innerHTML" hx-trigger="input"
                     class="flex w-[150px] items-center rounded-full bg-white p-2 space-x-1 shadow-inner">
 
                     <i class="fas fa-magnifying-glass fa-lg"></i>
@@ -51,7 +51,7 @@
         </div>
     </div>
 
-    @include('admin.modals.item-add')
+    @include('admin.modals.property-add')
 
 
     <style>
@@ -78,19 +78,11 @@
     </style>
 
     <div id="main-content" class="w-full h-full relative p-4 overflow-y-auto custom-scrollbar">
-        <div id="items" class="flex flex-wrap flex-grow gap-2">
-
-            <!--  Items -->
-
-
-
-            @include('admin.partials.items')
-
-
+        <div id="properties" class="flex flex-wrap flex-grow gap-2">
+            @include('admin.partials.properties')
         </div>
+        @include('admin.modals.property-preview')
     </div>
-
-
 
     <script>
         document.getElementById('img').addEventListener('change', function (event) {
@@ -109,7 +101,6 @@
             }
         });
     </script>
-
 
 @else
 

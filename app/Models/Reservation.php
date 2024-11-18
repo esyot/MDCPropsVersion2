@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Transaction extends Model
+class Reservation extends Model
 {
     use HasFactory;
 
@@ -18,9 +18,9 @@ class Transaction extends Model
 
 
     // Relationship with ItemsTransaction
-    public function itemsTransactions()
+    public function propertyReservation()
     {
-        return $this->hasMany(ItemsTransaction::class);
+        return $this->hasMany(PropertyReservation::class);
     }
 
 }

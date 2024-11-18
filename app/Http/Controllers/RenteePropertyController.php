@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
-
-use App\Models\Item;
-
-use App\Models\ItemsTransaction;
+use App\Models\Property;
+use App\Models\PropertyReservation;
 use App\Models\Rentee;
-use App\Models\Transaction;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
-class RenteeItemsController extends Controller
+
+class RenteePropertyController extends Controller
 {
     public function index($category_id, $rentee)
     {

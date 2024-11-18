@@ -11,15 +11,15 @@ use App\Models\Notification;
 use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
-use Auth;
 use DB;
 use Illuminate\Http\Request;
+use Auth;
 
-class ClaimItemController extends Controller
+class ReturnPropertyController extends Controller
 {
     public function index()
     {
-        $page_title = "Claim Items";
+        $page_title = "Return Item";
 
         $current_user_id = Auth::user()->id;
 
@@ -116,12 +116,10 @@ class ClaimItemController extends Controller
         }
 
 
-        $transactions = Transaction::where('status', 'approved')
-            ->whereNot('approved_at', null)
-            ->get();
+        $transactions = Transaction::where('status', 'occupied')->get();
 
 
-        return view('admin.pages.claim-items', compact(
+        return view('admin.pages.return-items', compact(
             'transactions',
             'categories',
             'users',
@@ -137,43 +135,44 @@ class ClaimItemController extends Controller
             'items',
             'categoriesIsNull',
         ));
-
     }
-    public function searchReservationForClaim(Request $request)
+
+    public function searchReservationForReturn(Request $request)
     {
         if ($request->search_value == null) {
-            $transactions = Transaction::where('status', 'approved')->get();
-            return view('admin.partials.items-for-claim', compact('transactions'));
+            $transactions = Transaction::where('status', 'occupied')->get();
+            return view('admin.partials.items-for-return', compact('transactions'));
 
         }
 
         $transactions = Transaction::where('tracking_code', 'LIKE', '%' . $request->search_value . '%')->where('status', 'in progress')->get();
-        return view('admin.partials.items-for-claim', compact('transactions'));
+        return view('admin.partials.items-for-return', compact('transactions'));
 
     }
 
-    public function reservedItemsToClaim($transaction_id)
-    {
 
+
+    public function reservedItemsToReturn($transaction_id)
+    {
 
         $reservations = ItemsTransaction::where('transaction_id', $transaction_id)->get();
 
-        return view('admin.modals.reserved-items-to-claim', compact(
+        return view('admin.modals.reserved-items-to-return', compact(
             'reservations',
             'transaction_id'
         ));
     }
 
-    public function reservedItemsClaimed($transaction_id)
+    public function reservedItemsReturned($transaction_id)
     {
 
         $items = ItemsTransaction::where('transaction_id', $transaction_id)->update([
-            'claimed_at' => now()
+            'returned_at' => now()
         ]);
 
         if ($items) {
             Transaction::find($transaction_id)->update([
-                'status' => 'occupied'
+                'status' => 'completed'
             ]);
         }
 

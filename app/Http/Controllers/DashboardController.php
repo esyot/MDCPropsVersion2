@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ItemsTransaction;
+use App\Models\PropertyReservation;
+use App\Models\Property;
 use DB;
 use Illuminate\Http\Request;
-use App\Models\Transaction;
+use App\Models\Reservation;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\Notification;
@@ -112,10 +113,11 @@ class DashboardController extends Controller
         if ($currentCategory) {
             $currentCategoryId = $currentCategory->id;
             $categoriesIsNull = false;
-            $daysWithRecords = ItemsTransaction::where('category_id', $currentCategory->id)
+
+            $daysWithRecords = PropertyReservation::where('category_id', $currentCategory->id)
                 ->whereYear('date_start', $currentDate->format('Y'))
                 ->get()
-                ->map(fn($transaction) => Carbon::parse($transaction->date_start)->format('Y-m-d'))
+                ->map(fn($reservation) => Carbon::parse($reservation->date_start)->format('Y-m-d'))
                 ->unique()
                 ->values()
                 ->toArray();
@@ -126,16 +128,13 @@ class DashboardController extends Controller
         }
 
 
-        $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : collect();
-
-
-
+        $properties = $currentCategory ? Property::where('category_id', $currentCategory->id)->get() : collect();
 
 
         $users = User::where('id', '!=', $current_user_id)->get();
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
 
-        $transactions = ItemsTransaction::all();
+        $reservations = PropertyReservation::all();
 
         $selectedMonth = '';
 
@@ -154,24 +153,14 @@ class DashboardController extends Controller
             'page_title',
             'unreadNotifications',
             'notifications',
-            'items',
+            'properties',
             'currentDate',
             'daysWithRecords',
-            'transactions',
+            'reservations',
             'categoriesIsNull'
         ));
     }
 
-
-    public function dateView($date)
-    {
-        $roles = Auth::user()->getRoleNames();
-        $transactions = ItemsTransaction::where('date_start', $date)->get();
-
-        $setting = Setting::find(1);
-
-        return view('admin.partials.date-view', compact('roles', 'setting', 'transactions', 'date'));
-    }
 
     public function dateCustom(Request $request)
     {
@@ -184,10 +173,9 @@ class DashboardController extends Controller
 
         $currentCategory = Category::find($category);
 
-
         $currentDate = Carbon::create($year, $month, 25);
 
-        $transactions = ItemsTransaction::where('category_id', $category)->get();
+        $reservations = PropertyReservation::where('category_id', $category)->get();
 
         $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
         $unreadMessages = $messages->count();
@@ -195,7 +183,7 @@ class DashboardController extends Controller
 
 
 
-        $items = Item::where('category_id', $category)->orderBy('name', 'ASC')->get();
+        $properties = Property::where('category_id', $category)->orderBy('name', 'ASC')->get();
 
         $contacts = DB::table('messages')
             ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
@@ -229,7 +217,7 @@ class DashboardController extends Controller
                 Auth::user()->id
             )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
 
-            $daysWithRecords = ItemsTransaction::where('category_id', $category)
+            $daysWithRecords = PropertyReservation::where('category_id', $category)
                 ->whereYear('date_start', $currentDate->format('Y'))
                 ->get()
                 ->map(fn($transaction) => Carbon::parse($transaction->date_start)->format('Y-m-d'))
@@ -255,7 +243,7 @@ class DashboardController extends Controller
                 Auth::user()->id
             )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
 
-            $daysWithRecords = ItemsTransaction::where('category_id', $category)
+            $daysWithRecords = PropertyReservation::where('category_id', $category)
                 ->whereYear('date_start', $currentDate->format('Y'))
                 ->get()
                 ->map(fn($transaction) => Carbon::parse($transaction->date_start)->format('Y-m-d'))
@@ -288,7 +276,7 @@ class DashboardController extends Controller
 
             if (in_array($category, $managedCategoryIds))
 
-                $daysWithRecords = ItemsTransaction::where('category_id', $category)
+                $daysWithRecords = PropertyReservation::where('category_id', $category)
                     ->whereYear('date_start', $currentDate->format('Y'))
                     ->get()
                     ->map(fn($transaction) => Carbon::parse($transaction->date_start)->format('Y-m-d'))
@@ -309,14 +297,14 @@ class DashboardController extends Controller
         }
 
 
-        $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : collect();
+        $properties = $currentCategory ? Property::where('category_id', $currentCategory->id)->get() : collect();
 
 
 
         $users = User::where('name', '!=', $current_user_id)->get();
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
 
-        $transactions = ItemsTransaction::all();
+        $reservations = PropertyReservation::all();
 
         return view(
             'admin.pages.dashboard',
@@ -332,11 +320,11 @@ class DashboardController extends Controller
                 'page_title',
                 'notifications',
                 'unreadNotifications',
-                'items',
+                'properties',
                 'currentCategory',
                 'categories',
                 'currentDate',
-                'transactions',
+                'reservations',
                 'daysWithRecords'
             )
         );
@@ -452,12 +440,12 @@ class DashboardController extends Controller
 
         $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : collect();
 
-        $daysWithRecords = ItemsTransaction::all()->map(fn($transaction) => Carbon::parse($transaction->date_start)->format('Y-m-d'))->unique()->values()->toArray();
+        $daysWithRecords = PropertyReservation::all()->map(fn($transaction) => Carbon::parse($transaction->date_start)->format('Y-m-d'))->unique()->values()->toArray();
 
         $users = User::where('name', '!=', $current_user_id)->get();
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
 
-        $transactions = ItemsTransaction::all();
+        $transactions = PropertyReservation::all();
 
         return view('admin.partials.calendar', compact(
             'categories',

@@ -14,14 +14,14 @@ class RolesAndPermissionsSeeder extends Seeder
         $permissions = [
             'can manage users',
             'can assign roles',
-            'can approve transactions',
+            'can approve reservations',
             'can view dashboard',
-            'can view transactions',
-            'can view items',
+            'can view reservations',
+            'can view properties',
             'can view categories',
-            'can add transactions',
+            'can add reservations',
             'can manage categories',
-            'can manage items',
+            'can manage properties',
             'can manage payments',
         ];
 
@@ -35,35 +35,35 @@ class RolesAndPermissionsSeeder extends Seeder
         $superadminRole->givePermissionTo([
             'can manage users',
             'can assign roles',
-            'can approve transactions',
+            'can approve reservations',
             'can view dashboard',
-            'can view transactions',
-            'can view items',
+            'can view reservations',
+            'can view properties',
             'can view categories',
-            'can add transactions',
+            'can add reservations',
             'can manage categories',
-            'can manage items'
+            'can manage properties'
         ]);
 
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $adminRole->givePermissionTo([
             'can manage categories',
-            'can approve transactions',
-            'can add transactions',
+            'can approve reservations',
+            'can add reservations',
             'can view dashboard',
-            'can view transactions',
-            'can view items',
+            'can view reservations',
+            'can view properties',
             'can view categories'
         ]);
 
         $staffRole = Role::firstOrCreate(['name' => 'staff']);
         $staffRole->givePermissionTo([
-            'can manage items',
+            'can manage properties',
             'can view dashboard',
-            'can add transactions',
-            'can view transactions',
+            'can add reservations',
+            'can view reservations',
             'can view categories',
-            'can view items',
+            'can view properties',
         ]);
 
         $cashierRole = Role::firstOrCreate(['name' => 'cashier']);

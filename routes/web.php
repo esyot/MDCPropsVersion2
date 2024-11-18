@@ -2,26 +2,26 @@
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CashierController;
-use App\Http\Controllers\ClaimItemController;
+use App\Http\Controllers\ClaimPropertyController;
 use App\Http\Controllers\ExportPDFController;
+use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\RenteePropertyController;
+use App\Http\Controllers\RenteeReservationController;
 use App\Http\Controllers\RenteeTrackingController;
-use App\Http\Controllers\RenteeTransactionController;
-use App\Http\Controllers\ReturnItemController;
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\ReturnPropertyController;
 use App\Http\Controllers\UpdatesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ItemController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RolePermissionController;
-use App\Http\Controllers\RenteeItemsController;
 use App\Http\Controllers\RenteeCartController;
 use App\Http\Controllers\RenteeHomeController;
 use App\Http\Controllers\RenteeController;
@@ -38,9 +38,9 @@ Route::get('/', function () {
 Route::get('/notifications', [UpdatesController::class, 'notifications']);
 
 Route::get('/welcome', [RenteeHomeController::class, 'welcome'])->name('welcome');
-Route::get('/rentee/items/{category_id}/{rentee}', [RenteeItemsController::class, 'index'])->name('userItems');
-Route::get('/rentee/item/{id}', [RenteeItemsController::class, 'itemUnAvailableDates']);
-Route::get('/rentee/items-filter/{category_id}/{rentee}', [RenteeItemsController::class, 'renteeItemsFilter'])->name('renteeItemsFilter');
+Route::get('/rentee/items/{category_id}/{rentee}', [RenteePropertyController::class, 'index'])->name('userItems');
+Route::get('/rentee/item/{id}', [RenteePropertyController::class, 'itemUnAvailableDates']);
+Route::get('/rentee/items-filter/{category_id}/{rentee}', [RenteePropertyController::class, 'renteeItemsFilter'])->name('renteeItemsFilter');
 Route::get('rentee/tracking', [RenteeTrackingController::class, 'index'])->name('tracking');
 Route::get('/rentee/cart/{rentee}', [RenteeCartController::class, 'index'])->name('cart');
 Route::get('/get-started', [RenteeController::class, 'create'])->name('getStarted');
@@ -50,12 +50,12 @@ Route::get('/rentee/add-to-cart/{rentee}/{item}', [RenteeCartController::class, 
 Route::get('/rentee/back-to-home/{rentee}', [RenteeHomeController::class, 'backToHome'])->name('backToHome');
 Route::get('/rentee/checkout/{rentee}', [RenteeCartController::class, 'checkout'])->name('checkout');
 Route::get('/rentee/remove-item-in-cart/{id}/{rentee}', [RenteeCartController::class, 'removeItemInCart'])->name('removeItemInCart');
-Route::post('/rentee/create-transaction/{rentee}', [RenteeTransactionController::class, 'store'])->name('renteeCreateTransaction');
+Route::post('/rentee/create-transaction/{rentee}', [RenteeReservationController::class, 'store'])->name('renteeCreateTransaction');
 Route::get('/rentee/track-transaction', [RenteeTrackingController::class, 'track'])->name('transactionTrack');
 Route::get('/rentee/tracking-page', [RenteeTrackingController::class, 'index'])->name('tracking');
 Route::get('/rentee/tracking', [RenteeTrackingController::class, 'fetch']);
-Route::get('/rentee/transaction-done/{transaction}', [RenteeTransactionController::class, 'transactionDone'])->name('transactionDone');
-Route::get('/rentee/reservation-cancel/{tracking_code}', [RenteeTransactionController::class, 'reservationCancel'])->name('rentee.reservation-cancel');
+Route::get('/rentee/transaction-done/{transaction}', [RenteeReservationController::class, 'transactionDone'])->name('transactionDone');
+Route::get('/rentee/reservation-cancel/{tracking_code}', [RenteeReservationController::class, 'reservationCancel'])->name('rentee.reservation-cancel');
 
 
 // Public Routes
@@ -113,13 +113,13 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
 // Moderator and Admin Role Routes
 Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
     //Transaction Approval Routes
-    Route::post('/admin/category-add', [CategoryController::class, 'create'])->name('category-add');
-    Route::post('/admin/transaction-decline/{id}', action: [TransactionController::class, 'decline'])->name('transactionDecline');
-    Route::get('/admin/pending-approve/{id}', [TransactionController::class, 'approve'])->name('transactionApprove');
+    Route::post('/admin/category-add', [CategoryController::class, 'create'])->name('admin.category-add');
+    Route::post('/admin/reservation-decline/{id}', action: [ReservationController::class, 'decline'])->name('admin.reservation-decline');
+    Route::get('/admin/reservation-pending-approve/{id}', [ReservationController::class, 'approve'])->name('admin.reservation-approve');
 
     //categories Update
-    Route::get('/admin/categories', [CategoryController::class, 'index'])->name('categories');
-    Route::post('/admin/category-update/{category_id}', [CategoryController::class, 'update'])->name('categoryUpdate');
+    Route::get('/admin/categories', [CategoryController::class, 'index'])->name('admin.categories');
+    Route::post('/admin/category-update/{category_id}', [CategoryController::class, 'update'])->name('admin.category-update');
 
     //Analytics Page
     Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('admin.analytics-index');
@@ -131,37 +131,36 @@ Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
 Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
 
     //Items Routes
-    Route::get('/admin/items', [ItemController::class, 'index'])->name('items');
-    Route::get('/admin/items-filter', [ItemController::class, 'itemsFilter'])->name('itemsFilter');
-    Route::get('/admin/item-search/{day}/{category_id}', [ItemController::class, 'search'])->name('itemSearch');
-    Route::post('/admin/item-add', [ItemController::class, 'create'])->name('itemAdd');
-    Route::put('/admin/item-update/{id}', [ItemController::class, 'update'])->name('itemUpdate');
-    Route::get('admin/item-page-search/{category_id}/', [ItemController::class, 'itemSearch'])->name('adminItemSearch');
+    Route::get('/admin/properties', [PropertyController::class, 'index'])->name('admin.properties');
+    Route::get('/admin/properties-filter', [PropertyController::class, 'propertiesFilter'])->name('admin.properties-filter');
+    Route::get('/admin/property-search/{day}/{category_id}', [PropertyController::class, 'search'])->name('admin.property-search');
+    Route::post('/admin/property-add', [PropertyController::class, 'create'])->name('admin.property-add');
+    Route::put('/admin/property-update/{id}', [PropertyController::class, 'update'])->name('admin.property-update');
+    Route::get('/admin/property-page-search/{category_id}/', [PropertyController::class, 'propertySearch'])->name('admin.property-page-search');
 
     // Transactions Routes
-    Route::post('/admin/transaction-create', [TransactionController::class, 'create'])->name('transaction-create');
-    Route::get('/admin/transactions', [TransactionController::class, 'index'])->name('transactions');
-    Route::get('/admin/transactions-filter', [TransactionController::class, 'filter'])->name('transactionsFilter');
+    Route::post('/admin/reservation-add', [ReservationController::class, 'create'])->name('admin.reservation-add');
+    Route::get('/admin/reservations', [ReservationController::class, 'index'])->name('admin.reservations');
+    Route::get('/admin/reservations-filter', [ReservationController::class, 'filter'])->name('admin.reservations-filter');
 
     //Item Return Routes
-    Route::get('/admin/search-reservation-for-return', [ReturnItemController::class, 'searchReservationForReturn'])->name('admin.search-reservation-for-return');
-    Route::get('/admin/reseved-items-returned/{transaction_id}', [ReturnItemController::class, 'reservedItemsReturned'])->name('admin.reserved-items-returned');
-    Route::get('/admin/reserved-items-to-return/{transaction_id}', [ReturnItemController::class, 'reservedItemsToReturn'])->name('admin.reserved-items-to-return');
-    Route::get('/admin/return-items', [ReturnItemController::class, 'index'])->name('admin.return-items');
+    Route::get('/admin/search-reservation-for-return', [ReturnPropertyController::class, 'searchReservationForReturn'])->name('admin.search-reservation-for-return');
+    Route::get('/admin/reseved-items-returned/{transaction_id}', [ReturnPropertyController::class, 'reservedItemsReturned'])->name('admin.reserved-items-returned');
+    Route::get('/admin/reserved-items-to-return/{transaction_id}', [ReturnPropertyController::class, 'reservedItemsToReturn'])->name('admin.reserved-items-to-return');
+    Route::get('/admin/return-items', [ReturnPropertyController::class, 'index'])->name('admin.return-items');
 
     //Item Claim Routes
-    Route::get('/admin/search-reservation-for-claim', [ClaimItemController::class, 'searchReservationForClaim'])->name('admin.search-reservation-for-claim');
-    Route::get('/admin/reseved-items-claimed/{transaction_id}', [ClaimItemController::class, 'reservedItemsClaimed'])->name('admin.reserved-items-claimed');
-    Route::get('/admin/reserved-items-to-claim/{transaction_id}', [ClaimItemController::class, 'reservedItemsToClaim'])->name('admin.reserved-items-to-claim');
-    Route::get('/admin/claim-items', [ClaimItemController::class, 'index'])->name('admin.claim-items');
+    Route::get('/admin/search-reservation-for-claim', [ClaimPropertyController::class, 'searchReservationForClaim'])->name('admin.search-reservation-for-claim');
+    Route::get('/admin/reseved-items-claimed/{transaction_id}', [ClaimPropertyController::class, 'reservedItemsClaimed'])->name('admin.reserved-items-claimed');
+    Route::get('/admin/reserved-items-to-claim/{transaction_id}', [ClaimPropertyController::class, 'reservedItemsToClaim'])->name('admin.reserved-items-to-claim');
+    Route::get('/admin/claim-items', [ClaimPropertyController::class, 'index'])->name('admin.claim-items');
 
 
     //Calendar Routes
     Route::get('/admin/calendar-move/{action}/{category}/{year}/{month}', [DashboardController::class, 'calendarMove'])->name('calendarMove');
-    Route::get('/admin/date-view/{date}', [DashboardController::class, 'dateView'])->name('dateView');
     Route::get('/admin/date-custom', [DashboardController::class, 'dateCustom'])->name('dateCustom');
     Route::get('admin/calendar-select-month/{year}/{month}/{category}', [CalendarController::class, 'selectMonth'])->name('admin.select-month');
-
+    Route::get('/admin/calendar-day-view/{date}/{category_id}', [CalendarController::class, 'calendarDayView'])->name('admin.calendar-day-view');
 
 });
 

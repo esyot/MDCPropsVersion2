@@ -11,9 +11,9 @@ class Pending extends Model
 
     protected $guarded = [];
 
-    public function item()
+    public function property()
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Property::class);
     }
 
     public function category()

@@ -1,4 +1,4 @@
-<form action="{{ route('categoryUpdate', ['category_id' => $category->id]) }}" method="POST">
+<form action="{{ route('admin.category-update', ['category_id' => $category->id]) }}" method="POST">
     @csrf
     <div id="category-update-{{$category->id}}"
         class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">

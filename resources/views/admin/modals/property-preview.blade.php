@@ -1,19 +1,23 @@
 <!-- Modal Container -->
+@foreach ($properties as $property)
 
-<form action="{{ route('itemUpdate', ['id' => $item->id]) }}" method="POST" enctype="multipart/form-data">
+
+<form id="property-preview-{{$property->id}}" action="{{ route('admin.property-update', ['id' => $property->id]) }}" method="POST" 
+
+        class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-70 hidden">
     @csrf
     @method('PUT')
 
-    <div id="item-{{$item->id}}"
-        class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-70 hidden">
+ 
         <!-- Modal Content -->
         <div class="bg-white w-[500px] mx-2 rounded-lg shadow-lg overflow-hidden">
             <!-- Modal Header -->
             <div class="flex items-center justify-between p-4 border-b border-gray-300">
                 <h1 class="text-xl font-semibold text-gray-900">Item Preview</h1>
                 <button type="button" class="text-4xl text-gray-600 hover:text-gray-800"
-                    onclick="document.getElementById('item-{{$item->id}}').classList.add('hidden')">&times;</button>
-            </div>
+    onclick="document.getElementById('property-preview-{{$property->id}}').classList.toggle('hidden')">&times;</button>
+
+</div>
 
 
 
@@ -23,7 +27,7 @@
                 <div class="flex flex-col justify-center items-center space-y-5">
 
                     <img id="old-img-preview"
-                        src="{{ asset('storage/images/categories/' . $currentCategory->folder_name . '/' . $item->img) }}"
+                        src="{{ asset('storage/images/categories/' . $property->category->folder_name  . '/' . $property->img) }}"
                         alt="Item Image"
                         class="mt-2 w-full h-64 object-cover rounded-lg border border-gray-200 shadow-md ">
 
@@ -45,20 +49,20 @@
                 <div class="flex-1  space-y-4">
                     <div class="w-[200px]">
                         <label for="name" class="block text-gray-700 font-medium">Name:</label>
-                        <input type="text" name="update_name" value="{{ $item->name }}"
+                        <input type="text" name="update_name" value="{{ $property->name }}"
                             class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             {{ $roles->contains('staff') ? 'disabled' : '' }}>
 
                         <label for="qty" class="block text-gray-700 font-medium">Quantity:</label>
-                        <input type="number" name="update_qty" value="{{ $item->qty }}"
+                        <input type="number" name="update_qty" value="{{ $property->qty }}"
                             class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             {{ $roles->contains('staff') ? 'disabled' : '' }}>
 
                         <label for="qty" class="block text-gray-700 font-medium">Approval Level:</label>
-                        <select name="update_approval_level" value="{{ $item->qty }}"
+                        <select name="update_approval_level" value="{{ $property->qty }}"
                             class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             {{ $roles->contains('staff') ? 'disabled' : '' }}>
-                            <option value="{{$item->approval_level}}">{{$item->approval_level}}</option>
+                            <option value="{{$property->approval_level}}">{{$property->approval_level}}</option>
 
                             <option value="admin">Admin Only</option>
                             <option value="staff">Staff Only</option>
@@ -71,7 +75,7 @@
                         <select name="update_category"
                             class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             {{ $roles->contains('staff') ? 'disabled' : '' }}>
-                            <option value="{{ $item->category->id }}">{{ $item->category->title }}</option>
+                            <option value="{{ $property->category->id }}">{{ $property->category->title }}</option>
 
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->title }}</option>
@@ -79,15 +83,15 @@
                         </select>
 
                         <div class="flex items-center space-x-1">
-                            <input id="isAvailableForRentingCheckbox-{{$item->id}}" name="isAvailableForRenting"
-                                type="checkbox" {{$item->price ? 'checked' : ''}}>
+                            <input id="isAvailableForRentingCheckbox-{{$property->id}}" name="isAvailableForRenting"
+                                type="checkbox" {{$property->price ? 'checked' : ''}}>
                             <span>
                                 Available for renting
                             </span>
 
                         </div>
 
-                        <small id="rentNoteAvailable-{{$item->id}}" class="hidden font-bold">Note:
+                        <small id="rentNoteAvailable-{{$property->id}}" class="hidden font-bold">Note:
                             <i class="text-xs font-normal">if not checked, this item will be set for borrowing
                                 only.</i>
                         </small>
@@ -96,15 +100,15 @@
 
 
 
-                            document.getElementById('isAvailableForRentingCheckbox-{{$item->id}}').addEventListener('change', function () {
+                            document.getElementById('isAvailableForRentingCheckbox-{{$property->id}}').addEventListener('change', function () {
 
-                                if (document.getElementById('isAvailableForRentingCheckbox-{{$item->id}}').checked) {
-    document.getElementById('price-{{$item->id}}').required = true;
+                                if (document.getElementById('isAvailableForRentingCheckbox-{{$property->id}}').checked) {
+    document.getElementById('price-{{$property->id}}').required = true;
 } else {
-    document.getElementById('price-{{$item->id}}').required = false;
+    document.getElementById('price-{{$property->id}}').required = false;
 }
-                                var updateRentingOptions = document.getElementById('rentingOptions-{{$item->id}}');
-                                var updateRentNoteUnavailable = document.getElementById('rentNoteAvailable-{{$item->id}}');
+                                var updateRentingOptions = document.getElementById('rentingOptions-{{$property->id}}');
+                                var updateRentNoteUnavailable = document.getElementById('rentNoteAvailable-{{$property->id}}');
 
 
                                 if (this.checked) {
@@ -117,10 +121,10 @@
                             });
                         </script>
 
-                        <div id="rentingOptions-{{$item->id}}" class="{{ $item->price != null ? '' : 'hidden' }}">
+                        <div id="rentingOptions-{{$property->id}}" class="{{ $property->price != null ? '' : 'hidden' }}">
 
                             <label for="qty" class="block text-gray-700 font-medium">Price:</label>
-                            <input id="price-{{$item->id}}" type="number" name="update_price" value="{{ $item->price }}"
+                            <input id="price-{{$property->id}}" type="number" name="update_price" value="{{ $property->price }}"
                                 class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 {{ $roles->contains('staff') ? 'disabled' : '' }} 
                                 
@@ -131,7 +135,7 @@
                                 <label for="">Per:</label>
                                 <select type="text" name="update_per" class="block p-2 w-full border border-gray-300 rounded "
                                     placeholder="" {{ $roles->contains('staff') ? 'disabled' : '' }}>
-                                    <option value="{{$item->per}}">{{$item->per}}</option>
+                                    <option value="{{$property->per}}">{{$property->per}}</option>
                                     <option value="pcs">Piece/s (pc/s)</option>
                                     <option value="pcs">Hour (hr)</option>
                                     <option value="km">Kilometer (km)</option>
@@ -154,7 +158,7 @@
 
                         <div>
                             <label for="">Assigned Personel:</label>
-                            <input type="text" name="update_assigned_personel" value="{{$item->assigned_personel}}"
+                            <input type="text" name="update_assigned_personel" value="{{$property->assigned_personel}}"
                                 class="block p-2 border border-gray-300 rounded">
                         </div>
 
@@ -166,7 +170,7 @@
             <!-- Modal Footer -->
             <div class="flex justify-end p-4 border-t border-gray-300 space-x-2">
 
-                <button type="button" onclick="document.getElementById('item-{{$item->id}}').classList.add('hidden')"
+                <button type="button" onclick="document.getElementById('property-preview-{{$property->id}}').classList.add('hidden')"
                     class="shadow-md px-4
                 py-2 border border-blue-300 text-blue-500 hover:opacity-50 rounded-md focus:outline-none focus:ring-2
                 focus:ring-gray-500">
@@ -181,7 +185,7 @@
             </div>
 
         </div>
-    </div>
+
 
 </form>
 
@@ -206,3 +210,5 @@
         }
     });
 </script>
+
+@endforeach

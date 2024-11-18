@@ -1,4 +1,4 @@
-<form id="category-add-form" method="POST" action="{{ route('category-add') }}" enctype="multipart/form-data">
+<form id="category-add-form" method="POST" action="{{ route('admin.category-add') }}" enctype="multipart/form-data">
     @csrf
     <div id="category-add-modal"
         class="fixed flex inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">

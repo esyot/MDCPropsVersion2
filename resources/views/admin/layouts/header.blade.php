@@ -182,16 +182,16 @@
                 <small class="text-white">Dashboard</small>
             </a>
 
-            <a href="{{ route('items') }}" class="flex flex-col items-center">
+            <a href="{{ route('admin.properties') }}" class="flex flex-col items-center">
                 <i class="fa-solid fa-boxes-stacked text-white drop-shadow-lg"></i>
                 <small class="text-white">Items</small>
             </a>
-            <a href="{{ route('categories') }}" class="flex flex-col items-center">
+            <a href="{{ route('admin.categories') }}" class="flex flex-col items-center">
                 <i class="fa-solid fa-th-large  text-white drop-shadow-lg"></i>
                 <small class="text-white">Categories</small>
 
             </a>
-            <a href="{{ route('transactions') }}" class="flex flex-col items-center">
+            <a href="{{ route('admin.reservations') }}" class="flex flex-col items-center">
                 <i class="fa-solid fa-business-time  text-white drop-shadow-lg"></i>
                 <small class="text-white">Transactions</small>
             </a>

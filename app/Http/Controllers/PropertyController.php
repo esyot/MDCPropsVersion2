@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use Illuminate\Http\Request;
 use App\Models\Category;
-use App\Models\Item;
+use App\Models\Property;
 use App\Models\Setting;
 use App\Models\Notification;
 use App\Models\Message;
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
-class ItemController extends Controller
+class PropertyController extends Controller
 {
     public function index()
     {
@@ -113,11 +113,11 @@ class ItemController extends Controller
         }
 
         $users = User::whereNot('name', Auth::user()->name)->get();
-        $items = $currentCategory
-            ? Item::where('category_id', $currentCategory->id)->orderBy('name', 'ASC')->get()
-            : Item::orderBy('name', 'ASC')->get();
+        $properties = $currentCategory
+            ? Property::where('category_id', $currentCategory->id)->orderBy('name', 'ASC')->get()
+            : Property::orderBy('name', 'ASC')->get();
 
-        return view('admin.pages.items', compact(
+        return view('admin.pages.properties', compact(
             'users',
             'categories',
             'categoriesIsNull',
@@ -129,7 +129,7 @@ class ItemController extends Controller
             'setting',
             'categories',
             'currentCategory',
-            'items',
+            'properties',
             'roles'
         ));
     }
@@ -158,21 +158,21 @@ class ItemController extends Controller
             return redirect()->back()->withErrors(['img' => 'Image file is required.']);
         }
 
-        $item = new Item();
-        $item->name = $validatedData['name'];
-        $item->category_id = $validatedData['category'];
-        $item->img = $imageFileName;
-        $item->qty = $validatedData['qty'];
-        $item->approval_level = $validatedData['approval_level'];
+        $property = new Property();
+        $property->name = $validatedData['name'];
+        $property->category_id = $validatedData['category'];
+        $property->img = $imageFileName;
+        $property->qty = $validatedData['qty'];
+        $property->approval_level = $validatedData['approval_level'];
 
         if ($validatedData['price'] == null) {
-            $item->price = null;
+            $property->price = null;
         } else {
-            $item->price = $validatedData['price'];
+            $property->price = $validatedData['price'];
         }
-        $item->per = $validatedData['per'];
-        $item->assigned_personel = $validatedData['assigned_personel'];
-        $item->save();
+        $property->per = $validatedData['per'];
+        $property->assigned_personel = $validatedData['assigned_personel'];
+        $property->save();
 
 
         Notification::create([
@@ -189,13 +189,16 @@ class ItemController extends Controller
         return redirect()->back()->with('success', 'A new item has been added successfully!');
     }
 
-    public function itemsFilter(Request $request)
+    public function propertiesFilter(Request $request)
     {
         $current_user_id = Auth::user()->id;
-        $page_title = "Items";
+        $page_title = "Properties";
         $currentCategory = Category::find($request->category);
-        $items = $currentCategory ? Item::where('category_id', $currentCategory->id)->get() : Item::all();
+
+        $properties = $currentCategory ? Property::where('category_id', $currentCategory->id)->get() : Property::all();
+
         $categories = Category::all();
+
         $setting = Setting::where('user_id', $current_user_id)->first();
 
         $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
@@ -268,9 +271,6 @@ class ItemController extends Controller
             })->whereIn('for', ['staff', 'both'])
                 ->orderBy('created_at', 'DESC')
                 ->get()->count();
-
-
-
         }
 
         if ($currentCategory) {
@@ -286,7 +286,7 @@ class ItemController extends Controller
 
         $users = User::whereNot('id', Auth::user()->id)->get();
 
-        return view('admin.pages.items', compact(
+        return view('admin.pages.properties', compact(
             'users',
             'categories',
             'categoriesIsNull',
@@ -298,7 +298,7 @@ class ItemController extends Controller
             'setting',
             'categories',
             'currentCategory',
-            'items',
+            'properties',
             'roles'
         ));
     }
@@ -317,15 +317,15 @@ class ItemController extends Controller
         ]);
 
 
-        $item = Item::find($id);
+        $property = Property::find($id);
 
-        if (!$item) {
+        if (!$property) {
             return redirect()->back()->with('error', 'Item not found!');
         }
 
-        $currentCategoryFolder = $item->category->folder_name;
+        $currentCategoryFolder = $property->category->folder_name;
         $newCategoryFolder = Category::find($validatedData['update_category'])->folder_name;
-        $imageFileName = $item->img;
+        $imageFileName = $property->img;
 
         if ($request->hasFile('update_img')) {
             $image = $request->file('update_img');
@@ -333,16 +333,16 @@ class ItemController extends Controller
             $filePath = 'images/categories/' . $newCategoryFolder;
             $image->storeAs($filePath, $imageFileName, 'public');
 
-            if ($item->img) {
-                $oldFilePath = 'images/categories/' . $currentCategoryFolder . '/' . $item->img;
+            if ($property->img) {
+                $oldFilePath = 'images/categories/' . $currentCategoryFolder . '/' . $property->img;
                 if (Storage::disk('public')->exists($oldFilePath)) {
                     Storage::disk('public')->delete($oldFilePath);
                 }
             }
         } else {
-            if ($item->img && $currentCategoryFolder !== $newCategoryFolder) {
-                $oldFilePath = 'images/categories/' . $currentCategoryFolder . '/' . $item->img;
-                $newFilePath = 'images/categories/' . $newCategoryFolder . '/' . $item->img;
+            if ($property->img && $currentCategoryFolder !== $newCategoryFolder) {
+                $oldFilePath = 'images/categories/' . $currentCategoryFolder . '/' . $property->img;
+                $newFilePath = 'images/categories/' . $newCategoryFolder . '/' . $property->img;
 
                 if (Storage::disk('public')->exists($oldFilePath)) {
                     Storage::disk('public')->move($oldFilePath, $newFilePath);
@@ -352,7 +352,7 @@ class ItemController extends Controller
 
 
         if ($request->isAvailableForRenting == 'on') {
-            $item->update([
+            $property->update([
                 'name' => $validatedData['update_name'],
                 'qty' => $validatedData['update_qty'],
                 'per' => $validatedData['update_per'],
@@ -365,7 +365,7 @@ class ItemController extends Controller
 
 
         } else {
-            $item->update([
+            $property->update([
                 'name' => $validatedData['update_name'],
                 'qty' => $validatedData['update_qty'],
                 'approval_level' => $validatedData['update_approval_level'],
@@ -377,8 +377,6 @@ class ItemController extends Controller
 
 
         }
-
-
 
 
         return redirect()->back()->with('success', 'Item has been successfully updated!');
@@ -393,21 +391,30 @@ class ItemController extends Controller
         return view('admin.partials.item', compact('items', 'day'));
     }
 
-    public function itemSearch(Request $request, $category_id)
+    public function propertySearch(Request $request, $category_id)
     {
+
         $categories = Category::all();
 
-        $items = Item::where('category_id', $category_id)
-            ->where('name', 'LIKE', '%' . $request->search_value . '%')
-            ->get();
-        $setting = Setting::where('user_id', Auth::user()->id)->first();
+        if ($request->search_value == null) {
 
+            $properties = Property::where('category_id', $category_id)
+                ->get();
+        } else {
+            $properties = Property::where('category_id', $category_id)
+                ->where('name', 'LIKE', '%' . $request->search_value . '%')
+                ->get();
+        }
         $currentCategory = Category::find($category_id);
 
-        return view('admin.partials.items', compact('items', 'currentCategory', 'setting', 'categories'));
+        $setting = Setting::where('user_id', Auth::user()->id)->first();
 
-
-
+        return view('admin.partials.properties', compact(
+            'categories',
+            'properties',
+            'setting',
+            'currentCategory'
+        ));
 
     }
 

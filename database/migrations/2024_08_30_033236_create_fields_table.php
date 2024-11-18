@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('items', function (Blueprint $table) {
+        Schema::create('properties', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('img');
@@ -81,7 +81,7 @@ return new class extends Migration {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable(false);
-            $table->foreignId('items_id')->constrained()->onDelete('cascade');
+            $table->foreignId('properties_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
@@ -103,7 +103,7 @@ return new class extends Migration {
             $table->timestamps();
 
         });
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             $table->string('tracking_code')->nullable(false);
             $table->foreignId('rentee_id')->constrained()->onDelete('cascade');
@@ -118,7 +118,7 @@ return new class extends Migration {
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('rentee_id')->constrained()->onDelete('cascade');
-            $table->json('items');
+            $table->json('properties');
             $table->timestamps();
         });
 
@@ -130,10 +130,10 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('items_transactions', function (Blueprint $table) {
+        Schema::create('property_reservations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id')->constrained()->onDelete('cascade');
-            $table->foreignId('item_id')->constrained()->onDelete('cascade');
+            $table->foreignId('reservation_id')->constrained()->onDelete('cascade');
+            $table->foreignId('property_id')->constrained()->onDelete('cascade');
             $table->foreignId('destination_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->integer('qty');

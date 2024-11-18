@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ItemsTransaction;
+use App\Models\PropertyReservation;
 use App\Models\Rentee;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
-use App\Models\Transaction;
+use App\Models\Reservation;
 use App\Models\Notification;
 use App\Models\Setting;
 use App\Models\Category;
@@ -19,7 +19,7 @@ use Log;
 use Str;
 
 
-class TransactionController extends Controller
+class ReservationController extends Controller
 {
     public function index(Request $request)
     {
@@ -338,9 +338,8 @@ class TransactionController extends Controller
     public function create(Request $request)
     {
 
-
         $validatedData = $request->validate([
-            'item_id' => 'required|exists:items,id',
+            'property_id' => 'required|exists:properties,id',
             'qty' => 'required|integer|min:1',
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
@@ -379,18 +378,18 @@ class TransactionController extends Controller
             $trackingCode = now()->format('Ymd') . '-' . substr(bin2hex(random_bytes(4)), 0, 8);
 
 
-            $transaction = Transaction::create([
+            $reservation = Reservation::create([
                 'tracking_code' => $trackingCode,
                 'rentee_id' => $renteeId,
                 'reservation_type' => $validatedData['reservation_type'],
                 'purpose' => $validatedData['purpose'],
             ]);
 
-            $transactionId = $transaction->id;
+            $reservationId = $reservation->id;
 
-            ItemsTransaction::create([
-                'transaction_id' => $transactionId,
-                'item_id' => $validatedData['item_id'],
+            PropertyReservation::create([
+                'reservation_id' => $reservationId,
+                'property_id' => $validatedData['property_id'],
                 'destination_id' => $validatedData['destination_id'],
                 'category_id' => $validatedData['category_id'],
                 'qty' => $validatedData['qty'],
@@ -412,17 +411,17 @@ class TransactionController extends Controller
                 'isReadBy' => $isReadBy,
             ]);
 
-
             return redirect()->back()->with('success', 'Transaction created successfully.');
+
         } catch (\Exception $e) {
 
-            Log::error('Transaction creation error: ' . $e->getMessage(), [
+            dd('Reservation creation error: ' . $e->getMessage(), [
                 'user_id' => Auth::user()->id,
                 'data' => $request->all(),
             ]);
 
 
-            return redirect()->back()->with('error', 'Error creating transaction. Please try again later.');
+            return redirect()->back()->with('error', 'Error creating reservation. Please try again later.');
         }
     }
 

@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ItemsTransaction extends Model
+class PropertyReservation extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function item()
+    public function property()
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Property::class);
     }
 
     public function category()
@@ -26,9 +26,9 @@ class ItemsTransaction extends Model
         return $this->belongsTo(Destination::class);
     }
 
-    public function transaction()
+    public function reservation()
     {
-        return $this->belongsTo(Transaction::class);
+        return $this->belongsTo(Reservation::class);
     }
 
 }
