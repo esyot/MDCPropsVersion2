@@ -27,13 +27,20 @@
                 <button id="notification-icon" class="hover:opacity-50">
                     <i class="fa-solid fa-bell fa-lg text-blue-600"></i>
                     <span id="notificationTitle">Notifications</span>
-                    @if($unreadNotifications > 0)
-                        <span id="notification-count"
-                            class="absolute top-0 left-0 flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full -translate-x-1/2 -translate-y-1/2">
-                            {{ $unreadNotifications }}
-                        </span>
-                    @endif
+
+                    <span id="notif-count" id="notification-count"
+                        class="absolute top-0 left-0 flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full -translate-x-1/2 -translate-y-1/2">
+                        {{ $unreadNotifications }}
+                    </span>
+
                 </button>
+
+                @include('admin.scripts.notification-count')
+
+
+
+
+
                 <style>
                     @media (orientation: landscape) {
                         #notification-dropdown {

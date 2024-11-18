@@ -78,10 +78,11 @@ class DashboardController extends Controller
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['admin', 'all'])->whereJsonDoesntContain(
-                'isDeletedBy',
-                Auth::user()->id
-            )->orderBy('created_at', 'DESC')->get();
+            $notifications = Notification::whereIn('for', ['admin', 'all'])
+                ->whereJsonDoesntContain(
+                    'isDeletedBy',
+                    Auth::user()->id
+                )->orderBy('created_at', 'DESC')->get();
 
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',

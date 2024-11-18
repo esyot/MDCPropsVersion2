@@ -58,9 +58,8 @@
                             <div class="flex items-center">
                                 <span class="font-medium">Rentee:</span>
                                 <span class="ml-2 text-yellow-300">
-                                    {{ $transaction->transaction->rentee->first_name }}
-                                    {{ $transaction->transaction->rentee->middle_name[0] }}.
-                                    {{ $transaction->transaction->rentee->last_name }}
+                                    {{ $transaction->transaction->rentee->name }}
+                                   
 
                                 </span>
                             </div>

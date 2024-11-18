@@ -7,6 +7,7 @@ use App\Http\Controllers\ExportPDFController;
 use App\Http\Controllers\RenteeTrackingController;
 use App\Http\Controllers\RenteeTransactionController;
 use App\Http\Controllers\ReturnItemController;
+use App\Http\Controllers\UpdatesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -32,6 +33,9 @@ use App\Http\Controllers\ContactController;
 Route::get('/', function () {
     return view('rentee.pages.welcome');
 });
+
+
+Route::get('/notifications', [UpdatesController::class, 'notifications']);
 
 Route::get('/welcome', [RenteeHomeController::class, 'welcome'])->name('welcome');
 Route::get('/rentee/items/{category_id}/{rentee}', [RenteeItemsController::class, 'index'])->name('userItems');

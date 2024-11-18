@@ -30,9 +30,7 @@
                     $formattedRentTime = \Carbon\Carbon::parse($transaction->rent_time)->format('h:i A');
                 @endphp
 
-                <p><strong>{{ $transaction->transaction->rentee->first_name }}
-                        {{ $transaction->transaction->rentee->middle_name[0] }}.
-                        {{ $transaction->transaction->rentee->last_name }}</strong> reserves
+                <p><strong>{{ $transaction->transaction->rentee->name }}</strong> reserves
                     <strong>{{ $transaction->qty }}</strong> item(s) <strong>"{{ $transaction->item->name }}"</strong> from
                     <strong>{{ $formattedRentDate }} {{$formattedRentTime}}</strong> and will return it by
                     <strong>{{ $formattedReturnDate }} {{ $formattedRentReturnTime }}</strong>.
