@@ -21,36 +21,29 @@ class RenteeHomeController extends Controller
     {
         $categories = Category::all();
 
-        // Fetch the rentee by code
         $fetchedRentee = Rentee::where('code', $rentee)->first();
 
 
-        // Fetch the cart for the rentee
+        if (!$fetchedRentee) {
+            return redirect()->back()->with('error', 'Rentee not found.');
+        }
+
+
         $cart = Cart::where('rentee_id', $fetchedRentee->id)->first();
 
-        // Check if the cart exists
-        if (!$cart) {
 
-            $cartedItems = 0;
+        $cartedProperties = 0;
 
-            return view('rentee.pages.index', compact('cartedItems', 'rentee', 'categories'));
 
-        } else {
-
-            // Decode the JSON array of item IDs
-            $itemIds = json_decode($cart->items);
-
-            // Ensure itemIds is an array
-            if (!is_array($itemIds)) {
-                $itemIds = [];
-            }
-
-            // Fetch items based on the decoded IDs
-            $cartedItems = Property::whereIn('id', $itemIds)->get()->count();
-
-            return view('rentee.pages.index', compact('cartedItems', 'rentee', 'categories'));
+        if ($cart) {
+            $propertiesInCart = json_decode($cart->properties, true); // Decode the JSON to an array
+            $cartedProperties = is_array($propertiesInCart) ? count($propertiesInCart) : 0; // Count if it's an array
 
         }
+
+
+        return view('rentee.pages.index', compact('cartedProperties', 'rentee', 'categories'));
+
 
     }
 
@@ -74,38 +67,36 @@ class RenteeHomeController extends Controller
     {
         $categories = Category::all();
 
-        // Fetch the rentee by code
+
         $fetchedRentee = Rentee::where('code', $rentee)->first();
 
 
-        // Fetch the cart for the rentee
+        if (!$fetchedRentee) {
+            return redirect()->back()->with('error', 'Rentee not found.');
+        }
         $cart = Cart::where('rentee_id', $fetchedRentee->id)->first();
 
-        // Check if the cart exists
+
         if (!$cart) {
-
-            $cartedItems = 0;
-
-            return view('rentee.pages.index', compact('cartedItems', 'rentee', 'categories'));
-
-        } else {
-
-            // Decode the JSON array of item IDs
-            $propertyIds = json_decode($cart->properties);
-
-            // Ensure itemIds is an array
-            if (!is_array($propertyIds)) {
-                $itemIds = [];
-            }
-
-            // Fetch items based on the decoded IDs
-            $cartedProperties = Property::whereIn('id', $propertyIds)->get()->count();
-
-            return view('rentee.pages.index', compact('cartedProperties', 'rentee', 'categories'));
-
-
+            return redirect()->back()->with('cart', 'Cart not found, please add items to cart first.');
         }
+
+
+        $propertyIds = json_decode($cart->properties);
+
+
+        if (!is_array($propertyIds)) {
+            $propertyIds = [];
+        }
+
+
+        $properties = Property::whereIn('id', $propertyIds)->get();
+
+        return view('rentee.pages.index', compact('cartedProperties', 'rentee', 'categories'));
+
+
     }
-
-
 }
+
+
+

@@ -37,10 +37,7 @@
                 Rentee:
             </h1>
             <span>
-                {{$reservation->rentee->first_name}}
-                {{$reservation->rentee->middle_name[0]}}.
-                {{$reservation->rentee->last_name}}
-            </span>
+                {{$reservation->rentee->name}}
 
 
         </div>

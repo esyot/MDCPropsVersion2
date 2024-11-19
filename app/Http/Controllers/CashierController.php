@@ -6,6 +6,8 @@ use App\Models\Item;
 use App\Models\ItemsTransaction;
 use App\Models\Message;
 use App\Models\Notification;
+use App\Models\PropertyReservation;
+use App\Models\Reservation;
 use App\Models\Setting;
 use App\Models\Transaction;
 use DB;
@@ -18,7 +20,7 @@ class CashierController extends Controller
     {
         $page_title = 'Home';
         $current_user_id = Auth::user()->id;
-        // Messages
+
         $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
         $unreadMessages = $messages->count();
         $contacts = DB::table('messages')
@@ -45,13 +47,13 @@ class CashierController extends Controller
             ->whereJsonDoesntContain('isReadBy', Auth::user()->id)
             ->count();
 
-        $reservationsPending = ItemsTransaction::where('approvedByCashier_at', null)
+        $reservationsPending = PropertyReservation::where('approvedByCashier_at', null)
             ->whereNot('approvedByAdmin_at', null)
             ->where('canceledByRentee_at', null)
             ->get()
             ->count();
 
-        $transactionMade = ItemsTransaction::where('cashier_id', Auth::user()->id)
+        $transactionMade = PropertyReservation::where('cashier_id', Auth::user()->id)
             ->get()
             ->count();
 
@@ -77,6 +79,7 @@ class CashierController extends Controller
         // Messages
         $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
         $unreadMessages = $messages->count();
+
         $contacts = DB::table('messages')
             ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
             ->join('users', 'users.id', '=', 'messages.sender_id')
@@ -103,40 +106,53 @@ class CashierController extends Controller
 
         $setting = Setting::where('user_id', Auth::user()->id)->first();
 
-
-        $itemsTransactions = ItemsTransaction::whereNull('approvedByCashier_at')
-            ->whereNot('approvedByAdmin_at', null)
+        $propertyReservation = PropertyReservation::whereNot('approvedByAdmin_at', null)
+            ->where('approvedByCashier_at', null)
+            ->where('declinedByAdmin_at', null)
+            ->where('canceledByRentee_at', null)
             ->get();
 
+        $reservationIds = $propertyReservation->pluck('reservation_id');
 
-        $reservationIds = $itemsTransactions->pluck('transaction_id');
+        $reservations = Reservation::whereIn('id', $reservationIds)->get();
 
-        $reservations = Transaction::whereIn('id', $reservationIds)
-            ->whereNot('status', 'canceled')
-            ->where('status', 'in progress')
-            ->get();
+        $properties = PropertyReservation::whereIn('reservation_id', $reservations->pluck('id'))->get();
 
-        $items = ItemsTransaction::whereIn('transaction_id', $reservations->pluck('id'))->get();
-
-
-        return view('cashier.pages.reservations', compact('unreadNotifications', 'notifications', 'contacts', 'reservations', 'items', 'setting'));
+        return view('cashier.pages.reservations', compact('unreadNotifications', 'notifications', 'contacts', 'reservations', 'properties', 'setting'));
     }
 
     public function reservationDetails($tracking_code)
     {
 
-        $reservation = Transaction::where('tracking_code', $tracking_code)->first();
+        $reservation = Reservation::where('tracking_code', $tracking_code)->first();
 
 
-        $items = ItemsTransaction::where('transaction_id', $reservation->id)
-            ->where('declinedByAdmin_at', null)
+        if (!$reservation) {
+            return redirect()->back()->with('error', 'Reservation not found.');
+        }
+
+
+        $propertyReservations = PropertyReservation::where('reservation_id', $reservation->id)
+            ->whereNull('declinedByAdmin_at')
+            ->whereNotNull('approvedByAdmin_at')
+            ->whereNull('canceledByRentee_at')
+            ->whereNull('approvedByCashier_at')
             ->get();
 
-        return view('cashier.modals.reservation-details', compact('reservation', 'items'));
+        $startDateTime = Carbon::parse($propertyReservations->first()->date_start . ' ' . $propertyReservations->first()->time_start);
+        $endDateTime = Carbon::parse($propertyReservations->first()->date_end . ' ' . $propertyReservations->first()->time_end);
+
+        $hours = $startDateTime->diffInHours($endDateTime);
+        $days = $startDateTime->diffInDays($endDateTime);
 
 
+        return view('cashier.modals.reservation-details', compact(
+            'reservation',
+            'propertyReservations',
+            'days',
+            'hours',
+        ));
     }
-
     public function search(Request $request)
     {
         if ($request->search_value == null) {
@@ -162,11 +178,6 @@ class CashierController extends Controller
             'reservation_id' => 'integer|required'
 
         ]);
-
-
-
-
-
 
         Transaction::where('id', $request->reservation_id)->update([
             'approved_at' => now(),

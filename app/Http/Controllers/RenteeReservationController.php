@@ -15,7 +15,7 @@ class RenteeReservationController extends Controller
 {
     public function reservationAdd(Request $request, $rentee)
     {
-        // Validate rentee fields
+
         $renteeData = $request->validate([
 
             'name' => 'nullable|string|max:255',
@@ -25,19 +25,18 @@ class RenteeReservationController extends Controller
 
         ]);
 
-        // Fetch rentee
+
         $fetchedRentee = Rentee::where('code', $rentee)->first();
 
         if (!$fetchedRentee) {
             return response()->json(['message' => 'Rentee not found'], 404);
         }
 
-        // Start transaction
+
         $reservation = DB::transaction(function () use ($fetchedRentee, $renteeData, $request) {
-            // Update rentee data
+
             $fetchedRentee->update($renteeData);
 
-            // Validate transaction fields
             $validatedData = $request->validate([
                 'properties.*.property_id' => 'required|exists:properties,id',
                 'properties.*.quantity' => 'required|integer|min:1',
@@ -46,29 +45,32 @@ class RenteeReservationController extends Controller
                 'time_start' => 'required|date_format:H:i',
                 'date_end' => 'required|date',
                 'time_end' => 'required|date_format:H:i',
+                'purpose' => 'required|string',
             ]);
 
-            // Create transaction
+
             $trackingCode = now()->format('Ymd') . '-' . substr(bin2hex(random_bytes(4)), 0, 8);
 
             $reservation = Reservation::create([
                 'rentee_id' => $fetchedRentee->id,
                 'tracking_code' => $trackingCode,
-                'reservation_type' => 'rent'
+                'reservation_type' => 'rent',
+                'purpose' => $validatedData['purpose']
 
             ]);
 
-            // Process each item in the transaction
+
             foreach ($validatedData['properties'] as $data) {
-                // Fetch item
+
                 $property = Property::find($data['property_id']);
 
-                // Check if item exists
+
                 if (!$property) {
                     throw new \Exception("Property not found: " . $data['property_id']);
                 }
 
                 $destination = Destination::where('municipality', 'LIKE', '%' . $validatedData['destination'] . '%')->first();
+
                 PropertyReservation::create([
                     'reservation_id' => $reservation->id,
                     'destination_id' => $destination->id,
@@ -81,7 +83,7 @@ class RenteeReservationController extends Controller
                     'qty' => $data['quantity']
                 ]);
 
-                // Add notification for each item
+
                 Notification::create([
                     'icon' => 'user.png',
                     'title' => 'Added new transaction',
@@ -103,19 +105,19 @@ class RenteeReservationController extends Controller
 
         session()->forget('rentee');
 
-        return redirect()->route('welcome', compact('reservation'))->with('success', 'Reservation has been submitted successfully.');
+        return redirect()->route('rentee.welcome', compact('reservation'))->with('success', 'Reservation has been submitted successfully.');
     }
 
     public function reservationCancel($tracking_code)
     {
-        $reservation = Transaction::where('tracking_code', $tracking_code)->first();
+        $reservation = Reservation::where('tracking_code', $tracking_code)->first();
 
         $reservation->update([
             'status' => 'canceled',
             'canceled_at' => now()
         ]);
 
-        ItemsTransaction::where('transaction_id', $reservation->id)->update([
+        PropertyReservation::where('transaction_id', $reservation->id)->update([
             'canceledByRentee_at' => now()
         ]);
 

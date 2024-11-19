@@ -53,22 +53,16 @@ class RenteeCartController extends Controller
         }
 
         $cart = Cart::where('rentee_id', $user->id)->first();
+        $properties = $cart ? json_decode($cart->properties, true) : [];
 
-        if ($cart == null) {
-
-            Cart::create([
-                'rentee_id' => $user->id,
-                'properties' => json_encode([$property])
-            ]);
-        } else {
-
-            $properties = json_decode($cart->properties, true);
-            $properties[] = $property;
-
-
-            $cart->properties = json_encode($property);
-            $cart->save();
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return redirect()->back()->with('error', 'Error decoding cart properties.');
         }
+
+        $properties[] = $property;
+
+        $cart ? $cart->update(['properties' => json_encode($properties)]) :
+            Cart::create(['rentee_id' => $user->id, 'properties' => json_encode([$property])]);
 
         return redirect()->back()->with('success', 'Item added to cart successfully!');
     }
@@ -90,24 +84,22 @@ class RenteeCartController extends Controller
 
     public function removeItemInCart($id, $rentee)
     {
-        $renteePerson = Rentee::where('rentee_code', $rentee)->first();
-
-
+        $renteePerson = Rentee::where('code', $rentee)->first();
 
         $cart = Cart::where('rentee_id', $renteePerson->id)->first();
 
         if (!$cart) {
             return redirect()->back()->with('error', 'Cart not found.');
         }
-        $items = json_decode($cart->items, true);
+
+        $properties = json_decode($cart->properties, true);
 
 
-        if (is_array($items) && ($key = array_search($id, $items)) !== false) {
-            unset($items[$key]);
+        if (is_array($properties) && ($key = array_search($id, $properties)) !== false) {
+            unset($properties[$key]);
         }
 
-
-        $cart->items = json_encode(array_values($items));
+        $cart->properties = json_encode(array_values($properties));
         $cart->save();
 
         return redirect()->back()->with('success', 'Item has been removed from your cart');

@@ -3,8 +3,8 @@
     <div id="single-preview-content-{{$reservation->id}}"
         class="bg-white rounded-lg shadow-lg w-[35rem] max-w-full {{$setting->transition == true ? 'animation-open' : ''}} relative overflow-hidden">
         <!-- Close Button -->
-        <button class="absolute top-2 text-2xl right-4 text-gray-500 hover:text-gray-700"
-            onclick="closeReservationSingleModal()">&times;</button>
+        <button class="absolute top-2 text-4xl font-bold right-4 text-gray-500 hover:text-gray-700"
+            onclick="closeReservationSingleModal({{$reservation->id}})">&times;</button>
 
         <!-- Modal Content -->
         <div class="flex flex-col">
@@ -85,36 +85,20 @@
     </div>
 </div>
 
-@if($setting->transition == true)
-    <script>
-        function closeReservationSingleModal() {
+<script>
+    function closeReservationSingleModal(id) {
+        const modalBackground = document.getElementById('single-preview-background-' + id);
+        const modalContent = document.getElementById('single-preview-content-' + id);
 
-            const modaBackground = document.getElementById('single-preview-background-{{$reservation->id}}');
-            const modalContent = document.getElementById('single-preview-content-{{$reservation->id}}');
-
+        if (@json($setting->transition)) {
             modalContent.classList.add('animation-close');
-
             setTimeout(() => {
-                modaBackground.classList.add('hidden');
+                modalBackground.classList.add('hidden');
                 modalContent.classList.remove('animation-close');
             }, 150);
-        }
-    </script>
-@else
-    <script>
-        function closeReservationSingleModal() {
-
-            const modaBackground = document.getElementById('single-preview-background-{{$reservation->id}}');
-            const modalContent = document.getElementById('single-preview-content-{{$reservation->id}}');
-
+        } else {
             modalContent.classList.remove('animation-close');
-
-            modaBackground.classList.toggle('hidden');
-
-
-
+            modalBackground.classList.add('hidden');
         }
-    </script>
-
-
-@endif
+    }
+</script>

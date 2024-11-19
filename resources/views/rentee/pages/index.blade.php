@@ -12,14 +12,11 @@
     <style>
         @media (orientation: portrait) {
             #rightbar {
-                display:none;
+                display: none;
             }
         }
 
-        @media (orientation: landscape) {
-        
-            
-        }
+        @media (orientation: landscape) {}
     </style>
 </head>
 
@@ -73,23 +70,6 @@
         </div>
     </div>
 
-    <!-- <div id="sidebar"
-        class="fixed left-0 top-0 h-full bg-gradient-to-b from-blue-500 to-blue-800 shadow-md transform -translate-x-full transition-transform duration-300 z-50">
-        <div class="flex flex-col justify-between h-full p-4 text-white">
-            <div class="mt-2">
-                <button onclick="toggleSidebar()" aria-label="Toggle Sidebar">
-                    <i class="fas fa-arrow-circle-left fa-lg"></i>
-                </button>
-            </div>
-
-            <div class="mt-auto">
-                <button title="Log-out">
-                    <i class="fa-solid fa-right-from-bracket fa-lg"></i>
-                </button>
-            </div>
-        </div>
-    </div> -->
-
     <script>
         function confirmLogoutModal() {
             document.getElementById('confirmLogoutModal').classList.remove('hidden');
@@ -97,21 +77,21 @@
     </script>
 
     <div class="container px-4 py-6">
-        <!-- <button id="toggleButton" class="hover:opacity-50 fixed z-40 bg-blue-500 text-white px-4 py-2 rounded"
-            aria-label="Open Sidebar">
-            <i class="fas fa-bars"></i>
-        </button> -->
+       
+
 
         <div id="rightbar" class="fixed right-0">
             <div class="flex flex-col items-center space-y-2">
 
 
-                <a id="cart-icon" @if( $cartedProperties!=0)href="{{ route('cart', ['rentee' => $rentee]) }}" @endif
-                    title="Cart" class="hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded mr-2">
-
+                <a id="cart-icon" @if($cartedProperties != 0 ) href="{{ route('cart', ['rentee' => $rentee]) }}" @endif title="Cart"
+                    class="cursor-pointer hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded mr-2">
+             @if($cartedProperties != 0)
                     <span class="absolute top-0 right-1 bg-red-500 text-white rounded-full px-[5px] text-xs">
                         {{ $cartedProperties }}
                     </span>
+                    @endif
+                  
                     <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
 
 
@@ -127,7 +107,7 @@
         </div>
 
         <div>
-            <h1 class="text-4xl font-bold text-center mb-2">Categories</h1>
+            <h1 class="text-2xl font-bold text-center mb-2">Categories</h1>
         </div>
 
         <div class="flex flex-wrap -mx-2 overflow-y-auto ">
@@ -181,9 +161,9 @@
             sidebar.classList.toggle('-translate-x-full');
         }
 
-        
 
-       
+
+
     </script>
 </body>
 

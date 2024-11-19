@@ -42,8 +42,8 @@ class RenteeController extends Controller
     {
         session()->forget('rentee');
 
-        Rentee::where('rentee_code', $rentee)->first()->delete();
+        Rentee::where('code', $rentee)->first()->delete();
 
-        return redirect()->route('welcome')->with('success', 'Session finished successfully.');
+        return redirect()->route('rentee.welcome')->with('success', 'Session canceled successfully.');
     }
 }

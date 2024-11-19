@@ -41,54 +41,55 @@ class RenteePropertyController extends Controller
 
         return view('rentee.pages.properties', compact('properties', 'category_id', 'rentee', 'cartedProperties'));
     }
+
+
     public function itemUnavailableDates($id)
     {
-        $item = Item::find($id);
-        $transactions = ItemsTransaction::where('item_id', $id)
+        $property = Property::find($id);
+
+        $reservations = PropertyReservation::where('property_id', $id)
             ->whereNotNull('approvedByAdmin_at')
             ->whereNotNull('approvedByCashier_at')
             ->where('returned_at', null)
             ->get();
 
-        // Return an empty array if there are no transactions for the item
-        if ($transactions->isEmpty()) {
+        if ($reservations->isEmpty()) {
             return response()->json([]);
         }
 
         $unavailableDates = [];
         $totalUnavailableQty = 0;
 
-        foreach ($transactions as $transaction) {
-            // Parse the rent dates
-            $start = \Carbon\Carbon::parse($transaction->rent_date);
-            $end = \Carbon\Carbon::parse($transaction->rent_return);
+        foreach ($reservations as $reservation) {
 
-            // Generate all dates between start and end, inclusive
+            $start = \Carbon\Carbon::parse($reservation->date_start);
+            $end = \Carbon\Carbon::parse($reservation->date_end);
+
+
             while ($start->lte($end)) {
                 $unavailableDates[] = $start->toISOString();
-                $start->addDay(); // Move to the next day
+                $start->addDay();
             }
 
-            // Accumulate the unavailable quantities
-            $totalUnavailableQty += $transaction->qty;
+
+            $totalUnavailableQty += $reservation->qty;
         }
 
-        // Remove duplicates and return unique unavailable dates
         $uniqueUnavailableDates = array_values(array_unique($unavailableDates));
 
-        // Check if the total unavailable quantity is less than the item's quantity
-        if ($totalUnavailableQty < $item->qty) {
+
+        if ($totalUnavailableQty < $reservation->qty) {
             return response()->json(['message' => 'All dates are available']);
         }
 
-        // Return the unique unavailable dates
+
         return response()->json($uniqueUnavailableDates);
     }
 
     public function renteeItemsFilter(Request $request, $category_id, $rentee)
     {
-        $items = Item::where('name', 'LIKE', '%' . $request->search . '%')->where('category_id', $category_id)->get();
+        $properties = Property::where('name', 'LIKE', '%' . $request->search . '%')->where('category_id', $category_id)->get();
 
-        return view('rentee.partials.item-single', compact('items', 'rentee'));
+        return view('rentee.partials.property-single', compact('properties', 'rentee'));
     }
 }

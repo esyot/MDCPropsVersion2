@@ -200,11 +200,17 @@ class ReservationController extends Controller
 
         $reservation = PropertyReservation::find($id);
 
-        $reservation->update([
+        $updateData = [
             'approvedByAdmin_at' => now(),
-            'approvedByCashier_at' => now(),
             'admin_id' => Auth::user()->id,
-        ]);
+        ];
+
+        if ($reservation->reservation_type == 'borrow') {
+            $updateData['approvedByCashier_at'] = now();
+        }
+
+        $reservation->update($updateData);
+
 
         if ($reservation) {
 

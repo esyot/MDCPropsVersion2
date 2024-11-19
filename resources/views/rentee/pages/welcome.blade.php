@@ -56,7 +56,7 @@
                         <i class="text-justify">Save this QR code; it will be used to track your
                             reservation on the tracking page and for payment at the cashier once your reservation is
                             approved, or just <a
-                                href="{{ route('tracking', ['search_val' => $transaction->tracking_code]) }}"
+                                href="{{ route('tracking', ['search_val' => $reservation->tracking_code]) }}"
                                 class="text-blue-500 hover:opacity-50 underline" title="Click me to redirect">click
                                 here</a> to monitor your request.</i>
                     </small>

@@ -17,11 +17,12 @@
 
 <body class="bg-gray-100 h-screen">
 
-    <!-- Error Modal -->
     <div id="error-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
         <div class="bg-white rounded-lg shadow-lg max-w-sm w-full p-6">
-            <h2 class="text-xl font-semibold text-red-600 mb-4">Error</h2>
-            <p class="text-gray-700 mb-4">Please complete the inputs first before proceeding to checkout.</p>
+            <h2 class="text-xl font-semibold text-red-600 mb-4">
+                <i class="fa-solid fa-triangle-exclamation"></i> Error
+            </h2>
+            <p class="text-gray-700 mb-4">Please complete the input fields first before proceeding to checkout.</p>
             <div class="flex justify-end">
                 <button class="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600"
                     onclick="document.getElementById('error-modal').classList.add('hidden')">Close</button>
@@ -29,7 +30,7 @@
         </div>
     </div>
 
-    <!-- Header Section -->
+
     <header class="flex py-4 items-center space-x-1 px-2 bg-blue-500">
         <a href="{{ route('rentee.back-to-home', ['rentee' => $rentee]) }}" class="hover:opacity-50">
             <i class="fas fa-arrow-circle-left fa-xl text-white"></i>
@@ -37,7 +38,7 @@
         <h1 class="text-xl text-white font-bold">Checkout</h1>
     </header>
 
-    <!-- Error Messages -->
+
     @if ($errors->any())
         <div class="bg-red-500 text-white p-4">
             <ul>
@@ -48,11 +49,11 @@
         </div>
     @endif
 
-    <!-- Checkout Form -->
+
     <form action="{{ route('rentee.reservation-add', ['rentee' => $rentee]) }}" method="POST">
         @csrf
 
-        <!-- Rentee Details Modal -->
+
         <div id="rentee-details"
             class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
             <div class="bg-white rounded-lg shadow-lg max-w-lg w-[500px] mx-2">
@@ -152,17 +153,25 @@
                         appropriate courts located within the Philippines.</p>
                 </div>
                 <div class="flex justify-end p-2 bg-gray-100 rounded-b-lg">
-                    <button type="button" onclick="document.getElementById('terms-and-conditions').classList.add('hidden');
-                        document.getElementById('terms-checkbox').classList.remove('hidden');
-                        document.getElementById('terms-checkbox').checked = true;
-                        document.getElementById('terms-checkbox-label-1').classList.add('hidden');
-                        document.getElementById('terms-checkbox-label-2').classList.remove('hidden');
-                        " class="px-4 py-2 border border-gray-300 hover:opacity-50 shadow-md rounded">Done</button>
+                    <button type="button" onclick="updateTermsState()"
+                        class="px-4 py-2 border border-gray-300 hover:opacity-50 shadow-md rounded">Done</button>
+
                 </div>
             </div>
         </div>
 
-        <!-- Item Details Section -->
+        <script>
+            function updateTermsState() {
+
+                document.getElementById('terms-and-conditions').classList.add('hidden');
+                document.getElementById('terms-checkbox').classList.remove('hidden');
+                document.getElementById('terms-checkbox').checked = true;
+                document.getElementById('terms-checkbox-label-1').classList.add('hidden');
+                document.getElementById('terms-checkbox-label-2').classList.remove('hidden');
+            }
+        </script>
+
+
         <div class="flex overflow-x-auto">
 
 
@@ -203,7 +212,6 @@
         </div>
         <section id="property-details" class="p-4 bg-white m-4 shadow-md rounded-lg">
 
-            <!-- Destination & Date Inputs -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
                 <div>
@@ -211,7 +219,6 @@
                 </div>
 
 
-                <!-- Rent Date and Time -->
                 <div>
                     <label for="date_start" class="block text-sm font-medium text-gray-700">Date Start:</label>
                     <input type="date" value="{{ today()->toDateString() }}" name="date_start"
@@ -226,7 +233,7 @@
                         required>
                 </div>
 
-                <!-- Return Date and Time -->
+
                 <div>
                     <label for="date_end" class="block text-sm font-medium text-gray-700">Date End:</label>
                     <input type="date" value="{{ today()->toDateString() }}" name="date_end"
@@ -240,6 +247,13 @@
                         class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
+                <div>
+                    <label for="" class="block text-sm font-medium text-gray-700">Purpose:</label>
+                    <textarea name="purpose" id="purpose" placeholder="Input purpose..."
+                        class="w-full border border-gray-300 rounded"></textarea>
+
+                </div>
+
 
             </div>
         </section>

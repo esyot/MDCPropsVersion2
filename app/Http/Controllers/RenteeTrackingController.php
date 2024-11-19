@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItemsTransaction;
-use App\Models\Transaction;
+use App\Models\PropertyReservation;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 
 class RenteeTrackingController extends Controller
@@ -11,21 +12,21 @@ class RenteeTrackingController extends Controller
     public function index(Request $request)
     {
         if ($request) {
-            $transactions = Transaction::where('tracking_code', $request->search_val)->get();
-            $transaction = $transactions->first();
+            $reservations = Reservation::where('tracking_code', $request->search_val)->get();
+            $reservation = $reservations->first();
 
-            if ($transaction) {
-                $items = ItemsTransaction::where('transaction_id', $transaction->id)->get();
+            if ($reservation) {
+                $properties = PropertyReservation::where('reservation_id', $reservation->id)->get();
             } else {
-                $items = collect();
+                $properties = collect();
             }
 
-            return view('rentee.pages.tracking', compact('transactions', 'items'));
+            return view('rentee.pages.tracking', compact('reservations', 'properties'));
         }
 
 
-        $transactions = ItemsTransaction::groupBy('transaction_id');
-        return view('rentee.pages.tracking', compact('transactions'));
+        $reservations = PropertyReservation::groupBy('reservation_id');
+        return view('rentee.pages.tracking', compact('reservations'));
     }
 
 

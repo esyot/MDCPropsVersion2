@@ -121,11 +121,12 @@
 
 
                 <a id="cart-icon" @if( $cartedProperties!=0)href="{{ route('cart', ['rentee' => $rentee]) }}" @endif
-                    title="Cart" class="hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded mr-2">
-
+                    title="Cart" class="cursor-pointer hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded mr-2">
+                    @if($cartedProperties != 0)
                     <span class="absolute top-0 right-1 bg-red-500 text-white rounded-full px-[5px] text-xs">
                         {{ $cartedProperties}}
                     </span>
+                    @endif
                     <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
 
 
@@ -173,90 +174,130 @@
             </div>
             <div class="flex space-x-1">
                 <p>back to home,</p>
-                <a href="{{ route('home', ['rentee' => $rentee]) }}" class="hover:underline text-blue-500">click here.</a>
+                <a href="{{ route('rentee.back-to-home', ['rentee' => $rentee]) }}" class="hover:underline text-blue-500">click here.</a>
             </div>
 
         </div>
         </div>
     @endif
     <script>
-        (function () {
-            const unavailableDates = {};
+    (function () {
+        const unavailableDates = {};
 
-            async function fetchUnavailableDates(itemId) {
-                try {
-                    const res = await fetch(`/rentee/item/${itemId}`);
-                    unavailableDates[itemId] = res.ok ? await res.json() : [];
-                } catch {
+        async function fetchUnavailableDates(itemId) {
+            try {
+                const res = await fetch(`/rentee/property/${itemId}`);
+                if (res.ok) {
+                    const data = await res.json();
+                   
+                    unavailableDates[itemId] = data.map(date => convertToLocalDate(date));
+                } else {
                     unavailableDates[itemId] = [];
                 }
-                updateCalendar(itemId);
+            } catch (err) {
+                unavailableDates[itemId] = [];
             }
+            updateCalendar(itemId); 
+        }
+        function convertToLocalDate(dateStr) {
+            const date = new Date(dateStr); 
+            const localYear = date.getFullYear();
+            const localMonth = String(date.getMonth() + 1).padStart(2, '0');
+            const localDay = String(date.getDate()).padStart(2, '0');
+            return `${localYear}-${localMonth}-${localDay}`; 
+        }
 
-            function openCalendar(itemId) {
-                fetchUnavailableDates(itemId);
-                document.getElementById(`date-${itemId}`).classList.remove('hidden');
-            }
+       
+        function openCalendar(itemId) {
+            fetchUnavailableDates(itemId); 
+            document.getElementById(`date-${itemId}`).classList.remove('hidden');
+        }
 
-            function changeMonth(itemId, dir) {
-                const monthInput = document.getElementById(`month-input-${itemId}`);
-                const date = new Date(monthInput.value + '-01');
-                date.setMonth(date.getMonth() + (dir === 'right' ? 1 : -1));
-                monthInput.value = date.toISOString().slice(0, 7);
-                updateCalendar(itemId);
-            }
+      
+        function changeMonth(itemId, dir) {
+            const monthInput = document.getElementById(`month-input-${itemId}`);
+            const date = new Date(monthInput.value + '-01');
 
-            function updateCalendar(itemId) {
-                const [y, m] = document.getElementById(`month-input-${itemId}`).value.split('-').map(Number);
-                const daysInMonth = new Date(y, m, 0).getDate();
-                const calendarContainer = document.getElementById(`calendar-${itemId}`);
-                calendarContainer.innerHTML = '';
+            if (dir === 'right') date.setMonth(date.getMonth() + 1);
+            if (dir === 'left') date.setMonth(date.getMonth() - 1);
+            if (dir === 'today') date.setFullYear(new Date().getFullYear(), new Date().getMonth());
 
-                // Ensure unavailableDates[itemId] is an array
-                const unavailableDays = new Set(Array.isArray(unavailableDates[itemId]) ? unavailableDates[itemId].map(date => date.split('T')[0]) : []);
+            monthInput.value = date.toISOString().slice(0, 7);
+            updateCalendar(itemId);
+        }
 
-                // Add empty divs for the leading days of the month
-                Array.from({ length: new Date(y, m - 1).getDay() }).forEach(() => calendarContainer.appendChild(document.createElement('div')));
+       
+        function getLocalDate() {
+            const today = new Date();
+            const localYear = today.getFullYear();
+            const localMonth = String(today.getMonth() + 1).padStart(2, '0'); 
+            const localDay = String(today.getDate()).padStart(2, '0');
+            return `${localYear}-${localMonth}-${localDay}`;
+        }
 
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const currentDay = new Date(y, m - 1, day);
-                    const dayDiv = document.createElement('div');
-                    dayDiv.innerText = day;
-                    dayDiv.className = 'flex justify-center shadow-md items-center h-10 w-10 bg-white rounded border';
+       
+        function updateCalendar(itemId) {
+            const [y, m] = document.getElementById(`month-input-${itemId}`).value.split('-').map(Number);
+            const daysInMonth = new Date(y, m, 0).getDate();
+            const calendarContainer = document.getElementById(`calendar-${itemId}`);
+            const unavailableDays = new Set((unavailableDates[itemId] || [])); 
 
-                    // Check if it's a Sunday
-                    if (currentDay.getDay() === 0) {
-                        dayDiv.classList.add('text-red-500'); // Add red text for Sundays
-                    }
+            const todayString = getLocalDate(); 
 
-                    // Check if there are no unavailable days
-                    if (unavailableDays.size === 0) {
-                        dayDiv.classList.add('bg-white'); // Style for available days
-                    } else {
-                        const isUnavailable = unavailableDays.has(new Date(currentDay.getTime() + 86400000).toISOString().split('T')[0]);
-                        if (isUnavailable) {
-                            dayDiv.classList.add('bg-gray-300', 'text-gray-400'); // Style for unavailable days
-                        }
-                    }
+            calendarContainer.innerHTML = '';
+            
+            Array.from({ length: new Date(y, m - 1).getDay() }).forEach(() => calendarContainer.appendChild(document.createElement('div')));
 
-                    calendarContainer.appendChild(dayDiv);
+        
+            for (let day = 1; day <= daysInMonth; day++) {
+                const currentDay = new Date(y, m - 1, day);
+                const localDayString = getLocalDateFromDate(currentDay); 
+
+                const dayDiv = document.createElement('div');
+                dayDiv.innerText = day;
+                dayDiv.className = 'flex justify-center shadow-md items-center h-10 w-10 bg-white rounded border relative'; 
+
+                
+                if (currentDay.getDay() === 0) dayDiv.classList.add('text-red-500');
+
+               
+                if (localDayString === todayString) {
+                    dayDiv.classList.add('bg-blue-500', 'text-white', 'font-bold');
+                    
+                   
+                    const circle = document.createElement('i');
+                    circle.className = 'fas fa-circle text-green-500 text-[5px] absolute bottom-1 z-50 left-1/2 transform -translate-x-1/2';
+                    dayDiv.appendChild(circle);
                 }
+
+             
+                if (unavailableDays.has(localDayString)) {
+                    dayDiv.classList.add('bg-gray-300', 'text-gray-400');
+                    dayDiv.style.pointerEvents = 'none';
+                }
+
+                calendarContainer.appendChild(dayDiv);
             }
+        }
 
+        function getLocalDateFromDate(date) {
+            const localYear = date.getFullYear();
+            const localMonth = String(date.getMonth() + 1).padStart(2, '0');
+            const localDay = String(date.getDate()).padStart(2, '0');
+            return `${localYear}-${localMonth}-${localDay}`; 
+        }
 
+        document.addEventListener('DOMContentLoaded', () => {
+            @foreach($properties as $property)
+                updateCalendar('{{$property->id}}');
+            @endforeach
+        });
 
-            document.addEventListener('DOMContentLoaded', () => {
-                @foreach($properties as $property)
-                    updateCalendar('{{$property->id}}');
-                @endforeach
-            });
-
-            window.openCalendar = openCalendar;
-            window.changeMonth = changeMonth;
-        })();
-    </script>
-
-
+        window.openCalendar = openCalendar;
+        window.changeMonth = changeMonth;
+    })();
+    
+</script>
 
 
 </body>

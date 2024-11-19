@@ -37,9 +37,9 @@ Route::get('/', function () {
 
 Route::get('/notifications', [UpdatesController::class, 'notifications']);
 
-Route::get('/welcome', [RenteeHomeController::class, 'welcome'])->name('welcome');
+Route::get('/welcome', [RenteeHomeController::class, 'welcome'])->name('rentee.welcome');
 Route::get('/rentee/properties/{category_id}/{rentee}', [RenteePropertyController::class, 'index'])->name('rentee.properties');
-Route::get('/rentee/item/{id}', [RenteePropertyController::class, 'itemUnAvailableDates']);
+Route::get('/rentee/property/{id}', [RenteePropertyController::class, 'itemUnAvailableDates']);
 Route::get('/rentee/items-filter/{category_id}/{rentee}', [RenteePropertyController::class, 'renteeItemsFilter'])->name('renteeItemsFilter');
 Route::get('rentee/tracking', [RenteeTrackingController::class, 'index'])->name('tracking');
 Route::get('/rentee/cart/{rentee}', [RenteeCartController::class, 'index'])->name('cart');
@@ -47,7 +47,7 @@ Route::get('/get-started', [RenteeController::class, 'create'])->name('rentee.st
 Route::get('/home/{rentee}', [RenteeHomeController::class, 'home'])->name('home');
 Route::get('/rentee/cancel-order/{rentee}', [RenteeController::class, 'cancelOrder'])->name('cancelOrder');
 Route::get('/rentee/add-to-cart/{rentee}/{property}', [RenteeCartController::class, 'addToCart'])->name('rentee.add-to-cart');
-Route::get('/rentee/back-to-home/{rentee}', [RenteeHomeController::class, 'backToHome'])->name('rentee.back-to-home');
+Route::get('/rentee/back-to-home/{rentee}', [RenteeHomeController::class, 'home'])->name('rentee.back-to-home');
 Route::get('/rentee/checkout/{rentee}', [RenteeCartController::class, 'checkout'])->name('checkout');
 Route::get('/rentee/remove-item-in-cart/{id}/{rentee}', [RenteeCartController::class, 'removeItemInCart'])->name('rentee.cart-remove-property');
 Route::post('/rentee/create-transaction/{rentee}', [RenteeReservationController::class, 'reservationAdd'])->name('rentee.reservation-add');
