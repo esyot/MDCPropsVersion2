@@ -262,7 +262,7 @@
 
                
                 if (localDayString === todayString) {
-                    dayDiv.classList.add('bg-blue-500', 'text-white', 'font-bold');
+                    dayDiv.classList.add();
                     
                    
                     const circle = document.createElement('i');
