@@ -120,6 +120,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
     //categories Update
     Route::get('/admin/categories', [CategoryController::class, 'index'])->name('admin.categories');
     Route::post('/admin/category-update/{category_id}', [CategoryController::class, 'update'])->name('admin.category-update');
+    Route::get('/admin/category-delete/{id}', [CategoryController::class, 'delete'])->name('admin.category-delete');
 
     //Analytics Page
     Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('admin.analytics-index');
@@ -127,10 +128,11 @@ Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
     Route::post('/admin/analytics-export-to-pdf', [ExportPDFController::class, 'analyticsExportPDF'])->name('admin.analytics-export-to-pdf');
 
     //Reservations
-
-
     Route::get('/admin/reservations', [ReservationController::class, 'index'])->name('admin.reservations');
     Route::get('/admin/reservations-filter', [ReservationController::class, 'filter'])->name('admin.reservations-filter');
+
+    //Properties
+    Route::get('/admin/property-delete/{id}', [PropertyController::class, 'delete'])->name('admin.property-delete');
 });
 
 Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {

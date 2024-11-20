@@ -9,6 +9,26 @@
     }
 </style>
 
+<script>
+    function closePropertyListModal(day) {
+
+        const count = document.getElementById('field-no-' + day).value;
+
+        const newVal = document.getElementById('new-selected-property-id-' + day).value;
+        const allVal = document.getElementById('all-selected-properties-on-' + day).value;
+
+        const textArray = allVal.split('');
+
+        textArray[count - 1] = newVal;
+
+        const newText = textArray.join('');
+
+        document.getElementById('all-selected-properties-on-' + day).value = newText;
+
+        document.getElementById('propertiesListModal-' + day).classList.toggle('hidden');
+    }
+</script>
+
 
 <!-- Modal Items  -->
 <div id="propertiesListModal-{{$day}}"
@@ -16,8 +36,7 @@
     <div class="bg-white px-4 rounded">
         <div class="flex items-center justify-between py-2">
             <h1 class="text-xl font-medium">Select a property</h1>
-            <button type="button" class="text-4xl"
-                onclick="document.getElementById('propertiesListModal-{{$day}}').classList.toggle('hidden')">
+            <button type="button" class="text-4xl" onclick="closePropertyListModal({{$day}})">
                 &times;
             </button>
         </div>
@@ -47,7 +66,6 @@
 </div>
 
 
-
 <div id="reservation-add-{{$day}}"
     class="fixed inset-0 bg-gray-800 bg-opacity-75 select-none flex items-center justify-center z-40 hidden">
     <form action="{{ route('admin.reservation-add') }}" method="POST" id="reservation-form-{{$day}}"
@@ -57,7 +75,7 @@
         <div class="flex justify-between px-4 py-2">
 
             <!-- Form Title -->
-            <h2 class="text-2xl font-bold mb-4 text-gray-800">Add Reservation on
+            <h2 class="text-xl font-bold  text-gray-800">Add Reservation on
                 <span class="text-red-500 font-bold">{{ $currentCategory->title }}</span>
             </h2>
 
@@ -67,31 +85,69 @@
             </button>
         </div>
 
+        <div id="properties-{{$day}}" class="overflow-y-auto h-[140px] custom-scrollbar space-y-2 p-2">
+            <div id="property-selected-on-{{$day}}-1" class="flex items-center space-x-4">
+                <div class="flex-1">
+                    <label for="property-name-{{$day}}-1"
+                        class="block text-gray-700 font-semibold mb-1">Property:</label>
+                    <div id="property-container-1" onclick="
+                document.getElementById('propertiesListModal-{{$day}}').classList.remove('hidden')
+                document.getElementById('field-no-{{$day}}').value = 1;"
+                        class="flex items-center justify-between w-full p-2 border border-gray-300 cursor-pointer rounded">
+                        <input type="text" title="Items" id="property-name-{{$day}}-1"
+                            class="focus:outline-none cursor-pointer w-full" placeholder="Select a property" readonly
+                            required>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <div class="flex-1">
+                    <label for="property-qty-{{$day}}-1"
+                        class="block text-gray-700 font-semibold mb-1">Quantity:</label>
+                    <input type="number" placeholder="0" name="property-qty-1" id="property-qty-{{$day}}-1"
+                        class="block p-2 border border-gray-300 rounded w-full">
+                </div>
+
+                <script>
+                    document.getElementById('property-qty-{{$day}}-1').addEventListener('input', function () {
+                        let value = parseInt(document.getElementById('property-qty-{{$day}}-1').value, 10);
+
+                        if (value < document.getElementById('property-qty-{{$day}}-1').min) {
+                            document.getElementById('property-qty-{{$day}}-1').value = document.getElementById('property-qty-{{$day}}-1').min;
+                        }
+
+                        if (value > document.getElementById('property-qty-{{$day}}-1').max) {
+                            document.getElementById('property-qty-{{$day}}-1').value = document.getElementById('property-qty-{{$day}}-1').max;
+                        }
+                    });
+
+                </script>
+
+                <input type="hidden" id="property-id-{{$day}}-1">
+
+
+
+            </div>
+
+
+        </div>
+        <div class="flex justify-end px-2">
+            <button type="button"
+                class="px-4 py-2 space-x-1 hover:opacity-50 flex items-center border border-gray-300 rounded"
+                onclick="insertProperty({{$day}})">
+                <h1>Add property</h1>
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+        <div>
+
+            <input type="hidden" name="propertiesId" id="all-selected-properties-on-{{$day}}">
+            <input type="hidden" name="category_id" value="{{$currentCategory->id}}">
+        </div>
 
         <!-- Form Inputs -->
         <div id="reservation-form-fields-{{$day}}" class="grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
 
-            <!-- Item Selection -->
-
-            <div>
-                <label for="property_id" class="block text-gray-700 font-semibold mb-1">Item</label>
-                <div onclick="document.getElementById('propertiesListModal-{{$day}}').classList.remove('hidden')"
-                    class="flex items-center justify-between block p-2 border border-gray-300 cursor-pointer rounded">
-                    <input type="text" title="Items" id="property-{{$day}}" class="focus:outline-none cursor-pointer"
-                        placeholder="Select a property" readonly required><i class="fa-solid fa-chevron-down"></i>
-
-                </div>
-
-            </div>
-            <div>
-                <label for="qty" class="block text-gray-700 font-semibold mb-1">Quantity</label>
-                <input type="number" id="qty" placeholder="Quantity" name="qty"
-                    class="block p-2 border border-gray-300 rounded w-full">
-            </div>
-
-            <!-- Hidden Item ID -->
-            <input type="hidden" name="property_id" id="property-id-{{$day}}">
-            <input type="hidden" name="category_id" value="{{ $currentCategory->id }}">
 
             <!-- Rentee Contact No -->
             <div>

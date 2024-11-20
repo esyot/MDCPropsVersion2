@@ -376,10 +376,37 @@ class ReservationController extends Controller
     }
     public function create(Request $request)
     {
+        // Step 1: Handle the `propertiesId` and `property-qty-` logic
+        $ids = str_split($request->propertiesId);
+
+        $allInputs = $request->all();
+
+        // Filter the `property-qty-` fields
+        $properties = array_filter($allInputs, function ($key) {
+            return strpos($key, 'property-qty-') === 0;
+        }, ARRAY_FILTER_USE_KEY);
+
+        $quantities = array_values($properties);
+
+        // Combine the ids and quantities into the desired format for PropertyReservation
+        $newarray = [];
+        foreach ($ids as $key => $id) {
+            if (isset($quantities[$key])) {
+                $newarray[] = [
+                    'property_id' => $id,
+                    'qty' => $quantities[$key],
+                ];
+            }
+        }
+
+        // Check for duplicates in property_ids
+        $propertyIds = array_column($newarray, 'property_id');
+        if (count($propertyIds) !== count(array_unique($propertyIds))) {
+            return redirect()->back()->with('error', 'Duplicate properties are not allowed!');
+        }
+
 
         $validatedData = $request->validate([
-            'property_id' => 'required|exists:properties,id',
-            'qty' => 'required|integer|min:1',
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
             'contact_no' => 'required|max:255',
@@ -395,13 +422,11 @@ class ReservationController extends Controller
             'reservation_type' => ['string', 'required']
         ]);
 
-
         try {
-
+            // Step 3: Create the Rentee and Reservation
             $dateTime = Carbon::now()->format('Ymd');
             $randomString = Str::random(8);
             $code = $dateTime . '-' . $randomString;
-
 
             $rentee = Rentee::create([
                 'code' => $code,
@@ -413,10 +438,10 @@ class ReservationController extends Controller
 
             $renteeId = $rentee->id;
 
-
+            // Generate tracking code for the reservation
             $trackingCode = now()->format('Ymd') . '-' . substr(bin2hex(random_bytes(4)), 0, 8);
 
-
+            // Create the reservation
             $reservation = Reservation::create([
                 'tracking_code' => $trackingCode,
                 'rentee_id' => $renteeId,
@@ -426,39 +451,44 @@ class ReservationController extends Controller
 
             $reservationId = $reservation->id;
 
-            PropertyReservation::create([
-                'reservation_id' => $reservationId,
-                'property_id' => $validatedData['property_id'],
-                'destination_id' => $validatedData['destination_id'],
-                'category_id' => $validatedData['category_id'],
-                'qty' => $validatedData['qty'],
-                'date_start' => $validatedData['date_start'],
-                'time_start' => $validatedData['time_start'],
-                'date_end' => $validatedData['date_end'],
-                'time_end' => $validatedData['time_end']
-            ]);
+            // Step 4: Create PropertyReservations from $newarray
+            foreach ($newarray as $entry) {
+                // Insert each property reservation for the current reservation
+                PropertyReservation::create([
+                    'reservation_id' => $reservationId,
+                    'property_id' => $entry['property_id'],
+                    'qty' => $entry['qty'], // Use quantity here
+                    'category_id' => $validatedData['category_id'],
+                    'destination_id' => $validatedData['destination_id'],
+                    'date_start' => $validatedData['date_start'],
+                    'time_start' => $validatedData['time_start'],
+                    'date_end' => $validatedData['date_end'],
+                    'time_end' => $validatedData['time_end']
+                ]);
+            }
+
 
             $isReadBy = [];
 
             Notification::create([
                 'icon' => Auth::user()->img,
-                'title' => 'New Transaction',
+                'title' => 'New Reservation',
                 'category_id' => $validatedData['category_id'],
-                'description' => Auth::user()->name . ' added a new transaction.',
-                'redirect_link' => 'transactions',
-                'for' => 'all',
+                'description' => Auth::user()->name . ' added a new reservation.',
+                'redirect_link' => 'reservations',
+                'for' => 'admin',
                 'isReadBy' => $isReadBy,
             ]);
 
-            return redirect()->back()->with('success', 'Transaction created successfully.');
+            // Return success response
+            return redirect()->back()->with('success', 'A new reservation has been added successfully.');
 
         } catch (\Exception $e) {
-
+            // Handle any errors
             dd('Reservation creation error: ' . $e->getMessage(), [
                 'user_id' => Auth::user()->id,
                 'data' => $request->all(),
             ]);
-
 
             return redirect()->back()->with('error', 'Error creating reservation. Please try again later.');
         }

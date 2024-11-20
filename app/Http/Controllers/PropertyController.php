@@ -379,16 +379,22 @@ class PropertyController extends Controller
         }
 
 
-        return redirect()->back()->with('success', 'Item has been successfully updated!');
+        return redirect()->back()->with('success', 'Item has been updated successfully!');
     }
 
     public function search(Request $request, $day, $category_id)
     {
-        $items = Item::where('category_id', $category_id)
+        $properties = Property::where('category_id', $category_id)
             ->where('name', 'LIKE', '%' . $request->input('input') . '%')
             ->get();
 
-        return view('admin.partials.item', compact('items', 'day'));
+        $setting = Setting::where('user_id', Auth::user()->id)->first();
+
+        return view('admin.partials.property', compact(
+            'properties',
+            'day',
+            'setting'
+        ));
     }
 
     public function propertySearch(Request $request, $category_id)
@@ -415,6 +421,22 @@ class PropertyController extends Controller
             'setting',
             'currentCategory'
         ));
+
+    }
+
+    public function delete($id)
+    {
+
+        $property = Property::find($id);
+
+        if ($property) {
+            $property->delete();
+
+            return redirect()->back()->with('success', 'Property has been deleted successfully!');
+
+        }
+
+        return redirect()->back()->with('error', 'Property not found!');
 
     }
 

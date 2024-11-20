@@ -4,7 +4,7 @@
 
     <div class="bg-white p-4 rounded">
         <div class="flex items-center">
-            <span class="font-medium">Item:</span>
+            <span class="font-medium">Property:</span>
             <span class="ml-2 text-blue-500">{{ $reservation->property->name }}</span>
         </div>
         <div class="flex items-center">

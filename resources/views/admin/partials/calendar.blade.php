@@ -40,7 +40,8 @@
         justify-content: center;
     }
 </style>
-
+@include('admin.partials.success.success-modal')
+@include('admin.partials.errors.error-modal')
 <div id="calendar-day-view">
 </div>
 

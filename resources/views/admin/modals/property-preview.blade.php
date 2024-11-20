@@ -2,9 +2,44 @@
 @foreach ($properties as $property)
 
 
+<!-- Confirmation delete -->
+
+<div id="property-delete-{{$property->id}}"
+    class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 hidden z-50">
+    <div class="bg-white rounded shadow-md">
+        <div class="bg-red-500 py-1 rounded-t">
+
+        </div>
+        <header class="flex px-4 py-2 items-center space-x-2 border-b">
+            <i class="fas fa-trash text-2xl bg-red-500 p-2 px-3.5 rounded-full text-red-100"></i>
+            <section>
+                <h1 class="text-xl font-medium">Delete Confirmation</h1>
+                <h1>Are you sure to delete this property?</h1>
+                <small class="font-bold">
+                    Note:
+                    <i class="font-normal">This action cannot be undone.</i>
+                </small>
+            </section>
+
+        </header>
+        <footer class="bg-gray-100 rounded-b flex justify-end space-x-1 p-2">
+            <button type="button"
+                onclick="document.getElementById('property-delete-{{$property->id}}').classList.toggle('hidden')"
+                class="px-4 py-2 border border-gray-300 text-gray-800 hover:opacity-50 rounded">
+                No
+            </button>
+            <a href="{{ route('admin.property-delete', ['id' => $property->id]) }}"
+                class="px-4 py-2 bg-red-500 text-red-100 hover:opacity-50 rounded">
+                Yes
+            </a>
+        </footer>
+    </div>
+</div>
+<!-- /Confirmation delete -->
+
 <form id="property-preview-{{$property->id}}" action="{{ route('admin.property-update', ['id' => $property->id]) }}" method="POST" 
 
-        class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-70 hidden">
+        class="fixed inset-0 flex items-center justify-center z-40 bg-gray-800 bg-opacity-70 hidden">
     @csrf
     @method('PUT')
 
@@ -13,12 +48,11 @@
         <div class="bg-white w-[500px] mx-2 rounded-lg shadow-lg overflow-hidden">
             <!-- Modal Header -->
             <div class="flex items-center justify-between p-4 border-b border-gray-300">
-                <h1 class="text-xl font-semibold text-gray-900">Item Preview</h1>
-                <button type="button" class="text-4xl text-gray-600 hover:text-gray-800"
-    onclick="document.getElementById('property-preview-{{$property->id}}').classList.toggle('hidden')">&times;</button>
-
-</div>
-
+                <h1 class="text-xl font-semibold text-gray-900">Property Preview</h1>
+                <button onclick="document.getElementById('property-delete-{{$property->id}}').classList.toggle('hidden')" type="button" title="delete this property" class="hover:opacity-50">
+                    <i class="fas fa-trash text-red-500"></i>
+                </button>
+            </div>
 
 
             <!-- Modal Body -->

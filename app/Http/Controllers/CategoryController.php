@@ -168,7 +168,7 @@ class CategoryController extends Controller
         }
 
 
-        Category::create([
+        $category = Category::create([
             'title' => $request->title,
             'folder_name' => $imageFolderName,
         ]);
@@ -178,6 +178,7 @@ class CategoryController extends Controller
 
         Notification::create([
             'icon' => Auth::user()->img,
+            'category_id' => $category->id,
             'title' => 'Added a new category',
             'description' => Auth::user()->name . ' added a new category named ' . $request->title . '.',
             'redirect_link' => 'categories',
@@ -185,7 +186,7 @@ class CategoryController extends Controller
             'isReadBy' => $isReadBy,
         ]);
 
-        return back()->with('success', 'Files uploaded successfully!');
+        return back()->with('success', 'A new category has been added successfully!');
     }
 
     public function update(Request $request, $category_id)
@@ -207,6 +208,22 @@ class CategoryController extends Controller
             return redirect()->back()->with('success', 'Category has been updated successfully!');
 
         }
+
+    }
+
+    public function delete($id)
+    {
+
+        $category = Category::find($id);
+
+        if ($category) {
+
+            $category->delete();
+
+            return redirect()->back()->with('success', 'Category has been deleted successfully!');
+        }
+
+        return redirect()->back()->with('error', 'Category not found!');
 
     }
 

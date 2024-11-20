@@ -40,8 +40,6 @@
 @foreach ($properties as $property)
 
 
-
-
     <div id="card" title="Click to preview"
         onclick="document.getElementById('property-preview-{{$property->id}}').classList.toggle('hidden');"
         class="flex flex-col text-white cursor-pointer relative bg-gray-200 rounded-lg hover:bg-gray-300 hover:shadow-inner w-52 h-52 overflow-hidden {{ $setting->transition == true ? 'transition-transform  duration-300 hover:scale-90' : '' }}">

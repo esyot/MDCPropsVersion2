@@ -84,6 +84,7 @@
         @include('admin.modals.property-preview')
     </div>
 
+    @include('admin.partials.success.success-modal')
     <script>
         document.getElementById('img').addEventListener('change', function (event) {
             const file = event.target.files[0];

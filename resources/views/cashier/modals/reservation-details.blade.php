@@ -19,79 +19,89 @@
 
                 <div class="flex justify-between flex-col  mb-3">
                     <div class="font-medium">Properties Reserved:</div>
-                  
-                        <div class="flex flex-wrap w-full">
-                            @foreach ($propertyReservations as $propertyReservation)
-                                <div
-                                    class="shadow-md p-4 border border-gray-200 rounded-md">
-                                    <div class="font-medium text-sm">{{$propertyReservation->property->name}}</div>
-                                    <div class="text-sm">Price: {{$propertyReservation->property->price}} per
-                                        {{$propertyReservation->property->per}}
-                                    </div>
 
-                                    <input type="hidden" name="itemsInArray[]"
-                                        value="{{ $propertyReservation->property->id }}">
-                                </div>
+                    <div class="flex flex-wrap w-full">
+                        @php
+                            $totalPayments = 0.00;
+                        @endphp
 
-                            @php
-                            $calculateByHour = 0.00;
-                            $calculateByKm = 0.00;
+                        @foreach ($propertyReservations as $propertyReservation)
+                                                <div class="shadow-md p-4 border border-gray-200 rounded-md">
+                                                    <div class="font-medium text-sm">{{$propertyReservation->property->name}}</div>
+                                                    <div class="text-sm">Price: {{$propertyReservation->property->price}} per
+                                                        {{$propertyReservation->property->per}}
+                                                    </div>
 
-                            if($propertyReservation->property->per == 'hr'){
-                             
-                                $calculateByHour = $propertyReservation->property->price * $hours;
-                            }
+                                                    <input type="hidden" name="itemsInArray[]" value="{{ $propertyReservation->property->id }}">
+                                                </div>
 
-                            if($propertyReservation->property->per == 'km'){
-                                $km = $propertyReservation->destination->kilometers;
-                                $calculateByKm = $propertyReservation->property->price * $km;
-                         
-                            }
+                                                @php
+                                                    $calculateByHour = 0.00;
+                                                    $calculateByKm = 0.00;
+                                                    $calculateByPc = 0.00;
 
-                           
-                           $totalPayments =  $calculateByHour +  $calculateByKm;
-                            @endphp
+                                                    if ($propertyReservation->property->per == 'hr') {
+                                                        $calculateByHour = $propertyReservation->property->price * $hours;
 
-                            @endforeach
-                        </div>
-                       
-                    
+                                                    } else if ($propertyReservation->property->per == 'km') {
+                                                        $km = $propertyReservation->destination->kilometers;
+                                                        $calculateByKm = $propertyReservation->property->price * $km;
+
+                                                    } else if ($propertyReservation->property->per == 'pc') {
+                                                        $pc = $propertyReservation->qty;
+                                                        $calculateByPc = $propertyReservation->property->price * $pc;
+
+                                                    }
+
+
+                                                    $totalPaymentsForReservation = $calculateByHour + $calculateByKm + $calculateByPc;
+
+
+                                                    $totalPayments += $totalPaymentsForReservation;
+                                                @endphp
+
+                        @endforeach
+
+
+                    </div>
+
+
                     <div class="font-medium">
                         <h1>Destination: </h1>
                         <span class="text-sm font-normal">{{$propertyReservation->destination->municipality}}</span>
-                     </div>
+                    </div>
 
                     <div class="font-medium">
-                       <h1>Distance: </h1> 
-                       <span class="text-sm font-normal">{{$propertyReservation->destination->kilometers}} km</span>
+                        <h1>Distance: </h1>
+                        <span class="text-sm font-normal">{{$propertyReservation->destination->kilometers}} km</span>
                     </div>
 
                     <div class="font-medium">
                         @if($days != 0)
-                           <h1>Days Renting: </h1> 
-                           <span class="text-sm font-normal">{{$days}} day/s</span>
+                            <h1>Days Renting: </h1>
+                            <span class="text-sm font-normal">{{$days}} day/s</span>
                         @else
-                          <h1>
-                          Hours Renting: 
-                          </h1> 
-                          <span class="text-sm font-normal">{{$hours}} hr/s</span>
+                            <h1>
+                                Hours Renting:
+                            </h1>
+                            <span class="text-sm font-normal">{{$hours}} hr/s</span>
                         @endif
                     </div>
                     <div class="flex justify-end items-center space-x-1">
                         <div class="font-medium">Payment Total:</div>
 
-                        <div class="">₱ {{number_format($totalPayments, 2)}}</div>
+                        <div class="">₱{{number_format($totalPayments, 2)}} only</div>
                     </div>
-                 
-                </div>
-               
 
-                
-               
+                </div>
+
+
+
+
             </div>
 
-          
-          
+
+
 
             <!-- Action Buttons -->
             <div class="flex justify-end space-x-1 mt-6">
