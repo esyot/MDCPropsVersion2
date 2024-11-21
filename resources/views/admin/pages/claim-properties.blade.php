@@ -13,17 +13,20 @@
         }
     }
 </style>
-<nav id="items-for-return-header" class="p-2 w-full shadow-md">
+@include('admin.partials.success.success-modal')
+@include('admin.partials.errors.error-modal')
+<nav id="reservation-to-claim-header" class="p-2 w-full shadow-md">
 
     <div id="claim-items-header-content" class="flex space-x-2 justify-end">
-        <form hx-get="{{ route('admin.search-reservation-for-claim') }}" hx-target="#items-for-return-list"
-            hx-swap="innerHTML" hx-trigger="input" class="p-2 focus:outline bg-white shadow-inner rounded-full">
+        <form hx-get="{{ route('admin.search-reservation-to-claim') }}" hx-target="#reservation-to-claim-list"
+            hx-swap="innerHTML" hx-trigger="input" class="p-2 focus:outline bg-white shadow-inner rounded-full"
+            onsubmit="event.preventDefault();">
             <i class="fas fa-magnifying-glass"></i>
-            <input type="text" onclick="document.getElementById().classList.add" name="search_value"
-                class="bg-transparent focus:outline-none" placeholder="Input Tracking Code">
+            <input type="text" name="search_value" class="bg-transparent focus:outline-none"
+                placeholder="Input Tracking Code">
         </form>
 
-        <button id="camera-btn"
+        <button itype="button" d="camera-btn"
             class="px-3 py-2 bg-blue-500 rounded-xl text-blue-100 hover:opacity-50 shadow-md rounded">
             <i class="fas fa-camera fa-lg"></i>
         </button>
@@ -45,8 +48,8 @@
     </div>
 </div>
 <section class="container mx-auto p-4">
-    <div id="items-for-return-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        @include('admin.partials.properties-for-claim')
+    <div id="reservation-to-claim-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
     </div>
 </section>
 <script>
@@ -125,7 +128,7 @@
                 stopCamera();
                 qrModal.classList.add('hidden');
 
-                htmx.ajax('GET', '{{ route('admin.search-reservation-for-return') }}?search_value=' + encodeURIComponent(code.data), { target: '#items-for-return-list' });
+                htmx.ajax('GET', '{{ route('admin.search-reservation-to-claim') }}?search_value=' + encodeURIComponent(code.data), { target: '#reservation-to-claim-list' });
             } else {
                 requestAnimationFrame(scanQRCode);
             }

@@ -28,14 +28,14 @@
         <div class="flex justify-end bg-gray-50 p-4 border-t border-gray-200">
             <button
                 onclick="document.getElementById('reserved-properties-to-claim-modal-{{$reservation->id}}').classList.remove('hidden')"
-                hx-get="{{ route('admin.reserved-items-to-claim', ['transaction_id' => $reservation->id]) }}"
+                hx-get="{{ route('admin.reserved-properties-to-claim', ['reservation_id' => $reservation->id]) }}"
                 hx-swap="innerHTML" hx-trigger="click" hx-target="#reserved-properties-to-claim-modal-{{$reservation->id}}"
                 class="text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer">View
                 Items
             </button>
         </div>
     </div>
-    <div id="reserved-properties-to-claim-modal-{{$transaction->id}}"
+    <div id="reserved-properties-to-claim-modal-{{$reservation->id}}"
         class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
     </div>
 @endforeach

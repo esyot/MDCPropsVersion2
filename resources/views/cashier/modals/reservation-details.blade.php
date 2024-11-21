@@ -32,7 +32,8 @@
                                                         {{$propertyReservation->property->per}}
                                                     </div>
 
-                                                    <input type="hidden" name="itemsInArray[]" value="{{ $propertyReservation->property->id }}">
+                                                    <input type="hidden" name="propertiesInArray[]"
+                                                        value="{{ $propertyReservation->property->id }}">
                                                 </div>
 
                                                 @php
@@ -95,13 +96,7 @@
 
                 </div>
 
-
-
-
             </div>
-
-
-
 
             <!-- Action Buttons -->
             <div class="flex justify-end space-x-1 mt-6">
@@ -114,7 +109,7 @@
                 <button
                     onclick="document.getElementById('paymentConfirmationModal-{{$reservation->id}}').classList.remove('hidden')"
                     type="button" class="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded-md">
-                    Proceed to Payment
+                    Receive the payment
                 </button>
             </div>
         </form>
@@ -136,7 +131,7 @@
             </div>
         </div>
 
-        <div class="flex justify-end space-x-4 p-4">
+        <div class="flex justify-end space-x-1 p-4">
             <button
                 onclick="document.getElementById('paymentConfirmationModal-{{$reservation->id}}').classList.add('hidden')"
                 type="button" class="px-4 py-2 border border-blue-300 text-blue-500 hover:bg-blue-100 rounded-md">

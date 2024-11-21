@@ -52,7 +52,7 @@
 
         fetchNotifications();
 
-        setInterval(fetchNotifications, 10000);
+        setInterval(fetchNotifications, 5000);
 
         function showLoader() {
             document.getElementById('loader').classList.remove('hidden');

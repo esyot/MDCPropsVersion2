@@ -173,36 +173,47 @@ class CashierController extends Controller
     {
 
         $request->validate([
-            'itemsInArray' => 'required|array',
-            'itemsInArray.*' => 'integer|exists:items,id',
+            'propertiesInArray' => 'required|array',
+            'propertiesInArray.*' => 'integer|exists:properties,id',
             'reservation_id' => 'integer|required'
 
         ]);
 
-        Transaction::where('id', $request->reservation_id)->update([
+        Reservation::where('id', $request->reservation_id)->update([
             'approved_at' => now(),
             'status' => 'approved'
         ]);
 
-        $itemIds = $request->input('itemsInArray');
+        $propertyIds = $request->input('propertiesInArray');
 
 
-        ItemsTransaction::where('transaction_id', $request->reservation_id)
-            ->whereIn('item_id', $itemIds)->update([
+
+
+        $propertyReservation = PropertyReservation::where('reservation_id', $request->reservation_id)
+            ->whereIn('property_id', $propertyIds)->update([
                     'approvedByCashier_at' => now(),
                     'cashier_id' => Auth::user()->id,
                 ]);
 
 
-        Notification::create([
-            'icon' => Auth::user()->img,
-            'title' => 'Approved Transaction',
-            'description' => Auth::user()->name . ' approved a new transaction, check it now!',
-            'redirect_link' => 'transactions',
-            'for' => 'admin',
-        ]);
+        if ($propertyReservation) {
+            Notification::create([
+                'icon' => Auth::user()->img,
+                'user_id' => Auth::user()->id,
+                'reservation_id' => $request->reservation_id,
+                'title' => 'Approved Reservation',
+                'description' => ' approved a reservation, waiting to claim now!',
+                'redirect_link' => 'claim-items',
+                'for' => 'admin|staff',
+            ]);
 
-        return redirect()->back()->with('success', 'Reservation has been processed successfully.');
+            return redirect()->back()->with('success', 'Reservation has been processed successfully.');
+
+        } else {
+
+            return redirect()->back()->with('error', 'Reservation process error.');
+        }
+
     }
 
 

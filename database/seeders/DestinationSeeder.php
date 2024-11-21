@@ -47,7 +47,7 @@ class DestinationSeeder extends Seeder
             ['municipality' => 'Sierra Bullones', 'kilometers' => 50.00],
             ['municipality' => 'Talibon', 'kilometers' => 45.00],
             ['municipality' => 'Trinidad', 'kilometers' => 49.00],
-            ['municipality' => 'Tubugon', 'kilometers' => 0.00],
+            ['municipality' => 'Tubigon', 'kilometers' => 1.50],
             ['municipality' => 'Tagbilaran', 'kilometers' => 40.00],
             ['municipality' => 'Ubay', 'kilometers' => 55.00],
             ['municipality' => 'Valencia', 'kilometers' => 60.00],

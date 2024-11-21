@@ -197,14 +197,14 @@
             </a>
 
 
-            <a href="{{ route('admin.claim-items') }}" class="flex flex-col items-center">
+            <a href="{{ route('admin.claim-properties') }}" class="flex flex-col items-center">
                 <i class="fas fa-hands  text-white drop-shadow-lg"></i>
                 <small class="text-white">Claim</small>
             </a>
 
 
 
-            <a href="{{ route('admin.return-items') }}" class="flex flex-col items-center">
+            <a href="{{ route('admin.return-properties') }}" class="flex flex-col items-center">
                 <i class="fas fa-truck text-white drop-shadow-lg"></i>
                 <small class="text-white">Return</small>
             </a>

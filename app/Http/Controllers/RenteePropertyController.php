@@ -36,7 +36,6 @@ class RenteePropertyController extends Controller
 
 
         $properties = Property::where('category_id', $category_id)
-            ->whereNot('price', 0.00)
             ->get();
 
         return view('rentee.pages.properties', compact('properties', 'category_id', 'rentee', 'cartedProperties'));

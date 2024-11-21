@@ -219,12 +219,24 @@
                 </div>
 
 
+
+                <div>
+                    <label for="time_end" class="block text-sm font-medium text-gray-700">Time End:</label>
+                    <input type="time" name="time_end"
+                        class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+
+
                 <div>
                     <label for="date_start" class="block text-sm font-medium text-gray-700">Date Start:</label>
                     <input type="date" value="{{ today()->toDateString() }}" name="date_start"
                         class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
+
+
+
 
                 <div>
                     <label for="time_start" class="block text-sm font-medium text-gray-700">Time Start:</label>
@@ -242,10 +254,11 @@
                 </div>
 
                 <div>
-                    <label for="time_end" class="block text-sm font-medium text-gray-700">Time End:</label>
-                    <input type="time" name="time_end"
-                        class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required>
+                    <label for="">Reservation Type: </label>
+                    <select name="reservation_type" id="" class="block p-2 w-full border border-gray-300 rounded">
+                        <option value="borrow">Borrow</option>
+                        <option value="rent">Rent</option>
+                    </select>
                 </div>
                 <div>
                     <label for="" class="block text-sm font-medium text-gray-700">Purpose:</label>
@@ -253,7 +266,6 @@
                         class="w-full border border-gray-300 rounded"></textarea>
 
                 </div>
-
 
             </div>
         </section>

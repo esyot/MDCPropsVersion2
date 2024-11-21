@@ -69,9 +69,9 @@
                 </section>
             </a>
             @endhasrole
-            <a href="{{ route('admin.claim-items') }}"
+            <a href="{{ route('admin.claim-properties') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
-                title="Claim Items">
+                title="Claim Properties">
                 <section
                     class="flex justify-center items-center rounded-lg p-4  {{ $page_title == 'Claim Items' ? 'bg-gray-100 text-blue-500' : '' }}">
                     <i class="fas fa-hands fa-lg"></i>
@@ -79,9 +79,9 @@
                 </section>
             </a>
 
-            <a href="{{ route('admin.return-items') }}"
+            <a href="{{ route('admin.return-properties') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
-                title="Return Items">
+                title="Return Properties">
                 <section
                     class="flex justify-center items-center rounded-lg p-4  {{ $page_title == 'Return Item' ? 'bg-gray-100 text-blue-500' : '' }}">
                     <i class="fas fa-truck fa-lg"></i>

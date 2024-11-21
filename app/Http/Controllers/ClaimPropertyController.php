@@ -140,44 +140,46 @@ class ClaimPropertyController extends Controller
         ));
 
     }
-    public function searchReservationForClaim(Request $request)
+    public function searchReservationToClaim(Request $request)
     {
         if ($request->search_value == null) {
-            $reservations = Reservation::where('status', 'approved')->get();
-            return view('admin.partials.properties-for-claim', compact('reservations'));
-
+            $reservations = null;
         }
 
-        $reservations = Reservation::where('tracking_code', 'LIKE', '%' . $request->search_value . '%')->where('status', 'in progress')->get();
-        return view('admin.partials.items-for-claim', compact('reservations'));
+        $reservations = Reservation::where('tracking_code', $request->search_value)->where('status', 'approved')->get();
+        return view('admin.partials.reservation-to-claim', compact('reservations'));
 
     }
 
-    public function reservedItemsToClaim($transaction_id)
+    public function reservedPropertiesToClaim($reservation_id)
     {
 
 
-        $reservations = PropertyReservation::where('transaction_id', $transaction_id)->get();
+        $reservations = PropertyReservation::where('reservation_id', $reservation_id)->get();
 
-        return view('admin.modals.reserved-items-to-claim', compact(
+        return view('admin.modals.reserved-properties-to-claim', compact(
             'reservations',
-            'transaction_id'
+            'reservation_id'
         ));
     }
 
-    public function reservedItemsClaimed($transaction_id)
+    public function reservedPropertiesClaimed($reservation_id)
     {
 
-        $items = ItemsTransaction::where('transaction_id', $transaction_id)->update([
+        $properties = PropertyReservation::where('reservation_id', $reservation_id)->update([
             'claimed_at' => now()
         ]);
 
-        if ($items) {
-            Transaction::find($transaction_id)->update([
+        if ($properties) {
+            Reservation::find($reservation_id)->update([
                 'status' => 'occupied'
             ]);
-        }
 
-        return redirect()->back()->with('success', 'Items has been successfully claimed!');
+            return redirect()->route('admin.return-properties')->with('success', 'Properties have been successfully claimed!');
+
+        }
+        return redirect()->route('admin.claim-properties')->with('error', 'Properties not found!');
+
+
     }
 }

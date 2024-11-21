@@ -46,6 +46,7 @@ class RenteeReservationController extends Controller
                 'date_end' => 'required|date',
                 'time_end' => 'required|date_format:H:i',
                 'purpose' => 'required|string',
+                'reservation_type' => 'required|string',
             ]);
 
 
@@ -54,7 +55,7 @@ class RenteeReservationController extends Controller
             $reservation = Reservation::create([
                 'rentee_id' => $fetchedRentee->id,
                 'tracking_code' => $trackingCode,
-                'reservation_type' => 'rent',
+                'reservation_type' => $validatedData['reservation_type'],
                 'purpose' => $validatedData['purpose']
 
             ]);
@@ -86,10 +87,12 @@ class RenteeReservationController extends Controller
 
                 Notification::create([
                     'icon' => 'user.png',
-                    'title' => 'Added new transaction',
+                    'user_id' => 1,
+                    'rentee_id' => $fetchedRentee->id,
+                    'title' => 'Added new reservation',
                     'description' => 'A rentee requested a new reservation, check it now.',
                     'redirect_link' => 'reservations',
-                    'category_id' => $property->category_id,
+                    'for' => 'superadmin|admin',
                 ]);
             }
 

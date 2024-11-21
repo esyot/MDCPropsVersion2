@@ -151,15 +151,15 @@ Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
 
     //Item Return Routes
     Route::get('/admin/search-reservation-for-return', [ReturnPropertyController::class, 'searchReservationForReturn'])->name('admin.search-reservation-for-return');
-    Route::get('/admin/reseved-items-returned/{transaction_id}', [ReturnPropertyController::class, 'reservedItemsReturned'])->name('admin.reserved-items-returned');
-    Route::get('/admin/reserved-items-to-return/{transaction_id}', [ReturnPropertyController::class, 'reservedItemsToReturn'])->name('admin.reserved-items-to-return');
-    Route::get('/admin/return-items', [ReturnPropertyController::class, 'index'])->name('admin.return-items');
+    Route::get('/admin/reseved-properties-returned/{reservation_id}', [ReturnPropertyController::class, 'reservedPropertiesReturned'])->name('admin.reserved-properties-returned');
+    Route::get('/admin/reserved-properties-to-return/{reservation_id}', [ReturnPropertyController::class, 'reservedPropertiesToReturn'])->name('admin.reserved-properties-to-return');
+    Route::get('/admin/return-properties', [ReturnPropertyController::class, 'index'])->name('admin.return-properties');
 
-    //Item Claim Routes
-    Route::get('/admin/search-reservation-for-claim', [ClaimPropertyController::class, 'searchReservationForClaim'])->name('admin.search-reservation-for-claim');
-    Route::get('/admin/reseved-items-claimed/{transaction_id}', [ClaimPropertyController::class, 'reservedItemsClaimed'])->name('admin.reserved-items-claimed');
-    Route::get('/admin/reserved-items-to-claim/{transaction_id}', [ClaimPropertyController::class, 'reservedItemsToClaim'])->name('admin.reserved-items-to-claim');
-    Route::get('/admin/claim-items', [ClaimPropertyController::class, 'index'])->name('admin.claim-items');
+    //Reservation Claim Routes
+    Route::get('/admin/search-reservation-to-claim', [ClaimPropertyController::class, 'searchReservationToClaim'])->name('admin.search-reservation-to-claim');
+    Route::get('/admin/reserved-properties-claimed/{reservation_id}', [ClaimPropertyController::class, 'reservedPropertiesClaimed'])->name('admin.reserved-properties-claimed');
+    Route::get('/admin/reserved-properties-to-claim/{reservation_id}', [ClaimPropertyController::class, 'reservedPropertiesToClaim'])->name('admin.reserved-properties-to-claim');
+    Route::get('/admin/claim-properties', [ClaimPropertyController::class, 'index'])->name('admin.claim-properties');
 
 
     //Calendar Routes

@@ -40,9 +40,9 @@
                 href="{{ route('isRead', ['id' => $notification->id, 'redirect_link' => $notification->redirect_link, 'role' => 'admin']) }}">
                 <h1 class="text-xs font-bold">{{ $notification->title }}</h1>
                 <span class="text-sm">
-                    @if ($notification->user_id == Auth::user()->id)
+                    @if ($notification->user_id == Auth::user()->id && $notification->rentee_id == null)
                         You
-                    @else
+                    @elseif($notification->rentee_id == null)
                         {{$notification->user->name}}
                     @endif
                     {{ $notification->description }}<br> <small class="font-normal text-red-500">{{ $timeAgo }}</small>

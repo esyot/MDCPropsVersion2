@@ -48,7 +48,7 @@
 
         <div class="flex justify-end py-2 space-x-1">
             <button onclick="document.getElementById('date-{{$property->id}}').classList.add('hidden')"
-                class="px-4 py-2 bg-gray-500 text-gray-100 hover:opacity-50 rounded">Close</button>
+                class="px-4 py-2 border border-gray-300 text-gray-800 hover:opacity-50 rounded">Close</button>
             <a href="{{ route('rentee.add-to-cart', ['rentee' => $rentee, 'property' => $property->id]) }}"
                 class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">Add to cart</a>
 

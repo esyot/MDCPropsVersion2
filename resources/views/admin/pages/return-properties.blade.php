@@ -14,6 +14,9 @@
         }
     }
 </style>
+@include('admin.partials.success.success-modal')
+@include('admin.partials.errors.error-modal')
+
 <nav id="items-for-return-header" class="p-2 w-full shadow-md">
     <div id="return-items-header-content" class="flex space-x-2 justify-end">
         <form hx-get="{{ route('admin.search-reservation-for-return') }}" hx-target="#items-for-return-list"

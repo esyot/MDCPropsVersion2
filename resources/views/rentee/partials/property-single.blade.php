@@ -27,23 +27,37 @@
                     <img src="{{ asset('storage/images/categories/' . $property->category->folder_name . '/' . $property->img) }}"
                         alt="Image" class="absolute top-0 left-0 w-full h-full object-contain z-0">
                 </div>
+                @if ($property->price == 0.00)
+
+                    <div class="flex justify-center text-red-500">
+                        For Borrowing only
+                    </div>
+                @else
+                    <div class="flex justify-center text-red-500">
+                        For Borrowing & Renting
+                    </div>
+                @endif
                 <div id="item-description" class="p-2 text-blue-100 text-xs bg-blue-500">
                     <div id="name">
                         <h1 class="font-bold">Name:</h1>
                         <span class="text-yellow-300">{{$property->name}}</span>
                     </div>
-                    <div id="price">
-                        <h1 class="font-bold">Price:</h1>
-                        <div class="text-yellow-300 flex space-x-1">
-                            <span>₱{{$property->price}}</span>
+                    @if ($property->price != 0.00)
 
-                            <h1>per</h1>
-                            <span>
-                                {{ $property->by }}
-                            </span>
+
+                        <div id="price">
+                            <h1 class="font-bold">Price:</h1>
+                            <div class="text-yellow-300 flex space-x-1">
+                                <span>₱{{$property->price}}</span>
+
+                                <h1>per</h1>
+                                <span>
+                                    {{ $property->per }}
+                                </span>
+                            </div>
+
                         </div>
-
-                    </div>
+                    @endif
                     <div id="qty">
                         <h1 class="font-bold">Quantity:</h1>
                         <span class="text-yellow-300">{{$property->qty}} pc/s</span>

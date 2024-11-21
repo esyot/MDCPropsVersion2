@@ -28,8 +28,8 @@
         <div class="flex justify-end bg-gray-50 p-4 border-t border-gray-200">
             <button
                 onclick="document.getElementById('reserved-properties-to-return-modal-{{$reservation->id}}').classList.remove('hidden')"
-                reservation hx-swap="innerHTML" hx-trigger="click"
-                hx-target="#reserved-reservations-to-return-modal-{{$reservation->id}}"
+                hx-get="{{ route('admin.reserved-properties-to-return', ['reservation_id' => $reservation->id]) }}"
+                hx-swap="innerHTML" hx-trigger="click" hx-target="#reserved-properties-to-return-modal-{{$reservation->id}}"
                 class="text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer">View
                 Items
             </button>

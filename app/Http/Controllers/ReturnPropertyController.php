@@ -9,6 +9,7 @@ use App\Models\ManagedCategory;
 use App\Models\Message;
 use App\Models\Notification;
 use App\Models\Property;
+use App\Models\PropertyReservation;
 use App\Models\Setting;
 use App\Models\Reservation;
 use App\Models\User;
@@ -153,30 +154,33 @@ class ReturnPropertyController extends Controller
 
 
 
-    public function reservedItemsToReturn($transaction_id)
+    public function reservedPropertiesToReturn($reservation_id)
     {
 
-        $reservations = ItemsTransaction::where('transaction_id', $transaction_id)->get();
+        $reservations = PropertyReservation::where('reservation_id', $reservation_id)->get();
 
-        return view('admin.modals.reserved-items-to-return', compact(
+        return view('admin.modals.reserved-properties-to-return', compact(
             'reservations',
-            'transaction_id'
+            'reservation_id'
         ));
     }
 
-    public function reservedItemsReturned($transaction_id)
+    public function reservedPropertiesReturned($reservation_id)
     {
 
-        $items = ItemsTransaction::where('transaction_id', $transaction_id)->update([
+        $reservations = PropertyReservation::where('reservation_id', $reservation_id)->update([
             'returned_at' => now()
         ]);
 
-        if ($items) {
-            Transaction::find($transaction_id)->update([
+        if ($reservations) {
+            Reservation::find($reservation_id)->update([
                 'status' => 'completed'
             ]);
-        }
 
-        return redirect()->back()->with('success', 'Items has been successfully claimed!');
+            return redirect()->route('admin.return-properties')->with('success', 'Properties has been successfully returned!');
+
+        }
+        return redirect()->route('admin.return-properties')->with('error', 'Properties not found!');
+
     }
 }

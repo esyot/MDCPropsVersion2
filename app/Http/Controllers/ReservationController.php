@@ -200,33 +200,43 @@ class ReservationController extends Controller
 
         $reservation = PropertyReservation::find($id);
 
-        $updateData = [
-            'approvedByAdmin_at' => now(),
-            'admin_id' => Auth::user()->id,
-        ];
-
-        if ($reservation->reservation_type == 'borrow') {
-            $updateData['approvedByCashier_at'] = now();
-        }
-
-        $reservation->update($updateData);
-
-
         if ($reservation) {
+
+            $reservation->update([
+                'approvedByAdmin_at' => now(),
+                'admin_id' => Auth::user()->id,
+            ]);
 
             Reservation::where('id', $reservation->reservation->id)
                 ->update([
                     'status' => 'in progress'
                 ]);
 
-            Notification::create([
-                'icon' => Auth::user()->img,
-                'category_id' => $reservation->category_id,
-                'title' => 'Approved Reservation',
-                'description' => Auth::user()->name . ' approved a new reservation, check it now!',
-                'redirect_link' => 'reservations',
-                'for' => 'cashier',
-            ]);
+
+            if ($reservation->reservation->reservation_type == 'borrow') {
+                $reservation->update([
+                    'approvedByCashier_at' => now(),
+                ]);
+                Notification::create([
+                    'icon' => Auth::user()->img,
+                    'user_id' => Auth::user()->id,
+                    'title' => 'Approved Reservation',
+                    'description' => ' approved a new reservation, check it now!',
+                    'redirect_link' => 'reservations',
+                    'for' => 'admin|staff',
+                ]);
+            } else {
+                Notification::create([
+                    'icon' => Auth::user()->img,
+                    'user_id' => Auth::user()->id,
+                    'title' => 'Approved Reservation',
+                    'description' => ' approved a new reservation, check it now!',
+                    'redirect_link' => 'reservations',
+                    'for' => 'cashier',
+                ]);
+            }
+
+
 
             return redirect()->back()->with('success', 'Transaction has been successfuly approved!');
         }
