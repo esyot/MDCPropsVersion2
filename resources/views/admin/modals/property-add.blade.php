@@ -115,7 +115,7 @@
                         <div>
                             <label for="">Assigned Personel:</label>
                             <input type="text" name="assigned_personel" class="block p-2 border border-gray-300 rounded"
-                                placeholder="Assigned personel">
+                                placeholder="Assigned personel" required>
                         </div>
                         </script>
                     </div>

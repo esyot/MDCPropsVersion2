@@ -59,6 +59,6 @@ class RolePermissionController extends Controller
 
         }
 
-        return redirect()->back()->with('success', 'Managed Categories updated successfully!');
+        return redirect()->back()->with('success', 'Category permission has been updated successfully!');
     }
 }

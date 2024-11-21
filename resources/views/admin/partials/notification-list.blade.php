@@ -9,18 +9,15 @@
 @foreach($notifications as $index => $notification)
     @php
         if ($notification->created_at) {
-            // Convert to Carbon instance if necessary
+
             $notificationTime = $notification->created_at instanceof \Carbon\Carbon
                 ? $notification->created_at
                 : \Carbon\Carbon::parse($notification->created_at);
 
-            // Get the current time
             $currentTime = \Carbon\Carbon::now();
 
-            // Calculate the time difference in minutes
             $minutesAgo = $notificationTime->diffInMinutes($currentTime);
 
-            // Determine the appropriate time ago string
             if ($minutesAgo < 1) {
                 $timeAgo = 'just now';
             } else {
@@ -30,8 +27,6 @@
             }
         }
     @endphp
-
-
 
     <div
         class="{{ in_array(Auth::user()->id, $notification->isReadBy) ? 'bg-white' : 'bg-gray-200 font-bold' }} notification-item flex items-center space-x-2 p-2 text-gray-800 cursor-pointer hover:shadow-inner hover:bg-gray-300 transition duration-150 ease-in-out border-t border-gray-300">
@@ -45,12 +40,16 @@
                 href="{{ route('isRead', ['id' => $notification->id, 'redirect_link' => $notification->redirect_link, 'role' => 'admin']) }}">
                 <h1 class="text-xs font-bold">{{ $notification->title }}</h1>
                 <span class="text-sm">
+                    @if ($notification->user_id == Auth::user()->id)
+                        You
+                    @else
+                        {{$notification->user->name}}
+                    @endif
                     {{ $notification->description }}<br> <small class="font-normal text-red-500">{{ $timeAgo }}</small>
                 </span>
             </a>
         </div>
     </div>
 @endforeach
-
 
 </div>

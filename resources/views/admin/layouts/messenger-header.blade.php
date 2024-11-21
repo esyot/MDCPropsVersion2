@@ -14,7 +14,7 @@
     <!-- JavaScript Libraries -->
     <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
     <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
-    @include('admin.styles.style')
+    @include('admin.styles.dark-mode')
 
     @if (!Auth::user()->isPasswordChanged && $page_title != 'Profile')
         <script>

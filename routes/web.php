@@ -27,6 +27,7 @@ use App\Http\Controllers\RenteeHomeController;
 use App\Http\Controllers\RenteeController;
 use App\Http\Controllers\ContactController;
 
+use Illuminate\Support\Facades\Response;
 
 
 //Rentee Routes
@@ -78,7 +79,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/password/update/{id}', [ProfileController::class, 'passwordUpdate'])->name('passwordUpdate');
 
     //Notifications
-    Route::get('/admin/notification-list/{filter}', [NotificationController::class, 'notificationList'])->name('notificationList');
+    Route::get('/admin/notification-list/{filter}', [NotificationController::class, 'notificationList'])->name('admin.notification-list');
     Route::get('/admin/isRead/{id}/{redirect_link}/{role}', [NotificationController::class, 'isRead'])->name('isRead');
     Route::get('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
     Route::get('/notifications/delete-all', [NotificationController::class, 'deleteAll'])->name('notifications.delete-all');

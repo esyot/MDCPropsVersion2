@@ -37,7 +37,7 @@ class ReservationController extends Controller
         $categories = Category::all();
 
 
-        $page_title = 'Transactions';
+        $page_title = 'Reservations';
 
         $setting = Setting::findOrFail(1);
 
@@ -69,7 +69,7 @@ class ReservationController extends Controller
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -77,7 +77,7 @@ class ReservationController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->count();
 
 
         } else if ($roles->contains('admin')) {
@@ -89,7 +89,7 @@ class ReservationController extends Controller
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['admin', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -97,7 +97,7 @@ class ReservationController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->count();
 
 
         } else if ($roles->contains('staff')) {
@@ -106,7 +106,7 @@ class ReservationController extends Controller
             $categories = Category::whereIn('id', $categoryIds)->get();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -114,7 +114,7 @@ class ReservationController extends Controller
             $unreadNotifications = Notification::whereIn('category_id', $categoryIds)->whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])->count();
 
 
         }
@@ -269,7 +269,7 @@ class ReservationController extends Controller
 
         $categories = Category::all();
 
-        $page_title = 'Transactions';
+        $page_title = 'Reservations';
 
         $setting = Setting::findOrFail(1);
 
@@ -298,7 +298,7 @@ class ReservationController extends Controller
         if ($roles->contains('superadmin')) {
             $categories = Category::all();
 
-            $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -306,21 +306,21 @@ class ReservationController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->count();
 
 
         } else if ($roles->contains('admin')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
 
-            $notifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->count();
 
 
 
@@ -331,14 +331,14 @@ class ReservationController extends Controller
             $notifications = Notification::where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
+            })->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])
                 ->orderBy('created_at', 'DESC')
                 ->get();
 
             $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
+            })->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])
                 ->orderBy('created_at', 'DESC')
                 ->get()->count();
 
@@ -376,19 +376,16 @@ class ReservationController extends Controller
     }
     public function create(Request $request)
     {
-        // Step 1: Handle the `propertiesId` and `property-qty-` logic
         $ids = str_split($request->propertiesId);
 
         $allInputs = $request->all();
 
-        // Filter the `property-qty-` fields
         $properties = array_filter($allInputs, function ($key) {
             return strpos($key, 'property-qty-') === 0;
         }, ARRAY_FILTER_USE_KEY);
 
         $quantities = array_values($properties);
 
-        // Combine the ids and quantities into the desired format for PropertyReservation
         $newarray = [];
         foreach ($ids as $key => $id) {
             if (isset($quantities[$key])) {
@@ -399,7 +396,6 @@ class ReservationController extends Controller
             }
         }
 
-        // Check for duplicates in property_ids
         $propertyIds = array_column($newarray, 'property_id');
         if (count($propertyIds) !== count(array_unique($propertyIds))) {
             return redirect()->back()->with('error', 'Duplicate properties are not allowed!');
@@ -423,7 +419,7 @@ class ReservationController extends Controller
         ]);
 
         try {
-            // Step 3: Create the Rentee and Reservation
+
             $dateTime = Carbon::now()->format('Ymd');
             $randomString = Str::random(8);
             $code = $dateTime . '-' . $randomString;
@@ -438,10 +434,10 @@ class ReservationController extends Controller
 
             $renteeId = $rentee->id;
 
-            // Generate tracking code for the reservation
+
             $trackingCode = now()->format('Ymd') . '-' . substr(bin2hex(random_bytes(4)), 0, 8);
 
-            // Create the reservation
+
             $reservation = Reservation::create([
                 'tracking_code' => $trackingCode,
                 'rentee_id' => $renteeId,
@@ -451,7 +447,7 @@ class ReservationController extends Controller
 
             $reservationId = $reservation->id;
 
-            // Step 4: Create PropertyReservations from $newarray
+
             foreach ($newarray as $entry) {
                 // Insert each property reservation for the current reservation
                 PropertyReservation::create([
@@ -472,9 +468,11 @@ class ReservationController extends Controller
 
             Notification::create([
                 'icon' => Auth::user()->img,
+                'user_id' => Auth::user()->id,
+                'reservation_id' => $reservation->id,
                 'title' => 'New Reservation',
                 'category_id' => $validatedData['category_id'],
-                'description' => Auth::user()->name . ' added a new reservation.',
+                'description' => ' added a new reservation.',
                 'redirect_link' => 'reservations',
                 'for' => 'admin',
                 'isReadBy' => $isReadBy,

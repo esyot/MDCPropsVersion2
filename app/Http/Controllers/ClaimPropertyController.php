@@ -57,7 +57,7 @@ class ClaimPropertyController extends Controller
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -65,7 +65,7 @@ class ClaimPropertyController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->count();
 
 
         } else if ($roles->contains(key: 'admin')) {
@@ -77,7 +77,7 @@ class ClaimPropertyController extends Controller
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['admin', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -85,7 +85,7 @@ class ClaimPropertyController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->count();
 
 
         } else if ($roles->contains('staff')) {
@@ -94,7 +94,7 @@ class ClaimPropertyController extends Controller
             $categories = Category::whereIn('id', $categoryIds)->get();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -102,7 +102,7 @@ class ClaimPropertyController extends Controller
             $unreadNotifications = Notification::whereIn('category_id', $categoryIds)->whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])->count();
 
 
         }
@@ -143,13 +143,13 @@ class ClaimPropertyController extends Controller
     public function searchReservationForClaim(Request $request)
     {
         if ($request->search_value == null) {
-            $transactions = Transaction::where('status', 'approved')->get();
-            return view('admin.partials.items-for-claim', compact('transactions'));
+            $reservations = Reservation::where('status', 'approved')->get();
+            return view('admin.partials.properties-for-claim', compact('reservations'));
 
         }
 
-        $transactions = Transaction::where('tracking_code', 'LIKE', '%' . $request->search_value . '%')->where('status', 'in progress')->get();
-        return view('admin.partials.items-for-claim', compact('transactions'));
+        $reservations = Reservation::where('tracking_code', 'LIKE', '%' . $request->search_value . '%')->where('status', 'in progress')->get();
+        return view('admin.partials.items-for-claim', compact('reservations'));
 
     }
 
@@ -157,7 +157,7 @@ class ClaimPropertyController extends Controller
     {
 
 
-        $reservations = ItemsTransaction::where('transaction_id', $transaction_id)->get();
+        $reservations = PropertyReservation::where('transaction_id', $transaction_id)->get();
 
         return view('admin.modals.reserved-items-to-claim', compact(
             'reservations',

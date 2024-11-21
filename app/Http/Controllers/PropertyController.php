@@ -40,8 +40,9 @@ class PropertyController extends Controller
             })
             ->get();
 
-        // Settings and roles
-        $setting = Setting::find(1);
+
+        $setting = Setting::where('user_id', Auth::user()->id)->first();
+
         $roles = Auth::user()->getRoleNames();
 
         $categories = [];
@@ -54,7 +55,7 @@ class PropertyController extends Controller
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -62,7 +63,7 @@ class PropertyController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->count();
 
 
         } else if ($roles->contains('admin')) {
@@ -74,7 +75,7 @@ class PropertyController extends Controller
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['admin', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -82,7 +83,7 @@ class PropertyController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->count();
 
 
         } else if ($roles->contains('staff')) {
@@ -91,7 +92,7 @@ class PropertyController extends Controller
             $categories = Category::whereIn('id', $categoryIds)->get();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -99,7 +100,7 @@ class PropertyController extends Controller
             $unreadNotifications = Notification::whereIn('category_id', $categoryIds)->whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])->count();
 
 
         }
@@ -147,7 +148,13 @@ class PropertyController extends Controller
             'img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
+        $existingProperty = Property::where('name', $request->name)->first();
+        if ($existingProperty) {
+            return redirect()->back()->with('error', 'Property with this name already exists.');
+        }
+
         $category = Category::findOrFail($validatedData['category']);
+
 
         if ($request->hasFile('img')) {
             $image = $request->file('img');
@@ -177,16 +184,18 @@ class PropertyController extends Controller
 
         Notification::create([
             'icon' => Auth::user()->img,
-            'title' => 'New Item',
-            'description' => Auth::user()->name . ' added a new item named ' . $validatedData['name'] .
+            'user_id' => Auth::user()->id,
+            'property_id' => $property->id,
+            'title' => 'New Property',
+            'description' => ' added a new property named ' . $validatedData['name'] .
                 ', check it now.',
-            'redirect_link' => 'items',
+            'redirect_link' => 'properties',
             'category_id' => $validatedData['category'],
-            'for' => 'all',
+            'for' => 'admin|staff',
 
         ]);
 
-        return redirect()->back()->with('success', 'A new item has been added successfully!');
+        return redirect()->back()->with('success', 'A new property has been added successfully!');
     }
 
     public function propertiesFilter(Request $request)
@@ -222,7 +231,7 @@ class PropertyController extends Controller
         if ($roles->contains('superadmin')) {
 
 
-            $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -230,21 +239,21 @@ class PropertyController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->count();
 
 
         } else if ($roles->contains('admin')) {
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
 
-            $notifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->count();
 
 
 
@@ -261,14 +270,14 @@ class PropertyController extends Controller
             $notifications = Notification::where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
+            })->whereIn('for', ['staff', 'admin|staff', 'cashier|staff', 'all'])
                 ->orderBy('created_at', 'DESC')
                 ->get();
 
             $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
+            })->whereIn('for', ['staff', 'admin|staff', 'cashier|staff', 'all'])
                 ->orderBy('created_at', 'DESC')
                 ->get()->count();
         }
@@ -430,12 +439,14 @@ class PropertyController extends Controller
         $property = Property::find($id);
 
         if ($property) {
+
+            Notification::where('property_id', $id)->delete();
+
             $property->delete();
 
             return redirect()->back()->with('success', 'Property has been deleted successfully!');
 
         }
-
         return redirect()->back()->with('error', 'Property not found!');
 
     }

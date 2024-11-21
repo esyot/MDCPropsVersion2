@@ -56,19 +56,24 @@ class NotificationController extends Controller
             if ($roles->contains('superadmin')) {
 
                 $notifications = Notification::whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
-                    ->whereIn('for', ['superadmin', 'all'])
+                    ->whereIn('for', ['superadmin', 'superadmin|admin', 'all'])
                     ->whereJsonDoesntContain('isReadBy', Auth::user()->id)
                     ->orderBy('created_at', 'DESC')->get();
 
 
             } else if ($roles->contains('admin')) {
 
-                $notifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->get();
+                $notifications = Notification::whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
+                    ->whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])
+                    ->whereJsonDoesntContain('isReadBy', Auth::user()->id)
+                    ->orderBy('created_at', 'DESC')->get();
 
             } else if ($roles->contains('staff')) {
 
-                $notifications = Notification::whereIn('category_id', $categories)->whereJsonDoesntContain('isReadBy', Auth::user()->id)->get();
-
+                $notifications = Notification::whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
+                    ->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])
+                    ->whereJsonDoesntContain('isReadBy', Auth::user()->id)
+                    ->orderBy('created_at', 'DESC')->get();
             }
 
 
@@ -79,17 +84,22 @@ class NotificationController extends Controller
 
             if ($roles->contains('superadmin')) {
 
-                $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
+                $notifications = Notification::whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
+                    ->whereIn('for', ['superadmin', 'superadmin|admin', 'all'])
+                    ->orderBy('created_at', 'DESC')->get();
 
 
             } else if ($roles->contains('admin')) {
 
-                $notifications = Notification::whereIn('for', ['admin', 'all'])->orderBy('created_at', 'DESC')->get();
+                $notifications = Notification::whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
+                    ->whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])
+                    ->orderBy('created_at', 'DESC')->get();
 
             } else if ($roles->contains('staff')) {
 
-                $notifications = Notification::whereIn('category_id', $categories)->get();
-
+                $notifications = Notification::whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
+                    ->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])
+                    ->orderBy('created_at', 'DESC')->get();
             }
 
             return view('admin.partials.notification-list', compact('notifications'));

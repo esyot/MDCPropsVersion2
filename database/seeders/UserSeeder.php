@@ -32,8 +32,18 @@ class UserSeeder extends Seeder
             'password' => Hash::make('P@ssw0rd'),
         ]);
 
-        // Assigned admin to this user
+        $user2 = User::create([
+            'id' => 3,
+            'name' => 'Cashiier',
+            'img' => 'user.png',
+            'email' => 'cashier@gmail.com',
+            'isPasswordChanged' => true,
+            'password' => Hash::make('P@ssw0rd'),
+        ]);
+
+
         $user->assignRole('superadmin');
         $user1->assignRole('staff');
+        $user2->assignRole('cashier');
     }
 }

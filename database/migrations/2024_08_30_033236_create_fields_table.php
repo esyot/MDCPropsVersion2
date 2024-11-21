@@ -41,14 +41,14 @@ return new class extends Migration {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->string('icon');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('reservation_id')->nullable(true);
             $table->string('category_id')->nullable(true);
-            $table->string('item_id')->nullable(true);
-            $table->string('user_id')->nullable(true);
+            $table->string('property_id')->nullable(true);
             $table->string('title');
             $table->string('description');
             $table->string('redirect_link');
-            $table->enum('for', ['superadmin', 'admin', 'staff', 'cashier', 'all']);
+            $table->enum('for', ['superadmin', 'admin', 'staff', 'cashier', 'superadmin|admin', 'admin|staff', 'staff|cashier']);
             $table->json('isReadBy')->default(json_encode([]));
             $table->json('isDeletedBy')->default(json_encode([]));
             $table->timestamps();

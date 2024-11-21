@@ -62,7 +62,7 @@ class UserController extends Controller
         $categories = Category::all();
         $currentCategory = $categories->first();
 
-        $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
+        $notifications = Notification::whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->whereJsonDoesntContain(
             'isDeletedBy',
             Auth::user()->id
         )->orderBy('created_at', 'DESC')->get();
@@ -70,8 +70,7 @@ class UserController extends Controller
         $unreadNotifications = Notification::whereJsonDoesntContain(
             'isReadBy',
             Auth::user()->id
-        )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
-
+        )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->count();
 
         if ($currentCategory) {
 
@@ -81,7 +80,6 @@ class UserController extends Controller
 
             $categoriesIsNull = true;
         }
-
 
         return view('admin.pages.users', [
             'roles' => $roles,

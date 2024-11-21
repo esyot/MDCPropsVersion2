@@ -60,7 +60,7 @@ class DashboardController extends Controller
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -68,7 +68,7 @@ class DashboardController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->count();
 
 
         } else if ($roles->contains('admin')) {
@@ -79,7 +79,7 @@ class DashboardController extends Controller
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['admin', 'all'])
+            $notifications = Notification::whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])
                 ->whereJsonDoesntContain(
                     'isDeletedBy',
                     Auth::user()->id
@@ -88,7 +88,7 @@ class DashboardController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->count();
 
 
         } else if ($roles->contains('staff')) {
@@ -97,7 +97,7 @@ class DashboardController extends Controller
             $categories = Category::whereIn('id', $categoryIds)->get();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -105,7 +105,7 @@ class DashboardController extends Controller
             $unreadNotifications = Notification::whereIn('category_id', $categoryIds)->whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])->count();
 
 
         }
@@ -204,7 +204,7 @@ class DashboardController extends Controller
 
             $currentCategory = Category::find($category);
 
-            $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -212,7 +212,7 @@ class DashboardController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->count();
 
             $daysWithRecords = PropertyReservation::where('category_id', $category)
                 ->whereYear('date_start', $currentDate->format('Y'))
@@ -231,14 +231,14 @@ class DashboardController extends Controller
             $categories = Category::all();
             $currentCategory = Category::find($category);
 
-            $notifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'superadmin|admin', 'admin', 'all'])->count();
 
             $daysWithRecords = PropertyReservation::where('category_id', $category)
                 ->whereYear('date_start', $currentDate->format('Y'))
@@ -258,14 +258,14 @@ class DashboardController extends Controller
             $notifications = Notification::where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
+            })->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])
                 ->orderBy('created_at', 'DESC')
                 ->get();
 
             $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
+            })->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])
                 ->orderBy('created_at', 'DESC')
                 ->get()->count();
 
@@ -374,7 +374,7 @@ class DashboardController extends Controller
 
             $currentCategory = Category::find($category);
 
-            $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -382,7 +382,7 @@ class DashboardController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'supperadmin|admin', 'all'])->count();
 
             $daysWithRecords = PropertyReservation::where('category_id', $category)
                 ->whereYear('date_start', $currentDate->format('Y'))
@@ -401,14 +401,14 @@ class DashboardController extends Controller
             $categories = Category::all();
             $currentCategory = Category::find($category);
 
-            $notifications = Notification::whereIn('for', ['admin', 'both'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'both'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->count();
 
             $daysWithRecords = PropertyReservation::where('category_id', $category)
                 ->whereYear('date_start', $currentDate->format('Y'))
@@ -428,14 +428,14 @@ class DashboardController extends Controller
             $notifications = Notification::where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
+            })->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])
                 ->orderBy('created_at', 'DESC')
                 ->get();
 
             $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'both'])
+            })->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])
                 ->orderBy('created_at', 'DESC')
                 ->get()->count();
 

@@ -4,7 +4,11 @@
     <div id="navbar" class="flex items-center justify-between p-4 shadow-md relative">
         <!-- App Name -->
         <div id="pageTitle" class="flex items-center space-x-2">
-            <span class="text-lg font-semibold"> {{ $page_title }}</span>
+            <span class="text-lg font-semibold">
+
+                {{$page_title}}
+
+            </span>
         </div>
 
         <!-- Right-side icons -->
@@ -12,7 +16,9 @@
             <!-- Notification Icon -->
             <div class="relative" id="inside-notification" title="Notifications">
                 <!-- Notification Button -->
-                <button id="notification-icon" class="hover:opacity-50">
+                <button id="notification-icon" class="hover:opacity-50"
+                    hx-get="{{ route('admin.notification-list', ['filter' => 'all'])}}" hx-swap="innerHTML"
+                    hx-trigger="click" hx-target="#notification-list">
                     <i class="fa-solid fa-bell fa-lg text-blue-600"></i>
                     <span id="notificationTitle">Notifications</span>
 
@@ -54,7 +60,7 @@
                         <div class="font-medium p-2">
                             <button id="all"
                                 onclick="document.getElementById('all').classList.add('bg-gray-300'); document.getElementById('unread').classList.remove('bg-gray-300')"
-                                hx-get="{{ route('notificationList', ['filter' => 'all'])}}" hx-swap="innerHTML"
+                                hx-get="{{ route('admin.notification-list', ['filter' => 'all'])}}" hx-swap="innerHTML"
                                 hx-trigger="click" hx-target="#notification-list"
                                 class="px-2 rounded-full bg-gray-300 hover:bg-gray-200">
                                 All
@@ -62,8 +68,8 @@
 
                             <button id="unread"
                                 onclick="document.getElementById('unread').classList.add('bg-gray-300'); document.getElementById('all').classList.remove('bg-gray-300');"
-                                hx-get="{{ route('notificationList', ['filter' => 'unread']) }}" hx-swap="innerHTML"
-                                hx-trigger="click" hx-target="#notification-list"
+                                hx-get="{{ route('admin.notification-list', ['filter' => 'unread']) }}"
+                                hx-swap="innerHTML" hx-trigger="click" hx-target="#notification-list"
                                 class="px-2 rounded-full hover:bg-gray-200">
                                 Unread
                             </button>
@@ -87,7 +93,7 @@
                             document.getElementById('all').addEventListener('click', function () {
                                 showLoader();
 
-                                htmx.ajax('GET', '{{ route('notificationList', ['filter' => 'all']) }}', {
+                                htmx.ajax('GET', '{{ route('admin.notification-list', ['filter' => 'all']) }}', {
                                     target: '#notification-list',
                                     swap: 'innerHTML'
                                 });
@@ -96,7 +102,7 @@
                             document.getElementById('unread').addEventListener('click', function () {
                                 showLoader();
 
-                                htmx.ajax('GET', '{{ route('notificationList', ['filter' => 'unread']) }}', {
+                                htmx.ajax('GET', '{{ route('admin.notification-list', ['filter' => 'unread']) }}', {
                                     target: '#notification-list',
                                     swap: 'innerHTML'
                                 });

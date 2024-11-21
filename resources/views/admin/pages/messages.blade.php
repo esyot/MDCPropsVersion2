@@ -30,7 +30,7 @@
         </div>
         <div>
             <div class="relative">
-                <form hx-get="{{ route('contacts') }}" hx-trigger="input, every 1s" hx-swap="innerHTML"
+                <form hx-get="{{ route('contacts') }}" hx-trigger="input" hx-swap="innerHTML"
                     hx-target="#messsages-contact-list"
                     class="flex justiify-around px-2 items-center bg-white rounded-full">
 
@@ -106,8 +106,8 @@
         </div>
         @if(count($allMessages) > 0)
             <a href="{{ route('messageBubble', ['receiver_id' => $receiver_id]) }}"
-                hx-get="{{ route('messageBubble', ['receiver_id' => $receiver_id]) }}" hx-swap="innerHTML"
-                hx-trigger="every 1s" hx-target="#messages-container"></a>
+                hx-get="{{ route('messageBubble', ['receiver_id' => $receiver_id]) }}" hx-swap="innerHTML" hx-trigger=""
+                hx-target="#messages-container"></a>
 
 
             <div class="bg-blue-500">
@@ -193,7 +193,7 @@
 
                                     <div class="flex flex-col p-2 bg-white rounded-full">
 
-                                        <input autocomplete="off" type="text" id="message-content" name="content"
+                                        <input autocomplete="off" type="text" id="message-text-area" name="content"
                                             class="w-full px-2 focus:outline-none bg-transparent" placeholder="Aa">
 
                                     </div>
@@ -222,18 +222,14 @@
 
 <script>
 
-
-
-
     window.onload = function () {
         function scrollToBottom() {
             const messagesContainer = document.getElementById('messages-container');
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
         scrollToBottom();
-        document.getElementById('message-content').focus();
+        document.getElementById('message-text-area').focus();
     }
-
 
 
     function imagePreviewClose() {
@@ -242,29 +238,26 @@
         document.getElementById('img-preview-x').classList.add('hidden');
         document.getElementById('sendIcon').classList.remove('fa-paper-plane');
         document.getElementById('sendIcon').classList.add('fa-thumbs-up');
-        document.getElementById('message-content').focus();
+        document.getElementById('message-text-area').focus();
 
     }
 
     function updateIcon() {
-        const contentInput = document.getElementById('message-content');
+        const contentInput = document.getElementById('message-text-area');
         const sendIcon = document.getElementById('sendIcon');
 
 
-
-        if (contentInput.value.trim() === '') {
-            // Input is empty, show thumbs up icon
-            sendIcon.classList.remove('fa-paper-plane');
+        if (contentInput.value == '') {
             sendIcon.classList.add('fa-thumbs-up');
+            sendIcon.classList.remove('fa-paper-plane');
         } else {
-            // Input has value, show paper plane icon
             sendIcon.classList.remove('fa-thumbs-up');
             sendIcon.classList.add('fa-paper-plane');
         }
     }
 
     // Attach the updateIcon function to the input's input event
-    document.getElementById('message-content').addEventListener('input', updateIcon);
+    document.getElementById('message-text-area').addEventListener('input', updateIcon);
 
 
     updateIcon();
@@ -284,7 +277,7 @@
 
         //changes icon
 
-        document.getElementById('message-content').focus();
+        document.getElementById('message-text-area').focus();
 
         document.getElementById('sendIcon').classList.remove('fa-paper-plane');
         document.getElementById('sendIcon').classList.add('fa-thumbs-up');
@@ -343,10 +336,10 @@
     }
 
     // Handle paste event for image files
-    document.getElementById('message-content').addEventListener('paste', function (event) {
+    document.getElementById('message-text-area').addEventListener('paste', function (event) {
         event.preventDefault();
 
-        document.getElementById('message-content').focus();
+        document.getElementById('message-text-area').focus();
 
         if (event.clipboardData && event.clipboardData.items) {
             const items = event.clipboardData.items;
@@ -409,7 +402,7 @@
         const newElement = document.getElementById(newElementId);
         if (newElement) {
             newElement.classList.remove('hidden');
-            document.getElementById('message-content').focus()
+            document.getElementById('message-text-area').focus()
         }
 
         // Update the currently visible element ID
@@ -419,7 +412,7 @@
         document.getElementById('replied-message-id').value = currentMessageId;
         document.getElementById('replied-sender-id').value = replied_sender_id;
         document.getElementById('replied-message-type').value = replied_message_type;
-        document.getElementById('message-content').focus();
+        document.getElementById('message-text-area').focus();
     }
 
 

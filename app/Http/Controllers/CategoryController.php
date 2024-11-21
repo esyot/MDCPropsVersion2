@@ -61,7 +61,7 @@ class CategoryController extends Controller
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['superadmin', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['superadmin', 'all', 'superadmin|admin'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -69,7 +69,7 @@ class CategoryController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'all', 'superadmin|admin'])->count();
 
 
         } else if ($roles->contains('admin')) {
@@ -81,7 +81,7 @@ class CategoryController extends Controller
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['admin', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -89,7 +89,7 @@ class CategoryController extends Controller
             $unreadNotifications = Notification::whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->count();
 
 
         } else if ($roles->contains('staff')) {
@@ -100,7 +100,7 @@ class CategoryController extends Controller
 
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'all'])->whereJsonDoesntContain(
+            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])->whereJsonDoesntContain(
                 'isDeletedBy',
                 Auth::user()->id
             )->orderBy('created_at', 'DESC')->get();
@@ -108,7 +108,7 @@ class CategoryController extends Controller
             $unreadNotifications = Notification::whereIn('category_id', $categoryIds)->whereJsonDoesntContain(
                 'isReadBy',
                 Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'all'])->count();
+            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])->count();
 
 
         }
@@ -151,6 +151,12 @@ class CategoryController extends Controller
             'title' => 'required|string|max:255',
         ]);
 
+
+        $existingCategory = Category::where('title', $request->title)->first();
+        if ($existingCategory) {
+            return redirect()->back()->with('error', 'Category with this title already exists.');
+        }
+
         $filePaths = [];
         $imageFolderName = Str::random(10);
 
@@ -178,15 +184,16 @@ class CategoryController extends Controller
 
         Notification::create([
             'icon' => Auth::user()->img,
+            'user_id' => Auth::user()->id,
             'category_id' => $category->id,
             'title' => 'Added a new category',
-            'description' => Auth::user()->name . ' added a new category named ' . $request->title . '.',
+            'description' => 'added a new category named ' . $request->title . '.',
             'redirect_link' => 'categories',
-            'for' => 'superadmin',
+            'for' => 'superadmin|admin',
             'isReadBy' => $isReadBy,
         ]);
 
-        return back()->with('success', 'A new category has been added successfully!');
+        return redirect()->back()->with('success', 'Category has been added successfully!');
     }
 
     public function update(Request $request, $category_id)
@@ -217,7 +224,7 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         if ($category) {
-
+            Notification::where('category_id', $category->id)->delete();
             $category->delete();
 
             return redirect()->back()->with('success', 'Category has been deleted successfully!');

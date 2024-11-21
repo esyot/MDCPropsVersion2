@@ -19,24 +19,53 @@
 
                     const newCount = data.length;
 
-
                     if (newCount > oldCount) {
-
-
                         document.getElementById('notif-count').innerHTML = `${newCount}`;
-                    }
 
-                    oldCount = newCount;
+                        oldCount = newCount;
+
+                        showLoader();
+
+                        htmx.ajax('GET', '{{ route('admin.notification-list', ['filter' => 'all']) }}', {
+                            target: '#notification-list',
+                            swap: 'innerHTML'
+                        });
+
+                    } else if (newCount < oldCount) {
+                        document.getElementById('notif-count').innerHTML = `${newCount}`;
+
+                        oldCount = newCount;
+
+                        showLoader();
+
+                        htmx.ajax('GET', '{{ route('admin.notification-list', ['filter' => 'all']) }}', {
+                            target: '#notification-list',
+                            swap: 'innerHTML'
+                        });
+
+                    }
                 })
                 .catch((error) => {
                     console.error('Fetch error:', error);
                 });
         }
 
-
         fetchNotifications();
 
+        setInterval(fetchNotifications, 10000);
 
-        setInterval(fetchNotifications, 5000);
+        function showLoader() {
+            document.getElementById('loader').classList.remove('hidden');
+        }
+
+        function hideLoader() {
+            document.getElementById('loader').classList.add('hidden');
+        }
+
+        document.body.addEventListener('htmx:afterRequest', function () {
+            hideLoader();
+
+
+        });
     });
 </script>
