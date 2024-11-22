@@ -7,24 +7,24 @@
         <div class="flex space-x-2">
 
 
-            <form hx-get="{{ route('cashier.reservation-search') }}" hx-target="#reservations" hx-swap="innerHTML"
+            <form  onsubmit="event.preventDefault();" hx-get="{{ route('cashier.reservation-search') }}" hx-target="#reservations" hx-swap="innerHTML"
                 hx-trigger="input" class="flex items-center space-x-1 bg-white rounded-full shadow-inner p-2">
                 <i class="fas fa-magnifying-glass"></i>
                 <input type="text" placeholder="Search Reservations" id="search_value" name="search_value"
                     class="bg-transparent focus:outline-none">
             </form>
-            <button id="scan-qr-button" class="py-2 px-3 bg-blue-500 text-white hover:opacity-50 rounded">
-                <i class="fas fa-qrcode fa-lg"></i>
 
+            <button id="scan-qr-button" class="px-3 py-2 bg-blue-500 text-white hover:opacity-50 rounded">
+                <i class="fas fa-camera fa-lg"></i>
             </button>
+            
         </div>
     </nav>
 
 
     <div>
         <ul id="reservations" class="p-2">
-            @include('cashier.partials.reservations')
-
+         
         </ul>
 
     </div>

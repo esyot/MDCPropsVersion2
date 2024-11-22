@@ -175,7 +175,7 @@ class ClaimPropertyController extends Controller
                 'status' => 'occupied'
             ]);
 
-            return redirect()->route('admin.return-properties')->with('success', 'Properties have been successfully claimed!');
+            return redirect()->route('admin.claim-properties')->with('success', 'Properties have been successfully claimed!');
 
         }
         return redirect()->route('admin.claim-properties')->with('error', 'Properties not found!');

@@ -39,7 +39,7 @@
         class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
     </div>
 @endforeach
-@if(count($properties) == 0)
+@if($reservations == null)
     <div>
         <h1>No match found!</h1>
     </div>

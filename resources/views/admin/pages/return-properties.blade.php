@@ -17,12 +17,12 @@
 @include('admin.partials.success.success-modal')
 @include('admin.partials.errors.error-modal')
 
-<nav id="items-for-return-header" class="p-2 w-full shadow-md">
+<nav id="reservation-to-return-header" class="p-2 w-full shadow-md">
     <div id="return-items-header-content" class="flex space-x-2 justify-end">
-        <form hx-get="{{ route('admin.search-reservation-for-return') }}" hx-target="#items-for-return-list"
+        <form hx-get="{{ route('admin.search-reservation-to-return') }}" hx-target="#reservation-to-return-list"
             hx-swap="innerHTML" hx-trigger="input" class="p-2 focus:outline bg-white shadow-inner rounded-full">
             <i class="fas fa-magnifying-glass"></i>
-            <input type="text" onclick="document.getElementById().classList.add" name="search_value"
+            <input type="text" name="search_value"
                 class="bg-transparent focus:outline-none" placeholder="Input Tracking Code">
         </form>
 
@@ -47,9 +47,8 @@
         </div>
     </div>
 </div>
-<section class="container mx-auto p-4">
-    <div id="items-for-return-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        @include('admin.partials.properties-for-return')
+<section class="p-2">
+    <div id="reservation-to-return-list" class="grid grid-cols-4">
     </div>
 </section>
 <script>
@@ -128,7 +127,7 @@
                 stopCamera();
                 qrModal.classList.add('hidden');
 
-                htmx.ajax('GET', '{{ route('admin.search-reservation-for-return') }}?search_value=' + encodeURIComponent(code.data), { target: '#items-for-return-list' });
+                htmx.ajax('GET', '{{ route('admin.search-reservation-to-return') }}?search_value=' + encodeURIComponent(code.data), { target: '#reservation-to-return-list' });
             } else {
                 requestAnimationFrame(scanQRCode);
             }

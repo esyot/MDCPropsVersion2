@@ -150,7 +150,7 @@ Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
     Route::post('/admin/reservation-add', [ReservationController::class, 'create'])->name('admin.reservation-add');
 
     //Item Return Routes
-    Route::get('/admin/search-reservation-for-return', [ReturnPropertyController::class, 'searchReservationForReturn'])->name('admin.search-reservation-for-return');
+    Route::get('/admin/search-reservation-to-return', [ReturnPropertyController::class, 'searchReservationToReturn'])->name('admin.search-reservation-to-return');
     Route::get('/admin/reseved-properties-returned/{reservation_id}', [ReturnPropertyController::class, 'reservedPropertiesReturned'])->name('admin.reserved-properties-returned');
     Route::get('/admin/reserved-properties-to-return/{reservation_id}', [ReturnPropertyController::class, 'reservedPropertiesToReturn'])->name('admin.reserved-properties-to-return');
     Route::get('/admin/return-properties', [ReturnPropertyController::class, 'index'])->name('admin.return-properties');

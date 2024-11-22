@@ -42,8 +42,14 @@
             $formattedTransactionDate = \Carbon\Carbon::parse($transaction->created_at)->format('l, F j, Y h:i A');
         @endphp
         <div class="flex space-x-2">
-            <p>Transaction Date: </p> <span>{{ $formattedTransactionDate }}</span>
+            <p>Date Start: </p> <span>{{ $formattedTransactionDate }}</span>
         </div>
+        <div class="flex space-x-2">
+            <p>Date End: </p> <span>{{ $formattedTransactionDate }}</span>
+        </div>
+        <div class="flex space-x-2">
+            <p>Reservation type: </p> <span>{{ $formattedTransactionDate }}</span>
+        </div>  
 
         <div>
             <h1>Requested Items:</h1>
@@ -54,9 +60,6 @@
             @php
                 $formattedItemRentDate = \Carbon\Carbon::parse($item->rent_date)->format('F j, Y');
                 $formattedItemRentReturnDate = \Carbon\Carbon::parse($item->rent_return)->format('F j, Y');
-
-
-
             @endphp
             @php
                 $formattedRentTime = \Carbon\Carbon::parse($transaction->rent_time)->format('h:i A');

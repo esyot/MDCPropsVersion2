@@ -57,7 +57,7 @@
                         </span>
                     </div>
                     <div class="flex space-x-2">
-                        <p>Rentee: </p>
+                        <p>Name: </p>
                         <span>
                             {{ $reservation->rentee->name }}
                         </span>
@@ -126,18 +126,19 @@
 
                     @foreach ($properties as $property)
                         @php
-                            $formattedItemRentDate = \Carbon\Carbon::parse($property->date_start)->format('F j, Y');
-                            $formattedItemRentReturnDate = \Carbon\Carbon::parse($property->date_end)->format('F j, Y');
+                            $formattedDateStart = \Carbon\Carbon::parse($property->date_start)->format('F j, Y');
+                            $formattedDateEnd = \Carbon\Carbon::parse($property->date_end)->format('F j, Y');
 
                         @endphp
                         @php
-                            $formattedRentTime = \Carbon\Carbon::parse($reservation->time_start)->format('h:i A');
-                            $formattedRentReturnTime = \Carbon\Carbon::parse($reservation->time_end)->format('h:i A');
+                            $formattedTimeStart= \Carbon\Carbon::parse($property->time_start)->format('h:i A');
+                            $formattedTimeEnd = \Carbon\Carbon::parse($property->time_end)->format('h:i A');
                         @endphp
                         <div class="flex flex-col border border-gray-300 p-2">
                             <p>Request {{$property->qty}} pc/s of <strong>{{ $property->property->name }}</strong>
-                                for this {{$formattedItemRentDate}} {{$formattedRentTime}} to {{$formattedItemRentReturnDate}}
-                                {{$formattedRentReturnTime}}.
+                                for this <strong>{{$formattedDateStart}} {{$formattedTimeStart}} </strong>to 
+                                <strong>{{$formattedDateStart}}
+                                    {{$formattedTimeEnd}}.</strong>
                             </p>
 
                             <div class="flex space-x-2">
@@ -239,7 +240,7 @@
 @endphp
 
 
-@if($rentReturnDate === $dateToday && $property->approvedByCashier_at != null && $property->claimed_at != null  && $property->return_at != null)
+@if($formattedDateEnd === $dateToday && $property->approvedByCashier_at != null && $property->claimed_at != null  && $property->return_at != null)
     <div class="flex items-center space-x-1">
         <span class="text-orange-500">Waiting for return</span>
         <i class="fas fa-hourglass-start text-orange-500"></i>

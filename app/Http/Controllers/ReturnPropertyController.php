@@ -139,16 +139,15 @@ class ReturnPropertyController extends Controller
         ));
     }
 
-    public function searchReservationForReturn(Request $request)
+    public function searchReservationToReturn(Request $request)
     {
         if ($request->search_value == null) {
-            $transactions = Transaction::where('status', 'occupied')->get();
-            return view('admin.partials.items-for-return', compact('transactions'));
-
+            $reservations = null;
         }
 
-        $transactions = Transaction::where('tracking_code', 'LIKE', '%' . $request->search_value . '%')->where('status', 'in progress')->get();
-        return view('admin.partials.items-for-return', compact('transactions'));
+        $reservations = Reservation::where('tracking_code', $request->search_value)->where('status', 'occupied')->get();
+
+        return view('admin.partials.reservation-to-return', compact('reservations'));
 
     }
 

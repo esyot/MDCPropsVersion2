@@ -191,9 +191,9 @@
 
                         <div class="">
                             <div class="flex flex-col">
-                                <label for="quantity" class="text-sm font-medium text-gray-700">Quantity:</label>
+                                <label for="quantity" class="text-sm font-medium text-gray-700">Piece/s:</label>
                                 <input type="number" max="{{ $property->qty }}"
-                                    name="properties[{{ $property->id }}][quantity]"
+                                    name="properties[{{ $property->id }}][quantity]" value='1'
                                     class="p-2 border border-gray-300 rounded" placeholder="Available: {{ $property->qty }}"
                                     required>
                             </div>
@@ -256,8 +256,8 @@
                 <div>
                     <label for="">Reservation Type: </label>
                     <select name="reservation_type" id="" class="block p-2 w-full border border-gray-300 rounded">
-                        <option value="borrow">Borrow</option>
                         <option value="rent">Rent</option>
+                        <option value="borrow">Borrow</option>
                     </select>
                 </div>
                 <div>

@@ -26,7 +26,7 @@
                 placeholder="Input Tracking Code">
         </form>
 
-        <button itype="button" d="camera-btn"
+        <button type="button" id="camera-btn"
             class="px-3 py-2 bg-blue-500 rounded-xl text-blue-100 hover:opacity-50 shadow-md rounded">
             <i class="fas fa-camera fa-lg"></i>
         </button>
@@ -47,9 +47,8 @@
         </div>
     </div>
 </div>
-<section class="container mx-auto p-4">
-    <div id="reservation-to-claim-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
+<section class="p-2">
+    <div id="reservation-to-claim-list" class="grid grid-cols-4">
     </div>
 </section>
 <script>

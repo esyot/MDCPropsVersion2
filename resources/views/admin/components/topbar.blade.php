@@ -166,7 +166,7 @@
                 <div id="messageSection" class="relative  {{$page_title == 'Messages' ? 'hidden' : ''}}"
                     id="inside-messages" title="Messages">
                     <button id="messages-icon" class="flex items-center hover:opacity-50 focus:outline-none">
-                        <i class="fa-solid fa-envelope fa-lg mt-1 text-blue-600"></i>
+                        <i class="fas fa-inbox fa-lg mt-1 text-blue-600"></i>
                         <span id="messageTitle" class="ml-2">Messages</span>
 
                         @if($unreadMessages > 0)

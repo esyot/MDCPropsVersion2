@@ -156,17 +156,22 @@ class CashierController extends Controller
     public function search(Request $request)
     {
         if ($request->search_value == null) {
-            $reservations = Transaction::all();
 
-            $items = ItemsTransaction::whereIn('transaction_id', $reservations->pluck('id'))->get();
-            return view('cashier.partials.reservations', compact('reservations', 'items'));
+            $reservations == null;
+          
+        }else{
+            $reservations = Reservation::where('tracking_code', $request->search_value)
+            ->whereNot('status', 'approved')
+            ->whereNot('status', 'completed')
+            ->whereNot('status', 'declined')
+            ->whereNot('status', 'canceled')
+            ->get();
+            $properties = PropertyReservation::whereIn('reservation_id', $reservations->pluck('id'))->get();
 
         }
 
-        $reservations = Transaction::where('tracking_code', $request->search_value)->get();
-        $items = ItemsTransaction::whereIn('transaction_id', $reservations->pluck('id'))->get();
 
-        return view('cashier.partials.reservations', compact('reservations', 'items'));
+        return view('cashier.partials.reservations', compact('reservations', 'properties'));
     }
 
     public function payment(Request $request)
@@ -203,7 +208,7 @@ class CashierController extends Controller
                 'reservation_id' => $request->reservation_id,
                 'title' => 'Approved Reservation',
                 'description' => ' approved a reservation, waiting to claim now!',
-                'redirect_link' => 'claim-items',
+                'redirect_link' => 'claim-properties',
                 'for' => 'admin|staff',
             ]);
 

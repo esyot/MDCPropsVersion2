@@ -1,12 +1,3 @@
-@if ($setting->daskMode == true)
-
-    <style>
-
-    </style>
-
-@endif
-
-
 
 <style>
     .slider {

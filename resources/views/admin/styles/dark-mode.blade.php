@@ -112,10 +112,14 @@
             background-color: #1d1d1d;
         }
 
-        #items-for-return-header {
+        #reservation-to-return-header {
             background-color: #1d1d1d;
         }
 
+        #reservation-to-claim-header {
+            background-color: #1d1d1d;
+        }
+        
         #messages-dropdown #title {
             color: #fff;
         }
@@ -149,7 +153,10 @@
             background-color: #BBDEFB;
         }
 
-        #items-for-return-header {
+        #reservation-to-claim-header {
+            background-color: #BBDEFB;
+        }
+        #reservation-to-return-header {
             background-color: #BBDEFB;
         }
 
