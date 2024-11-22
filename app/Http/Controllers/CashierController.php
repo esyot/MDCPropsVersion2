@@ -157,15 +157,16 @@ class CashierController extends Controller
     {
         if ($request->search_value == null) {
 
-            $reservations == null;
-          
-        }else{
+            $reservations = null;
+
+        } else {
             $reservations = Reservation::where('tracking_code', $request->search_value)
-            ->whereNot('status', 'approved')
-            ->whereNot('status', 'completed')
-            ->whereNot('status', 'declined')
-            ->whereNot('status', 'canceled')
-            ->get();
+                ->whereNot('status', 'approved')
+                ->whereNot('status', 'completed')
+                ->whereNot('status', 'declined')
+                ->whereNot('status', 'canceled')
+                ->get();
+
             $properties = PropertyReservation::whereIn('reservation_id', $reservations->pluck('id'))->get();
 
         }
