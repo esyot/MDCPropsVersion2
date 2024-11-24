@@ -76,7 +76,7 @@
 
             <!-- Form Title -->
             <h2 class="text-xl font-bold  text-gray-800">Add Reservation on
-                <span class="text-red-500 font-bold">{{ $currentCategory->title }}</span>
+                <span class="text-red-500 font-bold">{{ $currentDate->copy()->day($day)->format('F j, Y ') }}</span>
             </h2>
 
             <button type="button" class="flex justify-end text-gray-500 hover:text-gray-700 text-2xl font-bold"
@@ -185,7 +185,7 @@
             </div>
 
             <!-- Rent Date -->
-            <div>
+            <div class="hidden">
                 <label for="date_start" class="block text-gray-700 font-semibold mb-1">Date Start:</label>
                 <input id="date_start" name="date_start" type="date"
                     value="{{ $currentDate->copy()->day($day)->format('Y-m-d') }}"

@@ -87,6 +87,8 @@
 </head>
 
 <body class="bg-gradient-to-b from-blue-500 to-transparent">
+    @include('admin.partials.success.success-modal')
+    @include('admin.partials.errors.error-modal')
 
     <div class="flex justify-center items-center min-h-screen px-4">
         <div class="w-full max-w-4xl flex flex-col md:flex-row container-height rounded-lg overflow-hidden">
@@ -133,7 +135,7 @@
                                 value="{{old('password') }}" required>
 
                             <i
-                                class="hover:bg-red-800 hover:border-red-800 border border-transparent absolute left-0 top-1/2 transform -translate-y-1/2 bg-red-500 text-white rounded-l-md py-3 px-3 transition-colors duration-300 fas fa-lock"></i>
+                                class="hover:bg-red-800 hover:border-red-800 border border-transparent absolute left-0 top-1/2 transform -translate-y-1/2 bg-red-500 text-white rounded-l-md py-3 px-3 transition-colors duration-300 fas fa-key"></i>
                             <i id="togglePassword"
                                 class="hover:text-gray-500 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 cursor-pointer fas fa-eye-slash"></i>
                         </div>
@@ -144,8 +146,11 @@
                     </div>
 
                     <div class="flex justify-center mt-2">
-                        <h1 class="text-sm">Forgot password? <a href="" class="hover:text-red-800 text-red-500">Reset
-                                Password</a></h1>
+                        <h1 class="text-sm">Forgot password? <button type="button"
+                                onclick="document.getElementById('password-reset-request-form').classList.toggle('hidden')"
+                                class="hover:text-red-800 text-red-500">Request
+                                password reset. </button>
+                        </h1>
                     </div>
                 </form>
             </div>
@@ -162,6 +167,34 @@
             </div>
         </div>
     </div>
+
+
+    <form action="{{route('admin.password-reset-request')}}" method="POST" id="password-reset-request-form"
+        class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
+        @csrf
+        <section class="bg-white rounded w-[400px] shadow-md">
+            <header class=" flex items-center justify-between py-1 bg-blue-500 rounded-t">
+                <h1 class="p-2 text-lg text-white">Request Password Reset</h1>
+                <button onclick="document.getElementById('password-reset-request-form').classList.toggle('hidden')"
+                    class="px-2 text-white text-2xl hover:opacity-50">&times;</button>
+
+            </header>
+            <div class="p-2 border-b">
+                <label for="" class="font-medium">Email:</label>
+                <input type="email" name="email" placeholder="Input email Ex. example@gmail.com"
+                    class="block p-2 border border-gray-300 w-full rounded" required>
+                <small><strong>Note:</strong> Please allow 1-2 business days for processing your password reset request.
+                    Thank you for your patience.</small>
+
+
+            </div>
+
+            <footer class="flex justify-end p-2 bg-gray-100 rounded-b">
+                <button type="submit"
+                    class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">Submit</button>
+            </footer>
+        </section>
+    </form>
 
     <script>
         document.getElementById('togglePassword').addEventListener('click', function () {

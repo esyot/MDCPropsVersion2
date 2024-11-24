@@ -43,7 +43,7 @@
                             hx-get="{{ $date ? route('admin.calendar-day-view', ['date' => $date, 'category_id' => $currentCategory->id]) : '#' }}"
                             hx-target="#calendar-day-view" hx-swap="innerHTML" hx-trigger="click"
                         title="Click to preview reserve properties" @endif
-                            class="relative hover:opacity-50 {{ $setting->transition == true ? 'transition-transform duration-300 ease-in-out transform hover:scale-90' : '' }}  cursor-pointer {{ $hasRecord == true ? 'bg-gray-400 text-white ' : '' }} p-4 flex flex-col items-center justify-center font-semibold overflow-hidden group">
+                            class="relative hover:opacity-50 {{ $setting->transition == true ? 'transition-transform duration-300 ease-in-out transform hover:scale-90' : '' }}  cursor-pointer {{ $hasRecord == true ? 'bg-gray-400 border border-gray-100 text-white ' : '' }} p-4 flex flex-col items-center justify-center font-semibold overflow-hidden group">
 
                             <div class="">
                                 <h1 class="drop-shadow text-4xl font-normal {{ $isSunday ? 'text-red-500' : '' }}">

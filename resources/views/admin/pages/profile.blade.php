@@ -27,7 +27,7 @@
     <div id="isPasswordChangedModal" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50">
         <div class="bg-white p-4 rounded">
             <div class="space-y-2">
-                <h1>Your password needs to be changed first!</h1>
+                <h1>You need to change your password first.</h1>
                 <div class="flex justify-end">
                     <button type="button"
                         onclick="document.getElementById('isPasswordChangedModal').classList.add('hidden')"

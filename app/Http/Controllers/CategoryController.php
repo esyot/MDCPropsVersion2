@@ -49,9 +49,6 @@ class CategoryController extends Controller
 
         $roles = Auth::user()->getRoleNames();
 
-
-
-
         $currentCategory = null;
         $categoriesIsNull = true;
 

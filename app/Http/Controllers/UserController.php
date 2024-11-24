@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItemsTransaction;
+use App\Models\PasswordResetRequest;
 use App\Models\Property;
 use App\Models\PropertyReservation;
 use DB;
@@ -19,6 +20,7 @@ use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
 use Hash;
 use Log;
+use Str;
 
 class UserController extends Controller
 {
@@ -182,6 +184,60 @@ class UserController extends Controller
             return view('admin.partials.users', compact('users'));
         }
 
+    }
+    protected $mailController;
+
+    public function __construct(MailController $mailController)
+    {
+        $this->mailController = $mailController;
+    }
+    public function passwordRequestReset(Request $request, $action, $email)
+    {
+
+        $user = User::where('email', $email)->first();
+
+
+        if ($user) {
+            if ($action == 'edit') {
+                $user->update([
+                    'password' => Hash::make($request->password),
+                ]);
+                PasswordResetRequest::where('email', $email)->update([
+                    'passwordChanged_at' => now(),
+                ]);
+
+            } elseif ($action == 'random') {
+
+                $randomStr = Str::random(4);
+                $date = now()->format('Ymd');
+
+                $password = $date . $randomStr;
+
+                $user->update([
+                    'password' => Hash::make($password),
+                    'isPasswordChanged' => false,
+                ]);
+                PasswordResetRequest::where('email', $email)->update([
+                    'passwordChanged_at' => now(),
+                ]);
+
+                $data = [
+                    'message' => 'Dear ' . $user->name . ', Thank you for your patience. Here is your new password: [' . $password . ']. Kindly ensure that you do not share your password with anyone. Best regards, Admin'
+                ];
+
+
+                $email = $user->email;
+
+                $this->mailController->send($data, $email);
+            }
+
+
+            return redirect()->back()->with('success', 'Password Changed successfully!');
+
+
+        }
+
+        return redirect()->back()->with('error', 'User not found!');
     }
 
 }

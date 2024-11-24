@@ -2,12 +2,19 @@
 
 @section('content')
 <div id="users-header" class="flex justify-between items-center bg-gray-200 p-4 shadow-md z-40">
-    <div>
-        <button type="button" class="px-4 py-2 bg-blue-500 text-blue-100 rounded hover:opacity-50 shadow-md"
+    <div class="space-x-2 flex items-center">
+        <button title="Click to add a new user" type="button"
+            class="text-gray-800 drop-shadow  opacity-50 hover:opacity-100"
             onclick="document.getElementById('userAddModal').classList.remove('hidden')">
             Add User
         </button>
+        <span class="border-l-2 border-gray-400 h-6 mx-2"></span> <!-- Vertical separator line -->
+        <a href="{{ route('admin.password-reset-requests') }}" title="Click to view all pasword reset requests"
+            class="text-gray-800 drop-shadow opacity-50 hover:opacity-100">
+            Password Reset Requests
+        </a>
     </div>
+
     <div class="flex items-center">
         <form hx-get="{{ route('admin.users-search') }}" hx-trigger="input" hx-target="#users" hx-swap="innerHTML"
             class="flex space-x-1 items-center bg-white p-2 rounded-full shadow-md">

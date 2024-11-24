@@ -25,14 +25,6 @@ class ReservationController extends Controller
     {
         $current_user_id = Auth::user()->id;
 
-        $category = Category::all()->first();
-
-        $reservations = PropertyReservation::where('category_id', $category->id)
-            ->where('approvedByAdmin_at', null)
-            ->where('approvedByCashier_at', null)
-            ->where('canceledByRentee_at', null)
-            ->where('declinedByAdmin_at', null)
-            ->get();
 
         $categories = Category::all();
 
@@ -118,13 +110,26 @@ class ReservationController extends Controller
 
 
         }
+
+        $category = Category::all()->first();
+
+
+        $currentCategory = $category;
         if ($currentCategory) {
 
             $currentCategoryId = $currentCategory->id;
             $categoriesIsNull = false;
-        } else {
 
+            $reservations = PropertyReservation::where('category_id', $category->id)
+                ->where('approvedByAdmin_at', null)
+                ->where('approvedByCashier_at', null)
+                ->where('canceledByRentee_at', null)
+                ->where('declinedByAdmin_at', null)
+                ->get();
+        } else {
+            $reservations = null;
             $categoriesIsNull = true;
+
         }
 
         $users = User::whereNot('name', Auth::user()->name)->get();
@@ -459,7 +464,7 @@ class ReservationController extends Controller
 
 
             foreach ($newarray as $entry) {
-                // Insert each property reservation for the current reservation
+
                 PropertyReservation::create([
                     'reservation_id' => $reservationId,
                     'property_id' => $entry['property_id'],
@@ -469,7 +474,8 @@ class ReservationController extends Controller
                     'date_start' => $validatedData['date_start'],
                     'time_start' => $validatedData['time_start'],
                     'date_end' => $validatedData['date_end'],
-                    'time_end' => $validatedData['time_end']
+                    'time_end' => $validatedData['time_end'],
+                    'assigned_personel' => $validatedData['assigned_personel'],
                 ]);
             }
 
@@ -484,12 +490,17 @@ class ReservationController extends Controller
                 'category_id' => $validatedData['category_id'],
                 'description' => ' added a new reservation.',
                 'redirect_link' => 'reservations',
-                'for' => 'admin',
+                'for' => 'superadmin|admin',
                 'isReadBy' => $isReadBy,
             ]);
 
+
             // Return success response
-            return redirect()->back()->with('success', 'A new reservation has been added successfully.');
+            return redirect()->back()->with([
+                'reservation' => $reservation,
+                'success',
+                'A new reservation has been added successfully.'
+            ]);
 
         } catch (\Exception $e) {
             // Handle any errors

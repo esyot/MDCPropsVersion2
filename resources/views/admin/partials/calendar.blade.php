@@ -170,7 +170,7 @@
                                     @endphp
 
                                     <div
-                                        class=" {{ $hasRecord ? 'bg-gray-400 text-white' : '' }} {{ $currentDayInMonth == 'Sunday' ? 'text-red-500' : '' }} text-center ">
+                                        class=" {{ $hasRecord ? 'bg-gray-400 border border-gray-100 text-white' : '' }} {{ $currentDayInMonth == 'Sunday' ? 'text-red-500' : '' }} text-center ">
                                         <span class="relative inline-block">
                                             @if(\Carbon\Carbon::now()->isToday() && \Carbon\Carbon::now()->day == $day && $monthStart->month == \Carbon\Carbon::now()->month && $currentYear == \Carbon\Carbon::now()->format('Y'))
                                                 <i class="fas fa-circle text-green-500 text-[4px] absolute top-5 left-0 right-0 z-50"></i>

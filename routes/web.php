@@ -4,6 +4,8 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\ClaimPropertyController;
 use App\Http\Controllers\ExportPDFController;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\PasswordResetRequestController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\RenteePropertyController;
 use App\Http\Controllers\RenteeReservationController;
@@ -62,6 +64,8 @@ Route::get('/rentee/reservation-cancel/{tracking_code}', [RenteeReservationContr
 // Public Routes
 Route::get('/admin/login', [LoginController::class, 'index'])->name('loginPage');
 Route::post('/admin.login', [AuthController::class, 'login'])->name('login');
+Route::post('/admin/login/password-reset-request', [PasswordResetRequestController::class, 'store'])->name('admin.password-reset-request');
+
 Route::get('test', function () {
     return view('test');
 });
@@ -187,3 +191,11 @@ Route::middleware(['auth', 'role:cashier'])->group(function () {
 });
 
 
+//mailing
+
+Route::get('/admin/user-password-reset/send-email', [MailController::class, 'send'])->name('admin.send-email');
+
+Route::post('/admin/user-password-request-reset/{action}/{email}', [UserController::class, 'passwordRequestReset'])->name('admin.user-password-request-reset');
+
+
+Route::get('/admin/password-reset-requests', [PasswordResetRequestController::class, 'index'])->name('admin.password-reset-requests');

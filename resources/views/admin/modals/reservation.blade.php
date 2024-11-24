@@ -9,7 +9,7 @@
         </div>
         <div class="flex items-center">
             <span class="font-medium">Quantity:</span>
-            <span class="ml-2 text-blue-500">{{ $reservation->qty }} pcs</span>
+            <span class="ml-2 text-blue-500">{{ $reservation->qty }} pc/s</span>
         </div>
         <div class="flex items-center">
             <span class="font-medium">Rentee:</span>
@@ -55,6 +55,13 @@
             <span class="font-medium">Purpose:</span>
             <span class="ml-2 text-blue-500">
                 {{ ucfirst($reservation->reservation->purpose) }}
+            </span>
+
+        </div>
+        <div class="flex items-center mt-1">
+            <span class="font-medium">Assigned Personel:</span>
+            <span class="ml-2 text-blue-500">
+                {{ $reservation->reservation->assigned_personel }}
             </span>
 
         </div>

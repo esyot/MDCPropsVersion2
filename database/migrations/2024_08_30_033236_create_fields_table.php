@@ -159,6 +159,13 @@ return new class extends Migration {
             $table->timestamps();
         });
 
+        Schema::create('password_reset_requests', function (Blueprint $table) {
+            $table->id();
+            $table->string('email')->nullable(false);
+            $table->dateTime('passwordChanged_at')->nullable(true);
+            $table->timestamps();
+        });
+
 
     }
 
