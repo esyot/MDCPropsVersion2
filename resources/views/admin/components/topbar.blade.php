@@ -162,20 +162,37 @@
                 <!-- Messages Icon -->
 
 
+                <script>
+                    function showMessagesLoader() {
+                        document.getElementById('messages-loader').classList.remove('hidden');
+                    }
 
+                    function hideMessagesLoader() {
+                        document.getElementById('messages-loader').classList.add('hidden');
+                    }
+                    document.body.addEventListener('htmx:afterRequest', function () {
+                        hideMessagesLoader();
+
+
+                    });
+                </script>
                 <div id="messageSection" class="relative  {{$page_title == 'Messages' ? 'hidden' : ''}}"
                     id="inside-messages" title="Messages">
-                    <button id="messages-icon" class="flex items-center hover:opacity-50 focus:outline-none">
+                    <button onclick="showMessagesLoader()" hx-get="{{route('admin.contacts-refresh')}}"
+                        hx-swap="innerHTML" hx-target="#messages-dropdown" hx-trigger="click" id="messages-icon"
+                        class="flex items-center hover:opacity-50 focus:outline-none">
                         <i class="fas fa-inbox fa-lg mt-1 text-blue-600"></i>
                         <span id="messageTitle" class="ml-2">Messages</span>
 
-                        @if($unreadMessages > 0)
-                            <span id="notification-count"
-                                class="absolute top-0 left-0 flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full transform -translate-x-1/2 -translate-y-1/2">
-                                {{ $unreadMessages }}
-                            </span>
-                        @endif
+
+                        <span id="message-count"
+                            class="absolute top-0 left-0 flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full transform -translate-x-1/2 -translate-y-1/2">
+                            {{ $unreadMessages }}
+                        </span>
+
                     </button>
+
+
 
                     <style>
                         @media (orientation: landscape) {
@@ -195,68 +212,12 @@
                         }
                     </style>
 
+                    @include('admin.scripts.message-count')
                     <!-- Messages Dropdown Menu -->
+
                     <div id="messages-dropdown"
                         class="rounded mt-2 hidden mx-4 bg-white rounded-b-lg shadow-lg border border-gray-200 z-50">
-
-
-                        <div class="p-2">
-                            <div class="flex justify-between items-center">
-                                <div class="py-2">
-                                    <h1 id="title" class="text-2xl font-bold">Chats</h1>
-                                </div>
-
-
-                                <div class="flex">
-                                    <div title="Options">
-                                        <i
-                                            class="fa-solid fa-ellipsis hover:bg-gray-300 px-[10px] py-[9px] rounded-full"></i>
-                                    </div>
-                                    <div title="See all in messages">
-                                        <a href="{{ route('messages') }}" class=" font-medium  hover:underline py-2">
-
-                                            <i
-                                                class="fas fa-expand-arrows-alt hover:bg-gray-300 px-[10px] py-[9px] rounded-full"></i>
-                                        </a>
-
-                                    </div>
-                                    <div title="New message"
-                                        onclick="document.getElementById('message-new').classList.remove('hidden')">
-                                        <i
-                                            class="fa-solid fa-edit hover:bg-gray-300 px-[10px] py-[9px] rounded-full"></i>
-
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-                            <form hx-get="{{ route('contacts') }}" hx-trigger="input" hx-swap="innerHTML"
-                                hx-target="#contact-list"
-                                class="flex justiify-around px-2 items-center bg-gray-200 rounded-full">
-
-                                <div class="p-2">
-                                    <div class="fas fa-search text-black"></div>
-                                </div>
-
-                                <input type="text" name="searchValue" placeholder="Search contact"
-                                    class="mr-8 focus:outline-none bg-transparent">
-                            </form>
-                        </div>
-                        <div class="p-2 overflow-y-auto custom-scrollbar">
-
-                            <ul id="contact-list" class="list-none">
-                                @include('admin.partials.contact-list')
-                            </ul>
-
-
-
-                        </div>
-                        <div class="flex justify-center bg-gray-200 w-full rounded-b-lg">
-                            <a href="{{ route('messages') }}"
-                                class="text-blue-500 font-medium  hover:underline py-2">See
-                                all in Messages</a>
-                        </div>
+                        @include('admin.partials.messages-dropdown')
 
                     </div>
 

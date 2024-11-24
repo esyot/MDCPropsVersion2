@@ -2,6 +2,7 @@
 @section('content')
 
 <div id="dashboard" class="h-full w-full">
+    @include('admin.partials.errors.error-modal')
     @if (session('reservation') != null)
 
         <script src="{{ asset('asset/dist/qrious.js') }}"></script>

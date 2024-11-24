@@ -192,9 +192,6 @@ class CashierController extends Controller
 
         $propertyIds = $request->input('propertiesInArray');
 
-
-
-
         $propertyReservation = PropertyReservation::where('reservation_id', $request->reservation_id)
             ->whereIn('property_id', $propertyIds)->update([
                     'approvedByCashier_at' => now(),
@@ -250,7 +247,7 @@ class CashierController extends Controller
 
         $setting = Setting::where('user_id', Auth::user()->id)->first();
 
-        $transactions = ItemsTransaction::where('cashier_id', Auth::user()->id)->get();
+        $transactions = PropertyReservation::where('cashier_id', Auth::user()->id)->get();
 
         return view('cashier.pages.transactions', compact('unreadNotifications', 'notifications', 'transactions', 'contacts', 'unreadMessages', 'setting', 'notifications', 'page_title'));
 

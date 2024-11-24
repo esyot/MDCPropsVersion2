@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Message;
 use App\Models\Notification;
 use Auth;
+use DB;
 use Illuminate\Http\Request;
 
 class UpdatesController extends Controller
@@ -32,5 +34,17 @@ class UpdatesController extends Controller
         }
 
         return response()->json($notifications);
+    }
+
+
+    public function messages()
+    {
+
+        $messages = Message::where('receiver_id', Auth::user()->id)
+            ->where('isReadByReceiver', false)
+            ->get();
+
+
+        return response()->json($messages);
     }
 }

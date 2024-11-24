@@ -33,21 +33,21 @@ class RenteeTrackingController extends Controller
     public function track(Request $request)
     {
 
-        $transactions = Transaction::where('tracking_code', $request->search_val)->get();
+        $reservations = Reservation::where('tracking_code', $request->search_val)->get();
 
-        $items = ItemsTransaction::where('transaction_id', $transactions->first()->id)->get();
+        $items = PropertyReservation::where('reservation_id', $reservations->first()->id)->get();
 
-        return view('rentee.partials.transaction-single', compact('transactions', 'items'));
+        return view('rentee.partials.reservation-single', compact('reservations', 'properties'));
 
     }
 
     public function fetch(Request $request)
     {
 
-        $transactions = Transaction::where('tracking_code', $request->search_val)->get();
+        $reservations = Reservation::where('tracking_code', $request->search_val)->get();
 
-        $items = ItemsTransaction::where('transaction_id', $transactions->first()->id)->get();
-        return view('rentee.pages.tracking', compact('transactions', 'items'));
+        $properties = PropertyReservation::where('reservation_id', $reservations->first()->id)->get();
+        return view('rentee.pages.tracking', compact('reservations', 'properties'));
 
     }
 

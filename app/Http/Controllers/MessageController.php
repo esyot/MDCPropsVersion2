@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use DB;
 use Illuminate\Http\Request;
 use App\Models\Message;
@@ -23,13 +22,15 @@ class MessageController extends Controller
 
         $latestMessage = Message::where('receiver_id', $current_user_id)->latest()->first();
 
-        if ($latestMessage) {
-
-            $receiver_name = $latestMessage->sender_name;
+        if ($latestMessage == null) {
+            return redirect()->back()->with('error', 'No conversation was made with this account.');
         }
 
+
         $latestContact = Message::where('receiver_id', Auth::user()->id)->first();
-        $sender_name = $latestContact->sender_id;
+
+        $sender_name = User::where('id', $latestContact->sender_id)->pluck('name')[0];
+
         $receiver_name = $latestContact ? $latestContact->sender_name : null;
 
         $receiver_id = Message::where('receiver_id', $current_user_id)->first();
@@ -39,7 +40,13 @@ class MessageController extends Controller
         $receiver_name = User::where('id', Auth::user()->id)->first()->pluck('name');
 
         $contacts = DB::table('messages')
-            ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
+            ->select(
+                'messages.*',
+                'users.*',
+                'users.name as sender_name',
+                'users.id as sender_id',
+                'messages.created_at as created_at',
+            )
             ->join('users', 'users.id', '=', 'messages.sender_id')
             ->where(function ($query) {
                 $query->where('messages.receiver_id', Auth::user()->id);
@@ -398,7 +405,15 @@ class MessageController extends Controller
         $receiver_name = User::where('id', Auth::user()->id)->first()->pluck('name');
 
         $contacts = DB::table('messages')
-            ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
+            ->select(
+                'messages.*',
+                'users.*',
+                'users.name as sender_name',
+                'users.id as sender_id',
+                'messages.created_at as created_at',
+                'users.isLoggedIn_at as isLoggedIn_at',
+
+            )
             ->join('users', 'users.id', '=', 'messages.sender_id')
             ->where(function ($query) {
                 $query->where('messages.receiver_id', Auth::user()->id);
@@ -566,6 +581,34 @@ class MessageController extends Controller
 
         }
 
+    }
+
+    public function contactsRefresh()
+    {
+
+        $contacts = DB::table('messages')
+            ->select(
+                'messages.*',
+                'users.*',
+                'users.name as sender_name',
+                'users.id as sender_id',
+                'messages.created_at as created_at',
+            )
+            ->join('users', 'users.id', '=', 'messages.sender_id')
+            ->where(function ($query) {
+                $query->where('messages.receiver_id', Auth::user()->id);
+            })
+            ->whereIn('messages.id', function ($query) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from('messages')
+                    ->groupBy('sender_id', 'receiver_id');
+            })
+            ->orderBy('messages.created_at', 'desc') // Order by the most recent message first
+            ->get();
+
+        return view('admin.partials.messages-dropdown', compact(
+            'contacts'
+        ));
     }
 
 

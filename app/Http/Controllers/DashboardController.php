@@ -29,7 +29,13 @@ class DashboardController extends Controller
         $page_title = 'Dashboard';
 
         $contacts = DB::table('messages')
-            ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
+            ->select(
+                'messages.*',
+                'users.*',
+                'users.name as sender_name',
+                'users.id as sender_id',
+                'messages.created_at as created_at',
+            )
             ->join('users', 'users.id', '=', 'messages.sender_id')
             ->where(function ($query) {
                 $query->where('messages.receiver_id', Auth::user()->id);
@@ -39,7 +45,9 @@ class DashboardController extends Controller
                     ->from('messages')
                     ->groupBy('sender_id', 'receiver_id');
             })
+            ->orderBy('messages.created_at', 'desc') // Order by the most recent message first
             ->get();
+
 
 
         $unreadMessages = Message::where('receiver_id', Auth::user()->id)

@@ -39,6 +39,9 @@ Route::get('/', function () {
 
 
 Route::get('/notifications', [UpdatesController::class, 'notifications']);
+Route::get('/messages', [UpdatesController::class, 'messages']);
+
+Route::get('/admin/contacts-refresh', [MessageController::class, 'contactsRefresh'])->name('admin.contacts-refresh');
 
 Route::get('/welcome', [RenteeHomeController::class, 'welcome'])->name('rentee.welcome');
 Route::get('/rentee/properties/{category_id}/{rentee}', [RenteePropertyController::class, 'index'])->name('rentee.properties');

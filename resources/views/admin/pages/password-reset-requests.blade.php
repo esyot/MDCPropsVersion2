@@ -47,7 +47,10 @@
     }
 </style>
 
-<div id="main-content" class="w-full h-[90%] relative p-4 overflow-y-auto custom-scrollbar">
+<div id="main-content" class="w-full h-[90%] relative p-4 ">
+    <header>
+        <h1 class="text-xl font-medium">Password Reset Requests </h1>
+    </header>
     <div class="flex flex-wrap flex-grow gap-2">
 
 
@@ -64,7 +67,7 @@
 
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="overflow-y-auto custom-scrollbar">
                     @foreach ($passwordResetRequests as $request)
                         <tr class="border-t hover:bg-gray-50">
 
