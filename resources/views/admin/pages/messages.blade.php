@@ -54,7 +54,6 @@
 
         </div>
 
-
     </div>
 
     <script>
@@ -104,10 +103,11 @@
             class="flex flex-1 overflow-y-auto flex-col custom-scrollbar h-64 overflow-x-hidden  #555">
             @include('admin.partials.message-bubble')
         </div>
+
+        @include('admin.scripts.messenger-refresh')
+
+
         @if(count($allMessages) > 0)
-            <a href="{{ route('messageBubble', ['receiver_id' => $receiver_id]) }}"
-                hx-get="{{ route('messageBubble', ['receiver_id' => $receiver_id]) }}" hx-swap="innerHTML" hx-trigger=""
-                hx-target="#messages-container"></a>
 
 
             <div class="bg-blue-500">
@@ -144,9 +144,24 @@
 
 
                 <div id="footer-messenger" class="flex space-x-2 p-4">
+                    <div id="message-send"></div>
 
-                    <form id="myForm" action="{{ route('messageSend') }}" method="POST"
-                        class=" flex items-end w-full space-x-4">
+                    <script>
+                        document.body.addEventListener('htmx:afterRequest', function (event) {
+
+                            if (event.target.id === 'myForm') {
+                                document.getElementById('message-text-area').value = '';
+
+                                const elements = document.querySelectorAll('[id*="message-to-reply-"]');
+                                elements.forEach(element => {
+                                    element.classList.add('hidden');
+                                });
+                            }
+                        });
+                    </script>
+
+                    <form id="myForm" hx-post="{{ route('messageSend') }}" hx-target="#message-send" hx-swap="innerHTML"
+                        hx-trigger="submit" class=" flex items-end w-full space-x-4">
 
                         @csrf
 

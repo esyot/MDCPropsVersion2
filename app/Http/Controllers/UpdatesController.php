@@ -47,4 +47,21 @@ class UpdatesController extends Controller
 
         return response()->json($messages);
     }
+
+    public function messenger($sender_id)
+    {
+
+        $messages = Message::where(function ($query) use ($sender_id) {
+            $query->where('receiver_id', Auth::user()->id)
+                ->where('sender_id', $sender_id);
+        })
+            ->orWhere(function ($query) use ($sender_id) {
+                $query->where('receiver_id', $sender_id)
+                    ->where('sender_id', Auth::user()->id);
+            })
+            ->where('isReadByReceiver', false)
+            ->get();
+
+        return response()->json($messages);
+    }
 }

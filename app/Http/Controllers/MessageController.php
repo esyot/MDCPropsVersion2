@@ -343,11 +343,7 @@ class MessageController extends Controller
 
         Message::create($messageData);
 
-        if ($imageFileName) {
-            return back()->with('success', 'File uploaded successfully')->with('path', Storage::url('images/' . $imageFileName));
-        } else {
-            return back()->with('success', 'Message successfully sent!');
-        }
+        return '';
     }
 
 
@@ -411,8 +407,6 @@ class MessageController extends Controller
                 'users.name as sender_name',
                 'users.id as sender_id',
                 'messages.created_at as created_at',
-                'users.isLoggedIn_at as isLoggedIn_at',
-
             )
             ->join('users', 'users.id', '=', 'messages.sender_id')
             ->where(function ($query) {
@@ -423,6 +417,7 @@ class MessageController extends Controller
                     ->from('messages')
                     ->groupBy('sender_id', 'receiver_id');
             })
+            ->orderBy('messages.created_at', 'desc') // Order by the most recent message first
             ->get();
 
         $receiver_id = $contact;
@@ -523,7 +518,8 @@ class MessageController extends Controller
             'page_title',
             'allMessages',
             'sender_name',
-            'receiver_name'
+            'receiver_name',
+            'contact'
         ));
 
 
@@ -611,6 +607,32 @@ class MessageController extends Controller
         ));
     }
 
+    public function messengerContactsRefresh()
+    {
+        $contacts = DB::table('messages')
+            ->select(
+                'messages.*',
+                'users.*',
+                'users.name as sender_name',
+                'users.id as sender_id',
+                'messages.created_at as created_at',
+            )
+            ->join('users', 'users.id', '=', 'messages.sender_id')
+            ->where(function ($query) {
+                $query->where('messages.receiver_id', Auth::user()->id);
+            })
+            ->whereIn('messages.id', function ($query) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from('messages')
+                    ->groupBy('sender_id', 'receiver_id');
+            })
+            ->orderBy('messages.created_at', 'desc') // Order by the most recent message first
+            ->get();
+
+        return view('admin.partials.contact-list', compact(
+            'contacts'
+        ));
+    }
 
 
 }

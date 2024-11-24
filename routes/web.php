@@ -38,10 +38,13 @@ Route::get('/', function () {
 });
 
 
+
 Route::get('/notifications', [UpdatesController::class, 'notifications']);
 Route::get('/messages', [UpdatesController::class, 'messages']);
+Route::get('/messages/{sender_id}', [UpdatesController::class, 'messenger']);
 
 Route::get('/admin/contacts-refresh', [MessageController::class, 'contactsRefresh'])->name('admin.contacts-refresh');
+Route::get('/admin/messenger-contacts-refresh', [MessageController::class, 'messengerContactsRefresh'])->name('admin.messenger-contacts-refresh');
 
 Route::get('/welcome', [RenteeHomeController::class, 'welcome'])->name('rentee.welcome');
 Route::get('/rentee/properties/{category_id}/{rentee}', [RenteePropertyController::class, 'index'])->name('rentee.properties');
@@ -103,7 +106,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/message-send', [MessageController::class, 'messageSend'])->name('messageSend');
     Route::get('/admin/contacts', [MessageController::class, 'contacts'])->name('contacts');
     Route::post('/admin/message-new-send', [MessageController::class, 'messageNewSend'])->name('messageNewSend');
-    Route::get('/admin/message-bubble/{receiver_id}', [MessageController::class, 'messageBubble'])->name('messageBubble');
+    Route::get('/admin/message-bubble/{sender_id}', [MessageController::class, 'messageBubble'])->name('messageBubble');
 
 });
 
