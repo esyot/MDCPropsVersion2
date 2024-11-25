@@ -9,10 +9,10 @@
             </button>
         </header>
 
-        <div class="grid grid-cols-7 bg-white">
+        <div class="grid grid-cols-7 bg-white p-2">
 
             @foreach(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $day)
-                <div class=" font-bold p-4 bg-gray-100 text-3xl text-center {{ $day == 'Sun' ? 'text-red-500' : '' }}">
+                <div class=" font-bold bg-gray-100 text-3xl text-center {{ $day == 'Sun' ? 'text-red-500' : '' }}">
                     {{ $day }}
                 </div>
             @endforeach
@@ -28,43 +28,117 @@
             @endfor
 
             @for ($day = 1; $day <= $currentDate->daysInMonth; $day++)
+
                         @php
+                            // Ensure $reservations is a collection
+                            $reservationsCollection = collect($reservations);
+
+                            // Format the current day to match the date format 'Y-m-d'
                             $currentDay = $currentDate->copy()->day($day)->format('Y-m-d');
+
+                            // Check if there are records for this day in the daysWithRecords array
                             $hasRecord = in_array($currentDay, $daysWithRecords);
-                            $reservedProperty = $reservations->firstWhere(function ($property) use ($currentDay) {
-                                return \Carbon\Carbon::parse($property->date_start)->format('Y-m-d') === $currentDay;
+
+                            // Find the first reserved property for the current day
+                            $reservedProperty = $reservationsCollection->firstWhere(function ($property) use ($currentDay) {
+                                return isset($property->date_start) && \Carbon\Carbon::parse($property->date_start)->format('Y-m-d') === $currentDay;
                             });
+
+                            // Get the formatted date of the reserved property, if any
                             $date = $reservedProperty ? \Carbon\Carbon::parse($reservedProperty->date_start)->format('Y-m-d') : null;
+
+                            // Check if the current day is a Sunday
                             $isSunday = \Carbon\Carbon::parse($currentDay)->dayOfWeek === 0;
-                            $isToday = \Carbon\Carbon::parse($currentDay)->isToday(); 
+
+                            // Check if the current day is today
+                            $isToday = \Carbon\Carbon::parse($currentDay)->isToday();
+
+                            // Filter the reservations to get those that match the current day or fall within a reservation range
+                            $reservedProperties = $reservationsCollection->filter(function ($property) use ($currentDay) {
+                                return isset($property->date_start) && isset($property->date_end) &&
+                                    \Carbon\Carbon::parse($property->date_start)->lte($currentDay) &&
+                                    \Carbon\Carbon::parse($property->date_end)->gte($currentDay);
+                            });
+
+
                         @endphp
 
+
+
                         <button @if($hasRecord)
-                            hx-get="{{ $date ? route('admin.calendar-day-view', ['date' => $date, 'category_id' => $currentCategory->id]) : '#' }}"
-                            hx-target="#calendar-day-view" hx-swap="innerHTML" hx-trigger="click"
+                            hx-get="{{ $hasRecord ? route('admin.calendar-day-view', ['date' => \Carbon\Carbon::parse($currentDate->format('Y-m') . '-' . $day)->format('Y-m-d'), 'category_id' => $currentCategory->id]) : '#' }}"
+                            hx-target="#calendar-day-view-{{$day}}" hx-swap="innerHTML" hx-trigger="click"
                         title="Click to preview reserve properties" @endif
-                            class="relative hover:opacity-50 {{ $setting->transition == true ? 'transition-transform duration-300 ease-in-out transform hover:scale-90' : '' }}  cursor-pointer {{ $hasRecord == true ? 'bg-gray-400 border border-gray-100 text-white ' : '' }} p-4 flex flex-col items-center justify-center font-semibold overflow-hidden group">
+                            class="{{ $hasRecord ? 'border bg-gray-100' : '' }} relative justify-between h-full hover:opacity-50 cursor-pointer flex flex-col items-center justify-center font-semibold overflow-hidden group">
+                            <div class="w-full flex flex-col  relative">
+                                @foreach ($reservedProperties as $index => $property)
+                                                    @php
+                                                        // Pass the date_start (or date_end) to the JavaScript code as a data attribute
+                                                        $dateStart = \Carbon\Carbon::parse($property->date_start)->toIso8601String();
+                                                    @endphp
 
-                            <div class="">
-                                <h1 class="drop-shadow text-4xl font-normal {{ $isSunday ? 'text-red-500' : '' }}">
-                                    {{ $day }}
-                                </h1>
+                                                    <div class="w-full py-[3px]" data-date-start="{{ $dateStart }}" data-index="{{ $index }}">
+                                                        <!-- Your content goes here -->
+                                                    </div>
+                                @endforeach
+
+                                <script>
+                                    // JavaScript function to generate distinct colors from a predefined palette (yellow, blue, green, orange, red)
+                                    function generateColorFromPalette(index) {
+                                        // Define the base color palette (yellow, blue, green, orange, red)
+                                        const colors = [
+                                            { hue: 60, name: 'yellow' },  // Yellow (Hue 60)
+                                            { hue: 200, name: 'blue' },    // Blue (Hue 200)
+                                            { hue: 120, name: 'green' },   // Green (Hue 120)
+                                            { hue: 30, name: 'orange' },  // Orange (Hue 30)
+                                            { hue: 0, name: 'red' },     // Red (Hue 0)
+                                        ];
+
+                                        // Cycle through the colors array based on the index
+                                        const color = colors[index % colors.length];
+
+                                        // Adjust saturation and lightness dynamically
+                                        // You can modify the ranges here to create a wider variety of shades
+                                        const saturation = 60 + (index % 20);  // Adjust saturation to vary between 60% to 80% 
+                                        const lightness = 50 + (index % 30);   // Lightness between 50% and 80%
+
+                                        // Return the color in HSL format, dynamically adjusting saturation and lightness
+                                        return `hsl(${color.hue}, ${saturation}%, ${lightness}%)`;
+                                    }
+
+                                    // Apply the color to each property element
+                                    document.querySelectorAll('[data-date-start]').forEach(function (element) {
+                                        // Get the index from the data attribute
+                                        const index = parseInt(element.getAttribute('data-index'), 10);
+                                        // Generate a color from the palette based on the index
+                                        const color = generateColorFromPalette(index);
+                                        // Apply the dynamically generated color as a background style
+                                        element.style.backgroundColor = color;
+                                    });
+                                </script>
 
 
-                                @if($isToday)
-                                    <i class="fas fa-circle text-green-500 text-[8px] absolute bottom-1 z-50"></i>
-                                @endif
+
                             </div>
+
+                            <h1 class="p-4 drop-shadow text-4xl font-normal {{ $isSunday ? 'text-red-500' : '' }}">
+                                {{ $day }}
+                            </h1>
+
+                            @if($isToday)
+                                <i class="fas fa-circle text-green-500 text-[8px] absolute bottom-1 z-50"></i>
+                            @endif
 
                             @if(!$hasRecord)
                                 <div title="Add a new reservation" onclick="toggleReservationForm({{$day}}, {{$setting->transition}})"
-                                    title="Add Transaction"
-                                    class="absolute inset-0 flex items-center justify-center text-2xl font-bold text-white opacity-0 bg-gray-400 {{ $setting->transition == true ? 'group-hover:opacity-100' : 'hover:opacity-100 transition-opacity duration-300 ease-in-out'}}">
+                                    class="absolute inset-0 flex items-center justify-center text-2xl font-bold text-white opacity-0 bg-gray-400 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ $setting->transition == true ? 'group-hover:opacity-100' : 'hover:opacity-100 transition-opacity duration-300 ease-in-out'}}">
                                     <h1 class="flex justify-center items-center text-4xl">+</h1>
                                 </div>
                             @endif
                         </button>
 
+                        <div id="calendar-day-view-{{$day}}" class="absolute"></div>
                         @include('admin.modals.reservation-add')
             @endfor
 

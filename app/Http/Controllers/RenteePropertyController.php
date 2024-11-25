@@ -38,7 +38,15 @@ class RenteePropertyController extends Controller
         $properties = Property::where('category_id', $category_id)
             ->get();
 
-        return view('rentee.pages.properties', compact('properties', 'category_id', 'rentee', 'cartedProperties'));
+        $page_title = 'Properties';
+
+        return view('rentee.pages.properties', compact(
+            'properties',
+            'category_id',
+            'rentee',
+            'cartedProperties',
+            'page_title'
+        ));
     }
 
 

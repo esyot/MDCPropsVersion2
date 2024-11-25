@@ -14,6 +14,8 @@
 
 <body class="bg-gray-200">
 
+    @include('rentee.partials.errors.error-modal')
+
     <header class="flex items-center p-4 space-x-2 bg-blue-500 shadow-md">
         <a href="{{ route('rentee.back-to-home', ['rentee' => $rentee]) }}" class="hover:opacity-50">
             <i class="fas fa-arrow-circle-left fa-xl text-white"></i>
@@ -73,7 +75,7 @@
                                     class="px-4 py-2 border border-red-300 text-red-500 hover:opacity-50 rounded">
                                     No
                                 </button>
-                                <a href="{{route('rentee.cart-remove-property', ['id' => $property->id, 'rentee' => $rentee])}}"
+                                <a href="{{route('rentee.cart-remove-property', ['id' => $property->id, 'rentee' => $rentee, 'properties' => '[]'])}}"
                                     class="px-4 p-2 bg-red-500 text-red-100 hover:opacity-50 rounded">Yes</a>
 
 

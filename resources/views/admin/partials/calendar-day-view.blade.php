@@ -1,5 +1,6 @@
-<div id="modal-background" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-40">
-    <div id="modal-content"
+<div id="modal-background-{{$date}}"
+    class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-40">
+    <div id="modal-content-{{$date}}"
         class="bg-white mx-2 w-[800px] rounded shadow-md {{$setting->transition == true ? 'animation-open' : '' }}">
         <div class="bg-blue-500 rounded-t py-1">
 
@@ -37,8 +38,10 @@
                 </thead>
                 <tbody>
                     @foreach ($reservations as $reservation)
-                        <tr onclick="document.getElementById('single-preview-background-{{$reservation->id}}').classList.toggle('hidden')"
-                            title="Click to preview reservation" class="cursor-pointer hover:bg-gray-300">
+
+                        <tr onclick="document.getElementById('single-preview-background-{{$date}}-{{$reservation->property->id}}').classList.toggle('hidden')"
+                            title="Click to preview reservation" class="cursor-pointer hover:bg-gray-300 z-50">
+
                             <td class="text-center">{{$reservation->property->name}}</td>
                             <td class="text-center">
                                 {{\Carbon\Carbon::parse($reservation->date_start)->format('F j, Y')}}
@@ -70,8 +73,12 @@
                                 @endif
                             </td>
 
+                            @include('admin.modals.reservation-single-view')    
+
+
                         </tr>
-                        @include('admin.modals.reservation-single-view')
+
+
                     @endforeach
 
                 </tbody>
@@ -88,13 +95,10 @@
     <script>
         function closeCalendarDayView() {
 
-            const modaBackground = document.getElementById('modal-background');
-            const modalContent = document.getElementById('modal-content');
-
-            modalContent.classList.add('animation-close');
+            document.getElementById('modal-content-{{$date}}').classList.add('animation-close');
 
             setTimeout(() => {
-                modaBackground.classList.add('hidden');
+                document.getElementById('modal-background-{{$date}}').classList.add('hidden');
             }, 150);
         }
     </script>
@@ -102,13 +106,11 @@
     <script>
         function closeCalendarDayView() {
 
-            const modaBackground = document.getElementById('modal-background');
-            const modalContent = document.getElementById('modal-content');
+            document.getElementById('modal-content-{{$date}}').classList.remove('animation-close');
 
-            modalContent.classList.remove('animation-close');
+            document.getElementById('modal-background-{{$date}}').classList.add('hidden');
 
-            modaBackground.classList.add('hidden');
-            modalContent.classList.add('hidden');
+            document.getElementById('modal-content-{{$date}}').classList.add('hidden');
 
 
         }

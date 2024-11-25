@@ -11,9 +11,6 @@
     <title>Checkout Dashboard</title>
 </head>
 
-<style>
-    @media(orientation:landscape) {}
-</style>
 
 <body class="bg-gray-100 h-screen">
 
@@ -35,7 +32,7 @@
         <a href="{{ route('rentee.back-to-home', ['rentee' => $rentee]) }}" class="hover:opacity-50">
             <i class="fas fa-arrow-circle-left fa-xl text-white"></i>
         </a>
-        <h1 class="text-xl text-white font-bold">Checkout</h1>
+        <h1 class="text-xl text-white font-bold">{{$page_title}}</h1>
     </header>
 
 
@@ -176,38 +173,41 @@
 
 
             @foreach ($properties as $property)
-                <div class="p-2 m-2 border border-gray-300 bg-white rounded">
 
-
-                    <input type="hidden" name="properties[{{ $property->id }}][property_id]" value="{{ $property->id }}">
-
-                    <div class="">
-                        <div class="flex items-center justify-between">
-                            <img src="{{ asset('storage/images/categories/' . $property->category->folder_name . '/' . $property->img) }}"
-                                alt="{{ $property->name }}"
-                                class="w-16 h-16 object-cover rounded-md border border-gray-300 shadow-md">
-                            <p class="text-gray-800 text-lg font-medium">{{ $property->name }}</p>
-                        </div>
-
-                        <div class="">
-                            <div class="flex flex-col">
-                                <label for="quantity" class="text-sm font-medium text-gray-700">Piece/s:</label>
-                                <input type="number" max="{{ $property->qty }}"
-                                    name="properties[{{ $property->id }}][quantity]" value='1'
-                                    class="p-2 border border-gray-300 rounded" placeholder="Available: {{ $property->qty }}"
-                                    required>
+                        <div
+                            class="w-[200px] flex flex-col p-2 border m-2 bg-white rounded transition-transform duration-300 hover:scale-90">
+                            <div onclick="openCalendar({{ $property->id }})" class="flex justify-between cursor-pointer">
+                                <div>
+                                    <input type="hidden" name="properties[{{ $property->id }}][property_id]"
+                                        value="{{ $property->id }}">
+                                    <img src="{{ asset('storage/images/categories/' . $property->category->folder_name . '/' . $property->img) }}"
+                                        alt="{{ $property->name }}"
+                                        class="w-16 h-16 object-cover rounded-md border border-gray-300 shadow-md">
+                                    <p class="text-gray-800 text-lg font-medium">{{ $property->name }}</p>
+                                </div>
                             </div>
-                            <script>
-                                document.querySelector('input[name="properties[{{ $property->id }}][quantity]"]').addEventListener('input', function () {
-                                    const max = parseInt(this.getAttribute('max'));
-                                    if (this.value > max) {
-                                        this.value = max;
-                                    }
-                                });
-                            </script>
+                            <div>
+
+
+                                <label for="quantity" class="text-sm font-medium text-gray-700">Piece/s:</label>
+                                <input type="number" max="{{ $property->qty }}" name="properties[{{ $property->id }}][quantity]"
+                                    value='1' min="1" class="p-2 border border-gray-300 w-full rounded"
+                                    placeholder="Available: {{ $property->qty }}" required>
+                            </div>
                         </div>
-                    </div>
-                </div>
+
+                        <script>
+                            document.querySelector('input[name="properties[{{ $property->id }}][quantity]"]').addEventListener('input', function () {
+                                const max = parseInt(this.getAttribute('max'));
+                                if (this.value > max) {
+                                    this.value = max;
+                                }
+                            });
+                        </script>
+                        @include('rentee.modals.preview-date', [
+                    $properties
+                ])
+
             @endforeach
         </div>
         <section id="property-details" class="p-4 bg-white m-4 shadow-md rounded-lg">
@@ -230,7 +230,7 @@
 
                 <div>
                     <label for="date_start" class="block text-sm font-medium text-gray-700">Date Start:</label>
-                    <input type="date" value="{{ today()->toDateString() }}" name="date_start"
+                    <input type="date" id="date_start" name="date_start"
                         class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
@@ -248,7 +248,7 @@
 
                 <div>
                     <label for="date_end" class="block text-sm font-medium text-gray-700">Date End:</label>
-                    <input type="date" value="{{ today()->toDateString() }}" name="date_end"
+                    <input type="date" id="date_end" name="date_end"
                         class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
@@ -269,6 +269,34 @@
 
             </div>
         </section>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // Get unavailable date range start and end from PHP variables
+                const unavailableStart = "{{ $unavailableDateRanges['start'] }}";
+                const unavailableEnd = "{{ $unavailableDateRanges['end'] }}";
+
+                const dateStartInput = document.getElementById('date_start');
+                const dateEndInput = document.getElementById('date_end');
+
+                // Check if the elements exist before trying to set their attributes
+                if (dateStartInput && dateEndInput) {
+                    // Set the minimum date for date_start to be the unavailable end date (inclusive)
+                    dateStartInput.setAttribute('min', unavailableEnd);  // Start date cannot be before the unavailable start date
+
+                    // Set the maximum date for date_end to be the unavailable start date (inclusive)
+                    dateEndInput.setAttribute('min', unavailableEnd); // End date cannot be after the unavailable end date
+
+                    // Ensure that the date_end is after the selected date_start
+                    dateStartInput.addEventListener('input', function () {
+                        const startDate = dateStartInput.value;
+                        // Set the minimum date for date_end to be the selected date_start (inclusive)
+                        dateEndInput.setAttribute('min', startDate);
+                    });
+                } else {
+                    console.error("Date input elements not found in the DOM.");
+                }
+            });
+        </script>
 
         <div class="flex fixed right-0 left-0 m-2 bottom-0 items-center justify-center">
             <button type="button" onclick="validateInputs()"
@@ -288,6 +316,125 @@
             document.getElementById('rentee-details').classList.remove('hidden');
             return true;
         }
+    </script>
+
+    <script>
+        (function () {
+            const unavailableDates = {};
+
+            async function fetchUnavailableDates(itemId) {
+                try {
+                    const res = await fetch(`/rentee/property/${itemId}`);
+                    if (res.ok) {
+                        const data = await res.json();
+
+                        unavailableDates[itemId] = data.map(date => convertToLocalDate(date));
+                    } else {
+                        unavailableDates[itemId] = [];
+                    }
+                } catch (err) {
+                    unavailableDates[itemId] = [];
+                }
+                updateCalendar(itemId);
+            }
+            function convertToLocalDate(dateStr) {
+                const date = new Date(dateStr);
+                const localYear = date.getFullYear();
+                const localMonth = String(date.getMonth() + 1).padStart(2, '0');
+                const localDay = String(date.getDate()).padStart(2, '0');
+                return `${localYear}-${localMonth}-${localDay}`;
+            }
+
+
+            function openCalendar(itemId) {
+                fetchUnavailableDates(itemId);
+                document.getElementById(`date-${itemId}`).classList.remove('hidden');
+            }
+
+
+            function changeMonth(itemId, dir) {
+                const monthInput = document.getElementById(`month-input-${itemId}`);
+                const date = new Date(monthInput.value + '-01');
+
+                if (dir === 'right') date.setMonth(date.getMonth() + 1);
+                if (dir === 'left') date.setMonth(date.getMonth() - 1);
+                if (dir === 'today') date.setFullYear(new Date().getFullYear(), new Date().getMonth());
+
+                monthInput.value = date.toISOString().slice(0, 7);
+                updateCalendar(itemId);
+            }
+
+
+            function getLocalDate() {
+                const today = new Date();
+                const localYear = today.getFullYear();
+                const localMonth = String(today.getMonth() + 1).padStart(2, '0');
+                const localDay = String(today.getDate()).padStart(2, '0');
+                return `${localYear}-${localMonth}-${localDay}`;
+            }
+
+
+            function updateCalendar(itemId) {
+                const [y, m] = document.getElementById(`month-input-${itemId}`).value.split('-').map(Number);
+                const daysInMonth = new Date(y, m, 0).getDate();
+                const calendarContainer = document.getElementById(`calendar-${itemId}`);
+                const unavailableDays = new Set((unavailableDates[itemId] || []));
+
+                const todayString = getLocalDate();
+
+                calendarContainer.innerHTML = '';
+
+                Array.from({ length: new Date(y, m - 1).getDay() }).forEach(() => calendarContainer.appendChild(document.createElement('div')));
+
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const currentDay = new Date(y, m - 1, day);
+                    const localDayString = getLocalDateFromDate(currentDay);
+
+                    const dayDiv = document.createElement('div');
+                    dayDiv.innerText = day;
+                    dayDiv.className = 'flex justify-center shadow-md items-center h-10 w-10 bg-white rounded border relative';
+
+
+                    if (currentDay.getDay() === 0) dayDiv.classList.add('text-red-500');
+
+
+                    if (localDayString === todayString) {
+                        dayDiv.classList.add();
+
+
+                        const circle = document.createElement('i');
+                        circle.className = 'fas fa-circle text-green-500 text-[5px] absolute bottom-1 z-50 left-1/2 transform -translate-x-1/2';
+                        dayDiv.appendChild(circle);
+                    }
+
+
+                    if (unavailableDays.has(localDayString)) {
+                        dayDiv.classList.add('bg-gray-300', 'text-gray-400');
+                        dayDiv.style.pointerEvents = 'none';
+                    }
+
+                    calendarContainer.appendChild(dayDiv);
+                }
+            }
+
+            function getLocalDateFromDate(date) {
+                const localYear = date.getFullYear();
+                const localMonth = String(date.getMonth() + 1).padStart(2, '0');
+                const localDay = String(date.getDate()).padStart(2, '0');
+                return `${localYear}-${localMonth}-${localDay}`;
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                @foreach($properties as $property)
+                    updateCalendar('{{$property->id}}');
+                @endforeach
+            });
+
+            window.openCalendar = openCalendar;
+            window.changeMonth = changeMonth;
+        })();
+
     </script>
 </body>
 

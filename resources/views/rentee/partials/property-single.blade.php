@@ -21,7 +21,7 @@
 @if(count($properties) > 0)
     @foreach($properties as $property)
         <div onclick="openCalendar({{ $property->id }})"
-            class="flex flex-col justify-between h-full transition-transform ease-in-out duration-300 hover:scale-90 hover:opacity-50 cursor-pointer">
+            class="flex flex-col cursor-pointer justify-between h-full transition-transform ease-in-out duration-300 hover:scale-90 hover:opacity-50 cursor-pointer">
             <div class="shadow-lg rounded-lg overflow-hidden relative">
                 <div class="w-full h-0 pt-[50%] relative">
                     <img src="{{ asset('storage/images/categories/' . $property->category->folder_name . '/' . $property->img) }}"

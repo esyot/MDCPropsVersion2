@@ -12,14 +12,14 @@
                 value="{{ now()->format('Y-m') }}" onchange="updateCalendar('{{$property->id}}')">
 
             <div class="flex items-center space-x-2">
-                <button onclick="changeMonth('{{$property->id}}', 'today')"
+                <button type="button" onclick="changeMonth('{{$property->id}}', 'today')"
                     class="px-4 py-2 bg-teal-500 text-teal-100 rounded hover:opacity-50">
                     <span>Today</span>
                 </button>
-                <button onclick="changeMonth('{{$property->id}}', 'left')" class="hover:opacity-50">
+                <button type="button" onclick="changeMonth('{{$property->id}}', 'left')" class="hover:opacity-50">
                     <i class="fas fa-chevron-circle-left text-blue-500 fa-2xl"></i>
                 </button>
-                <button onclick="changeMonth('{{$property->id}}', 'right')" class="hover:opacity-50">
+                <button type="button" onclick="changeMonth('{{$property->id}}', 'right')" class="hover:opacity-50">
                     <i class="fas fa-chevron-circle-right text-blue-500 fa-2xl"></i>
                 </button>
 
@@ -47,10 +47,24 @@
         </div>
 
         <div class="flex justify-end py-2 space-x-1">
-            <button onclick="document.getElementById('date-{{$property->id}}').classList.add('hidden')"
+            <button type="button" onclick="document.getElementById('date-{{$property->id}}').classList.add('hidden')"
                 class="px-4 py-2 border border-gray-300 text-gray-800 hover:opacity-50 rounded">Close</button>
-            <a href="{{ route('rentee.add-to-cart', ['rentee' => $rentee, 'property' => $property->id]) }}"
-                class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">Add to cart</a>
+
+            @if ($page_title != 'Checkout')
+
+
+                <a href="{{ route('rentee.add-to-cart', ['rentee' => $rentee, 'property' => $property->id]) }}"
+                    class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">Add to cart</a>
+            @else
+
+
+                        <a href="{{ route('rentee.cart-remove-property', [
+                    'rentee' => $rentee,
+                    'id' => $property->id,
+                    'properties' => urlencode(json_encode($properties))
+                ]) }}" class="px-4 py-2 bg-red-500 text-red-100 hover:opacity-50 rounded">Remove from cart</a>
+
+            @endif
 
         </div>
     </div>

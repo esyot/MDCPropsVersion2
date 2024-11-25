@@ -135,8 +135,9 @@
             <button type="button"
                 class="px-4 py-2 space-x-1 hover:opacity-50 flex items-center border border-gray-300 rounded"
                 onclick="insertProperty({{$day}})">
-                <h1>Add property</h1>
                 <i class="fas fa-plus"></i>
+                <h1>Add property</h1>
+
             </button>
         </div>
         <div>
@@ -259,12 +260,18 @@
                 Close
             </button>
 
-            <button type="submit" class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 shadow-md rounded">
+            <button id="submit-btn-{{$day}}" type="submit"
+                class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 shadow-md rounded">
                 Submit
             </button>
         </div>
     </form>
-
+    <script>
+        document.getElementById('reservation-form-{{$day}}').addEventListener('submit', function (event) {
+            document.getElementById('submit-btn-{{$day}}').disabled = true;
+            document.getElementById('submit-btn-{{$day}}').innerText = 'Submitting';
+        });
+    </script>
 
 </div>
 
@@ -280,7 +287,6 @@
         </div>
     </div>
 @endif
-
 
 @if($setting->transition == true)
     <script>

@@ -1,10 +1,10 @@
-<div id="single-preview-background-{{$reservation->id}}"
-    class="bg-gray-800 bg-opacity-50 fixed inset-0 flex items-center justify-center z-50 hidden">
-    <div id="single-preview-content-{{$reservation->id}}"
+<div id="single-preview-background-{{$date}}-{{$reservation->property->id}}"
+    class="bg-gray-800 bg-opacity-50 fixed inset-0 flex items-center justify-center hidden z-50 ">
+    <div id="single-preview-content-{{$date}}-{{$reservation->property->id}}"
         class="bg-white rounded-lg shadow-lg w-[35rem] max-w-full {{$setting->transition == true ? 'animation-open' : ''}} relative overflow-hidden">
         <!-- Close Button -->
         <button class="absolute top-2 text-4xl font-bold right-4 text-gray-500 hover:text-gray-700"
-            onclick="closeReservationSingleModal({{$reservation->id}})">&times;</button>
+            onclick="closeReservationSingleModal('{{$date}}-{{$reservation->property->id}}')">&times;</button>
 
         <!-- Modal Content -->
         <div class="flex flex-col">
@@ -86,19 +86,17 @@
 </div>
 
 <script>
-    function closeReservationSingleModal(id) {
-        const modalBackground = document.getElementById('single-preview-background-' + id);
-        const modalContent = document.getElementById('single-preview-content-' + id);
+    function closeReservationSingleModal(Id) {
 
         if (@json($setting->transition)) {
-            modalContent.classList.add('animation-close');
+            document.getElementById('single-preview-content-' + Id).classList.add('animation-close');
             setTimeout(() => {
-                modalBackground.classList.add('hidden');
-                modalContent.classList.remove('animation-close');
+                document.getElementById('single-preview-background-' + Id).classList.add('hidden');
+                document.getElementById('single-preview-content-' + Id).classList.remove('animation-close');
             }, 150);
         } else {
-            modalContent.classList.remove('animation-close');
-            modalBackground.classList.add('hidden');
+            document.getElementById('single-preview-content-' + Id).classList.remove('animation-close');
+            document.getElementById('single-preview-background-' + Id).classList.add('hidden');
         }
     }
 </script>

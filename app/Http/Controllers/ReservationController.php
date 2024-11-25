@@ -391,6 +391,8 @@ class ReservationController extends Controller
     }
     public function create(Request $request)
     {
+        sleep(3);
+
         $ids = str_split($request->propertiesId);
 
         $allInputs = $request->all();

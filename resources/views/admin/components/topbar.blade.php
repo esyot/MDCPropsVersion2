@@ -216,7 +216,7 @@
                     <!-- Messages Dropdown Menu -->
 
                     <div id="messages-dropdown"
-                        class="rounded mt-2 hidden mx-4 bg-white rounded-b-lg shadow-lg border border-gray-200 z-50">
+                        class="rounded mt-2 hidden mx-4 w-[300px] bg-white rounded-b-lg shadow-lg border border-gray-200 z-50">
                         @include('admin.partials.messages-dropdown')
 
                     </div>

@@ -17,19 +17,23 @@ class UpdatesController extends Controller
         if ($role->contains('superadmin')) {
             $notifications = Notification::whereIN('for', ['superadmin', 'superadmin|admin', 'all'])
                 ->whereJsonDoesntContain('isReadBy', Auth::user()->id)
+                ->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
                 ->get();
         } elseif ($role->contains('admin')) {
             $notifications = Notification::whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])
                 ->whereJsonDoesntContain('isReadBy', Auth::user()->id)
+                ->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
                 ->get();
         } elseif ($role->contains('staff')) {
             $notifications = Notification::whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])
                 ->whereJsonDoesntContain('isReadBy', Auth::user()->id)
+                ->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
                 ->get();
 
         } elseif ($role->contains('cashier')) {
             $notifications = Notification::whereIn('for', ['cashier', 'staff|cashier', 'all'])
                 ->whereJsonDoesntContain('isReadBy', Auth::user()->id)
+                ->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
                 ->get();
         }
 

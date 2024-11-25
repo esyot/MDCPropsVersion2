@@ -42,8 +42,6 @@
 </style>
 @include('admin.partials.success.success-modal')
 @include('admin.partials.errors.error-modal')
-<div id="calendar-day-view">
-</div>
 
 <form id="filter-form" hx-get="{{ route('admin.date-custom')}}" hx-target="#dashboard" hx-swap="innerHTML"
     hx-trigger="change" class="select-none shadow-md">
@@ -115,8 +113,6 @@
 <div id="calendar-month" class="hidden w-full h-full overflow-hidden">
 
 </div>
-
-
 @php
     // Assuming $currentDate is a Carbon instance or a date string
     $currentDate = \Carbon\Carbon::parse($currentDate);
@@ -132,7 +128,6 @@
                     $monthStart = \Carbon\Carbon::createFromDate($currentYear, $month, 1);
                     $daysInMonth = $monthStart->daysInMonth;
                     $firstDayOfWeek = $monthStart->dayOfWeek;
-
                 @endphp
 
                 <div id="calendar-months" title="Click to select month"
@@ -148,7 +143,7 @@
                     <div id="calendar-month-header" class="grid grid-cols-7 text-center bg-gray-100">
                         {{-- Days of the week header --}}
                         @foreach(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $day)
-                            <div class=" font-bold text-center {{ $day == 'Sun' ? 'text-red-500' : '' }}">
+                            <div class="font-bold text-center {{ $day == 'Sun' ? 'text-red-500' : '' }}">
                                 {{ $day }}
                             </div>
                         @endforeach
@@ -160,37 +155,33 @@
                             <div class=""></div>
                         @endfor
 
-
                         @for ($day = 1; $day <= $daysInMonth; $day++)
                                     @php
                                         $date = \Carbon\Carbon::createFromDate($currentYear, $month, $day);
                                         $currentDay = $date->format('Y-m-d');
                                         $currentDayInMonth = $date->format('l');
-                                        $hasRecord = in_array($currentDay, $daysWithRecords); 
+                                        $hasRecord = in_array($currentDay, $daysWithRecords); // Check if the day is within the range
                                     @endphp
 
                                     <div
-                                        class=" {{ $hasRecord ? 'bg-gray-400 border border-gray-100 text-white' : '' }} {{ $currentDayInMonth == 'Sunday' ? 'text-red-500' : '' }} text-center ">
+                                        class="{{ $hasRecord ? 'bg-teal-500 border border-gray-100 text-white' : '' }} 
+                                                                                                                                                                                                                                                                                                                                                 {{ $currentDayInMonth == 'Sunday' ? 'text-red-500' : '' }} text-center">
                                         <span class="relative inline-block">
                                             @if(\Carbon\Carbon::now()->isToday() && \Carbon\Carbon::now()->day == $day && $monthStart->month == \Carbon\Carbon::now()->month && $currentYear == \Carbon\Carbon::now()->format('Y'))
                                                 <i class="fas fa-circle text-green-500 text-[4px] absolute top-5 left-0 right-0 z-50"></i>
                                             @endif
-                                            <span>{{$day}}</span>
+                                            <span>{{ $day }}</span>
                                         </span>
-
                                     </div>
-
-
                         @endfor
 
-
+                        {{-- Render empty days at the end of the month --}}
                         @for ($i = $monthStart->addDays($daysInMonth)->dayOfWeek; $i < 7; $i++)
                             <div class=""></div>
                         @endfor
                     </div>
                 </div>
         @endforeach
-
     </div>
 </div>
 

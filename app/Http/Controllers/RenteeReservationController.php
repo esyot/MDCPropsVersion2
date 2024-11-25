@@ -120,7 +120,7 @@ class RenteeReservationController extends Controller
             'canceled_at' => now()
         ]);
 
-        PropertyReservation::where('transaction_id', $reservation->id)->update([
+        PropertyReservation::where('reservation_id', $reservation->id)->update([
             'canceledByRentee_at' => now()
         ]);
 

@@ -58,7 +58,7 @@ Route::get('/rentee/cancel-order/{rentee}', [RenteeController::class, 'cancelOrd
 Route::get('/rentee/add-to-cart/{rentee}/{property}', [RenteeCartController::class, 'addToCart'])->name('rentee.add-to-cart');
 Route::get('/rentee/back-to-home/{rentee}', [RenteeHomeController::class, 'home'])->name('rentee.back-to-home');
 Route::get('/rentee/checkout/{rentee}', [RenteeCartController::class, 'checkout'])->name('checkout');
-Route::get('/rentee/remove-item-in-cart/{id}/{rentee}', [RenteeCartController::class, 'removeItemInCart'])->name('rentee.cart-remove-property');
+Route::get('/rentee/remove-property-from-cart/{id}/{rentee}/{properties}', [RenteeCartController::class, 'removePropertyFromCart'])->name('rentee.cart-remove-property');
 Route::post('/rentee/create-transaction/{rentee}', [RenteeReservationController::class, 'reservationAdd'])->name('rentee.reservation-add');
 Route::get('/rentee/track-transaction', [RenteeTrackingController::class, 'track'])->name('transactionTrack');
 Route::get('/rentee/tracking-page', [RenteeTrackingController::class, 'index'])->name('tracking');

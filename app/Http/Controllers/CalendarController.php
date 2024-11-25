@@ -23,7 +23,20 @@ class CalendarController extends Controller
         $daysWithRecords = PropertyReservation::where('category_id', $category)
             ->whereYear('date_start', $currentDate->format('Y'))
             ->get()
-            ->map(fn($reservation) => Carbon::parse($reservation->date_start)->format('Y-m-d'))
+            ->flatMap(function ($reservation) {
+                // Create Carbon instances for the start and end dates
+                $startDate = Carbon::parse($reservation->date_start);
+                $endDate = Carbon::parse($reservation->date_end);
+
+                // Collect all dates between startDate and endDate (inclusive)
+                $dates = [];
+                while ($startDate->lte($endDate)) {
+                    $dates[] = $startDate->format('Y-m-d');
+                    $startDate->addDay(); // Move to the next day
+                }
+
+                return $dates;
+            })
             ->unique()
             ->values()
             ->toArray();
@@ -58,7 +71,11 @@ class CalendarController extends Controller
         $currentDate = Carbon::parse($date)->format('F j, Y');
 
         $reservations = PropertyReservation::where('category_id', $category_id)
-            ->where('date_start', $date)
+            ->where(function ($query) use ($date) {
+                // Check if the selected date is between date_start and date_end (inclusive)
+                $query->whereDate('date_start', '<=', $date)
+                    ->whereDate('date_end', '>=', $date);
+            })
             ->get();
 
         $setting = Setting::where('user_id', Auth::user()->id)->first();
