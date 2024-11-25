@@ -244,7 +244,7 @@
                     <!-- User Dropdown Menu -->
                     <div id="user-dropdown" class="flex absolute right-0 hidden z-50 justify-center items-center z-50">
 
-                        <div id="user-dropdown-content" class="w-[150px] rounded-lg shadow-xl border border-gray-300">
+                        <div id="user-dropdown-content" class="w-[200px] rounded-lg shadow-xl border border-gray-300">
                             <div class="flex flex-col space-y-2">
                                 <a href="{{ route('profile') }}" title="{{Auth::user()->name}}">
 

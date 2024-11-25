@@ -137,6 +137,8 @@ class MessageController extends Controller
         }
         $users = User::all();
 
+        $contact = $latestContact->id;
+
         return view(
             'admin.pages.messages',
             compact(
@@ -152,7 +154,8 @@ class MessageController extends Controller
                 'currentCategory',
                 'sender_name',
                 'allMessages',
-                'unreadMessages'
+                'unreadMessages',
+                'contact'
             )
         );
     }

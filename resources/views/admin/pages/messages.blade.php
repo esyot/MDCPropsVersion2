@@ -12,7 +12,7 @@
     @media(orientation:landscape) {
 
         #chats {
-            display: block;
+            display: block;  
         }
 
 
@@ -20,10 +20,9 @@
 </style>
 <!-- Main Content -->
 
-
 <div id="contacts" class="main-content flex flex-1 overflow-x-hidden transition-all duration-300 ease-in-out">
 
-    <div id="chats" class="flex w-[500px] p-2 items-center  overflow-x-hidden flex-col shadow ">
+    <div id="chats" class="flex  p-2 items-center  flex-col shadow ">
 
         <div id="title" class="mt-2 text-2xl font-bold">
             <h1>Chats</h1>
@@ -65,6 +64,7 @@
                 chats.style.display = 'none';
             } else {
                 chats.style.display = 'block';
+               
             }
 
             document.getElementById('openContactContainerBtn').classList.toggle('fa-chevron-left');

@@ -9,12 +9,16 @@
 
     <a href="{{ route('chatSelected', ['contact' => $contact->sender_id]) }}" class="flex w-full">
         <li
-            class="{{ $contact->isReadByReceiver == false && $isReceiver ? 'font-bold bg-gray-300 text-black' : '' }} hover:bg-gray-200 p-2 rounded-lg cursor-pointer duration-300">
+            class="{{ $contact->isReadByReceiver == false && $isReceiver ? 'font-bold bg-gray-300 text-black' : '' }} hover:bg-gray-200 p-2 rounded-lg cursor-pointer duration-300 w-full">
             <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 rounded-full">
-                    <img src="{{ asset('asset/photos/user.png') }}" alt="Profile Icon" class="w-full h-full object-cover">
+                <div class="">
+                    <img src="{{ asset('asset/photos/user.png') }}" alt="Profile Icon" class="w-10 m-2 h-10 object-cover">
                 </div>
-                <div>
+<div class="flex items-center justify-between w-full">
+                <div> 
+                 
+
+                    
                     <h1 class="font-medium text-lg">
                         {{ $isSender ? 'You' : $contact->sender_name }}
                     </h1>
@@ -28,6 +32,8 @@
                             {{ $contact->sender_name }}: {{ $contact->content }}
                         @endif
                     </h1>
+               
+                    
                     <small class="text-red-500">{{ \Carbon\Carbon::parse($contact->created_at)->diffForHumans() }}</small>
                 </div>
 
@@ -36,6 +42,7 @@
                     </div>
                 @endif
             </div>
+        </div>
         </li>
     </a>
 @endforeach
