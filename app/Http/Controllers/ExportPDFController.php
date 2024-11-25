@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Property;
 use App\Models\Item;
-use App\Models\ItemsTransaction;
+use App\Models\PropertyReservation;
 use App\Models\Rentee;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -47,29 +48,29 @@ class ExportPDFController extends Controller
 
         $usersCount = User::all()->count();
         $renteesCount = Rentee::all()->count();
-        $itemsCount = Item::all()->count();
+        $propertiesCount = Property::all()->count();
         $categoriesCount = Category::all()->count();
         $adminsCount = User::role('admin')->count();
         $superadminsCount = User::role('superadmin')->count();
         $cashiersCount = User::role('cashier')->count();
         $staffsCount = User::role('staff')->count();
 
-        $itemsCanceledCount = ItemsTransaction::whereNotNull('canceledByRentee_at')
+        $properttiesCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
             ->whereYear('canceledByRentee_at', $currentYear)
             ->count();
 
-        $itemsDeclinedCount = ItemsTransaction::whereNotNull('declinedByAdmin_at')
+        $properttiesDeclinedCount = PropertyReservation::whereNotNull('declinedByAdmin_at')
             ->whereYear('declinedByAdmin_at', $currentYear)
             ->count();
 
-        $itemsCompletedCount = ItemsTransaction::whereNotNull('returned_at')
+        $properttiesCompletedCount = PropertyReservation::whereNotNull('returned_at')
             ->whereYear('returned_at', $currentYear)
             ->count();
 
         $pdfData = [
             'usersCount' => $usersCount,
             'renteesCount' => $renteesCount,
-            'itemsCount' => $itemsCount,
+            'propertiesCount' => $propertiesCount,
             'categoriesCount' => $categoriesCount,
             'adminsCount' => $adminsCount,
             'superadminsCount' => $superadminsCount,
@@ -78,9 +79,9 @@ class ExportPDFController extends Controller
             'barChartImage' => $barChartFilename,
             'pieChartImage' => $pieChartFilename,
             'currentYear' => $currentYear,
-            'itemsCanceledCount' => $itemsCanceledCount,
-            'itemsDeclinedCount' => $itemsDeclinedCount,
-            'itemsCompletedCount' => $itemsCompletedCount,
+            'properttiesCanceledCount' => $properttiesCanceledCount,
+            'properttiesDeclinedCount' => $properttiesDeclinedCount,
+            'properttiesCompletedCount' => $properttiesCompletedCount,
         ];
 
         $pdf = PDF::loadView('admin.exports.analytics-pdf', $pdfData);
