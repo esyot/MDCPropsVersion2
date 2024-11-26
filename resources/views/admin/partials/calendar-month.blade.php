@@ -72,47 +72,42 @@
                             class="{{ $hasRecord ? 'border bg-gray-100' : '' }} relative justify-between h-full hover:opacity-50 cursor-pointer flex flex-col items-center justify-center font-semibold overflow-hidden group">
                             <div class="w-full flex flex-col  relative">
                                 @foreach ($reservedProperties as $index => $property)
-                                                    @php
-                                                        // Pass the date_start (or date_end) to the JavaScript code as a data attribute
-                                                        $dateStart = \Carbon\Carbon::parse($property->date_start)->toIso8601String();
-                                                    @endphp
+                                                @php
 
-                                                    <div class="w-full py-[3px]" data-date-start="{{ $dateStart }}" data-index="{{ $index }}">
-                                                        <!-- Your content goes here -->
-                                                    </div>
+                                                    $dateStart = \Carbon\Carbon::parse($property->date_start)->toIso8601String();
+                                                @endphp
+
+                                                <div class="w-full py-[3px]" data-date-start="{{ $dateStart }}" data-index="{{ $index }}">
+
+                                                </div>
                                 @endforeach
 
                                 <script>
-                                    // JavaScript function to generate distinct colors from a predefined palette (yellow, blue, green, orange, red)
                                     function generateColorFromPalette(index) {
-                                        // Define the base color palette (yellow, blue, green, orange, red)
                                         const colors = [
-                                            { hue: 60, name: 'yellow' },  // Yellow (Hue 60)
-                                            { hue: 200, name: 'blue' },    // Blue (Hue 200)
-                                            { hue: 120, name: 'green' },   // Green (Hue 120)
-                                            { hue: 30, name: 'orange' },  // Orange (Hue 30)
-                                            { hue: 0, name: 'red' },     // Red (Hue 0)
+                                            { hue: 60, name: 'yellow' },
+                                            { hue: 200, name: 'blue' },
+                                            { hue: 120, name: 'green' },
+                                            { hue: 30, name: 'orange' },
+                                            { hue: 0, name: 'red' },
                                         ];
 
-                                        // Cycle through the colors array based on the index
                                         const color = colors[index % colors.length];
 
-                                        // Adjust saturation and lightness dynamically
-                                        // You can modify the ranges here to create a wider variety of shades
-                                        const saturation = 60 + (index % 20);  // Adjust saturation to vary between 60% to 80% 
-                                        const lightness = 50 + (index % 30);   // Lightness between 50% and 80%
+                                        const saturation = 60 + (index % 20);
+                                        const lightness = 50 + (index % 30);
 
-                                        // Return the color in HSL format, dynamically adjusting saturation and lightness
+
                                         return `hsl(${color.hue}, ${saturation}%, ${lightness}%)`;
                                     }
 
-                                    // Apply the color to each property element
+
                                     document.querySelectorAll('[data-date-start]').forEach(function (element) {
-                                        // Get the index from the data attribute
+
                                         const index = parseInt(element.getAttribute('data-index'), 10);
-                                        // Generate a color from the palette based on the index
+
                                         const color = generateColorFromPalette(index);
-                                        // Apply the dynamically generated color as a background style
+
                                         element.style.backgroundColor = color;
                                     });
                                 </script>
@@ -126,13 +121,13 @@
                             </h1>
 
                             @if($isToday)
-                                <i class="fas fa-circle text-green-500 text-[8px] absolute bottom-1 z-50"></i>
+                                <i class="fas fa-circle text-green-500 text-[8px] absolute bottom-1"></i>
                             @endif
 
                             @if(!$hasRecord)
                                 <div title="Add a new reservation" onclick="toggleReservationForm({{$day}}, {{$setting->transition}})"
                                     class="absolute inset-0 flex items-center justify-center text-2xl font-bold text-white opacity-0 bg-gray-400 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ $setting->transition == true ? 'group-hover:opacity-100' : 'hover:opacity-100 transition-opacity duration-300 ease-in-out'}}">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ $setting->transition == true ? 'group-hover:opacity-100' : 'hover:opacity-100 transition-opacity duration-300 ease-in-out'}}">
                                     <h1 class="flex justify-center items-center text-4xl">+</h1>
                                 </div>
                             @endif

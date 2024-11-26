@@ -1,4 +1,5 @@
-<form id="category-add-form" method="POST" action="{{ route('admin.category-add') }}" enctype="multipart/form-data">
+<form id="category-add-form" method="POST" onsubmit="disableBtn()" action="{{ route('admin.category-add') }}"
+    enctype="multipart/form-data">
     @csrf
     <div id="category-add-modal"
         class="fixed flex inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
@@ -21,8 +22,6 @@
                             format.</i>
                     </small>
                 </div>
-
-
 
                 <div class="mt-2">
                     <label for="title">Title:</label>
@@ -51,7 +50,8 @@
                     Close
                 </button>
 
-                <button type="submit" class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 shadow-md rounded">
+                <button id="submit-btn" type="submit"
+                    class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 shadow-md rounded">
                     Add
                 </button>
             </div>
@@ -59,3 +59,9 @@
         </div>
     </div>
 </form>
+<script>
+    document.getElementById('category-add-form').addEventListener('submit', function (event) {
+        document.getElementById('submit-btn').disabled = true;
+        document.getElementById('submit-btn').innerText = 'Submitting';
+    });
+</script>

@@ -1,8 +1,9 @@
-<div id="item-add-modal" class="fixed flex inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
+<div id="property-add-modal"
+    class="fixed flex inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
     <div id="item-add-content" class="bg-white mx-2 shadow-md max-w-full rounded ">
         <div class="flex justify-between p-1 items-center space-x-6 border-b border-gray-300">
             <h1 class="p-2 text-xl font-bold">Add Property</h1>
-            <button onclick="document.getElementById('item-add-modal').classList.add('hidden')"
+            <button onclick="document.getElementById('item-property-modal').classList.toggle('hidden')"
                 class="text-4xl hover:text-gray-400 px-2 font-medium">&times;</button>
         </div>
         <form action="{{ route('admin.property-add') }}" method="POST" enctype="multipart/form-data">
@@ -141,12 +142,20 @@
             <!-- Modal Footer: Close and Add Buttons -->
             <div class="flex justify-end border-t border-gray-300 shadow-t-lg">
                 <div class="flex p-2 space-x-1">
-                    <button onclick="document.getElementById('item-add-modal').classList.add('hidden')"
+                    <button onclick="document.getElementById('property-add-modal').classList.toggle('hidden')"
                         class="px-4 py-2 border border-blue-300 text-blue-500 hover:opacity-50 rounded">Close</button>
 
-                    <button class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">Add</button>
+                    <button id="submit-btn"
+                        class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">Submit</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+    document.getElementById('property-add-modal').addEventListener('submit', function (event) {
+        document.getElementById('submit-btn').disabled = true;
+        document.getElementById('submit-btn').innerText = 'Submitting';
+    });
+</script>

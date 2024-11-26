@@ -80,17 +80,13 @@ class RenteeCartController extends Controller
 
         $propertiesHasRecord = PropertyReservation::whereIn('property_id', $selectedProperties)->get();
 
-        $unavailableStartDates = $propertiesHasRecord->pluck('date_start');
-        $unavailableEndDates = $propertiesHasRecord->pluck('date_end');
+        $unavailableDateRanges = $propertiesHasRecord->map(function ($reservation) {
+            return [
+                'start' => $reservation->date_start,
+                'end' => $reservation->date_end,
+            ];
+        });
 
-        $lowestStartDate = $unavailableStartDates->min();
-        $highestEndDate = $unavailableEndDates->max();
-
-
-        $unavailableDateRanges = [
-            'start' => $lowestStartDate,
-            'end' => $highestEndDate,
-        ];
 
 
         $page_title = 'Checkout';

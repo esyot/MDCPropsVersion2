@@ -228,15 +228,13 @@
                 </div>
 
 
-                <div>
-                    <label for="date_start" class="block text-sm font-medium text-gray-700">Date Start:</label>
-                    <input type="date" id="date_start" name="date_start"
-                        class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required>
-                </div>
 
 
+                <!-- Include Flatpickr CSS -->
+                <link rel="stylesheet" href="{{asset('asset/css/flatpickr.min.css')}}">
 
+                <!-- Include Flatpickr JS -->
+                <script src="{{asset('asset/js/flatpickr.min.js')}}"></script>
 
                 <div>
                     <label for="time_start" class="block text-sm font-medium text-gray-700">Time Start:</label>
@@ -247,11 +245,121 @@
 
 
                 <div>
-                    <label for="date_end" class="block text-sm font-medium text-gray-700">Date End:</label>
-                    <input type="date" id="date_end" name="date_end"
+                    <label for="time_start" class="block text-sm font-medium text-gray-700">Time Start:</label>
+                    <input type="time" name="time_start"
                         class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
+
+                <div>
+                    <label for="date_start" class="block text-sm font-medium text-gray-700">Date Start:</label>
+                    <input type="text" id="date_start" name="date_start" placeholder="Date Start"
+                        class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+
+
+                <div>
+                    <label for="date_end" class="block text-sm font-medium text-gray-700">Date End:</label>
+                    <input type="text" id="date_end" name="date_end" placeholder="Date End"
+                        class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+
+                <script>
+
+                    const unavailableDateRanges = @json($unavailableDateRanges);
+
+
+                    function isDateUnavailable(date) {
+                        const formattedDate = formatDate(date);
+                        return unavailableDateRanges.some(range => {
+                            const startDate = range.start;
+                            const endDate = range.end;
+                            return formattedDate >= startDate && formattedDate <= endDate;
+                        });
+                    }
+
+                    function formatDate(date) {
+                        const d = new Date(date);
+
+                        d.setDate(d.getDate() + 1);
+                        return d.toISOString().split('T')[0];
+                    }
+
+                    let startDatePicker = flatpickr("#date_start", {
+                        minDate: "today",
+                        disable: [
+                            "today",
+                            function (date) {
+                                return isDateUnavailable(date);
+                            }
+                        ],
+                        onChange: function (selectedDates, dateStr, instance) {
+
+                            if (selectedDates.length > 0) {
+                                const startDate = formatDate(selectedDates[0]);
+
+                                endDatePicker.set('minDate', startDate);
+                                endDatePicker.enable();
+                            } else {
+
+                                endDatePicker.disable();
+                            }
+                        },
+                        clickOpens: true,
+                    });
+
+
+                    let endDatePicker = flatpickr("#date_end", {
+                        minDate: "today",
+                        disable: [
+                            "today",
+                            function (date) {
+                                return isDateUnavailable(date);
+                            },
+                            function (date) {
+
+                                const startDate = startDatePicker.selectedDates[0];
+                                if (startDate) {
+                                    return date < startDate;
+                                }
+                                return false;
+                            }
+                        ],
+                        clickOpens: true,
+                        enabled: false
+                    });
+
+
+                    document.getElementById('date_start').addEventListener('input', function () {
+                        const dateStartValue = document.getElementById('date_start').value;
+                        const dateEndInput = document.getElementById('date_end');
+
+                        if (!dateStartValue) {
+
+                            dateEndInput.setAttribute('readonly', true);
+                            endDatePicker.disable();
+                        } else {
+
+                            dateEndInput.removeAttribute('readonly');
+                            endDatePicker.enable();
+                        }
+                    });
+
+
+                    document.addEventListener("click", function (event) {
+                        const dateStartElement = document.getElementById('date_start');
+                        const dateEndElement = document.getElementById('date_end');
+
+                        s
+                        if (!dateStartElement.contains(event.target) && !dateEndElement.contains(event.target)) {
+                            startDatePicker.close();
+                            endDatePicker.close();
+                        }
+                    });
+
+                </script>
 
                 <div>
                     <label for="">Reservation Type: </label>
@@ -269,34 +377,7 @@
 
             </div>
         </section>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                // Get unavailable date range start and end from PHP variables
-                const unavailableStart = "{{ $unavailableDateRanges['start'] }}";
-                const unavailableEnd = "{{ $unavailableDateRanges['end'] }}";
 
-                const dateStartInput = document.getElementById('date_start');
-                const dateEndInput = document.getElementById('date_end');
-
-                // Check if the elements exist before trying to set their attributes
-                if (dateStartInput && dateEndInput) {
-                    // Set the minimum date for date_start to be the unavailable end date (inclusive)
-                    dateStartInput.setAttribute('min', unavailableEnd);  // Start date cannot be before the unavailable start date
-
-                    // Set the maximum date for date_end to be the unavailable start date (inclusive)
-                    dateEndInput.setAttribute('min', unavailableEnd); // End date cannot be after the unavailable end date
-
-                    // Ensure that the date_end is after the selected date_start
-                    dateStartInput.addEventListener('input', function () {
-                        const startDate = dateStartInput.value;
-                        // Set the minimum date for date_end to be the selected date_start (inclusive)
-                        dateEndInput.setAttribute('min', startDate);
-                    });
-                } else {
-                    console.error("Date input elements not found in the DOM.");
-                }
-            });
-        </script>
 
         <div class="flex fixed right-0 left-0 m-2 bottom-0 items-center justify-center">
             <button type="button" onclick="validateInputs()"

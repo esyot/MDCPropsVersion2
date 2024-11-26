@@ -29,7 +29,7 @@
                     </select>
                 </form>
                 @hasrole('superadmin|admin')
-                <button title="Add Item" onclick="document.getElementById('item-add-modal').classList.remove('hidden')"
+                <button title="Add Item" onclick="document.getElementById('property-add-modal').classList.toggle('hidden')"
                     class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 shadow-md rounded">
                     +
                 </button>
