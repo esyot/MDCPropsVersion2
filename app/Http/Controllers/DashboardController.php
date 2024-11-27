@@ -122,7 +122,6 @@ class DashboardController extends Controller
             $currentCategoryId = $currentCategory->id;
             $categoriesIsNull = false;
 
-            // Get all days between date_start and date_end for each reservation
             $daysWithRecords = PropertyReservation::where('category_id', $currentCategory->id)
                 ->whereYear('date_start', $currentDate->format('Y'))
                 ->get()
@@ -155,13 +154,14 @@ class DashboardController extends Controller
 
         $properties = $currentCategory ? Property::where('category_id', $currentCategory->id)->get() : collect();
 
-
         $users = User::where('id', '!=', $current_user_id)->get();
+
         $destinations = Destination::orderBy('municipality', 'ASC')->get();
 
         $reservations = PropertyReservation::all();
 
         $selectedMonth = '';
+
 
 
         return view('admin.pages.dashboard', compact(

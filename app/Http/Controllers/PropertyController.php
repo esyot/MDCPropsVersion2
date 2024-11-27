@@ -141,7 +141,6 @@ class PropertyController extends Controller
             'name' => 'required|string|max:255',
             'qty' => 'required|integer|min:1',
             'category' => 'required|exists:categories,id',
-            'approval_level' => ['required'],
             'per' => ['string'],
             'price' => ['nullable'],
             'assigned_personel' => ['required', 'string'],
@@ -170,7 +169,6 @@ class PropertyController extends Controller
         $property->category_id = $validatedData['category'];
         $property->img = $imageFileName;
         $property->qty = $validatedData['qty'];
-        $property->approval_level = $validatedData['approval_level'];
 
         if ($validatedData['price'] == null) {
             $property->price = null;

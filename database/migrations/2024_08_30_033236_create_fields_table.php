@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->string('title');
             $table->string('folder_name');
+            $table->enum('approval_level', ['admin', 'staff', 'both']);
             $table->timestamps();
         });
 
@@ -27,7 +28,6 @@ return new class extends Migration {
             $table->integer('qty');
             $table->decimal('price', 10, 2)->nullable(true);
             $table->enum('per', ['pcs', 'hr', 'km', 'mi', 'm', 'kg', 'g', 'mg', 'cm', 'mm', 'lbs', 'oz', 'l', 'ml'])->nullable(true);
-            $table->enum('approval_level', ['admin', 'staff', 'both']);
             $table->string('assigned_personel')->nullable(true);
             $table->timestamps();
         });

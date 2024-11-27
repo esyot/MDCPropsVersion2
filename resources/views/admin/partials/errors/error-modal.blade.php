@@ -9,7 +9,7 @@
                 <h1>{{session('error')}}</h1>
             </div>
             <footer class="flex justify-center mt-2">
-                <button onclick="document.getElementById('error-modal').classList.toggle('hidden')"
+                <button onclick="document.getElementById('error-modal').classList.add('hidden')"
                     class="px-4 py-2 border border-gray-300 hover:opacity-50 rounded">Close</button>
             </footer>
         </div>

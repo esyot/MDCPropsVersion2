@@ -45,14 +45,6 @@
 
                     <!-- Right Column: Renting Options -->
                     <div class="flex flex-col space-y-4">
-                        <div class="mt-2">
-                            <label for="" class="font-medium">Approval Level:</label>
-                            <select name="approval_level" class="block p-2 border border-gray-300 rounded w-full">
-                                <option value="admin">Admin Only</option>
-                                <option value="staff">Staff Only</option>
-                                <option value="both">Both</option>
-                            </select>
-                        </div>
 
                         <div class="mt-2">
                             <label for="category" class="font-medium">Category:</label>

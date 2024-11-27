@@ -146,6 +146,7 @@ class CategoryController extends Controller
         $request->validate([
             'files.*' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'title' => 'required|string|max:255',
+            'approval_level' => ['required'],
         ]);
 
 
@@ -173,6 +174,7 @@ class CategoryController extends Controller
 
         $category = Category::create([
             'title' => $request->title,
+            'approval_level' => $request->approval_level,
             'folder_name' => $imageFolderName,
         ]);
 
@@ -197,6 +199,7 @@ class CategoryController extends Controller
     {
         $request->validate([
             'title' => ['required', 'string'],
+            'approval_level' => ['required', 'string'],
 
         ]);
 
@@ -204,13 +207,11 @@ class CategoryController extends Controller
 
         $category->update([
             'title' => $request->title,
-
+            'approval_level' => $request->approval_level,
         ]);
 
         if ($category) {
-
             return redirect()->back()->with('success', 'Category has been updated successfully!');
-
         }
 
     }

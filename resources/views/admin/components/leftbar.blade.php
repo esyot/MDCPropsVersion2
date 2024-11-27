@@ -69,6 +69,23 @@
                 </section>
             </a>
             @endhasrole
+            @if ($currentCategory)
+
+
+                @hasrole('staff')
+                @if ($currentCategory->approval_level == 'staff' || $currentCategory->approval_level == 'both')
+                    <a href="{{ route('admin.reservations') }}"
+                        class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg "
+                        title="Manage Reservations">
+                        <section
+                            class="flex justify-center items-center rounded-lg p-4 {{ $page_title == 'Reservations' ? 'bg-gray-100 text-blue-500 ' : '' }} ">
+                            <i class="fa-solid fa-business-time fa-lg"></i>
+                            <span class="pl-2 pr-[100px] text-sm hidden">Reservations</span>
+                        </section>
+                    </a>
+                @endif
+                @endhasrole
+            @endif
             <a href="{{ route('admin.claim-properties') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
                 title="Claim Properties">

@@ -56,6 +56,8 @@ class ReservationController extends Controller
         $roles = Auth::user()->getRoleNames();
 
 
+
+
         if ($roles->contains('superadmin')) {
 
             $categories = Category::all();
@@ -93,28 +95,37 @@ class ReservationController extends Controller
 
 
         } else if ($roles->contains('staff')) {
+
+            $category = Category::first();
+            $currentCategory = $category;
+
+
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
-            $categoryIds = $managedCategories->pluck('category_id');
+            $categoryIds = $managedCategories->pluck('category_id')->toArray();
+
+
+            if (!in_array($currentCategory->approval_level, ['staff', 'both'])) {
+                return redirect()->route('unauthorize');
+            }
+
             $categories = Category::whereIn('id', $categoryIds)->get();
-            $currentCategory = $categories->first();
-
-            $notifications = Notification::whereIn('category_id', $categoryIds)->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])->whereJsonDoesntContain(
-                'isDeletedBy',
-                Auth::user()->id
-            )->orderBy('created_at', 'DESC')->get();
-
-            $unreadNotifications = Notification::whereIn('category_id', $categoryIds)->whereJsonDoesntContain(
-                'isReadBy',
-                Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])->count();
 
 
+            $notifications = Notification::whereIn('category_id', $categoryIds)
+                ->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])
+                ->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
+                ->orderBy('created_at', 'DESC')
+                ->get();
+
+
+            $unreadNotifications = Notification::whereIn('category_id', $categoryIds)
+                ->whereJsonDoesntContain('isReadBy', Auth::user()->id)
+                ->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)
+                ->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])
+                ->count();
         }
 
-        $category = Category::all()->first();
 
-
-        $currentCategory = $category;
         if ($currentCategory) {
 
             $currentCategoryId = $currentCategory->id;
@@ -250,32 +261,7 @@ class ReservationController extends Controller
 
     public function filter(Request $request)
     {
-        if ($request->status == 'pending') {
-            $reservations = PropertyReservation::where('declinedByAdmin_at', null)
-                ->where('approvedByCashier_at', null)
-                ->where('approvedByAdmin_at', null)
-                ->where('canceledByRentee_at', null)
-                ->where('category_id', $request->category)
-                ->get();
 
-        } else if ($request->status == 'approved') {
-            $reservations = PropertyReservation::where('declinedByAdmin_at', null)
-                ->whereNot('approvedByCashier_at', null)
-                ->whereNot('approvedByAdmin_at', null)
-                ->where('canceledByRentee_at', null)
-                ->where('category_id', $request->category)
-                ->get();
-        } else if ($request->status == 'canceled') {
-            $reservations = PropertyReservation::where('declinedByAdmin_at', null)
-                ->whereNot('canceledByRentee_at', null)
-                ->where('category_id', $request->category)
-                ->get();
-
-
-        } else if ($request->status == 'declined') {
-            $reservations = PropertyReservation::whereNot('declinedByAdmin_at', null)->where('category_id', $request->category)->get();
-
-        }
 
 
         $current_user_id = Auth::user()->id;
@@ -340,24 +326,67 @@ class ReservationController extends Controller
 
 
         } else if ($roles->contains('staff')) {
+
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
 
+
+            if (!in_array($request->category, $categoryIds->toArray())) {
+
+                return redirect()->route('unauthorize');
+            }
+
+
+            // Retrieve notifications based on categories and user roles
             $notifications = Notification::where(function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds)
                     ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])
+            })
+                ->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])
                 ->orderBy('created_at', 'DESC')
                 ->get();
 
-            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)->where(function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds)
-                    ->orWhereNull('category_id');
-            })->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])
+            // Retrieve unread notifications for the authenticated user
+            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', Auth::user()->id)
+                ->where(function ($query) use ($categoryIds) {
+                    $query->whereIn('category_id', $categoryIds)
+                        ->orWhereNull('category_id');
+                })
+                ->whereIn('for', ['staff', 'admin|staff', 'staff|cashier', 'all'])
                 ->orderBy('created_at', 'DESC')
-                ->get()->count();
+                ->count();
 
+            // Define base query for PropertyReservation based on the category
+            $reservationQuery = PropertyReservation::whereIn('category_id', $categoryIds)
+                ->where('category_id', $request->category); // Ensure only the requested category
+
+
+            // Filter reservations based on the requested status
+            if ($request->status == 'pending') {
+                $reservations = $reservationQuery->whereNull('declinedByAdmin_at')
+                    ->whereNull('approvedByCashier_at')
+                    ->whereNull('approvedByAdmin_at')
+                    ->whereNull('canceledByRentee_at')
+                    ->get();
+            } elseif ($request->status == 'approved') {
+                $reservations = $reservationQuery->whereNull('declinedByAdmin_at')
+                    ->whereNotNull('approvedByCashier_at')
+                    ->whereNotNull('approvedByAdmin_at')
+                    ->whereNull('canceledByRentee_at')
+                    ->get();
+            } elseif ($request->status == 'canceled') {
+                $reservations = $reservationQuery->whereNull('declinedByAdmin_at')
+                    ->whereNotNull('canceledByRentee_at')
+                    ->get();
+            } elseif ($request->status == 'declined') {
+                $reservations = $reservationQuery->whereNotNull('declinedByAdmin_at')
+                    ->get();
+            } else {
+
+                $reservations = collect();
+            }
         }
+
         if ($currentCategory) {
 
             $currentCategoryId = $currentCategory->id;

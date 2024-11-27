@@ -76,6 +76,9 @@ Route::get('test', function () {
     return view('test');
 });
 
+Route::get('unauthorize', function () {
+    return view('admin.unauthorize.unauthorize');
+})->name('unauthorize');
 
 //Authenticated Routes
 Route::middleware('auth')->group(function () {
@@ -117,7 +120,6 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
     Route::post('/admin/users-role-update', [UserController::class, 'roleUpdate'])->name('roleUpdate');
     Route::post('/admin/user-add', [UserController::class, 'create'])->name('userAdd');
     Route::post('/admin/user-delete/{id}', [UserController::class, 'delete'])->name('userDelete');
-    Route::post('/admin/managed-categories/{category_id}', [RolePermissionController::class, 'managedCategoriesUpdate'])->name('managedCategoriesUpdate');
     Route::get('/admin/users-filter', [UserController::class, 'filter'])->name('admin.users-search');
 });
 
@@ -132,21 +134,23 @@ Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
     Route::get('/admin/categories', [CategoryController::class, 'index'])->name('admin.categories');
     Route::post('/admin/category-update/{category_id}', [CategoryController::class, 'update'])->name('admin.category-update');
     Route::get('/admin/category-delete/{id}', [CategoryController::class, 'delete'])->name('admin.category-delete');
+    Route::post('/admin/managed-categories/{category_id}', [RolePermissionController::class, 'managedCategoriesUpdate'])->name('managedCategoriesUpdate');
 
     //Analytics Page
     Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('admin.analytics-index');
     Route::get('/admin/analytics-charts-custom-year', [AnalyticsController::class, 'index'])->name('admin.analytics-charts-custom-year');
     Route::post('/admin/analytics-export-to-pdf', [ExportPDFController::class, 'analyticsExportPDF'])->name('admin.analytics-export-to-pdf');
 
-    //Reservations
-    Route::get('/admin/reservations', [ReservationController::class, 'index'])->name('admin.reservations');
-    Route::get('/admin/reservations-filter', [ReservationController::class, 'filter'])->name('admin.reservations-filter');
 
     //Properties
     Route::get('/admin/property-delete/{id}', [PropertyController::class, 'delete'])->name('admin.property-delete');
 });
 
 Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
+
+    //Reservations
+    Route::get('/admin/reservations', [ReservationController::class, 'index'])->name('admin.reservations');
+    Route::get('/admin/reservations-filter', [ReservationController::class, 'filter'])->name('admin.reservations-filter');
 
     //Items Routes
     Route::get('/admin/properties', [PropertyController::class, 'index'])->name('admin.properties');

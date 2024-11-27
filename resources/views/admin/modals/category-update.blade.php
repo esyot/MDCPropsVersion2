@@ -55,6 +55,23 @@
                     <input type="text" name="title" class="w-full p-2 border border-gray-300 shadow-inner rounded"
                         value="{{$category->title}}">
                 </div>
+                <div class="mt-2">
+                    <label for="" class="font-medium">Approval Level:</label>
+                    <select name="approval_level" class="block p-2 border border-gray-300 rounded w-full">
+                        <option value="{{$category->approval_level}}">
+                            {{ucfirst($category->approval_level)}}
+
+                            @if ($category->approval_level != 'both')
+
+                                only
+
+                            @endif
+                        </option>
+                        <option value="admin">Admin Only</option>
+                        <option value="staff">Staff Only</option>
+                        <option value="both">Both</option>
+                    </select>
+                </div>
 
 
             </div>

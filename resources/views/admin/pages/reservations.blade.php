@@ -11,6 +11,8 @@
 </style>
 
 @if ($categoriesIsNull == false)
+    @include('admin.partials.errors.error-modal')
+    @include('admin.partials.success.success-modal')
 
     <div id="reser$reservations-header" class="flex items-center justify-between p-4 shadow-md">
         <div id="reser$reservations-header-content" class="flex items-center space-x-2 ">
@@ -79,21 +81,21 @@
                         </div>
 
                         <div class="flex justify-center space-x-2 mt-4">
-                            @can('can approve reservations')
-                                @if ($currentStatus == 'pending')
-                                    <button
-                                        onclick="document.getElementById('delete-confirmation-{{$reservation->id}}').classList.remove('hidden')"
-                                        class="shadow px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 flex items-center">
-                                        <i class="fas fa-times mr-2"></i> Decline
-                                    </button>
 
-                                    <button type="button"
-                                        onclick="document.getElementById('reservation-confirm-{{ $reservation->id }}').classList.remove('hidden')"
-                                        class="shadow px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center">
-                                        <i class="fas fa-check mr-2"></i> Approve
-                                    </button>
-                                @endif
-                            @endcan
+                            @if ($currentStatus == 'pending')
+                                <button
+                                    onclick="document.getElementById('delete-confirmation-{{$reservation->id}}').classList.remove('hidden')"
+                                    class="shadow px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 flex items-center">
+                                    <i class="fas fa-times mr-2"></i> Decline
+                                </button>
+
+                                <button type="button"
+                                    onclick="document.getElementById('reservation-confirm-{{ $reservation->id }}').classList.remove('hidden')"
+                                    class="shadow px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center">
+                                    <i class="fas fa-check mr-2"></i> Approve
+                                </button>
+                            @endif
+
                         </div>
                     </div>
                 </div>

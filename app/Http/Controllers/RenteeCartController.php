@@ -150,11 +150,22 @@ class RenteeCartController extends Controller
 
             $page_title = 'Checkout';
 
+
+            $propertiesHasRecord = PropertyReservation::whereIn('property_id', $ids)->get();
+
+            $unavailableDateRanges = $propertiesHasRecord->map(function ($reservation) {
+                return [
+                    'start' => $reservation->date_start,
+                    'end' => $reservation->date_end,
+                ];
+            });
+
             return view('rentee.pages.checkout', compact(
                 'rentee',
                 'properties',
                 'destinations',
-                'page_title'
+                'page_title',
+                'unavailableDateRanges'
             ));
 
 
