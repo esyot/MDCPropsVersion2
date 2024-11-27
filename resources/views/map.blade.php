@@ -17,7 +17,7 @@
 </div>
 
 <!-- Section 3: Map -->
-<div id="map" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 hidden">
+<div id="map" class="select-none flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 hidden">
     <div class="bg-white px-4 pb-4 mx-2 rounded-lg">
         <div class="flex items-center py-2 justify-between">
             <h1 class="text-2xl font-medium">Choose a destination</h1>

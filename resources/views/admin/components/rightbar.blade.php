@@ -92,7 +92,7 @@
 </div>
 
 <!-- Toggle Button -->
-<div id="toggle-container" class="fixed right-1 bottom-[45%] z-50">
+<div id="toggle-container" class="fixed right-1 bottom-[45%] z-40">
     <button id="open-btn" title="Display Settings"
         class="hover:opacity-50  rounded-full {{ $setting->darkMode ? 'bg-black text-white' : 'bg-white text-blue-500' }}  shadow-md  toggle-button font-bold rounded-full">
         <i id="btn" class=" fas fa-chevron-circle-left text-[40px]"></i>

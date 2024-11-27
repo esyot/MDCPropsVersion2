@@ -1,10 +1,18 @@
 <style>
     @media(orientation: portrait) {
         #reservation-form-fields-{{$day}} {
-            height: 500px;
+            height: 380px;
             overflow-y: auto;
-            margin-left: 16px;
-            margin-right: 16px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    }
+
+    @media(orientation: landscape) {
+        #reservation-form-fields-{{$day}} {
+            width: 600px;
+            margin-left: 10px;
+            margin-right: 10px;
         }
     }
 </style>
@@ -33,10 +41,15 @@
 <!-- Modal Items  -->
 <div id="propertiesListModal-{{$day}}"
     class="flex fixed inset-0 bg-gray-800  justify-center items-center bg-opacity-50 z-50 hidden">
-    <div class="bg-white px-4 rounded">
+    <div class="bg-white px-4 rounded shadow-md">
+
+        <!-- hidden fields -->
+        <input id="field-no-{{$day}}" type="hidden">
+        <input type="hidden" id="new-selected-property-id-{{$day}}">
+
         <div class="flex items-center justify-between py-2">
             <h1 class="text-xl font-medium">Select a property</h1>
-            <button type="button" class="text-4xl" onclick="closePropertyListModal({{$day}})">
+            <button type="button" class="text-4xl hover:opacity-50" onclick="closePropertyListModal({{$day}})">
                 &times;
             </button>
         </div>
@@ -50,6 +63,7 @@
                     <input type="text" class="focus:outline-none" name="input" placeholder="Search a property...">
                 </form>
             </div>
+
 
             <div class="border border-gray-200 my-2 bg-gray-100">
                 <div>
@@ -85,7 +99,7 @@
             </button>
         </div>
 
-        <div id="properties-{{$day}}" class="overflow-y-auto h-[140px] custom-scrollbar space-y-2 p-2">
+        <div id="properties-{{$day}}" class="overflow-y-auto max-h-[150px] custom-scrollbar space-y-2 p-2">
             <div id="property-selected-on-{{$day}}-1" class="flex items-center space-x-4">
                 <div class="flex-1">
                     <label for="property-name-{{$day}}-1"
@@ -125,18 +139,15 @@
 
                 <input type="hidden" id="property-id-{{$day}}-1">
 
-
-
             </div>
-
 
         </div>
         <div class="flex justify-end px-2">
             <button type="button"
-                class="px-4 py-2 space-x-1 hover:opacity-50 flex items-center border border-gray-300 rounded"
+                class="px-2 py-2 space-x-1 bg-blue-500 text-blue-100 hover:opacity-50 flex items-center border border-gray-300 rounded"
                 onclick="insertProperty({{$day}})">
-                <i class="fas fa-plus"></i>
-                <h1>Add property</h1>
+                <i class="fas fa-plus fa-lg"></i>
+                <h1>Insert property</h1>
 
             </button>
         </div>
@@ -147,12 +158,12 @@
         </div>
 
         <!-- Form Inputs -->
-        <div id="reservation-form-fields-{{$day}}" class="grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
+        <div id="reservation-form-fields-{{$day}}" class="grid grid-cols-2 gap-2">
 
 
             <!-- Rentee Contact No -->
             <div>
-                <label for="contact_no" class="block text-gray-700 font-semibold mb-1">Contact
+                <label for="contact_no" class="block text-gray-700 font-semibold">Contact
                     No:</label>
                 <input id="contact_no" name="contact_no" type="number"
                     class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -161,7 +172,7 @@
 
             <!-- Rentee First Name -->
             <div>
-                <label for="name" class="block text-gray-700 font-semibold mb-1">Full Name:</label>
+                <label for="name" class="block text-gray-700 font-semibold">Full Name:</label>
                 <input id="name" name="name" type="text"
                     class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Full name" required>
@@ -169,17 +180,15 @@
 
             <!-- Rentee Address 1 -->
             <div>
-                <label for="address" class="block text-gray-700 font-semibold mb-1">Address</label>
+                <label for="address" class="block text-gray-700 font-semibold">Address</label>
                 <input id="address" name="address" type="text"
                     class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Address" required>
             </div>
 
-
-
             <!-- Rentee Email -->
             <div>
-                <label for="email" class="block text-gray-700 font-semibold mb-1">Email:</label>
+                <label for="email" class="block text-gray-700 font-semibold">Email:</label>
                 <input id="email" name="email" type="email"
                     class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Email" required>
@@ -187,7 +196,7 @@
 
             <!-- Rent Date -->
             <div class="hidden">
-                <label for="date_start" class="block text-gray-700 font-semibold mb-1">Date Start:</label>
+                <label for="date_start" class="block text-gray-700 font-semibold">Date Start:</label>
                 <input id="date_start" name="date_start" type="date"
                     value="{{ $currentDate->copy()->day($day)->format('Y-m-d') }}"
                     class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -195,7 +204,7 @@
 
             <!-- Rent Time -->
             <div>
-                <label for="time_start" class="block text-gray-700 font-semibold mb-1">Time Start:</label>
+                <label for="time_start" class="block text-gray-700 font-semibold">Time Start:</label>
                 <input id="time_start" name="time_start" type="time"
                     class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required>
@@ -203,7 +212,7 @@
 
             <!-- Rent Return Date -->
             <div>
-                <label for="date_end" class="block text-gray-700 font-semibold mb-1">Date End:</label>
+                <label for="date_end" class="block text-gray-700 font-semibold">Date End:</label>
                 <input id="date_end" name="date_end" type="date"
                     value="{{ $currentDate->copy()->day($day)->format('Y-m-d') }}"
                     class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -212,7 +221,7 @@
 
             <!-- Rent Return Time -->
             <div>
-                <label for="time_end" class="block text-gray-700 font-semibold mb-1">Time End:</label>
+                <label for="time_end" class="block text-gray-700 font-semibold">Time End:</label>
                 <input id="time_end" name="time_end" type="time"
                     class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required>
@@ -220,8 +229,8 @@
 
             <!-- Destination -->
             <div>
-                <label for="destination_id" class="block text-gray-700 font-semibold mb-1">Destination:</label>
-                <select name="destination_id" id="destination_id"
+                <label for="destination_id" class="block text-gray-700 font-semibold">Destination:</label>
+                <select name=" destination_id" id="destination_id"
                     class="block p-2 border border-gray-300 w-full custom-scrollbar rounded">
                     @foreach ($destinations as $destination)
                         <option value="{{ $destination->id }}">{{ $destination->municipality }}</option>
@@ -231,14 +240,14 @@
 
 
             <div>
-                <label for="" class="block text-gray-700 font-semibold mb-1">Reservation Type:</label>
+                <label for="" class="block text-gray-700 font-semibold">Reservation Type:</label>
                 <select name="reservation_type" id="" class="block p-2 border border-gray-300 rounded w-full ">
                     <option value="borrow">Borrow</option>
                     <option value="rent">Rent</option>
                 </select>
             </div>
             <div>
-                <label for="" class="block text-gray-700 font-semibold mb-1">Assigned Personel: </label>
+                <label for="" class="block text-gray-700 font-semibold">Assigned Personel: </label>
                 <input type="text" name="assigned_personel" class="block p-2 w-full border border-gray-300 rounded"
                     placeholder="Personel of the property.">
             </div>
@@ -246,9 +255,9 @@
         </div>
 
         <div class="px-4">
-            <label for="" class="block text-gray-700 font-semibold mb-1">Purpose</label>
+            <label for="" class="block text-gray-700 font-semibold">Purpose</label>
             <textarea name="purpose" id="" placeholder="Input the purpose of reservation..."
-                class="w-full border border-gray-300 rounded"></textarea>
+                class="block w-full border border-gray-300 rounded"></textarea>
         </div>
 
         <!-- Submit and Cancel Buttons -->

@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
 
     <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
-    <script src="{{ asset('asset/js/jsQR.min.js') }}"></script>
+    <script src="{{ asset('asset/dist/qrious.js') }}"></script>
+
 
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
     <title>MDC Property Rental & Reservation Management System</title>
@@ -27,7 +28,7 @@
         </div>
     </header>
 
-    <section class="mt-4 flex justify-center space-x-2">
+    <section class="mt-4 flex justify-center space-x-2 mx-2">
         <form id="searchbar" class="flex items-center space-x-1 bg-white px-4 py-2 rounded-full shadow-md w-96">
             <i class="fas fa-magnifying-glass"></i>
             <input type="text" name="search_val" class="bg-transparent focus:outline-none w-full"
@@ -49,20 +50,65 @@
         @elseif(request('search_val') != null)
             @foreach ($reservations as $reservation)
 
+           
+        <script src="{{ asset('asset/dist/qrious.js') }}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var trackingCode = '{{ $reservation->tracking_code }}';
+        var qr = new QRious({
+            element: document.getElementById('canvas'),
+            value: trackingCode,
+            size: 100
+        });
+
+        var qrLarge = new QRious({
+            element: document.getElementById('QR-large'),
+            value: trackingCode,
+            size: 400
+        });
+    });
+</script>
+
+<div id="preview-qr-large" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden" onclick="closeModal(event)">
+    <div class="bg-white rounded shadow-md">
+        <div class="p-4">
+            <canvas id="QR-large"></canvas>
+        </div>
+        <div class="flex justify-center space-x-1">
+            <p>Tracking code: </p>
+            <span>{{ $reservation->tracking_code }}</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+    function closeModal(event) {
+       
+        if (event.target === document.getElementById('preview-qr-large')) {
+            document.getElementById('preview-qr-large').classList.toggle('hidden');
+        }
+    }
+</script>
+
                 <div class="flex flex-col justify-start bg-white p-2 space-y-2 w-full">
-                    <div class="flex space-x-2">
-                        <p>Tracking code: </p>
-                        <span>
-                            {{ $reservation->tracking_code }}
-                        </span>
-                    </div>
-                    <div class="flex space-x-2">
+                    <div class="flex space-x-2 justify-between">
+                        <div class="flex flex-col">
+                            <div class="flex space-x-1">
+                            <p>Tracking code: </p>
+                                <span>
+                                    {{ $reservation->tracking_code }}
+                                </span>
+                            </div>
+                      
+                        <div class="flex space-x-2">
                         <p>Name: </p>
                         <span>
                             {{ $reservation->rentee->name }}
                         </span>
-                    </div>
-
+                       </div>
+                       
                     <div class="flex space-x-2">
                         <p>Status: </p>
                         @if ($reservation->approved_at != null && $reservation->status == 'approved')
@@ -116,14 +162,16 @@
                         $formattedTransactionDate = \Carbon\Carbon::parse($reservation->created_at)->format('l, F j, Y h:i A');
                     @endphp
                     <div class="flex space-x-2">
-                        <p>Transaction Date: </p> <span>{{ $formattedTransactionDate }}</span>
+                        <p>Date Submitted: </p> <span>{{ $formattedTransactionDate }}</span>
                     </div>
+                        </div>
 
-                    <div>
-                        <h1>Requested Items:</h1>
+                        <div onclick="document.getElementById('preview-qr-large').classList.toggle('hidden')" class="hover:opacity-50 cursor-pointer">
+                            <canvas id="canvas"></canvas>
+                        </div>
+                        
                     </div>
-
-
+            
                     @foreach ($properties as $property)
                         @php
                             $formattedDateStart = \Carbon\Carbon::parse($property->date_start)->format('F j, Y');
@@ -140,7 +188,10 @@
                                 <strong>{{$formattedDateStart}}
                                     {{$formattedTimeEnd}}.</strong>
                             </p>
-
+                            <div class="flex space-x-1">
+                                <h1>Destination:</h1>
+                                <span>{{$property->destination->municipality}}</span>
+                            </div>
                             <div class="flex space-x-2">
 
                                 @if ($property->approvedByAdmin_at != null && $property->approvedByCashier_at != null && $property->canceledByRentee_at == null)

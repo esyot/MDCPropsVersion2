@@ -92,18 +92,7 @@
                             class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             {{ $roles->contains('staff') ? 'disabled' : '' }}>
 
-                        <label for="qty" class="block text-gray-700 font-medium">Approval Level:</label>
-                        <select name="update_approval_level" value="{{ $property->qty }}"
-                            class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            {{ $roles->contains('staff') ? 'disabled' : '' }}>
-                            <option value="{{$property->approval_level}}">{{$property->approval_level}}</option>
-
-                            <option value="admin">Admin Only</option>
-                            <option value="staff">Staff Only</option>
-                            <option value="both">Both</option>
-                        </select>
-
-
+            
 
                         <label for="update_category" class="font-medium">Category:</label>
                         <select name="update_category"

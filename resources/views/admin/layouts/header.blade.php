@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
     <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
     <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
-    <script src="{{ asset('asset/js/jsQR.min.js') }}"></script>
+    <script src="{{ asset('asset/dist/qrious.js') }}"></script>
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
     @include('admin.styles.dark-mode')
 

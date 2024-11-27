@@ -13,6 +13,13 @@
 </head>
 
 <body>
+
+    <script>
+        function clearData() {
+            localStorage.removeItem('formData');
+        }
+        clearData();
+    </script>
     @if (request('reservation') != null)
 
         <script src="{{ asset('asset/dist/qrious.js') }}"></script>
@@ -68,9 +75,10 @@
             </div>
         </div>
     @endif
-    <div title="Monitor Transaction"
-        class="fixed right-0 z-50 p-2 transition-transform duration-300 hover:scale-110 ease-in-out">
-        <a href="{{ route('tracking') }}"> <i class="fas fa-desktop fa-xl text-white shadow-md"></i></a>
+    <div title="Track Reservation" class="flex fixed top-0 z-50 right-0 p-4 hover:opacity-50">
+        <a href="{{ route('tracking') }}">
+            <i class="fas fa-desktop fa-xl text-white drop-shadow"></i>
+        </a>
     </div>
     <div id="welcome"
         class="flex fixed inset-0 bg-gradient-to-b from-blue-500 to-blue-900 justify-center items-center z-40">

@@ -3,7 +3,7 @@
     <div id="item-add-content" class="bg-white mx-2 shadow-md max-w-full rounded ">
         <div class="flex justify-between p-1 items-center space-x-6 border-b border-gray-300">
             <h1 class="p-2 text-xl font-bold">Add Property</h1>
-            <button onclick="document.getElementById('item-property-modal').classList.toggle('hidden')"
+            <button onclick="document.getElementById('property-add-modal').classList.toggle('hidden')"
                 class="text-4xl hover:text-gray-400 px-2 font-medium">&times;</button>
         </div>
         <form action="{{ route('admin.property-add') }}" method="POST" enctype="multipart/form-data">

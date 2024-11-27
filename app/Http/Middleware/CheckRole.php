@@ -10,7 +10,7 @@ class CheckRole
     public function handle($request, Closure $next, $role)
     {
         if (!Auth::check() || !Auth::user()->hasRole($role)) {
-            return redirect('/admin');
+            return redirect()->route('unauthorize');
         }
 
         return $next($request);

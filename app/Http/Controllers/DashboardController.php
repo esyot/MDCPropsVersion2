@@ -162,8 +162,6 @@ class DashboardController extends Controller
 
         $selectedMonth = '';
 
-
-
         return view('admin.pages.dashboard', compact(
             'categories',
             'selectedMonth',

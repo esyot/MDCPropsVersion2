@@ -141,7 +141,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
     Route::get('/admin/analytics-charts-custom-year', [AnalyticsController::class, 'index'])->name('admin.analytics-charts-custom-year');
     Route::post('/admin/analytics-export-to-pdf', [ExportPDFController::class, 'analyticsExportPDF'])->name('admin.analytics-export-to-pdf');
 
-
+    Route::get('admin/analytics/custom/{rentee}/{category}/{property}/{destination}/{year}/{month}/{day}', [AnalyticsController::class, 'custom'])->name('admin.analytics-custom');
     //Properties
     Route::get('/admin/property-delete/{id}', [PropertyController::class, 'delete'])->name('admin.property-delete');
 });

@@ -1,7 +1,8 @@
 <div class="p-2 w-full">
     <div class="shadow-md">
 
-        <header class="flex justify-between py-4 w-full bg-blue-500  items-center px-4 rounded-t-lg">
+        <header
+            class="flex justify-between py-4 w-full {{ $setting->darkMode ? 'bg-gray-500' : 'bg-blue-500' }}  items-center px-4 rounded-t-lg">
             <span class="text-white text-2xl text-center font-bold"> {{$selectedMonth}}</span>
 
             <button title="Expand" onclick="calendarExpand()">
@@ -9,10 +10,10 @@
             </button>
         </header>
 
-        <div class="grid grid-cols-7 bg-white p-2">
+        <div class="grid grid-cols-7 bg-white">
 
             @foreach(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $day)
-                <div class=" font-bold bg-gray-100 text-3xl text-center {{ $day == 'Sun' ? 'text-red-500' : '' }}">
+                <div class=" font-bold bg-gray-200 text-xl text-center {{ $day == 'Sun' ? 'text-red-500' : '' }}">
                     {{ $day }}
                 </div>
             @endforeach
@@ -127,7 +128,7 @@
                             @if(!$hasRecord)
                                 <div title="Add a new reservation" onclick="toggleReservationForm({{$day}}, {{$setting->transition}})"
                                     class="absolute inset-0 flex items-center justify-center text-2xl font-bold text-white opacity-0 bg-gray-400 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ $setting->transition == true ? 'group-hover:opacity-100' : 'hover:opacity-100 transition-opacity duration-300 ease-in-out'}}">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ $setting->transition == true ? 'group-hover:opacity-100' : 'hover:opacity-100 transition-opacity duration-300 ease-in-out'}}">
                                     <h1 class="flex justify-center items-center text-4xl">+</h1>
                                 </div>
                             @endif

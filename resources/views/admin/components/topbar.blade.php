@@ -38,6 +38,7 @@
                             right: 0;
                             width: 400px;
                         }
+
                     }
 
                     @media (orientation: portrait) {
@@ -46,6 +47,8 @@
                             left: 0;
                             right: 0;
                         }
+
+
                     }
                 </style>
 
