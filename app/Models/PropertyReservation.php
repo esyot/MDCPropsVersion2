@@ -31,4 +31,7 @@ class PropertyReservation extends Model
         return $this->belongsTo(Reservation::class);
     }
 
+
+
+
 }

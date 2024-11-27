@@ -2,11 +2,15 @@
 @section('content')
 
 <header class="flex p-2 justify-between bg-blue-200">
-    <div class="flex space-x-4 p-2 items-center">
+    <form action="{{ route('admin.analytics-custom') }}" onchange="this.submit()"
+        class="flex space-x-4 p-2 items-center">
 
         <div>
             <label for="">Rentee:</label>
-            <select name="" id="">
+            <select name="rentee" id="">
+                @if ($currentRentee != null)
+                    <option value="{{$currentRentee->id}}">{{$currentRentee->name}}</option>
+                @endif
                 <option value="all">All</option>
                 @foreach ($rentees as $rentee)
 
@@ -16,7 +20,11 @@
         </div>
         <div>
             <label for="">Categories:</label>
-            <select name="" id="">
+            <select name="category" id="">
+
+                @if($selectedCategory)
+                    <option value="{{$selectedCategory->id}}">{{$selectedCategory->title}}</option>
+                @endif
                 <option value="all">All</option>
                 @foreach ($categories as $category)
 
@@ -26,7 +34,7 @@
         </div>
         <div>
             <label for="">Properties:</label>
-            <select name="" id="">
+            <select name="property" id="">
                 <option value="all">All</option>
                 @foreach ($properties as $property)
 
@@ -36,11 +44,23 @@
         </div>
         <div>
             <label for="">Year:</label>
-            <select name="" id="">
+            <select name="year" id="">
                 <option value="all">All</option>
             </select>
         </div>
-    </div>
+        <div>
+            <label for="">Month:</label>
+            <select name="month" id="">
+                <option value="all">All</option>
+            </select>
+        </div>
+        <div>
+            <label for="">Day:</label>
+            <select name="day" id="">
+                <option value="all">All</option>
+            </select>
+        </div>
+    </form>
 
     <div>
         <form action="">

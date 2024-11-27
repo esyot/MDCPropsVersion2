@@ -226,7 +226,7 @@ class AnalyticsController extends Controller
         );
     }
 
-    public function custom($rentee, $category, $property, $destination, $year, $month, $day)
+    public function custom(Request $request)
     {
         $current_user_id = Auth::user()->id;
         $currentDate = now();
@@ -325,16 +325,66 @@ class AnalyticsController extends Controller
 
 
         $currentYear = $request->year ?? date('Y');
+        $rentees = Rentee::all();
+        if ($request->rentee == 'all') {
+            // No need to set $currentRentee since we're fetching all rentees.
 
+            $currentRentee = null;
 
-        if (in_array('all', [$rentee, $category, $property, $destination, $year, $month, $day])) {
-            $records = PropertyReservation::all();
+            // Get all PropertyReservations without filtering by rentee
+            $records = PropertyReservation::with([
+                'category',          // Eager load the related Category
+                'property',          // Eager load the related Property
+                'reservation.rentee' // Eager load the related Rentee through Reservation
+            ])
+                ->get();
+        } else {
+            // When a specific rentee is selected
+            $currentRentee = Rentee::find($request->rentee);
+
+            // Get PropertyReservations for the specific rentee
+            $records = PropertyReservation::with([
+                'category',          // Eager load the related Category
+                'property',          // Eager load the related Property
+                'reservation.rentee' // Eager load the related Rentee through Reservation
+            ])
+                ->whereHas('reservation', function ($query) use ($currentRentee) {
+                    $query->where('rentee_id', $currentRentee->id); // Filter by specific rentee_id
+                })
+                ->get();
+        }
+
+        // Filter by category if specified
+        if ($request->category != 'all') {
+            $category = $request->category;
+            $records = $records->filter(function ($record) use ($category) {
+                return $record->category_id == $category; // Filter records by category_id
+            });
+        }
+        $selectedCategory = null;
+        // Final filter when both rentee and category are selected
+        if ($request->category != 'all' && $request->rentee != 'all') {
+            $rentee = $request->rentee;
+            $category = $request->category;
+            $selectedCategory = Category::find($category);
+            $records = PropertyReservation::with([
+                'category',          // Eager load the related Category
+                'property',          // Eager load the related Property
+                'reservation.rentee' // Eager load the related Rentee through Reservation
+            ])
+                ->whereHas('reservation', function ($query) use ($rentee) {
+                    $query->where('rentee_id', $rentee);
+                })
+                ->whereHas('category', function ($query) use ($category) {
+                    $query->where('category_id', $category);
+                })
+                ->get();
         }
 
 
-        // Lists of Arrays
 
-        $rentees = Rentee::all();
+
+
         $categories = Category::all();
         $properties = Property::all();
 
@@ -342,6 +392,8 @@ class AnalyticsController extends Controller
         return view(
             'admin.analytics.customized',
             compact(
+                'selectedCategory',
+                'currentRentee',
                 'properties',
                 'categories',
                 'rentees',

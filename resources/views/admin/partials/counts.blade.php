@@ -15,7 +15,7 @@
     </div>
 </div>
 
-<a href="{{ route('admin.analytics-custom', ['rentee' => 'all', 'category' => 'all', 'property' => 'all', 'destination' => 'all', 'year' => 'all', 'month' => 'all', 'day' => 'all']) }}"
+<a href="{{ route('admin.analytics-custom') }}"
     class="flex m-2 flex-col bg-white border shadow-md w-[200px] rounded-xl cursor-pointer {{ $setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : ''}} ">
     <div class="p-2">
         <div class="flex items-center justify-between">
