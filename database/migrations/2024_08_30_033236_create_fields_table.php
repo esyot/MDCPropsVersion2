@@ -82,14 +82,6 @@ return new class extends Migration {
 
         });
 
-        Schema::create('images', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->nullable(false);
-            $table->foreignId('properties_id')->constrained()->onDelete('cascade');
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
-        });
-
         Schema::create('managed_categories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained()->onDelete('cascade');

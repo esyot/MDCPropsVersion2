@@ -540,4 +540,20 @@ class ReservationController extends Controller
         }
     }
 
+    public function assign(Request $request){
+
+      
+        $reservation = PropertyReservation::find($request->reservation_id);
+        if($reservation){
+            $reservation->update([
+                'assigned_personel'=>$request->personel
+            ]);
+
+            return redirect()->back()->with('success', 'Personel assigned to reserved property!');
+        }
+
+        return redirect()->back()->with('error', 'Process unsucessful!');
+
+    }
+
 }

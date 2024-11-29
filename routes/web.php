@@ -144,6 +144,11 @@ Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
     Route::get('admin/analytics/custom', [AnalyticsController::class, 'custom'])->name('admin.analytics-custom');
     //Properties
     Route::get('/admin/property-delete/{id}', [PropertyController::class, 'delete'])->name('admin.property-delete');
+
+    //Assign Personel
+    Route::get('/admin/reservation-assign-personel', [ReservationController::class, 'assign'])->name('admin.assign-personel');
+
+
 });
 
 Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
