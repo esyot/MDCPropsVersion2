@@ -32,6 +32,10 @@
                                                         {{$propertyReservation->property->per}}
                                                     </div>
 
+                                                    <div>
+                                                        Qty: {{$propertyReservation->qty}}
+                                                    </div>
+
                                                     <input type="hidden" name="propertiesInArray[]"
                                                         value="{{ $propertyReservation->property->id }}">
                                                 </div>
@@ -42,18 +46,20 @@
                                                     $calculateByPc = 0.00;
 
                                                     if ($propertyReservation->property->per == 'hr') {
-                                                        $calculateByHour = $propertyReservation->property->price * $hours;
+                                                        $pc = $propertyReservation->qty;
+                                                        $calculateByHour = ($propertyReservation->property->price * $hours) * $pc;
+
 
                                                     } else if ($propertyReservation->property->per == 'km') {
                                                         $km = $propertyReservation->destination->kilometers;
-                                                        $calculateByKm = $propertyReservation->property->price * $km;
+                                                        $pc = $propertyReservation->qty;
+                                                        $calculateByKm = ($propertyReservation->property->price * $km) * $pc;
 
-                                                    } else if ($propertyReservation->property->per == 'pc') {
+                                                    } else if ($propertyReservation->property->per == 'pcs') {
                                                         $pc = $propertyReservation->qty;
                                                         $calculateByPc = $propertyReservation->property->price * $pc;
 
                                                     }
-
 
                                                     $totalPaymentsForReservation = $calculateByHour + $calculateByKm + $calculateByPc;
 
@@ -61,7 +67,10 @@
                                                     $totalPayments += $totalPaymentsForReservation;
                                                 @endphp
 
+
                         @endforeach
+
+
 
 
                     </div>

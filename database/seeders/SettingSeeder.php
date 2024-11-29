@@ -37,5 +37,13 @@ class SettingSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        Setting::create([
+            'user_id' => '4',
+            'darkMode' => false,
+            'transition' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }

@@ -143,7 +143,6 @@ class PropertyController extends Controller
             'category' => 'required|exists:categories,id',
             'per' => ['string'],
             'price' => ['nullable'],
-            'assigned_personel' => ['required', 'string'],
             'img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
@@ -319,7 +318,6 @@ class PropertyController extends Controller
             'update_qty' => 'integer',
             'update_price' => ['nullable'],
             'update_per' => 'string',
-            'update_approval_level' => 'required',
             'update_assigned_personel' => 'string',
         ]);
 
@@ -363,7 +361,6 @@ class PropertyController extends Controller
                 'name' => $validatedData['update_name'],
                 'qty' => $validatedData['update_qty'],
                 'per' => $validatedData['update_per'],
-                'approval_level' => $validatedData['update_approval_level'],
                 'price' => (float) $validatedData['update_price'],
                 'img' => $imageFileName,
                 'category_id' => $validatedData['update_category'],
@@ -375,7 +372,6 @@ class PropertyController extends Controller
             $property->update([
                 'name' => $validatedData['update_name'],
                 'qty' => $validatedData['update_qty'],
-                'approval_level' => $validatedData['update_approval_level'],
                 'img' => $imageFileName,
                 'category_id' => $validatedData['update_category'],
                 'price' => null,

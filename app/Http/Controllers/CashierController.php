@@ -116,6 +116,7 @@ class CashierController extends Controller
 
         $reservations = Reservation::whereIn('id', $reservationIds)->get();
 
+
         $properties = PropertyReservation::whereIn('reservation_id', $reservations->pluck('id'))->get();
 
         return view('cashier.pages.reservations', compact('unreadNotifications', 'notifications', 'contacts', 'reservations', 'properties', 'setting'));

@@ -13,6 +13,7 @@ use App\Models\Rentee;
 use App\Models\Setting;
 use App\Models\User;
 use Auth;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 
@@ -228,26 +229,26 @@ class AnalyticsController extends Controller
 
     public function custom(Request $request)
     {
+        // Set basic variables
         $current_user_id = Auth::user()->id;
         $currentDate = now();
         $page_title = 'Analytics';
 
-        $users = User::whereNot('id', Auth::user()->id)->get();
+        // Get users excluding the current one
+        $users = User::whereNot('id', $current_user_id)->get();
 
-        $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
-
-        $unreadMessages = Message::where('receiver_id', Auth::user()->id)
+        // Get unread messages for the current user
+        $messages = Message::where('receiver_id', $current_user_id)
             ->where('isReadByReceiver', false)
-            ->count();
+            ->get();
 
-        $unreadMessagesCount = $messages->count();
+        $unreadMessages = $messages->count();
 
+        // Get recent message contacts (last message per sender)
         $contacts = DB::table('messages')
             ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
             ->join('users', 'users.id', '=', 'messages.sender_id')
-            ->where(function ($query) {
-                $query->where('messages.receiver_id', Auth::user()->id);
-            })
+            ->where('messages.receiver_id', $current_user_id)
             ->whereIn('messages.id', function ($query) {
                 $query->select(DB::raw('MAX(id)'))
                     ->from('messages')
@@ -255,140 +256,129 @@ class AnalyticsController extends Controller
             })
             ->get();
 
-        $setting = Setting::where('user_id', Auth::user()->id)->first();
+        // Get user settings
+        $setting = Setting::where('user_id', $current_user_id)->first();
 
+        // Get roles of the current user
         $roles = Auth::user()->getRoleNames();
 
+        // Initialize variables for categories and notifications
         $categories = [];
         $unreadNotifications = 0;
         $notifications = [];
         $currentCategory = null;
 
+        // Determine the categories and notifications based on roles
         if ($roles->contains('superadmin')) {
-
             $categories = Category::all();
             $currentCategory = $categories->first();
 
-            $notifications = Notification::whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->whereJsonDoesntContain(
-                'isDeletedBy',
-                Auth::user()->id
-            )->orderBy('created_at', 'DESC')->get();
+            $notifications = Notification::whereIn('for', ['superadmin', 'superadmin|admin', 'all'])
+                ->whereJsonDoesntContain('isDeletedBy', $current_user_id)
+                ->orderBy('created_at', 'DESC')
+                ->get();
 
-            $unreadNotifications = Notification::whereJsonDoesntContain(
-                'isReadBy',
-                Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->count();
-
+            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', $current_user_id)
+                ->whereJsonDoesntContain('isDeletedBy', $current_user_id)
+                ->whereIn('for', ['superadmin', 'superadmin|admin', 'all'])
+                ->count();
 
         } else if ($roles->contains('admin')) {
-            $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+            // Admin role: filter based on managed categories
+            $managedCategories = ManagedCategory::where('user_id', $current_user_id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
             $categories = Category::whereIn('id', $categoryIds)->get();
             $currentCategory = $categories->first();
 
-            $categories = Category::all();
-            $currentCategory = $categories->first();
+            $notifications = Notification::whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])
+                ->whereJsonDoesntContain('isDeletedBy', $current_user_id)
+                ->orderBy('created_at', 'DESC')
+                ->get();
 
-            $notifications = Notification::whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->whereJsonDoesntContain(
-                'isDeletedBy',
-                Auth::user()->id
-            )->orderBy('created_at', 'DESC')->get();
-
-            $unreadNotifications = Notification::whereJsonDoesntContain(
-                'isReadBy',
-                Auth::user()->id
-            )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])->count();
-
+            $unreadNotifications = Notification::whereJsonDoesntContain('isReadBy', $current_user_id)
+                ->whereJsonDoesntContain('isDeletedBy', $current_user_id)
+                ->whereIn('for', ['admin', 'superadmin|admin', 'admin|staff', 'all'])
+                ->count();
         }
 
+        // Determine if there's a current category or if it's null
+        $categoriesIsNull = false;
         if ($currentCategory) {
-
             $currentCategoryId = $currentCategory->id;
-            $categoriesIsNull = false;
         } else {
-
             $categoriesIsNull = true;
         }
 
+        // Get user and category counts
         $usersCount = User::all()->count();
         $renteesCount = Rentee::all()->count();
         $propertiesCount = Property::all()->count();
         $categoriesCount = Category::all()->count();
-
         $adminsCount = User::role('admin')->count();
-
         $superadminsCount = User::role('superadmin')->count();
-
         $cashiersCount = User::role('cashier')->count();
-
         $staffsCount = User::role('staff')->count();
 
+        // Date filters (defaults to today's date if not provided)
+        $currentDateStart = $request->date_start ?? 'all';
+        $currentDateEnd = $request->date_end ?? 'all';
+        $currentYear = Carbon::parse($currentDate)->format('Y');
 
-        $currentYear = $request->year ?? date('Y');
+        // Get rentees for filtering
         $rentees = Rentee::all();
-        if ($request->rentee == 'all') {
-            // No need to set $currentRentee since we're fetching all rentees.
-
-            $currentRentee = null;
-
-            // Get all PropertyReservations without filtering by rentee
-            $records = PropertyReservation::with([
-                'category',          // Eager load the related Category
-                'property',          // Eager load the related Property
-                'reservation.rentee' // Eager load the related Rentee through Reservation
-            ])
-                ->get();
-        } else {
-            // When a specific rentee is selected
-            $currentRentee = Rentee::find($request->rentee);
-
-            // Get PropertyReservations for the specific rentee
-            $records = PropertyReservation::with([
-                'category',          // Eager load the related Category
-                'property',          // Eager load the related Property
-                'reservation.rentee' // Eager load the related Rentee through Reservation
-            ])
-                ->whereHas('reservation', function ($query) use ($currentRentee) {
-                    $query->where('rentee_id', $currentRentee->id); // Filter by specific rentee_id
-                })
-                ->get();
+        $currentRentee = null;
+        if ($request->rentee == null) {
+            $request->rentee = 'all';
         }
 
-        // Filter by category if specified
-        if ($request->category != 'all') {
-            $category = $request->category;
-            $records = $records->filter(function ($record) use ($category) {
-                return $record->category_id == $category; // Filter records by category_id
+        $selectedCategory = null;
+
+        // Start building the PropertyReservation query
+        $recordsQuery = PropertyReservation::with([
+            'category',
+            'property',
+            'reservation.rentee'
+        ]);
+
+        // Apply rentee filter if not 'all'
+        if ($request->rentee != 'all') {
+            $currentRentee = $rentees->first(); // Assuming the first is selected for now
+            $recordsQuery->whereHas('reservation', function ($query) use ($currentRentee) {
+                $query->where('rentee_id', $currentRentee->id);
             });
         }
-        $selectedCategory = null;
-        // Final filter when both rentee and category are selected
-        if ($request->category != 'all' && $request->rentee != 'all') {
-            $rentee = $request->rentee;
-            $category = $request->category;
-            $selectedCategory = Category::find($category);
-            $records = PropertyReservation::with([
-                'category',          // Eager load the related Category
-                'property',          // Eager load the related Property
-                'reservation.rentee' // Eager load the related Rentee through Reservation
-            ])
-                ->whereHas('reservation', function ($query) use ($rentee) {
-                    $query->where('rentee_id', $rentee);
-                })
-                ->whereHas('category', function ($query) use ($category) {
-                    $query->where('category_id', $category);
-                })
-                ->get();
+
+        // Apply category filter if not 'all'
+        if ($request->category != 'all') {
+            $recordsQuery->whereHas('category', function ($query) use ($request) {
+                $query->where('category_id', $request->category);
+            });
         }
 
+        // Apply property filter if not 'all'
+        $selectedProperty = null;
+        if ($request->property != 'all') {
+            $selectedProperty = Property::find($request->property); // Fetch the selected property
+            $recordsQuery->where('property_id', $request->property); // Filter by property ID
+        }
 
+        // Apply date filters if provided
+        if ($currentDateStart != 'all') {
+            $recordsQuery->where('date_start', $currentDateStart);
+        }
 
+        if ($currentDateEnd != 'all') {
+            $recordsQuery->where('date_end', $currentDateEnd);
+        }
 
+        // Execute the query
+        $records = $recordsQuery->get();
 
+        // Final categories and properties lists for the view
         $categories = Category::all();
         $properties = Property::all();
 
-
+        // Return the view with the data
         return view(
             'admin.analytics.customized',
             compact(
@@ -414,11 +404,11 @@ class AnalyticsController extends Controller
                 'superadminsCount',
                 'cashiersCount',
                 'staffsCount',
-
+                'currentDateStart',
+                'currentDateEnd',
                 'currentYear',
-
+                'selectedProperty' // Add selectedProperty to the view
             )
         );
     }
-
 }

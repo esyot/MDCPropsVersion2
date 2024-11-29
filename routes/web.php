@@ -151,6 +151,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
 
 });
 
+
 Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
 
     //Reservations
@@ -162,8 +163,9 @@ Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
     Route::get('/admin/properties-filter', [PropertyController::class, 'propertiesFilter'])->name('admin.properties-filter');
     Route::get('/admin/property-search/{day}/{category_id}', [PropertyController::class, 'search'])->name('admin.property-search');
     Route::post('/admin/property-add', [PropertyController::class, 'create'])->name('admin.property-add');
-    Route::put('/admin/property-update/{id}', [PropertyController::class, 'update'])->name('admin.property-update');
     Route::get('/admin/property-page-search/{category_id}/', [PropertyController::class, 'propertySearch'])->name('admin.property-page-search');
+    Route::post('/admin/property-update/{id}', [PropertyController::class, 'update'])->name('admin.property-update');
+
 
     // Transactions Routes
     Route::post('/admin/reservation-add', [ReservationController::class, 'create'])->name('admin.reservation-add');

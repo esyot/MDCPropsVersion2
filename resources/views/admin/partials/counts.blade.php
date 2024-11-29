@@ -14,22 +14,30 @@
         <i class="fas fa-arrow-right text-white"></i>
     </div>
 </div>
+<form action="{{ route('admin.analytics-custom') }}" class="flex m-2 flex-col  w-[200px]">
+    <button
+        class="bg-white border shadow-md rounded-xl cursor-pointer {{ $setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : ''}} ">
+        <div class="p-2">
+            <input type="hidden" name="rentee" value="all">
+            <input type="hidden" name="category" value="all">
+            <input type="hidden" name="property" value="all">
+            <input type="hidden" name="date_start" value="all">
+            <input type="hidden" name="date_end" value="all">
 
-<a href="{{ route('admin.analytics-custom') }}"
-    class="flex m-2 flex-col bg-white border shadow-md w-[200px] rounded-xl cursor-pointer {{ $setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : ''}} ">
-    <div class="p-2">
-        <div class="flex items-center justify-between">
-            <span class="text-2xl font-bold">{{ $renteesCount }}</span>
-            <i class="fas fa-people-group text-blue-500"></i>
+            <div class="flex items-center justify-between">
+                <span class="text-2xl font-bold">{{ $renteesCount }}</span>
+                <i class="fas fa-people-group text-blue-500"></i>
+            </div>
+
+            <h1 class="font-medium text-gray-500">Rentees</h1>
         </div>
+        <div class="flex justify-between items-center p-2 bg-blue-500 rounded-b-xl">
+            <h1 class="text-white">View More</h1>
+            <i class="fas fa-arrow-right text-white"></i>
+        </div>
+    </button>
 
-        <h1 class="font-medium text-gray-500">Rentees</h1>
-    </div>
-    <div class="flex justify-between items-center p-2 bg-blue-500 rounded-b-xl">
-        <h1 class="text-white">View More</h1>
-        <i class="fas fa-arrow-right text-white"></i>
-    </div>
-</a>
+</form>
 
 <div
     class="flex m-2 flex-col bg-white border shadow-md w-[200px] rounded-xl cursor-pointer {{ $setting->transition ? 'transition-transform duration-300 ease-in-out hover:scale-90' : ''}} ">

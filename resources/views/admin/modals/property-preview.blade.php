@@ -41,7 +41,6 @@
 
         class="fixed inset-0 flex items-center justify-center z-40 bg-gray-800 bg-opacity-70 hidden">
     @csrf
-    @method('PUT')
 
  
         <!-- Modal Content -->
@@ -126,10 +125,10 @@
                             document.getElementById('isAvailableForRentingCheckbox-{{$property->id}}').addEventListener('change', function () {
 
                                 if (document.getElementById('isAvailableForRentingCheckbox-{{$property->id}}').checked) {
-    document.getElementById('price-{{$property->id}}').required = true;
-} else {
-    document.getElementById('price-{{$property->id}}').required = false;
-}
+                                        document.getElementById('price-{{$property->id}}').required = true;
+                                    } else {
+                                        document.getElementById('price-{{$property->id}}').required = false;
+                                    }
                                 var updateRentingOptions = document.getElementById('rentingOptions-{{$property->id}}');
                                 var updateRentNoteUnavailable = document.getElementById('rentNoteAvailable-{{$property->id}}');
 
