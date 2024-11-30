@@ -323,6 +323,8 @@
                 const userDropdown = document.getElementById('user-dropdown');
                 const seeMoreBtn = document.getElementById('see-more-btn');
                 const notificationList = document.getElementById('notification-list');
+                const dropdownButton = document.getElementById('dropdownButton');
+                const dropdownMenu = document.getElementById('dropdownMenu');
 
                 // Toggle notification dropdown
                 notificationIcon.addEventListener('click', (event) => {

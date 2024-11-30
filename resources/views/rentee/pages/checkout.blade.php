@@ -4,11 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
-    <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{asset('asset/css/flatpickr.min.css')}}">
     <script src="{{asset('asset/js/flatpickr.min.js')}}"></script>
+    <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
+    <script src="{{ asset('asset/dist/qrious.js') }}"></script>
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <script src="{{ mix('js/main.js') }}"></script>
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
     <title>Checkout</title>
 </head>
@@ -218,29 +219,12 @@
                 <div>
                     @include('map')
                 </div>
-
-                <div>
-                    <label for="time_end" class="block text-sm font-medium text-gray-700">Time End:</label>
-                    <input type="time" name="time_end"
-                        class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required>
-                </div>
-
-
-                <div>
-                    <label for="time_start" class="block text-sm font-medium text-gray-700">Time Start:</label>
-                    <input type="time" name="time_start"
-                        class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required>
-                </div>
-
                 <div>
                     <label for="date_start" class="block text-sm font-medium text-gray-700">Date Start:</label>
                     <input type="text" id="date_start" name="date_start" placeholder="Date Start"
                         class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                 </div>
-
 
                 <div>
                     <label for="date_end" class="block text-sm font-medium text-gray-700">Date End:</label>
@@ -249,63 +233,69 @@
                         required>
                 </div>
 
+
+                <div>
+                    <label for="time_end" class="block text-sm font-medium text-gray-700">Time End:</label>
+                    <input type="time" id="time_end" name="time_end"
+                        class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+
+                <div>
+                    <label for="time_start" class="block text-sm font-medium text-gray-700">Time Start:</label>
+                    <input type="time" id="time_start" name="time_start"
+                        class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+
+
                 <script>
-
                     const unavailableDateRanges = @json($unavailableDateRanges);
-
 
                     function isDateUnavailable(date) {
                         const formattedDate = formatDate(date);
                         return unavailableDateRanges.some(range => {
-                            const startDate = range.start;
-                            const endDate = range.end;
+                            const startDate = formatDate(range.start);
+                            const endDate = formatDate(range.end);
                             return formattedDate >= startDate && formattedDate <= endDate;
                         });
                     }
 
                     function formatDate(date) {
                         const d = new Date(date);
-
-                        d.setDate(d.getDate() + 1);
-                        return d.toISOString().split('T')[0];
+                        d.setDate(d.getDate());
+                        return d.toISOString().split('T')[0]; // "YYYY-MM-DD"
                     }
 
                     let startDatePicker = flatpickr("#date_start", {
-                        minDate: "today",
+                        minDate: "today", // Ensure "today" is selectable
                         disable: [
-                            "today",
                             function (date) {
-                                return isDateUnavailable(date);
+                                return isDateUnavailable(date); // Disable unavailable dates
                             }
                         ],
-                        onChange: function (selectedDates, dateStr, instance) {
-
+                        onChange: function (selectedDates) {
                             if (selectedDates.length > 0) {
                                 const startDate = formatDate(selectedDates[0]);
-
-                                endDatePicker.set('minDate', startDate);
+                                endDatePicker.set('minDate', startDate); // Ensure end date is not before start date
                                 endDatePicker.enable();
                             } else {
-
                                 endDatePicker.disable();
                             }
                         },
                         clickOpens: true,
                     });
 
-
                     let endDatePicker = flatpickr("#date_end", {
-                        minDate: "today",
+                        minDate: "today", // Ensure "today" is selectable for end date too
                         disable: [
-                            "today",
                             function (date) {
-                                return isDateUnavailable(date);
+                                return isDateUnavailable(date); // Disable unavailable dates
                             },
                             function (date) {
-
                                 const startDate = startDatePicker.selectedDates[0];
                                 if (startDate) {
-                                    return date < startDate;
+                                    return date < startDate; // Ensure end date is not before start date
                                 }
                                 return false;
                             }
@@ -314,23 +304,57 @@
                         enabled: false
                     });
 
-
                     document.getElementById('date_start').addEventListener('input', function () {
                         const dateStartValue = document.getElementById('date_start').value;
                         const dateEndInput = document.getElementById('date_end');
 
                         if (!dateStartValue) {
-
                             dateEndInput.setAttribute('readonly', true);
                             endDatePicker.disable();
                         } else {
-
                             dateEndInput.removeAttribute('readonly');
                             endDatePicker.enable();
                         }
                     });
 
+                    function validateTime() {
+                        const dateStart = document.getElementById('date_start').value;
+                        const dateEnd = document.getElementById('date_end').value;
+                        const timeStart = document.getElementById('time_start').value;
+                        const timeEnd = document.getElementById('time_end').value;
+
+                        // Only validate time if the dates are the same
+                        if (dateStart && dateEnd && dateStart === dateEnd) {
+                            // Check if time_end is earlier than time_start
+                            if (timeEnd && timeStart && timeEnd < timeStart) {
+                                alert("Time End must be greater than or equal to Time Start for the same date.");
+
+                                // Clear time inputs if the validation fails
+                                document.getElementById('time_end').value = '';
+                                document.getElementById('time_start').value = '';
+
+                                // Set custom validity on time_end input field
+                                document.getElementById('time_end').setCustomValidity("Time End must be greater than or equal to Time Start.");
+                            } else {
+                                // Clear the custom validity error if the validation passes
+                                document.getElementById('time_end').setCustomValidity("");
+                            }
+                        } else {
+                            // If dates are different, clear the time fields and validity
+                            document.getElementById('time_end').setCustomValidity("");
+                            document.getElementById('time_end').value = '';
+                            document.getElementById('time_start').value = '';
+                        }
+                    }
+
+                    // Add event listeners to trigger validation on input changes
+                    document.getElementById('time_start').addEventListener('input', validateTime);
+                    document.getElementById('time_end').addEventListener('input', validateTime);
+                    document.getElementById('date_start').addEventListener('input', validateTime);
+                    document.getElementById('date_end').addEventListener('input', validateTime);
+
                 </script>
+
 
                 <div>
                     <label for="">Reservation Type: </label>

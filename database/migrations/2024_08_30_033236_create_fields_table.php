@@ -118,14 +118,6 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-
-        Schema::create('rentee_sessions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('rentee_id')->constrained()->onDelete('cascade');
-            $table->boolean('isSessionStarted')->default(false);
-            $table->timestamps();
-        });
-
         Schema::create('property_reservations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reservation_id')->constrained()->onDelete('cascade');

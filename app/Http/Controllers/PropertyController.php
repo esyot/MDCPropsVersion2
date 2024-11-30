@@ -175,7 +175,6 @@ class PropertyController extends Controller
             $property->price = $validatedData['price'];
         }
         $property->per = $validatedData['per'];
-        $property->assigned_personel = $validatedData['assigned_personel'];
         $property->save();
 
 

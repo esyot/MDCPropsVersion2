@@ -119,7 +119,7 @@
         #reservation-to-claim-header {
             background-color: #1d1d1d;
         }
-        
+
         #messages-dropdown #title {
             color: #fff;
         }
@@ -135,6 +135,7 @@
 
         #analytics-header {
             background-color: #1d1d1d;
+            color: #fff;
         }
     </style>
 
@@ -156,6 +157,7 @@
         #reservation-to-claim-header {
             background-color: #BBDEFB;
         }
+
         #reservation-to-return-header {
             background-color: #BBDEFB;
         }

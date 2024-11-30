@@ -168,7 +168,8 @@ class ReturnPropertyController extends Controller
     {
 
         $reservations = PropertyReservation::where('reservation_id', $reservation_id)->update([
-            'returned_at' => now()
+            'returned_at' => now(),
+            'receivedBy_id' => Auth::user()->id,
         ]);
 
         if ($reservations) {

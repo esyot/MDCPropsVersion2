@@ -117,8 +117,7 @@ class AnalyticsController extends Controller
         $staffsCount = User::role('staff')->count();
 
 
-        $currentYear = $request->year ?? date('Y');
-
+        $currentYear = $request->year ?? Carbon::now()->format('Y');
 
         if ($request->year) {
             $propertiesCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
@@ -158,7 +157,6 @@ class AnalyticsController extends Controller
             }
 
         } else {
-
             $propertiesCanceledCount = PropertyReservation::whereNotNull('canceledByRentee_at')
                 ->whereYear('canceledByRentee_at', $currentYear)
                 ->count();
@@ -167,34 +165,53 @@ class AnalyticsController extends Controller
                 ->count();
             $propertiesCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
+                ->whereMonth('returned_at', 11)
                 ->count();
 
-            $canceledCounts = [];
-            $declinedCounts = [];
-            $completedCounts = [];
+            // Initialize arrays for storing the counts
+            $canceledCounts = array_fill(0, 12, 0);
+            $declinedCounts = array_fill(0, 12, 0);
+            $completedCounts = array_fill(0, 12, 0);
 
+            // Query for canceled reservations by month
+            $canceledReservations = PropertyReservation::whereNotNull('canceledByRentee_at')
+                ->whereYear('canceledByRentee_at', $currentYear)
+                ->selectRaw('MONTH(canceledByRentee_at) as month, COUNT(*) as count')
+                ->groupBy('month')
+                ->get();
 
-            for ($month = 1; $month <= 12; $month++) {
+            // Query for declined reservations by month
+            $declinedReservations = PropertyReservation::whereNotNull('declinedByAdmin_at')
+                ->whereYear('declinedByAdmin_at', $currentYear)
+                ->selectRaw('MONTH(declinedByAdmin_at) as month, COUNT(*) as count')
+                ->groupBy('month')
+                ->get();
 
-                $canceledCounts[] = PropertyReservation::whereNotNull('canceledByRentee_at')
-                    ->whereYear('canceledByRentee_at', $currentYear)
-                    ->whereMonth('canceledByRentee_at', $month)
-                    ->count();
+            // Query for completed reservations by month
+            $completedReservations = PropertyReservation::whereNotNull('returned_at')
+                ->whereYear('returned_at', $currentYear)
+                ->selectRaw('MONTH(returned_at) as month, COUNT(*) as count')
+                ->groupBy('month')
+                ->get();
 
-
-                $declinedCounts[] = PropertyReservation::whereNotNull('declinedByAdmin_at')
-                    ->whereYear('declinedByAdmin_at', $currentYear)
-                    ->whereMonth('declinedByAdmin_at', $month)
-                    ->count();
-
-
-                $completedCounts[] = PropertyReservation::whereNotNull('declinedByAdmin_at')
-                    ->whereYear('returned_at', $currentYear)
-                    ->whereMonth('returned_at', $month)
-                    ->count();
+            // Populate the arrays with the counts from the queries
+            foreach ($canceledReservations as $reservation) {
+                $canceledCounts[$reservation->month - 1] = $reservation->count;
             }
 
+            foreach ($declinedReservations as $reservation) {
+                $declinedCounts[$reservation->month - 1] = $reservation->count;
+            }
+
+            foreach ($completedReservations as $reservation) {
+                $completedCounts[$reservation->month - 1] = $reservation->count;
+            }
+
+
+
+
         }
+
 
         return view(
             'admin.pages.analytics',
@@ -229,22 +246,18 @@ class AnalyticsController extends Controller
 
     public function custom(Request $request)
     {
-        // Set basic variables
+
         $current_user_id = Auth::user()->id;
         $currentDate = now();
         $page_title = 'Analytics';
-
-        // Get users excluding the current one
         $users = User::whereNot('id', $current_user_id)->get();
 
-        // Get unread messages for the current user
         $messages = Message::where('receiver_id', $current_user_id)
             ->where('isReadByReceiver', false)
             ->get();
 
         $unreadMessages = $messages->count();
 
-        // Get recent message contacts (last message per sender)
         $contacts = DB::table('messages')
             ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
             ->join('users', 'users.id', '=', 'messages.sender_id')
@@ -284,7 +297,7 @@ class AnalyticsController extends Controller
                 ->count();
 
         } else if ($roles->contains('admin')) {
-            // Admin role: filter based on managed categories
+
             $managedCategories = ManagedCategory::where('user_id', $current_user_id)->get();
             $categoryIds = $managedCategories->pluck('category_id');
             $categories = Category::whereIn('id', $categoryIds)->get();
@@ -301,7 +314,7 @@ class AnalyticsController extends Controller
                 ->count();
         }
 
-        // Determine if there's a current category or if it's null
+
         $categoriesIsNull = false;
         if ($currentCategory) {
             $currentCategoryId = $currentCategory->id;
@@ -309,79 +322,128 @@ class AnalyticsController extends Controller
             $categoriesIsNull = true;
         }
 
-        // Get user and category counts
-        $usersCount = User::all()->count();
-        $renteesCount = Rentee::all()->count();
-        $propertiesCount = Property::all()->count();
-        $categoriesCount = Category::all()->count();
-        $adminsCount = User::role('admin')->count();
-        $superadminsCount = User::role('superadmin')->count();
-        $cashiersCount = User::role('cashier')->count();
-        $staffsCount = User::role('staff')->count();
 
-        // Date filters (defaults to today's date if not provided)
         $currentDateStart = $request->date_start ?? 'all';
         $currentDateEnd = $request->date_end ?? 'all';
+
         $currentYear = Carbon::parse($currentDate)->format('Y');
 
-        // Get rentees for filtering
+
         $rentees = Rentee::all();
+
+
         $currentRentee = null;
         if ($request->rentee == null) {
             $request->rentee = 'all';
         }
 
+        $properties = Property::all();
+
         $selectedCategory = null;
 
-        // Start building the PropertyReservation query
+
         $recordsQuery = PropertyReservation::with([
             'category',
             'property',
             'reservation.rentee'
         ]);
 
-        // Apply rentee filter if not 'all'
+
         if ($request->rentee != 'all') {
-            $currentRentee = $rentees->first(); // Assuming the first is selected for now
+            $currentRentee = $rentees->first();
             $recordsQuery->whereHas('reservation', function ($query) use ($currentRentee) {
                 $query->where('rentee_id', $currentRentee->id);
             });
         }
+        $selectedProperty = null;
 
-        // Apply category filter if not 'all'
+
         if ($request->category != 'all') {
             $recordsQuery->whereHas('category', function ($query) use ($request) {
                 $query->where('category_id', $request->category);
             });
+
+            $selectedCategory = Category::find($request->category);
+            $properties = Property::where('category_id', $request->category)->get();
+            $selectedProperty = Property::where('category_id', $request->category)
+                ->first();
         }
 
-        // Apply property filter if not 'all'
-        $selectedProperty = null;
-        if ($request->property != 'all') {
-            $selectedProperty = Property::find($request->property); // Fetch the selected property
-            $recordsQuery->where('property_id', $request->property); // Filter by property ID
+        if ($request->property != 'all' && $request->category != 'all') {
+            $selectedProperty = Property::where('category_id', $request->category)
+                ->where('id', $request->property)->first();
+
+            if ($selectedProperty == null) {
+
+                $selectedProperty = Property::where('category_id', $request->category)->first();
+
+                $properties = Property::where('category_id', $request->category)->get();
+            }
+
         }
 
-        // Apply date filters if provided
+
         if ($currentDateStart != 'all') {
-            $recordsQuery->where('date_start', $currentDateStart);
+            $recordsQuery->where('date_start', '<=', $currentDateStart);
         }
 
         if ($currentDateEnd != 'all') {
             $recordsQuery->where('date_end', $currentDateEnd);
         }
 
-        // Execute the query
+        if ($currentDateEnd != 'all' && $currentDateStart != 'all') {
+            $recordsQuery->where('date_end', '<=', $currentDateEnd)
+                ->where('date_start', '>=', $currentDateStart);
+        }
+
+
         $records = $recordsQuery->get();
-
-        // Final categories and properties lists for the view
         $categories = Category::all();
-        $properties = Property::all();
 
-        // Return the view with the data
+        $clonedQueryForCanceled = clone $recordsQuery;
+        $clonedQueryForDeclined = clone $recordsQuery;
+        $clonedQueryForCompleted = clone $recordsQuery;
+
+
+        $propertiesCanceledCount = $clonedQueryForCanceled->whereNotNull('canceledByRentee_at')->count();
+        $propertiesDeclinedCount = $clonedQueryForDeclined->whereNotNull('declinedByAdmin_at')->count();
+        $propertiesCompletedCount = $clonedQueryForCompleted->whereNotNull('returned_at')->count();
+
+        $canceledCounts = [];
+        $declinedCounts = [];
+        $completedCounts = [];
+
+        for ($month = 1; $month <= 12; $month++) {
+
+            $clonedQueryForCanceled = clone $recordsQuery;
+            $clonedQueryForDeclined = clone $recordsQuery;
+            $clonedQueryForCompleted = clone $recordsQuery;
+
+            $canceledCounts[] = $clonedQueryForCanceled
+                ->whereNotNull('canceledByRentee_at')
+                ->whereMonth('canceledByRentee_at', $month)
+                ->count();
+
+            $declinedCounts[] = $clonedQueryForDeclined
+                ->whereNotNull('declinedByAdmin_at')
+                ->whereMonth('declinedByAdmin_at', $month)
+                ->count();
+
+            $completedCounts[] = $clonedQueryForCompleted
+                ->whereNotNull('returned_at')
+                ->whereMonth('returned_at', $month)
+                ->count();
+        }
+
         return view(
             'admin.analytics.customized',
             compact(
+                'propertiesCanceledCount',
+                'propertiesDeclinedCount',
+                'propertiesCompletedCount',
+                'canceledCounts',
+                'declinedCounts',
+                'completedCounts',
                 'selectedCategory',
                 'currentRentee',
                 'properties',
@@ -396,19 +458,13 @@ class AnalyticsController extends Controller
                 'unreadMessages',
                 'contacts',
                 'users',
-                'usersCount',
-                'renteesCount',
-                'propertiesCount',
-                'categoriesCount',
-                'adminsCount',
-                'superadminsCount',
-                'cashiersCount',
-                'staffsCount',
                 'currentDateStart',
                 'currentDateEnd',
                 'currentYear',
-                'selectedProperty' // Add selectedProperty to the view
+                'selectedProperty'
             )
         );
     }
+
+
 }

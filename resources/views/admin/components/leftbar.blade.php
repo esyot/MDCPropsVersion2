@@ -106,7 +106,7 @@
                 </section>
             </a>
 
-            @hasrole('superadmin')
+            @hasrole('superadmin|admin')
             <a href="{{ route('users') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
                 title="manage Users">

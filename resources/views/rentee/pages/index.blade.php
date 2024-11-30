@@ -3,12 +3,14 @@
 
 <head>
     <meta charset="UTF-8">
+       <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
-    <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
+    <title>MDC - Property Rental System</title>
+    <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
+    <script src="{{ asset('asset/dist/qrious.js') }}"></script>
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <script src="{{ mix('js/main.js') }}"></script>
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
-    <title>Dashboard</title>
     <style>
         @media (orientation: portrait) {
             #rightbar {

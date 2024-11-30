@@ -22,8 +22,9 @@
                 class="font-medium px-4 py-2 border border-red-300 text-red-500 hover:opacity-50 rounded">No,
                 cancel.
             </button>
-            <button type="submit" class="font-medium px-4 py-2 bg-red-500 text-red-100 hover:opacity-50 rounded">Yes,
-                proceed.</button>
+            <a href="{{ route('admin.user-delete', ['id' => $user->id]) }}"
+                class="font-medium px-4 py-2 bg-red-500 text-red-100 hover:opacity-50 rounded">Yes,
+                proceed.</a>
         </div>
     </div>
 </div>

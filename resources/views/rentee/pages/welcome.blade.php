@@ -4,30 +4,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
-    <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
+    <title>MDC - Property Rental System</title>
+    <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
+    <script src="{{ asset('asset/dist/qrious.js') }}"></script>
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <script src="{{ mix('js/main.js') }}"></script>
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
+    <style>
+        body {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
 
-    <title>Dashboard</title>
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header img {
+            width: 70px;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header .details {
+            font-size: 0.9rem;
+        }
+
+        .footer-button {
+            background-color: #2563eb;
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 9999px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .footer-button:hover {
+            background-color: #1e40af;
+            transform: translateY(-2px);
+        }
+
+        .background-overlay {
+            position: absolute;
+            inset: 0;
+            background: url('{{ asset('asset/background-img/mdc-back.jpg') }}') center/cover no-repeat;
+            opacity: 0.4;
+            z-index: -1;
+        }
+    </style>
 </head>
 
 <body>
-
     <script>
         function clearData() {
             localStorage.removeItem('formData');
         }
         clearData();
     </script>
+
     @if (request('reservation') != null)
-
-        <script src="{{ asset('asset/dist/qrious.js') }}"></script>
-
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 var trackingCode = '{{ $reservation->tracking_code }}';
-                var qr = new QRious({
+                new QRious({
                     element: document.getElementById('canvas'),
                     value: trackingCode,
                     size: 300
@@ -35,85 +76,71 @@
             });
         </script>
 
-
         <div id="QR" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50">
-            <div class="bg-white p-4 rounded mx-2">
-                <div class="flex justify-center">
-                    <h1 class="text-2xl text-center font-bold">Your reservation has been successfully submitted!</h1>
+            <div class="max-w-[300px] bg-white rounded-lg shadow-lg p-4 z-10 bg-gradient-to-b from-blue-100 to-blue-500">
+                <h1 class="text-xl font-bold text-center">Reservation Successful!</h1>
+                <div class="flex justify-center mt-4">
+                    <canvas id="canvas"></canvas>
+                </div>
+                <div class="text-center mt-3">
+                    <p>Tracking Code: <span class="font-bold">{{ $reservation->tracking_code }}</span></p>
+                </div>
+                <div class="flex justify-center mt-6">
+                    <p class="text-xs text-justify border border-red-500 p-3">
+                        <strong>Note:</strong> Save this QR code for tracking and payment.<br> Or click
+                        <a href="{{ route('tracking', ['search_val' => $reservation->tracking_code]) }}"
+                            class="text-blue-500 hover:underline">here</a> to track your request.
+                    </p>
                 </div>
 
-                <div class="flex mt-2 justify-center">
-                    <canvas id="canvas" class=""></canvas>
-
-                </div>
-                <div class="flex space-x-2 p-2 justify-center">
-                    <h1>Tracking Code: </h1>
-                    <span class="font-bold">
-                        {{ $reservation->tracking_code }}
-                    </span>
-
-                </div>
-
-                <div class="flex justify-center">
-
-                    <small class="w-80 text-justify border border-red-500 p-2">
-                        <span class="font-bold">
-                            Note:
-                        </span>
-                        <i class="text-justify">Save this QR code; it will be used to track your
-                            reservation on the tracking page and for payment at the cashier once your reservation is
-                            approved, or just <a
-                                href="{{ route('tracking', ['search_val' => $reservation->tracking_code]) }}"
-                                class="text-blue-500 hover:opacity-50 underline" title="Click me to redirect">click
-                                here</a> to monitor your request.</i>
-                    </small>
-                </div>
-                <div class="flex justify-center mt-2">
+                <div class="flex justify-center mt-2 ">
                     <button onclick="document.getElementById('QR').classList.add('hidden')"
-                        class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">Done</button>
+                        class="footer-button">Done</button>
                 </div>
             </div>
         </div>
+
     @endif
-    <div title="Track Reservation" class="flex fixed top-0 z-50 right-0 p-4 hover:opacity-50">
-        <a href="{{ route('tracking') }}">
-            <i class="fas fa-desktop fa-xl text-white drop-shadow"></i>
+
+    <div class="flex fixed top-0 right-0 p-4 z-50">
+        <a href="{{ route('tracking') }}" title="Check reservation"
+            class="bg-blue-500 px-2 shadow-md py-2 rounded-full hover:opacity-50">
+            <i class="fas fa-desktop fa-xl text-white shadow-md"></i>
         </a>
     </div>
-    <div id="welcome"
-        class="flex fixed inset-0 bg-gradient-to-b from-blue-500 to-blue-900 justify-center items-center z-40">
-        <div class="bg-white rounded shadow-2xl p-2 select-none">
-            <header class="flex flex-col items-center">
-                <div class="mt-2">
-                    <img src="{{ asset('asset/logo/logo.png') }}"
-                        class="p-1 border-4 border-blue-300 rounded-full shadow-md h-32" alt="">
-                </div>
-                <div class="flex p-2 flex-col justify-center items-center">
-                    <h1 class="text-4xl font-bold text-blue-500">MDC PropRentals</h1>
-                    <small>"Avail, Rent & Return."</small>
+    <div id="welcome" class="flex fixed inset-0 justify-center items-center">
+        <div class="max-w-[600px] rounded-lg shadow-xl z-10 bg-white p-4">
+            <header class="header">
+                <img src="{{ asset('asset/logo/logo.png') }}" alt="MDC Logo">
+                <div class="details">
+                    <h1 class="text-2xl font-semibold">Mater Dei College</h1>
+
+                    <p class="text-xs">
+                        <i class="fas fa-directions text-red-500"></i> Brgy. Cabulijan, Tubigon, Bohol
+                    </p>
+                    <p class="text-xs">
+                        <i class="fas fa-envelope text-gray-500"></i> mdc1983tub@gmail.com
+                    </p>
+                    <p>
+                        <a href="https://www.facebook.com/mdctubigon" class="text-xs hover:underline text-blue-500">
+                            <i class="fab fa-facebook"></i> mdctubigon
+                        </a>
+                    </p>
                 </div>
             </header>
-            <section class="flex p-2 justify-center">
-
+            <section class="text-center mt-6">
+                <h1 class="text-2xl">
+                    {{ session()->has('rentee') ? 'Welcome back to MDC' : 'Welcome to MDC' }}
+                    <br>Property Reservation System
+                </h1>
             </section>
-
-            <div class="text-green-600 text-center">
-                <p>
-                    @if (session()->has('rentee'))
-                        <h1 class="text-2xl font-bold">Welcome back!</h1>
-                    @else
-                        <h1 class="text-2xl font-bold">Welcome!</h1>
-                    @endif
-                </p>
-            </div>
-
-            <footer class="flex justify-center p-2 mb-2">
-                <a href="{{ route('rentee.start-reservation') }}"
-                    class="px-4 py-2 bg-blue-200 text-blue-800 rounded-lg hover:bg-blue-500 hover:text-blue-100 shadow">
+            <footer class="flex justify-center mt-6">
+                <a href="{{ route('rentee.start-reservation') }}" class="footer-button">
                     {{ session()->has('rentee') ? 'Back to Home' : 'Get started' }}
                 </a>
             </footer>
         </div>
+        <div class="background-overlay"></div>
     </div>
 </body>
 

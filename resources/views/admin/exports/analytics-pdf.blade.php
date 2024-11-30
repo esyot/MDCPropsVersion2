@@ -317,9 +317,6 @@
                 </div>
             </div>
 
-
-
-
             <!-- Pie Chart Section -->
             <div class="chart-container">
                 <div class="pie-chart-container">
@@ -331,17 +328,17 @@
                 <div class="statistics-container">
                     <div class="statistics-item">
                         <i id="status-square-green">&times;</i>
-                        <span class="statistics-text">{{$itemsCompletedCount}} Completed Reservations</span>
+                        <span class="statistics-text">{{$propertiesCompletedCount}} Completed Reservations</span>
                     </div>
 
                     <div class="statistics-item">
                         <i id="status-square-red">&times;</i>
-                        <span class="statistics-text">{{$itemsDeclinedCount}} Declined Reservations</span>
+                        <span class="statistics-text">{{$propertiesDeclinedCount}} Declined Reservations</span>
                     </div>
 
                     <div class="statistics-item">
                         <i id="status-square-yellow">&times;</i>
-                        <span class="statistics-text">{{$itemsCanceledCount}} Canceled Reservations</span>
+                        <span class="statistics-text">{{$propertiesCanceledCount}} Canceled Reservations</span>
                     </div>
                 </div>
             </div>
@@ -370,7 +367,7 @@
                     </tr>
                     <tr>
                         <td>Items</td>
-                        <td>{{ $itemsCount }}</td>
+                        <td>{{ $propertiesCount }}</td>
                     </tr>
                     <tr>
                         <td>Categories</td>

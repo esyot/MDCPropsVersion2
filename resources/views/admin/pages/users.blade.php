@@ -4,11 +4,11 @@
 <div id="users-header" class="flex justify-between items-center bg-gray-200 p-4 shadow-md z-40">
     <div class="space-x-2 flex items-center">
         <button title="Click to add a new user" type="button"
-            class="text-gray-800 drop-shadow  opacity-50 hover:opacity-100"
+            class="bg-blue-500 text-blue-100 px-4 py-2 rounded hover:opacity-50"
             onclick="document.getElementById('userAddModal').classList.remove('hidden')">
             Add User
         </button>
-        <span class="border-l-2 border-gray-400 h-6 mx-2"></span> <!-- Vertical separator line -->
+        <span class="border-l-2 border-gray-200 h-8 mx-2"></span> <!-- Vertical separator line -->
         <a href="{{ route('admin.password-reset-requests') }}" title="Click to view all pasword reset requests"
             class="text-gray-800 drop-shadow opacity-50 hover:opacity-100">
             Password Reset Requests

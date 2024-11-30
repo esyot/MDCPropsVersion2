@@ -24,14 +24,14 @@
             @can('can assign roles')
 
                 <div class="flex justify-center space-x-1 mt-2">
-                    <form action="{{ route('userDelete', ['id' => $user->id]) }}" method="POST">
-                        @csrf
-                        <button title="Delete user" type="button"
-                            onclick="document.getElementById('userDeleteConfirm-{{$user->id}}').classList.remove('hidden')"
-                            class="px-4 py-2 space-x-1 bg-gray-500 text-gray-100 hover:opacity-50 rounded">
-                            <i class="fa-solid fa-trash fa-w"></i><span>Delete</span>
-                        </button>
-                    </form>
+
+
+                    <button title="Delete user" type="button"
+                        onclick="document.getElementById('userDeleteConfirm-{{$user->id}}').classList.remove('hidden')"
+                        class="px-4 py-2 space-x-1 bg-gray-500 text-gray-100 hover:opacity-50 rounded">
+                        <i class="fa-solid fa-trash fa-w"></i><span>Delete</span>
+                    </button>
+
                     <button title="Edit role" onclick="openModal('{{ $user->id }}', '{{ $user->getRoleNames()->first() }}')"
                         class="px-4 py-2 space-x-1 bg-blue-500 hover:opacity-50 text-blue-100 rounded">
                         <i class="fas fa-edit fa-fw"></i><span>Edit Role</span>

@@ -113,16 +113,6 @@ Route::middleware('auth')->group(function () {
 
 });
 
-// Admin Role Routes
-Route::middleware(['auth', 'role:superadmin'])->group(function () {
-    //User page
-    Route::get('/admin/users', [UserController::class, 'index'])->name('users');
-    Route::post('/admin/users-role-update', [UserController::class, 'roleUpdate'])->name('roleUpdate');
-    Route::post('/admin/user-add', [UserController::class, 'create'])->name('userAdd');
-    Route::post('/admin/user-delete/{id}', [UserController::class, 'delete'])->name('userDelete');
-    Route::get('/admin/users-filter', [UserController::class, 'filter'])->name('admin.users-search');
-});
-
 // Moderator and Admin Role Routes
 Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
     //Transaction Approval Routes
@@ -140,6 +130,7 @@ Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
     Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('admin.analytics-index');
     Route::get('/admin/analytics-charts-custom-year', [AnalyticsController::class, 'index'])->name('admin.analytics-charts-custom-year');
     Route::post('/admin/analytics-export-to-pdf', [ExportPDFController::class, 'analyticsExportPDF'])->name('admin.analytics-export-to-pdf');
+    Route::post('/admin/analytics-export-custom-to-pdf', [ExportPDFController::class, 'analyticsCustomExportPDF'])->name('admin.analytics-custom-export-to-pdf');
 
     Route::get('admin/analytics/custom', [AnalyticsController::class, 'custom'])->name('admin.analytics-custom');
     //Properties
@@ -147,7 +138,12 @@ Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
 
     //Assign Personel
     Route::get('/admin/reservation-assign-personel', [ReservationController::class, 'assign'])->name('admin.assign-personel');
-
+    //User page
+    Route::get('/admin/users', [UserController::class, 'index'])->name('users');
+    Route::post('/admin/users-role-update', [UserController::class, 'roleUpdate'])->name('roleUpdate');
+    Route::post('/admin/user-add', [UserController::class, 'create'])->name('userAdd');
+    Route::get('/admin/user-delete/{id}', [UserController::class, 'delete'])->name('admin.user-delete');
+    Route::get('/admin/users-filter', [UserController::class, 'filter'])->name('admin.users-search');
 
 });
 
@@ -192,7 +188,7 @@ Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
 });
 
 
-Route::middleware(['auth', 'role:cashier'])->group(function () {
+Route::middleware(['auth', 'role:cashier|superadmin'])->group(function () {
 
     //Cashier Routes
     Route::get('/cashier/welcome', [CashierController::class, 'welcome'])->name('cashier.welcome');
