@@ -295,8 +295,6 @@ class ReservationController extends Controller
         $roles = Auth::user()->getRoleNames();
 
 
-
-
         if ($roles->contains('superadmin')) {
 
             $categories = Category::all();
@@ -373,6 +371,7 @@ class ReservationController extends Controller
             if ($request->status == 'pending') {
                 $reservations = PropertyReservation::where('category_id', $currentCategoryId)
                     ->where('approvedByAdmin_at', null)
+                    ->where('declinedByAdmin_at', null)
                     ->orderBy('created_at', 'DESC')
                     ->get();
 
@@ -540,13 +539,14 @@ class ReservationController extends Controller
         }
     }
 
-    public function assign(Request $request){
+    public function assign(Request $request)
+    {
 
-      
+
         $reservation = PropertyReservation::find($request->reservation_id);
-        if($reservation){
+        if ($reservation) {
             $reservation->update([
-                'assigned_personel'=>$request->personel
+                'assigned_personel' => $request->personel
             ]);
 
             return redirect()->back()->with('success', 'Personel assigned to reserved property!');
