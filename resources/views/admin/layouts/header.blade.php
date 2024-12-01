@@ -5,10 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MDC - Property Rental System</title>
-    <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
     <script src="{{ asset('asset/dist/qrious.js') }}"></script>
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-    <script src="{{ mix('js/main.js') }}"></script>
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
+    <link rel="icon" href="{{ asset('asset/photos/logo.png') }}" type="image/png">
+
+    <!-- JavaScript Libraries -->
+    <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
+    <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
     @include('admin.styles.dark-mode')
 
@@ -158,14 +163,14 @@
     }
 </style>
 
-<body class="flex h-screen overflow-hidden bg-gray-100 text-gray-800">
+<body class="select-none flex h-screen overflow-hidden bg-gray-100 text-gray-800">
     <!-- Components -->
     @include('admin.components.rightbar')
     @include('admin.components.leftbar')
     @include('admin.components.topbar')
 
     <!-- contents -->
-    <div id="content" class="h-full">
+    <div id="content" class=" h-full">
         @yield('content')
     </div>
 

@@ -268,9 +268,9 @@
 
 <section class="w-full">
 
-    <div id="analytics-charts" class="flex justify-between space-x-2 p-4">
+    <div id="analytics-charts" class="flex justify-between space-x-2 p-2">
 
-        <div
+        <div id="transactionChartContainer"
             class="flex flex-col items-center w-full h-96 bg-gray-100 rounded {{ $setting->darkMode ? 'bg-gray-300' : 'bg-white border shadow-md'}}">
             <div class="flex items-center w-full justify-between">
 
@@ -278,13 +278,20 @@
 
                 </div>
             </div>
+            <div class="relative flex justify-end w-full fixed float-right">
+                <button onclick="document.getElementById('transactionChartContainer').classList.add('hidden')"
+                    class="px-2 fixed text-2xl font-bold hover:opacity-50">&times;</button>
+            </div>
 
             <canvas id="transactionChart" class="w-full h-full"></canvas>
         </div>
 
-        <div
-            class="flex justify-center items-center w-full h-96 rounded {{ $setting->darkMode ? 'bg-gray-300' : 'bg-white border shadow-md' }}">
-
+        <div id="myPieChartContainer"
+            class="flex flex-col items-center w-full h-96 bg-gray-100 rounded {{ $setting->darkMode ? 'bg-gray-300' : 'bg-white border shadow-md'}}">
+            <div class="relative flex justify-end w-full fixed float-right">
+                <button onclick="document.getElementById('myPieChartContainer').classList.add('hidden')"
+                    class="px-2 fixed text-2xl font-bold hover:opacity-50">&times;</button>
+            </div>
             <div class="relative">
                 <canvas id="myPieChart"></canvas>
             </div>
@@ -460,41 +467,45 @@
             }
         }
     </script>
-    <div class="mx-4">
+    <div id="analytics-table" class="overflow-y-auto h-[200px] mx-2 custom-scrollbar">
         <table class="w-full">
-            <thead class="bg-gray-200 ">
-                <tr>
-
-                    <th class="px-6 py-3 text-left">Rentee</th>
-                    <th class="px-6 py-3 text-left">Category</th>
-                    <th class="px-6 py-3 text-left">Property</th>
-                    <th class="px-6 py-3 text-left">Date Rent Start</th>
-                    <th class="px-6 py-3 text-left">Date End Start</th>
-                    <th class="px-6 py-3 text-left">Status</th>
-                    <th class="px-6 py-3 text-center">Action</th>
+            <thead class="bg-gray-200 sticky top-0 z-10">
+                <tr class="p-2">
+                    <th class="text-center">Rentee</th>
+                    <th class="text-center">Category</th>
+                    <th class="text-center">Property</th>
+                    <th class="text-center">Destination</th>
+                    <th class="text-center">Date Rent Start</th>
+                    <th class="text-center">Date End Start</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($records as $record)
                     <tr class="bg-white border-b hover:bg-gray-100">
-                        <td class="px-6 py-3">{{$record->reservation->rentee->name}}</td>
-                        <td class="px-6 py-3">{{$record->category->title}}</td>
-                        <td class="px-6 py-3">{{$record->property->name}}</td>
-                        <td class="px-6 py-3">{{$record->date_start}} {{$record->time_start}}</td>
-                        <td class="px-6 py-3">{{$record->date_end}} {{$record->time_end}}</td>
-                        <td class="px-6 py-3">{{ $record->reservation->status }}</td>
-
-                        <td class="px-6 py-3 text-center">
+                        <td class="text-center px-6 py-3">{{$record->reservation->rentee->name}}</td>
+                        <td class="text-center px-6 py-3">{{$record->category->title}}</td>
+                        <td class="text-center px-6 py-3">{{$record->property->name}}</td>
+                        <td class="text-center px-6 py-3">{{$record->destination->municipality}}</td>
+                        <td class="text-center px-6 py-3">{{$record->date_start}} {{$record->time_start}}</td>
+                        <td class="text-center px-6 py-3">{{$record->date_end}} {{$record->time_end}}</td>
+                        <td class="text-center px-6 py-3">{{ $record->reservation->status }}</td>
+                        <td class="text-center px-6 py-3 text-center">
                             <button onclick="document.getElementById('preview-{{$record->id}}').classList.toggle('hidden')">
                                 <i class="fas fa-eye text-blue-500 hover:opacity-100 opacity-50"></i>
                             </button>
                         </td>
-
                     </tr>
                 @endforeach
-
             </tbody>
         </table>
+
+
+    </div>
+    <div class="flex justify-center mt-2">
+        <button onclick="document.getElementById('analytics-table').classList.toggle('h-[200px]')"
+            class="text-blue-500"><i class="fas fa-chevron-down fa-2xl"></i></button>
 
     </div>
 

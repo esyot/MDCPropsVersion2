@@ -78,7 +78,13 @@ class RenteeCartController extends Controller
 
         $destinations = Destination::all();
 
-        $propertiesHasRecord = PropertyReservation::whereIn('property_id', $selectedProperties)->get();
+        $propertiesHasRecord = PropertyReservation::whereIn('property_id', $selectedProperties)
+            ->whereNull('returned_at')
+            ->whereNull('canceledByRentee_at')
+            ->whereNotNUll('approvedByAdmin_at')
+            ->whereNotNUll('approvedByCashier_at')
+            ->get();
+
 
         $unavailableDateRanges = $propertiesHasRecord->map(function ($reservation) {
             return [

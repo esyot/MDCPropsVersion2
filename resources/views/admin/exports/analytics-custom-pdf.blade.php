@@ -338,6 +338,7 @@
                         <th>Name</th>
                         <th>Category</th>
                         <th>Property</th>
+                        <th>Destination</th>
                         <th>Date Start</th>
                         <th>Date End</th>
                         <th>Status</th>
@@ -350,6 +351,7 @@
                             <td class="px-6 py-3">{{$record->reservation->rentee->name}}</td>
                             <td class="px-6 py-3">{{$record->category->title}}</td>
                             <td class="px-6 py-3">{{$record->property->name}}</td>
+                            <td class="px-6 py-3">{{$record->destination->municipality}}</td>
                             <td class="px-6 py-3">{{$record->date_start}} {{$record->time_start}}</td>
                             <td class="px-6 py-3">{{$record->date_end}} {{$record->time_end}}</td>
                             <td class="px-6 py-3">{{ $record->reservation->status }}</td>

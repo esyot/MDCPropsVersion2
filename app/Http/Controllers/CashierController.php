@@ -119,7 +119,15 @@ class CashierController extends Controller
 
         $properties = PropertyReservation::whereIn('reservation_id', $reservations->pluck('id'))->get();
 
-        return view('cashier.pages.reservations', compact('unreadNotifications', 'notifications', 'contacts', 'reservations', 'properties', 'setting'));
+        return view('cashier.pages.reservations', compact(
+            'unreadNotifications',
+            'notifications',
+            'contacts',
+            'reservations',
+            'properties',
+            'setting',
+            'page_title'
+        ));
     }
 
     public function reservationDetails($tracking_code)
@@ -224,16 +232,22 @@ class CashierController extends Controller
     public function transactions()
     {
         $page_title = 'Transactions';
-        $current_user_name = Auth::user()->name;
-        // Messages
-        $messages = Message::where('receiver_name', $current_user_name)->where('isRead', false)->get();
+        $current_user_id = Auth::user()->id;
+
+        $messages = Message::where('receiver_id', $current_user_id)->where('isReadByReceiver', false)->get();
         $unreadMessages = $messages->count();
-        $contacts = Message::where('receiver_name', $current_user_name)
-            ->latest()
-            ->get()
-            ->groupBy('sender_name')
-            ->map(fn($group) => $group->first())
-            ->values();
+        $contacts = DB::table('messages')
+            ->select('messages.*', 'users.*', 'users.name as sender_name', 'users.id as sender_id')
+            ->join('users', 'users.id', '=', 'messages.sender_id')
+            ->where(function ($query) {
+                $query->where('messages.receiver_id', Auth::user()->id);
+            })
+            ->whereIn('messages.id', function ($query) {
+                $query->select(DB::raw('MAX(id)'))
+                    ->from('messages')
+                    ->groupBy('sender_id', 'receiver_id');
+            })
+            ->get();
 
 
 

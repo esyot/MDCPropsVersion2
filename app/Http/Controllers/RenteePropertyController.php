@@ -55,9 +55,10 @@ class RenteePropertyController extends Controller
         $property = Property::find($id);
 
         $reservations = PropertyReservation::where('property_id', $id)
-            ->whereNotNull('approvedByAdmin_at')
-            ->whereNotNull('approvedByCashier_at')
-            ->where('returned_at', null)
+            ->whereNull('returned_at')
+            ->whereNull('canceledByRentee_at')
+            ->whereNotNUll('approvedByAdmin_at')
+            ->whereNotNUll('approvedByCashier_at')
             ->get();
 
         if ($reservations->isEmpty()) {

@@ -263,39 +263,41 @@
 
                     function formatDate(date) {
                         const d = new Date(date);
-                        d.setDate(d.getDate());
-                        return d.toISOString().split('T')[0]; // "YYYY-MM-DD"
+                        const year = d.getFullYear();
+                        const month = ('0' + (d.getMonth() + 1)).slice(-2);
+                        const day = ('0' + d.getDate()).slice(-2);
+                        return `${year}-${month}-${day}`; // "YYYY-MM-DD"
                     }
 
                     let startDatePicker = flatpickr("#date_start", {
-                        minDate: "today", // Ensure "today" is selectable
+                        minDate: "today",
                         disable: [
                             function (date) {
-                                return isDateUnavailable(date); // Disable unavailable dates
+                                return isDateUnavailable(date);
                             }
                         ],
                         onChange: function (selectedDates) {
                             if (selectedDates.length > 0) {
-                                const startDate = formatDate(selectedDates[0]);
-                                endDatePicker.set('minDate', startDate); // Ensure end date is not before start date
-                                endDatePicker.enable();
+                                const startDate = selectedDates[0];
+                                endDatePicker.set('minDate', startDate);
+                                endDatePicker.open(); // Open the end date picker if needed
                             } else {
-                                endDatePicker.disable();
+                                endDatePicker.close(); // Close the end date picker if needed
                             }
                         },
                         clickOpens: true,
                     });
 
                     let endDatePicker = flatpickr("#date_end", {
-                        minDate: "today", // Ensure "today" is selectable for end date too
+                        minDate: "today",
                         disable: [
                             function (date) {
-                                return isDateUnavailable(date); // Disable unavailable dates
+                                return isDateUnavailable(date);
                             },
                             function (date) {
                                 const startDate = startDatePicker.selectedDates[0];
                                 if (startDate) {
-                                    return date < startDate; // Ensure end date is not before start date
+                                    return date < startDate;
                                 }
                                 return false;
                             }
@@ -310,10 +312,10 @@
 
                         if (!dateStartValue) {
                             dateEndInput.setAttribute('readonly', true);
-                            endDatePicker.disable();
+                            endDatePicker.close(); // Close the end date picker
                         } else {
                             dateEndInput.removeAttribute('readonly');
-                            endDatePicker.enable();
+                            endDatePicker.open(); // Open the end date picker if needed
                         }
                     });
 
@@ -323,31 +325,22 @@
                         const timeStart = document.getElementById('time_start').value;
                         const timeEnd = document.getElementById('time_end').value;
 
-                        // Only validate time if the dates are the same
                         if (dateStart && dateEnd && dateStart === dateEnd) {
-                            // Check if time_end is earlier than time_start
                             if (timeEnd && timeStart && timeEnd < timeStart) {
                                 alert("Time End must be greater than or equal to Time Start for the same date.");
-
-                                // Clear time inputs if the validation fails
                                 document.getElementById('time_end').value = '';
                                 document.getElementById('time_start').value = '';
-
-                                // Set custom validity on time_end input field
                                 document.getElementById('time_end').setCustomValidity("Time End must be greater than or equal to Time Start.");
                             } else {
-                                // Clear the custom validity error if the validation passes
                                 document.getElementById('time_end').setCustomValidity("");
                             }
                         } else {
-                            // If dates are different, clear the time fields and validity
                             document.getElementById('time_end').setCustomValidity("");
                             document.getElementById('time_end').value = '';
                             document.getElementById('time_start').value = '';
                         }
                     }
 
-                    // Add event listeners to trigger validation on input changes
                     document.getElementById('time_start').addEventListener('input', validateTime);
                     document.getElementById('time_end').addEventListener('input', validateTime);
                     document.getElementById('date_start').addEventListener('input', validateTime);
