@@ -97,7 +97,11 @@ class RenteePropertyController extends Controller
     public function renteeItemsFilter(Request $request, $category_id, $rentee)
     {
         $properties = Property::where('name', 'LIKE', '%' . $request->search . '%')->where('category_id', $category_id)->get();
-
-        return view('rentee.partials.property-single', compact('properties', 'rentee'));
+        $page_title = 'Properties';
+        return view('rentee.partials.property-single', compact(
+            'properties',
+            'page_title',
+            'rentee'
+        ));
     }
 }
