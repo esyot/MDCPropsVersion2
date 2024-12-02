@@ -7,56 +7,97 @@
     <title>MDC - Property Rental System</title>
     <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
     <script src="{{ asset('asset/dist/qrious.js') }}"></script>
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-    <script src="{{ mix('js/main.js') }}"></script>
+
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
+    <link rel="icon" href="{{ asset('asset/photos/logo.png') }}" type="image/png">
+
+    <!-- JavaScript Libraries -->
+    <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
+    <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
+    <script src="{{ asset('asset/js/jsQR.min.js') }}"></script>
+
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
-    <style>
-        body {
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .header img {
-            width: 70px;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .header .details {
-            font-size: 0.9rem;
-        }
-
-        .footer-button {
-            background-color: #2563eb;
-            color: white;
-            font-weight: bold;
-            padding: 10px 20px;
-            border-radius: 9999px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s;
-        }
-
-        .footer-button:hover {
-            background-color: #1e40af;
-            transform: translateY(-2px);
-        }
-
-        .background-overlay {
-            position: absolute;
-            inset: 0;
-            background: url('{{ asset('asset/background-img/mdc-back.jpg') }}') center/cover no-repeat;
-            opacity: 0.4;
-            z-index: -1;
-        }
-    </style>
 </head>
 
-<body>
+<body class="font-sans min-h-screen flex flex-col bg-gradient-to-b from-blue-800 to-blue-100">
+    <!-- Tutorial -->
+    <div id="imageModal"
+        class="select-none fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 z-40 hidden">
+        <div class="bg-white rounded-lg shadow-lg w-[800px] mx-2 z-50">
+            <div class="relative shadow-md">
+                <div class="carousel-container relative">
+                    <img src="{{ asset('asset/photos/tutorial/1.jpg') }}" alt="Image 1" class="carousel-img"
+                        id="carouselImage">
+                </div>
+                <button
+                    class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-800 text-white px-3.5 py-2 opacity-40 hover:opacity-100 rounded-full"
+                    id="nextBtn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const images = Array.from({ length: 17 }, (_, index) => `{{ asset('asset/photos/tutorial/') }}/${index + 1}.jpg`);
+
+            let currentIndex = 0;
+
+            const modal = document.getElementById("imageModal");
+            const openModalBtn = document.getElementById("redirect-btn");
+            const closeModalBtn = document.getElementById("closeModalBtn");
+            const carouselImage = document.getElementById("carouselImage");
+            const nextBtn = document.getElementById("nextBtn");
+            const prevBtn = document.getElementById("prevBtn");
+
+            if (openModalBtn) {
+
+                openModalBtn.addEventListener("click", () => {
+                    modal.classList.remove("hidden");
+                    document.getElementById('character-waving').classList.add('hidden');
+                });
+            }
+
+
+            if (closeModalBtn) {
+
+                closeModalBtn.addEventListener("click", () => {
+                    modal.classList.add("hidden");
+                });
+            }
+
+
+            if (nextBtn) {
+
+                nextBtn.addEventListener("click", () => {
+                    currentIndex = (currentIndex + 1) % images.length;
+                    carouselImage.src = images[currentIndex];
+
+
+                    if (currentIndex === 16) {
+                        modal.classList.add("hidden");
+                    }
+                });
+            }
+
+
+            if (prevBtn) {
+
+                prevBtn.addEventListener("click", () => {
+                    currentIndex = (currentIndex - 1 + images.length) % images.length;
+                    carouselImage.src = images[currentIndex];
+                });
+            }
+        });
+    </script>
+
+    <!-- /Tutorial -->
+
     <script>
         function clearData() {
             localStorage.removeItem('formData');
@@ -76,9 +117,10 @@
             });
         </script>
 
-        <div id="QR" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50">
-            <div class="max-w-[300px] bg-white rounded-lg shadow-lg p-4 z-10 bg-gradient-to-b from-blue-100 to-blue-500">
-                <h1 class="text-xl font-bold text-center">Reservation Successful!</h1>
+        <!-- QR Modal -->
+        <div id="QR" class="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
+            <div class="w-[500px] bg-white rounded-lg shadow-lg p-4 z-10">
+                <h1 class="text-xl font-bold text-center">Reservation submitted successfully!</h1>
                 <div class="flex justify-center mt-4">
                     <canvas id="canvas"></canvas>
                 </div>
@@ -93,55 +135,135 @@
                     </p>
                 </div>
 
-                <div class="flex justify-center mt-2 ">
+                <div class="flex justify-center mt-2">
                     <button onclick="document.getElementById('QR').classList.add('hidden')"
-                        class="footer-button">Done</button>
+                        class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">
+                        Done
+                    </button>
                 </div>
             </div>
         </div>
-
     @endif
 
-    <div class="flex fixed top-0 right-0 p-4 z-50">
+    <!-- Fixed tracking button -->
+    <div class="flex fixed top-0 right-0 p-4 z-20">
         <a href="{{ route('tracking') }}" title="Check reservation"
-            class="bg-blue-500 px-2 shadow-md py-2 rounded-full hover:opacity-50">
-            <i class="fas fa-desktop fa-xl text-white shadow-md"></i>
+            class="bg-blue-500 px-2 py-1.5 shadow-xl rounded-full hover:opacity-50">
+            <i class="fas fa-desktop fa-lg text-blue-100"></i>
         </a>
     </div>
-    <div id="welcome" class="flex fixed inset-0 justify-center items-center">
-        <div class="max-w-[600px] rounded-lg shadow-xl z-10 bg-white p-4">
-            <header class="header">
-                <img src="{{ asset('asset/logo/logo.png') }}" alt="MDC Logo">
-                <div class="details">
-                    <h1 class="text-2xl font-semibold">Mater Dei College</h1>
 
-                    <p class="text-xs">
-                        <i class="fas fa-directions text-red-500"></i> Brgy. Cabulijan, Tubigon, Bohol
-                    </p>
-                    <p class="text-xs">
-                        <i class="fas fa-envelope text-gray-500"></i> mdc1983tub@gmail.com
-                    </p>
-                    <p>
-                        <a href="https://www.facebook.com/mdctubigon" class="text-xs hover:underline text-blue-500">
-                            <i class="fab fa-facebook"></i> mdctubigon
-                        </a>
-                    </p>
+
+    <div id="character-waving" class="flex fixed bottom-16 left-[-50px] p-4 z-30">
+
+        <span>
+            <div class="fixed relative left-32 text-center text-[12px]">
+                <p class="bg-white rounded-r-full rounded-tl-full to py-2 px-4 break-words w-[250px] shadow-md">
+                    <span id="typing-text"> Hi there! are you new here? you can run tutorials by
+                        clicking</span>
+                    <button id="redirect-btn" class="hidden text-blue-500 hover:underline">here.</button>
+                </p>
+
+
+                <i class="fas fa-circle text-[10px] fixed left-20 text-white shadow-md"> </i>
+                <i class="fas fa-circle text-[6px] fixed left-16 mt-4 text-white shadow-md"> </i>
+
+            </div>
+
+            <img src="{{ asset('asset/gif/wave-92.gif') }}" class="w-36 h-36 drop-shadow-md" alt="">
+        </span>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const textElement = document.getElementById("typing-text");
+            const text = textElement.innerHTML;
+            textElement.innerHTML = '';
+
+            let index = 0;
+
+            function typeWriter() {
+                if (index < text.length) {
+                    textElement.innerHTML += text.charAt(index);
+                    index++;
+                    setTimeout(typeWriter, 30)
+                    document.getElementById('redirect-btn').classList.add('hidden');
+                } else {
+
+                    document.getElementById('redirect-btn').classList.remove('hidden');
+                }
+
+            }
+
+
+            setInterval(function () {
+                index = 0;
+                textElement.innerHTML = '';
+                typeWriter();
+            }, 10000);
+
+
+            typeWriter();
+        });
+    </script>
+
+
+    <!-- Welcome Section -->
+    <div id="welcome" class="relative flex justify-center items-center h-full flex-grow">
+        <div class="w-[500px] rounded shadow-2xl z-10 bg-white mx-4 sm:mx-8">
+
+
+            <section class="text-center ">
+                <div class="flex justify-center p-2">
+                    <img src="{{ asset('asset/logo/logo.png') }}" alt="" class="drop-shadow mt-2 w-20 h-20 bg-blue-500 rounded-full cursor-pointer select-none
+    transition-all duration-150 [box-shadow:0_3px_0_0_#1b6ff8,0_6px_0_0_#1b70f841]
+    border-b border-blue-400">
                 </div>
-            </header>
-            <section class="text-center mt-6">
-                <h1 class="text-2xl">
+                <h1 class="text-xl mt-2 font-semibold">
                     {{ session()->has('rentee') ? 'Welcome back to MDC' : 'Welcome to MDC' }}
                     <br>Property Reservation System
                 </h1>
             </section>
-            <footer class="flex justify-center mt-6">
-                <a href="{{ route('rentee.start-reservation') }}" class="footer-button">
-                    {{ session()->has('rentee') ? 'Back to Home' : 'Get started' }}
+            <footer class="flex justify-center mt-6 p-4 ">
+
+                <a href="{{ route('rentee.start-reservation') }}" class="button px-4 py-2 mb-4 bg-blue-500 rounded-full cursor-pointer select-none
+    active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841]
+    active:border-b-[0px]
+    transition-all duration-150 [box-shadow:0_4px_0_0_#1b6ff8,0_7px_0_0_#1b70f841]
+    border-b border-blue-400
+  ">
+                    <span class="flex flex-col justify-center items-center h-full text-white font-bold text-lg ">
+                        {{ session()->has('rentee') ? 'Back to Home' : 'Get started' }}</span>
                 </a>
+
             </footer>
+
         </div>
-        <div class="background-overlay"></div>
+
     </div>
+
+    <!-- Main Footer -->
+    <footer class="w-full bg-white py-4 mt-16 shadow-md">
+        <div class="container mx-auto text-center space-y-4">
+            <div class="flex flex-wrap justify-around">
+                <p class="flex items-center justify-center text-blue-800 space-x-2">
+                    <i class="fas fa-directions "></i>
+                    <span class="">/Brgy. Cabulijan, Tubigon, Bohol</span>
+                </p>
+                <p class="flex items-center justify-center space-x-2">
+                    <i class="fas fa-envelope text-blue-800"></i>
+                    <span class="text-blue-800 ">/mdc1983tub@gmail.com</span>
+                </p>
+                <p class="justify-center">
+                    <a href="https://www.facebook.com/mdctubigon"
+                        class="text-blue-800 flex items-center space-x-2 hover:underline ">
+                        <i class="fab fa-facebook"> </i> <span>/mdctubigon</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
 </body>
 
 </html>

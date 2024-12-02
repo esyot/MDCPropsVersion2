@@ -5,10 +5,15 @@
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MDC - Property Rental System</title>
+   <!-- Stylesheets -->
+   <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
+    <link rel="icon" href="{{ asset('asset/photos/logo.png') }}" type="image/png">
+
+    <!-- JavaScript Libraries -->
+    <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
     <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
-    <script src="{{ asset('asset/dist/qrious.js') }}"></script>
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-    <script src="{{ mix('js/main.js') }}"></script>
+    <script src="{{ asset('asset/js/jsQR.min.js') }}"></script>
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
 </head>
 

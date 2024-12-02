@@ -233,7 +233,6 @@
                         required>
                 </div>
 
-
                 <div>
                     <label for="time_end" class="block text-sm font-medium text-gray-700">Time End:</label>
                     <input type="time" id="time_end" name="time_end"
@@ -248,9 +247,8 @@
                         required>
                 </div>
 
-
                 <script>
-                    const unavailableDateRanges = @json($unavailableDateRanges);
+                    const unavailableDateRanges = []; // Add your unavailable date ranges here.
 
                     function isDateUnavailable(date) {
                         const formattedDate = formatDate(date);
@@ -336,8 +334,7 @@
                             }
                         } else {
                             document.getElementById('time_end').setCustomValidity("");
-                            document.getElementById('time_end').value = '';
-                            document.getElementById('time_start').value = '';
+
                         }
                     }
 
