@@ -27,7 +27,7 @@ return new class extends Migration {
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->integer('qty');
             $table->decimal('price', 10, 2)->nullable(true);
-            $table->enum('per', ['pcs', 'hr', 'km', 'mi', 'm', 'kg', 'g', 'mg', 'cm', 'mm', 'lbs', 'oz', 'l', 'ml'])->nullable(true);
+            $table->enum('per', ['pcs', 'hr', 'km'])->nullable(true);
             $table->string('assigned_personel')->nullable(true);
             $table->timestamps();
         });
@@ -76,7 +76,6 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->boolean('darkMode')->default(false);
-            $table->boolean('leftbarOpen')->default(false);
             $table->boolean('transition')->default(true);
             $table->timestamps();
 
