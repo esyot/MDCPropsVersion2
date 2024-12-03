@@ -16,13 +16,13 @@
             <!-- Notification Icon -->
             <div class="relative" id="inside-notification" title="Notifications">
                 <!-- Notification Button -->
-                <button id="notification-icon" class="hover:opacity-50"
+                <button id="notification-icon" class="relative hover:opacity-50"
                     hx-get="{{ route('admin.notification-list', ['filter' => 'all'])}}" hx-swap="innerHTML"
                     hx-trigger="click" hx-target="#notification-list">
                     <i class="fa-solid fa-bell fa-lg text-blue-600"></i>
                     <span id="notificationTitle">Notifications</span>
 
-                    <span id="notif-count" id="notification-count"
+                    <span id="notif-count"
                         class="absolute top-0 left-0 flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full -translate-x-1/2 -translate-y-1/2">
                         {{ $unreadNotifications }}
                     </span>
@@ -46,6 +46,12 @@
                             position: fixed;
                             left: 0;
                             right: 0;
+                        }
+
+                        #message-count {
+                            display: fixed;
+                            top: -9px;
+                            margin-bottom: 20px;
                         }
 
 
@@ -183,16 +189,14 @@
                     id="inside-messages" title="Messages">
                     <button onclick="showMessagesLoader()" hx-get="{{route('admin.contacts-refresh')}}"
                         hx-swap="innerHTML" hx-target="#messages-dropdown" hx-trigger="click" id="messages-icon"
-                        class="flex items-center hover:opacity-50 focus:outline-none">
+                        class="relative flex items-center hover:opacity-50 focus:outline-none">
                         <i class="fas fa-inbox fa-lg mt-1 text-blue-600"></i>
                         <span id="messageTitle" class="ml-2">Messages</span>
 
-
                         <span id="message-count"
-                            class="absolute top-0 left-0 flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full transform -translate-x-1/2 -translate-y-1/2">
+                            class="absolute top-0 left-0 flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full -translate-x-1/2 -translate-y-1/2">
                             {{ $unreadMessages }}
                         </span>
-
                     </button>
 
 
@@ -208,7 +212,7 @@
                         @media (orientation: portrait) {
                             #messages-dropdown {
                                 position: fixed;
-                                left: 0;
+                                left: 5;
                                 right: 0;
                                 top: 50px;
                             }

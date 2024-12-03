@@ -101,6 +101,10 @@
 
         }
 
+        #main-content {
+            height: 75%;
+        }
+
 
     }
 </style>
@@ -140,53 +144,51 @@
         </script>
 
         @foreach ($categories as $category)  
-                <form id="myForm-{{$category->id}}" action="{{ route('admin.properties-filter') }}">
-                    @csrf
-                    <div id="card"
-                        class=" flex flex-col text-white rounded-lg overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-90' : '' }}">
-                        <div title="Click to redirect to properties"
-                            class="relative w-full overflow-hidden slide-container cursor-pointer"
-                            onclick="document.getElementById('myForm-{{$category->id}}').submit()">
-                            <input type="hidden" name="category" value="{{$category->id}}">
-                            <div class="slide-wrapper z-50">
-                                @php
-                                    $directory = storage_path('app/public/images/categories/' . $category->folder_name);
-                                    $images = array_diff(scandir($directory), array('..', '.'));
-                                @endphp
 
-                                @foreach ($images as $image)
-                                    <div class="slide bg-gray-100">
-                                        <img src="{{ asset('storage/images/categories/' . $category->folder_name . '/' . $image) }}"
-                                            alt="Image">
-                                    </div>
-                                @endforeach
-                            </div>
-                            <button type="button" class="prev-slide">&#10094;</button>
-                            <button type="button" class="next-slide">&#10095;</button>
+                <div id="card"
+                    class=" flex flex-col text-white rounded-lg overflow-hidden {{ $setting->transition == true ? 'transform transition-transform duration-300 hover:scale-90' : '' }}">
+                    <div title="Click to redirect to properties"
+                        class="relative w-full overflow-hidden slide-container cursor-pointer" S>
+                        <input type="hidden" name="category" value="{{$category->id}}">
+                        <div class="slide-wrapper z-50">
+                            @php
+                                $directory = storage_path('app/public/images/categories/' . $category->folder_name);
+                                $images = array_diff(scandir($directory), array('..', '.'));
+                            @endphp
+
+                            @foreach ($images as $image)
+                                <div class="slide bg-gray-100">
+                                    <img src="{{ asset('storage/images/categories/' . $category->folder_name . '/' . $image) }}"
+                                        alt="Image">
+                                </div>
+                            @endforeach
                         </div>
-                        <div class="p-2 bg-gradient-to-b from-blue-500 to-blue-800">
-                            <div class="flex items-center justify-center">
-                                <h1 class="text-lg font-semibold drop-shadow truncate">{{ $category->title }}</h1>
-                            </div>
+                        <button type="button" class="prev-slide">&#10094;</button>
+                        <button type="button" class="next-slide">&#10095;</button>
+                    </div>
+                    <div class="p-2 bg-gradient-to-b from-blue-500 to-blue-800">
+                        <div class="flex items-center justify-center">
+                            <h1 class="text-lg font-semibold drop-shadow truncate">{{ $category->title }}</h1>
+                        </div>
 
-                            <div class="w-full h-full space-y-2">
-                                <button type="button" title="Edit Details"
-                                    onclick="document.getElementById('category-update-{{$category->id}}').classList.remove('hidden')"
-                                    class="py-2 w-full shadow-md bg-blue-100 text-blue-800 hover:opacity-50 rounded">Edit
-                                    Details
-                                </button>
+                        <div class="w-full h-full space-y-2">
+                            <button type="button" title="Edit Details"
+                                onclick="document.getElementById('category-update-{{$category->id}}').classList.remove('hidden')"
+                                class="py-2 w-full shadow-md bg-blue-100 text-blue-800 hover:opacity-50 rounded">Edit
+                                Details
+                            </button>
 
-                                @hasrole('superadmin|admin')
-                                <button type="button" title="Assign Users"
-                                    onclick="document.getElementById('category-{{$category->id}}').classList.remove('hidden')"
-                                    class="py-2 w-full bg-blue-500 text-blue-100 hover:opacity-50 hover:text-green-100 rounded">Assign
-                                    Users
-                                </button>
-                                @endhasrole
-                            </div>
+                            @hasrole('superadmin|admin')
+                            <button type="button" title="Assign Users"
+                                onclick="document.getElementById('category-{{$category->id}}').classList.remove('hidden')"
+                                class="py-2 w-full bg-blue-500 text-blue-100 hover:opacity-50 hover:text-green-100 rounded">Assign
+                                Users
+                            </button>
+                            @endhasrole
                         </div>
                     </div>
-                </form>
+                </div>
+
         @endforeach
 
     </div>

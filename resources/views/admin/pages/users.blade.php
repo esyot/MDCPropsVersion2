@@ -11,20 +11,20 @@
         <span class="border-l-2 border-gray-200 h-8 mx-2"></span> <!-- Vertical separator line -->
         <a href="{{ route('admin.password-reset-requests') }}" title="Click to view all pasword reset requests"
             class="text-gray-800 drop-shadow opacity-50 hover:opacity-100">
-            Password Reset Requests
+            User's Requests
         </a>
     </div>
 
     <div class="flex items-center">
-        <form hx-get="{{ route('admin.users-search') }}" hx-trigger="input" hx-target="#users" hx-swap="innerHTML"
-            class="flex space-x-1 items-center bg-white p-2 rounded-full shadow-md">
+        <form id="search-bar" hx-get="{{ route('admin.users-search') }}" hx-trigger="input" hx-target="#users"
+            hx-swap="innerHTML" class="flex space-x-1 items-center bg-white p-2 rounded-full shadow-md w-full">
             @csrf
             <i class="fas fa-magnifying-glass"></i>
-            <input type="text" name="search" placeholder="Search user..." class="focus:outline-none">
-
+            <input type="text" name="search" placeholder="Search user..."
+                class="flex-1 w-full max-w-lg focus:outline-none">
         </form>
-
     </div>
+
 
 </div>
 <style>
@@ -47,27 +47,20 @@
         #card {
             width: 100%;
         }
+
+        #main-content {
+            height: 65%;
+        }
+
+        #search-bar {
+            width: 120px;
+        }
     }
 </style>
 
 <div id="main-content" class="w-full h-[90%] relative p-4 overflow-y-auto custom-scrollbar">
     <div class="flex flex-wrap flex-grow gap-2">
 
-        @hasrole('superadmin')
-
-        <!-- <div id="add-new-user-card" title="Add a new user"
-            class="flex flex-col rounded-lg bg-gray-300 {{ $setting->transition == true ? 'transition-transform transform duration-300 hover:scale-90' : '' }}">
-            <div class="flex justify-center items-center rounded-lg bg-gray-200 h-3/4 cursor-pointer hover:text-gray-800 text-gray-400 "
-                >
-                <h1 class="text-8xl mb-3 font-bold py-2 w-50 h-50 object-cover cursor-pointer">+</h1>
-            </div>
-            <div class="bg-blue-500 w-full h-1/4 shadow-md text-center flex items-center rounded-b-lg justify-center">
-                <h1 class="text-lg font-semibold text-white truncate">Add User</h1>
-            </div>
-        </div> -->
-
-
-        @endhasrole
         <div id="users" class="flex flex-wrap flex-grow gap-2">
             @include('admin.partials.users')
 

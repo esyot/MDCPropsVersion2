@@ -178,54 +178,46 @@
         All rights reserved &copy; 2024
     </footer>
 
-    <footer id="footer-portrait" class="flex bg-blue-500 p-2 justify-center z-50 shadow-md">
-
-
+    <footer id="footer-portrait" class="flex bg-blue-500 justify-center z-50 fixed bottom-0 left-0 w-full">
         <div class="flex items-center space-x-8 overflow-x-auto transition-transform duration-300 ease-in-out">
-            <a href="{{ route('dashboard') }}" class="flex flex-col items-center">
-                <i class="fa-solid fa-calendar-days text-white drop-shadow-lg"></i>
-                <small class="text-white">Dashboard</small>
+            <a href="{{ route('dashboard') }}" class="flex flex-col mt-2 py-2 items-center">
+                <i class="fa-solid fa-calendar-days fa-lg text-white drop-shadow-lg"></i>
+                <small class="text-white mt-2">Dashboard</small>
             </a>
 
-            <a href="{{ route('admin.properties') }}" class="flex flex-col items-center">
-                <i class="fa-solid fa-boxes-stacked text-white drop-shadow-lg"></i>
-                <small class="text-white">Items</small>
-            </a>
-            <a href="{{ route('admin.categories') }}" class="flex flex-col items-center">
-                <i class="fa-solid fa-th-large  text-white drop-shadow-lg"></i>
-                <small class="text-white">Categories</small>
-
-            </a>
-            <a href="{{ route('admin.reservations') }}" class="flex flex-col items-center">
-                <i class="fa-solid fa-business-time  text-white drop-shadow-lg"></i>
-                <small class="text-white">Transactions</small>
+            <a href="{{ route('admin.properties') }}" class="flex mt-2 py-2 flex-col items-center">
+                <i class="fa-solid fa-boxes-stacked fa-lg text-white drop-shadow-lg"></i>
+                <small class="text-white mt-2 ">Items</small>
             </a>
 
-
-            <a href="{{ route('admin.claim-properties') }}" class="flex flex-col items-center">
-                <i class="fas fa-hands  text-white drop-shadow-lg"></i>
-                <small class="text-white">Claim</small>
+            <a href="{{ route('admin.categories') }}" class="flex mt-2 py-2 flex-col items-center">
+                <i class="fa-solid fa-th-large fa-lg text-white drop-shadow-lg"></i>
+                <small class="text-white mt-2">Categories</small>
             </a>
 
-
-
-            <a href="{{ route('admin.return-properties') }}" class="flex flex-col items-center">
-                <i class="fas fa-truck text-white drop-shadow-lg"></i>
-                <small class="text-white">Return</small>
+            <a href="{{ route('admin.reservations') }}" class="flex mt-2 py-2 flex-col items-center">
+                <i class="fa-solid fa-business-time fa-lg text-white drop-shadow-lg"></i>
+                <small class="text-white mt-2">Reservations</small>
             </a>
 
-            <a href="{{ route('users') }}" class="flex flex-col items-center">
-                <i class="fa-solid fa-users-gear text-white drop-shadow-lg"></i>
-                <small class="text-white">Users</small>
+            <a href="{{ route('admin.claim-properties') }}" class="flex mt-2 py-2 flex-col items-center">
+                <i class="fas fa-hands text-white fa-lg drop-shadow-lg"></i>
+                <small class="text-white mt-2">Claim</small>
             </a>
 
-
-            <a href="{{ route('admin.analytics-index') }}" class="flex flex-col items-center">
-                <i class="fas fa-chart-line text-white drop-shadow-lg"></i>
-                <small class="text-white">Analytics</small>
+            <a href="{{ route('admin.return-properties') }}" class="flex mt-2 py-2 flex-col items-center">
+                <i class="fas fa-truck text-white fa-lg drop-shadow-lg"></i>
+                <small class="text-white mt-2">Return</small>
             </a>
 
-        </div>
+            <a href="{{ route('users') }}" class="flex flex-col mt-2 py-2 items-center">
+                <i class="fa-solid fa-users-gear fa-lg text-white drop-shadow-lg"></i>
+                <small class="text-white mt-2">Users</small>
+            </a>
 
+            <a href="{{ route('admin.analytics-index') }}" class="flex mt-2 py-2 flex-col items-center">
+                <i class="fas fa-chart-line text-white fa-lg drop-shadow-lg"></i>
+                <small class="text-white mt-2">Analytics</small>
+            </a>
         </div>
     </footer>

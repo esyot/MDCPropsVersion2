@@ -1,10 +1,15 @@
 <style>
     @media(orientation: portrait) {
         #reservation-form-fields-{{$day}} {
-            height: 380px;
+            height: 280px;
             overflow-y: auto;
             margin-left: 10px;
             margin-right: 10px;
+        }
+
+        #reservation-form-{{$day}} {
+            position: fixed;
+            top: 0;
         }
     }
 
@@ -83,13 +88,13 @@
 <div id="reservation-add-{{$day}}"
     class="fixed inset-0 bg-gray-800 bg-opacity-75 select-none flex items-center justify-center z-40 hidden">
     <form action="{{ route('admin.reservation-add') }}" method="POST" id="reservation-form-{{$day}}"
-        class="bg-white rounded shadow-md mx-2">
+        class=" bg-white rounded shadow-md mx-2">
         @csrf
 
         <div class="flex justify-between px-4 py-2">
 
             <!-- Form Title -->
-            <h2 class="text-xl font-bold  text-gray-800">Add Reservation on
+            <h2 class="text-xl font-bold  text-gray-800">Reserve on
                 <span class="text-red-500 font-bold">{{ $currentDate->copy()->day($day)->format('F j, Y ') }}</span>
             </h2>
 
@@ -254,7 +259,7 @@
 
         </div>
 
-        <div class="px-4">
+        <div class="px-3">
             <label for="" class="block text-gray-700 font-semibold">Purpose</label>
             <textarea name="purpose" id="" placeholder="Input the purpose of reservation..."
                 class="block w-full border border-gray-300 rounded"></textarea>

@@ -44,10 +44,10 @@
 <form id="filter-form" hx-get="{{ route('admin.date-custom')}}" hx-target="#dashboard" hx-swap="innerHTML"
     hx-trigger="change" class="select-none shadow-md">
 
-    <div id="calendar-header" class="py-2">
+    <div id="calendar-header" class="py-2 px-2">
 
         <div class="flex items-center space-x-1">
-            <div class="flex items-center space-x-2 px-2">
+            <div class="flex items-center space-x-1">
                 <a hx-get="{{ route('admin.calendar-move', ['category' => $currentCategory->id, 'action' => 'today', 'year' => $currentDate->format('Y'), 'month' => $currentDate->format('m')]) }}"
                     hx-target="#dashboard" hx-swap="innerHTML"
                     class="px-4 py-2 {{ $setting->darkMode ? 'bg-gray-200 text-gray-800' : 'bg-teal-500 text-teal-100' }}  hover:opacity-50 shadow-md rounded-lg">
@@ -65,7 +65,7 @@
                         class="fas fa-chevron-circle-right fa-2xl  {{ $setting->darkMode ? 'text-gray-100' : 'text-blue-500 ' }}  hover:opacity-50"></i>
                 </a>
             </div>
-            <div class="flex items-center hover:opacity-50 bg-white shadow-md p-2 rounded-lg">
+            <div class="flex items-center hover:opacity-50 space-x-1 bg-white shadow-md p-2 rounded-lg">
 
                 <i id="category-icon" class="fa-solid fa-calendar-days text-gray-500"></i>
                 <select name="year" class="bg-transparent focus:outline-none">
@@ -82,7 +82,7 @@
                 </select>
             </div>
 
-            <div class="flex items-center hover:opacity-50 bg-white shadow-md p-2 rounded-lg">
+            <div class="flex items-center space-x-1 hover:opacity-50 bg-white shadow-md p-2 rounded-lg">
                 <i id="category-icon" class="fa-solid fa-list text-gray-500"></i>
 
                 <select name="category"
@@ -145,7 +145,8 @@
                         {{-- Days of the week header --}}
                         @foreach(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $day)
                             <div class="font-bold text-center {{ $day == 'Sun' ? 'text-red-500' : '' }}">
-                                {{ $day }}
+                                <small>
+                                    {{ $day }}</small>
                             </div>
                         @endforeach
                     </div>
@@ -166,7 +167,7 @@
 
                                     <div
                                         class="{{ $hasRecord ? 'bg-gray-300 text-gray-800 border border-gray-100' : '' }} 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         {{ $currentDayInMonth == 'Sunday' ? 'text-red-500' : '' }} text-center">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 {{ $currentDayInMonth == 'Sunday' ? 'text-red-500' : '' }} text-center">
                                         <span class="relative inline-block">
                                             @if(\Carbon\Carbon::now()->isToday() && \Carbon\Carbon::now()->day == $day && $monthStart->month == \Carbon\Carbon::now()->month && $currentYear == \Carbon\Carbon::now()->format('Y'))
                                                 <i class="fas fa-circle text-green-500 text-[4px] absolute top-5 left-0 right-0 z-50"></i>
