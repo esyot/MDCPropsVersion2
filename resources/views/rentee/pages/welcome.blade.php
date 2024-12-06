@@ -22,7 +22,7 @@
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
 </head>
 
-<body class="font-sans min-h-screen flex flex-col bg-gradient-to-b from-blue-800 to-blue-100">
+<body class="font-sans h-screen overflow-hidden flex flex-col bg-gradient-to-b from-blue-800 to-blue-100">
     <!-- Tutorial -->
     <div id="imageModal"
         class="select-none fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 z-40 hidden">
@@ -154,7 +154,7 @@
     </div>
 
 
-    <div id="character-waving" class="flex fixed bottom-16 left-[-50px] p-4 z-30">
+    <div id="character-waving" class="flex fixed bottom-2 left-[-50px] p-4 z-30">
 
         <span>
             <div class="fixed relative left-32 text-center text-[12px]">
@@ -209,8 +209,8 @@
 
 
     <!-- Welcome Section -->
-    <div id="welcome" class="relative flex justify-center items-center h-full flex-grow">
-        <div class="w-[500px] rounded shadow-2xl z-10 bg-white mx-4 sm:mx-8">
+    <div id="welcome" class="flex fixed inset-0 justify-center items-center">
+        <div class="bg-white px-12 rounded shadow-md">
 
 
             <section class="text-center ">
@@ -224,7 +224,7 @@
                     <br>Property Reservation System
                 </h1>
             </section>
-            <footer class="flex justify-center mt-6 p-4 ">
+            <footer class="flex justify-center p-4 ">
 
                 <a href="{{ route('rentee.start-reservation') }}" class="button px-4 py-2 mb-4 bg-blue-500 rounded-full cursor-pointer select-none
     active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841]
@@ -243,26 +243,26 @@
     </div>
 
     <!-- Main Footer -->
-    <footer class="w-full bg-white py-4 mt-16 shadow-md">
-        <div class="container mx-auto text-center space-y-4">
-            <div class="flex flex-wrap justify-around">
-                <p class="flex items-center justify-center text-blue-800 space-x-2">
-                    <i class="fas fa-directions "></i>
-                    <span class="">/Brgy. Cabulijan, Tubigon, Bohol</span>
-                </p>
-                <p class="flex items-center justify-center space-x-2">
-                    <i class="fas fa-envelope text-blue-800"></i>
-                    <span class="text-blue-800 ">/mdc1983tub@gmail.com</span>
-                </p>
-                <p class="justify-center">
-                    <a href="https://www.facebook.com/mdctubigon"
-                        class="text-blue-800 flex items-center space-x-2 hover:underline ">
-                        <i class="fab fa-facebook"> </i> <span>/mdctubigon</span>
-                    </a>
-                </p>
+    <footer class="w-full bg-white shadow-md fixed bottom-0 left-0">
+        <div class="w-full flex py-2 justify-around">
+
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-envelope text-blue-800"></i>
+                <small class="text-blue-800 ">/mdc1983tub@gmail.com</small>
             </div>
+
+            <div class="flex items-center space-x-2">
+                <i class="fab fa-facebook text-blue-800"></i>
+                <a href="https://www.facebook.com/mdctubigon"
+                    class="text-blue-800 text-xs hover:underline">/mdctubigon</a>
+            </div>
+
+
+
+
         </div>
     </footer>
+
 
 </body>
 

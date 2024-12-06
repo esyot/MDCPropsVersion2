@@ -1,13 +1,27 @@
+<style>
+    @media(orientation:portrait) {
+        #modal-content-{{$date}} {
+            position: fixed;
+            top: 0;
+            margin-top: 20px;
+        }
+
+        #modal-table-{{$date}} {
+            height: 500px;
+        }
+    }
+</style>
+
 <div id="modal-background-{{$date}}"
     class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-40">
     <div id="modal-content-{{$date}}"
-        class="bg-white mx-2 w-[800px] rounded shadow-md {{$setting->transition == true ? 'animation-open' : '' }}">
+        class="bg-white mx-2 rounded shadow-md {{$setting->transition == true ? 'animation-open' : '' }}">
         <div class="bg-blue-500 rounded-t py-1">
 
         </div>
         <!-- Close Button -->
         <div class="flex items-center justify-between p-2">
-            <h2 class="text-xl font-semibold mb-4">Reserved on {{$currentDate}}</h2>
+            <h2 class="text-xl font-semibold mb-4">Reserved on <span class="text-red-500">{{$currentDate}}</span></h2>
 
             <button title="Insert a reservation"
                 onclick="toggleReservationForm({{\Carbon\Carbon::parse($date)->format('j')}}, {{$setting->transition}})"
@@ -15,23 +29,23 @@
 
         </div>
         <!-- Modal Content -->
-        <div class="">
+        <div id="modal-table-{{$date}}" class="overflow-y-auto">
             <table class="w-full">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="">
-                            Properties
+                <thead class="sticky bg-gray-50">
+                    <tr class="text-xs">
+                        <th class="text-center">
+                            Property
                         </th>
-                        <th class="">
+                        <th class="text-center">
                             Date Start
                         </th>
-                        <th class="">
+                        <th class="text-center">
                             Date End
                         </th>
-                        <th class="">
-                            Reservation Type
+                        <th class="text-center">
+                            Type
                         </th>
-                        <th class="">
+                        <th class="text-center">
                             Status
                         </th>
                     </tr>

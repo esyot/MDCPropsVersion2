@@ -65,7 +65,7 @@ class RenteeCartController extends Controller
         $cart ? $cart->update(['properties' => json_encode($properties)]) :
             Cart::create(['rentee_id' => $user->id, 'properties' => json_encode([$property])]);
 
-        return redirect()->back()->with('success', 'Item added to cart successfully!');
+        return redirect()->back()->with('success', 'A Property added to cart successfully!');
     }
 
 

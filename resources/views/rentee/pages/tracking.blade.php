@@ -5,10 +5,17 @@
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MDC - Property Rental System</title>
+   <!-- Stylesheets -->
+   <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
+    <link rel="icon" href="{{ asset('asset/photos/logo.png') }}" type="image/png">
+
+    <!-- JavaScript Libraries -->
+    <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
     <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
-    <script src="{{ asset('asset/dist/qrious.js') }}"></script>
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-    <script src="{{ mix('js/main.js') }}"></script>
+    <script src="{{ asset('asset/js/jsQR.min.js') }}"></script>
+    <script src="{{ asset('asset/js/webcam.min.js') }}"></script>
+   
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
 </head>
 
@@ -30,7 +37,7 @@
                 placeholder="Input tracking no.">
             <button type="submit" class="fas fa-arrow-circle-up fa-lg text-gray-500 hover:text-gray-800"></button>
         </form>
-        <button id="scan-qr-button" class="px-3 py-2 bg-blue-500 text-blue-100 rounded hover:opacity-50 shadow-md"
+        <button id="start-camera-btn" class="px-3 py-2 bg-blue-500 text-blue-100 rounded hover:opacity-50 shadow-md"
             title="Scan QR Code">
             <i class="fa-solid fa-camera fa-lg"></i>
         </button>
@@ -60,7 +67,7 @@
         var qrLarge = new QRious({
             element: document.getElementById('QR-large'),
             value: trackingCode,
-            size: 400
+            size: 300
         });
     });
 </script>
@@ -186,6 +193,10 @@
                             <div class="flex space-x-1">
                                 <h1>Destination:</h1>
                                 <span>{{$property->destination->municipality}}</span>
+                            </div>
+                            <div class="flex space-x-1">
+                                <h1>Reservation Type:</h1>
+                                <span>{{ucfirst($property->reservation->reservation_type)}}</span>
                             </div>
                             <div class="flex space-x-2">
 
@@ -350,108 +361,86 @@
             <p>All rights reserved &copy; 2024</p>
         </div>
     </footer>
-
-    <div id="qr-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+ 
+   <!-- QR Scan Modal -->
+   <div id="qr-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="bg-white p-4 rounded shadow-md">
-            <video id="video" width="300" height="300" autoplay></video>
-            <div class="flex justify-end space-x-1">
-                <button id="close-modal" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">
-                    Close
-                </button>
-                <button id="open-camera-button" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Open
-                    Camera
-                </button>
+            <!-- Webcam Display -->
+            <div id="my_camera"></div>
 
+            <div class="flex justify-end space-x-1">
+                <button id="close-modal" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">Close</button>
             </div>
         </div>
     </div>
 
     <script>
-        const scanButton = document.getElementById('scan-qr-button');
-        const qrModal = document.getElementById('qr-modal');
-        const closeModalButton = document.getElementById('close-modal');
-        const openCameraButton = document.getElementById('open-camera-button');
-        const video = document.getElementById('video');
-        let scanning = false;
-        let cameraTimeout;
+        // Function to start camera and scanning
+        function startCamera() {
+            // Set up Webcam.js to start the camera
+            Webcam.set({
+                width: 320,
+                height: 240,
+                image_format: 'jpeg',
+                jpeg_quality: 90
+            });
 
-        scanButton.onclick = async () => {
-            qrModal.classList.remove('hidden');
-            await startCamera();
-        };
-
-        closeModalButton.onclick = () => {
-            stopCamera();
-            qrModal.classList.add('hidden');
-        };
-
-        openCameraButton.onclick = () => {
-            reopenCamera();
-        };
-
-        async function startCamera() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-                video.srcObject = stream;
-                video.setAttribute('playsinline', true);
-                video.play();
-                scanning = true;
-                requestAnimationFrame(scanQRCode);
-
-                // Set a timeout to stop the camera after 1 minute
-                cameraTimeout = setTimeout(() => {
-                    stopCamera();
-                    qrModal.classList.add('hidden');
-                }, 60000); // 60000 milliseconds = 1 minute
-            } catch (error) {
-                console.error('Error accessing the camera:', error);
-                alert('Could not access the camera. Please check permissions.');
-            }
+            Webcam.attach('#my_camera');
+            continuousScan(); // Start continuous scanning after the camera feed starts
         }
 
+        // Continuous scanning function
+        function continuousScan() {
+            // Continuously capture frames from the webcam and scan them
+            Webcam.snap(function (data_uri) {
+                // Create an image object from the captured frame
+                const image = new Image();
+                image.src = data_uri;
+
+                image.onload = function () {
+                    // Create a canvas to draw the image for QR scanning
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.width = image.width;
+                    canvas.height = image.height;
+                    context.drawImage(image, 0, 0);
+
+                    // Get image data from the canvas
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, canvas.width, canvas.height);
+
+                    // Check if a QR code is detected
+                    if (code) {
+                        console.log('QR Code detected:', code.data);
+                        document.querySelector('input[name="search_val"]').value = code.data;
+                        stopCamera(); // Stop the camera after QR code is detected
+                        document.getElementById('searchbar').submit(); // Submit the form with QR code value
+                    } else {
+                        // If no QR code detected, continue scanning
+                        setTimeout(continuousScan, 100); // Retry scanning after a short delay
+                    }
+                };
+            });
+        }
+
+        // Stop the camera feed when a QR code is detected
         function stopCamera() {
-            scanning = false;
-            clearTimeout(cameraTimeout); // Clear the timeout if the camera is stopped
-            const stream = video.srcObject;
-            if (stream) {
-                const tracks = stream.getTracks();
-                tracks.forEach(track => track.stop());
-            }
+            Webcam.reset(); // Stop the camera
         }
 
-        function reopenCamera() {
-            qrModal.classList.remove('hidden');
-            startCamera();
-        }
+        // Event listener for the start scanning button
+        document.getElementById('start-camera-btn').addEventListener('click', function() {
+            startCamera(); // Start the camera when the button is clicked
+            document.getElementById('qr-modal').classList.remove('hidden'); // Show the camera modal
+            document.getElementById('start-camera-btn').style.display = 'none'; // Hide the start button after clicking
+        });
 
-        function scanQRCode() {
-            if (!scanning) return;
-
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-
-            if (video.videoWidth > 0 && video.videoHeight > 0) {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                const code = jsQR(imageData.data, canvas.width, canvas.height);
-
-                if (code) {
-                    console.log('QR Code detected:', code.data);
-                    document.querySelector('input[name="search_val"]').value = code.data;
-                    stopCamera();
-                    qrModal.classList.add('hidden');
-
-                    document.getElementById('searchbar').submit();
-                } else {
-                    requestAnimationFrame(scanQRCode);
-                }
-            } else {
-                requestAnimationFrame(scanQRCode);
-            }
-        }
+        // Event listener for closing the modal
+        document.getElementById('close-modal').addEventListener('click', function() {
+            stopCamera(); // Stop the camera when modal is closed
+            document.getElementById('qr-modal').classList.add('hidden'); // Hide the modal
+            document.getElementById('start-camera-btn').style.display = 'inline-block'; // Show the start button again
+        });
     </script>
 </body>
 

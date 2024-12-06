@@ -6,19 +6,38 @@
        <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MDC - Property Rental System</title>
+   <!-- Stylesheets -->
+   <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
+    <link rel="icon" href="{{ asset('asset/photos/logo.png') }}" type="image/png">
+
+    <!-- JavaScript Libraries -->
+    <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
     <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
-    <script src="{{ asset('asset/dist/qrious.js') }}"></script>
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-    <script src="{{ mix('js/main.js') }}"></script>
+    <script src="{{ asset('asset/js/jsQR.min.js') }}"></script>
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
     <style>
         @media (orientation: portrait) {
             #rightbar {
                 display: none;
             }
+
+            #categories-container{
+                display: flex;
+                flex-direction: column;
+                overflow-y: auto;
+                overflow-x: hidden;
+                gap: 0.5rem;
+            }
         }
 
-        @media (orientation: landscape) {}
+        @media (orientation: landscape) {
+            #categories-container{
+                display: flex;
+                gap: 0.5rem;
+            }
+
+        }
     </style>
 </head>
 
@@ -80,28 +99,26 @@
 
     <div class="container px-4 py-6">
        
-
-
-        <div id="rightbar" class="fixed right-0">
+        <div id="rightbar" class="fixed right-0 z-50">
             <div class="flex flex-col items-center space-y-2">
 
 
                 <a id="cart-icon" @if($cartedProperties != 0 ) href="{{ route('cart', ['rentee' => $rentee]) }}" @endif title="Cart"
-                    class="cursor-pointer hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded mr-2">
+                    class="px-2 py-3 bg-blue-400 rounded-full cursor-pointer hover:opacity-50 z-40 drop-shadow px-3 py-2 rounded mr-2">
              @if($cartedProperties != 0)
                     <span class="absolute top-0 right-1 bg-red-500 text-white rounded-full px-[5px] text-xs">
                         {{ $cartedProperties }}
                     </span>
                     @endif
                   
-                    <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
+                    <i class="fas fa-shopping-cart fa-xl text-white"></i>
 
 
                 </a>
 
                 <button onclick="confirmLogoutModal()" title="Cancel Reservation"
-                    class="hover:opacity-50 mb-2 z-40 drop-shadow px-4 py-2 rounded">
-                    <i class="fa-solid fa-right-from-bracket fa-2xl text-blue-400"></i>
+                    class="hover:opacity-50 mb-2 mr-2 z-40 drop-shadow px-3 py-3 bg-blue-400 rounded-full">
+                    <i class="fa-solid fa-right-from-bracket fa-xl text-white"></i>
                 </button>
 
             </div>
@@ -112,13 +129,13 @@
             <h1 class="text-2xl font-bold text-center mb-2">Categories</h1>
         </div>
 
-        <div class="flex flex-wrap -mx-2 overflow-y-auto ">
+        <div id="categories-container" class="flex">
             @foreach($categories as $category)
                         <a onmouseout="document.getElementById('open-{{$category->id}}').classList.add('hidden')"
                             onmouseover="document.getElementById('open-{{$category->id}}').classList.remove('hidden')"
                             href="{{ route('rentee.properties', ['category_id' => $category->id, 'rentee' => $rentee]) }}"
                             title="{{ $category->title }}"
-                            class="w-full md:w-1/3 px-2 mb-4 m-2 transition-transform ease-in-out duration-300 hover:scale-90">
+                            class="w-full md:w-1/3 transition-transform ease-in-out duration-300 hover:scale-90">
                             <div class="shadow-lg rounded-lg overflow-hidden">
                                 <div class="flex h-[200px] relative">
                                     <div id="open-{{$category->id}}"

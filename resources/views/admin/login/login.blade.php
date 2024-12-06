@@ -80,14 +80,12 @@
                 display: none;
             }
 
-            #app-copy {
-                display: none;
-            }
+
         }
     </style>
 </head>
 
-<body class="bg-gradient-to-b from-blue-500 to-transparent">
+<body class="overflow-hidden bg-gradient-to-b from-blue-500 to-transparent">
     @include('admin.partials.success.success-modal')
     @include('admin.partials.errors.error-modal')
 
@@ -106,7 +104,7 @@
 
 
 
-                    <div class="flex flex-col mt-4">
+                    <div class="flex flex-col">
 
                         <div class="relative mx-4">
                             <!-- Error Message Section -->
@@ -147,7 +145,7 @@
                     </div>
 
                     <div class="flex justify-center mt-2">
-                        <h1 class="text-sm">Forgot password? <button type="button"
+                        <h1 class="text-xs">Forgot password? <button type="button"
                                 onclick="document.getElementById('password-reset-request-form').classList.toggle('hidden')"
                                 class="hover:text-red-800 text-red-500">Request
                                 password reset. </button>
@@ -160,7 +158,7 @@
                 class="shadow-md logo-container flex flex-col bg-gradient-to-b from-blue-500 to-teal-500 flex-1 rounded-t-lg md:rounded-l-lg overflow-auto p-4">
                 <div class="flex justify-center items-center flex-col h-full">
                     <img class="drop-shadow-md max-w-full h-auto mb-4" src="{{ asset('asset/logo/logo.png')}}"
-                        height="200" width="200" alt="">
+                        height="150" width="150" alt="">
                     <h1 id="app-title" class="text-xl text-white text-center font-serif mb-4">MDC Property
                         Reservation <br> Management System</h1>
                     <h1 id="app-copy" class="text-white text-sm">All rights reserved © 2024</h1>

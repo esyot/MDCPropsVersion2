@@ -88,7 +88,7 @@
 <div id="reservation-add-{{$day}}"
     class="fixed inset-0 bg-gray-800 bg-opacity-75 select-none flex items-center justify-center z-40 hidden">
     <form action="{{ route('admin.reservation-add') }}" method="POST" id="reservation-form-{{$day}}"
-        class=" bg-white rounded shadow-md mx-2">
+        class=" bg-white rounded shadow-md mt-2 mx-2">
         @csrf
 
         <div class="flex justify-between px-4 py-2">

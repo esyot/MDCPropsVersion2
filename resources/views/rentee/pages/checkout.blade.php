@@ -6,10 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{asset('asset/css/flatpickr.min.css')}}">
     <script src="{{asset('asset/js/flatpickr.min.js')}}"></script>
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('asset/css/fontawesome.min.css') }}">
+    <link rel="icon" href="{{ asset('asset/photos/logo.png') }}" type="image/png">
+
+    <!-- JavaScript Libraries -->
+    <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
     <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
-    <script src="{{ asset('asset/dist/qrious.js') }}"></script>
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-    <script src="{{ mix('js/main.js') }}"></script>
+    <script src="{{ asset('asset/js/jsQR.min.js') }}"></script>
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
     <title>Checkout</title>
 </head>
@@ -30,7 +35,8 @@
     </div>
 
 
-    <header class="flex py-4 items-center space-x-1 px-2 bg-blue-500">
+    <header
+        class="flex items-center space-x-2 z-50 bg-gradient-to-r from-blue-400 to-blue-800 p-2 shadow-md sticky top-0">
         <a href="{{ route('rentee.back-to-home', ['rentee' => $rentee]) }}" class="hover:opacity-50">
             <i class="fas fa-arrow-circle-left fa-xl text-white"></i>
         </a>
@@ -77,7 +83,7 @@
 
                     <div class="mb-2">
                         <label for="contact" class="block text-sm font-medium text-gray-700">Contact #:</label>
-                        <input type="text" name="contact_no" placeholder="Enter Contact #"
+                        <input type="number" name="contact_no" placeholder="Enter Contact #"
                             class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
                     </div>
                     <div class="mb-2">
@@ -120,7 +126,7 @@
 
         <div id="terms-and-conditions"
             class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
-            <div class="bg-white w-[600px] rounded shadow-md mx-2">
+            <div class="bg-white w-[500px] h-[80%] overflow-y-auto rounded shadow-md mx-2">
                 <div class="border-b-2 p-2">
 
 
@@ -171,14 +177,13 @@
         </script>
 
 
-        <div class="flex overflow-x-auto">
+        <div class="flex overflow-x-auto w-full">
 
 
             @foreach ($properties as $property)
 
-                        <div
-                            class="w-[200px] flex flex-col p-2 border m-2 bg-white rounded transition-transform duration-300 hover:scale-90">
-                            <div onclick="openCalendar({{ $property->id }})" class="flex justify-between cursor-pointer">
+                        <div class="bg-white flex flex-col p-2 border m-2 rounded transition-transform duration-300 hover:scale-90">
+                            <div onclick="openCalendar({{ $property->id }})" class="flex w-[120px] justify-between cursor-pointer">
                                 <div>
                                     <input type="hidden" name="properties[{{ $property->id }}][property_id]"
                                         value="{{ $property->id }}">
@@ -227,6 +232,13 @@
                 </div>
 
                 <div>
+                    <label for="time_start" class="block text-sm font-medium text-gray-700">Time Start:</label>
+                    <input type="time" id="time_start" name="time_start"
+                        class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required>
+                </div>
+
+                <div>
                     <label for="date_end" class="block text-sm font-medium text-gray-700">Date End:</label>
                     <input type="text" id="date_end" name="date_end" placeholder="Date End"
                         class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -240,15 +252,9 @@
                         required>
                 </div>
 
-                <div>
-                    <label for="time_start" class="block text-sm font-medium text-gray-700">Time Start:</label>
-                    <input type="time" id="time_start" name="time_start"
-                        class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required>
-                </div>
 
                 <script>
-                    const unavailableDateRanges = []; // Add your unavailable date ranges here.
+                    const unavailableDateRanges = @json($unavailableDateRanges);
 
                     function isDateUnavailable(date) {
                         const formattedDate = formatDate(date);
@@ -264,23 +270,19 @@
                         const year = d.getFullYear();
                         const month = ('0' + (d.getMonth() + 1)).slice(-2);
                         const day = ('0' + d.getDate()).slice(-2);
-                        return `${year}-${month}-${day}`; // "YYYY-MM-DD"
+                        return `${year}-${month}-${day}`;
                     }
 
                     let startDatePicker = flatpickr("#date_start", {
                         minDate: "today",
-                        disable: [
-                            function (date) {
-                                return isDateUnavailable(date);
-                            }
-                        ],
+                        disable: [isDateUnavailable],
                         onChange: function (selectedDates) {
                             if (selectedDates.length > 0) {
                                 const startDate = selectedDates[0];
                                 endDatePicker.set('minDate', startDate);
-                                endDatePicker.open(); // Open the end date picker if needed
+                                endDatePicker.open();
                             } else {
-                                endDatePicker.close(); // Close the end date picker if needed
+                                endDatePicker.close();
                             }
                         },
                         clickOpens: true,
@@ -289,20 +291,25 @@
                     let endDatePicker = flatpickr("#date_end", {
                         minDate: "today",
                         disable: [
-                            function (date) {
-                                return isDateUnavailable(date);
-                            },
+                            isDateUnavailable,
                             function (date) {
                                 const startDate = startDatePicker.selectedDates[0];
                                 if (startDate) {
-                                    return date < startDate;
+                                    return date < startDate || isDateInRange(startDate, date);
                                 }
                                 return false;
                             }
                         ],
                         clickOpens: true,
-                        enabled: false
                     });
+
+                    function isDateInRange(startDate, endDate) {
+                        return unavailableDateRanges.some(range => {
+                            const rangeStart = new Date(range.start);
+                            const rangeEnd = new Date(range.end);
+                            return (startDate <= rangeStart && endDate >= rangeEnd);
+                        });
+                    }
 
                     document.getElementById('date_start').addEventListener('input', function () {
                         const dateStartValue = document.getElementById('date_start').value;
@@ -310,10 +317,10 @@
 
                         if (!dateStartValue) {
                             dateEndInput.setAttribute('readonly', true);
-                            endDatePicker.close(); // Close the end date picker
+                            endDatePicker.close();
                         } else {
                             dateEndInput.removeAttribute('readonly');
-                            endDatePicker.open(); // Open the end date picker if needed
+                            endDatePicker.open();
                         }
                     });
 
@@ -325,7 +332,7 @@
 
                         if (dateStart && dateEnd && dateStart === dateEnd) {
                             if (timeEnd && timeStart && timeEnd < timeStart) {
-                                alert("Time End must be greater than or equal to Time Start for the same date.");
+                                alert("The time end must be ahead of the time Start on the same date.");
                                 document.getElementById('time_end').value = '';
                                 document.getElementById('time_start').value = '';
                                 document.getElementById('time_end').setCustomValidity("Time End must be greater than or equal to Time Start.");
@@ -334,7 +341,6 @@
                             }
                         } else {
                             document.getElementById('time_end').setCustomValidity("");
-
                         }
                     }
 
@@ -342,7 +348,6 @@
                     document.getElementById('time_end').addEventListener('input', validateTime);
                     document.getElementById('date_start').addEventListener('input', validateTime);
                     document.getElementById('date_end').addEventListener('input', validateTime);
-
                 </script>
 
 
@@ -361,6 +366,10 @@
 
                 </div>
 
+            </div>
+            <div class="flex w-full justify-center">
+                <button type="button" onclick="validateInputs()"
+                    class="px-6 py-3 bg-blue-500 text-blue-100 shadow-md rounded hover:opacity-50">Next</button>
             </div>
         </section>
         <script>
@@ -407,10 +416,7 @@
         </script>
 
 
-        <div class="flex fixed right-0 left-0 m-2 bottom-0 items-center justify-center">
-            <button type="button" onclick="validateInputs()"
-                class="px-6 py-3 bg-blue-500 text-blue-100 shadow-md rounded hover:opacity-50">Next</button>
-        </div>
+
     </form>
 
     <script>

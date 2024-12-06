@@ -6,10 +6,12 @@
 
         #analytics-charts {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: end;
-            height: 500px;
-            overflow-y: auto;
+            height: 350px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            margin-top: 10px;
 
         }
 
@@ -21,8 +23,15 @@
     }
 
     #transactionChart {
-        width: 100px;
+        width: 800px;
+        padding-top: 30px;
+    }
 
+
+
+    #myPieChart {
+
+        padding-right: 20px;
     }
 </style>
 
@@ -32,8 +41,8 @@
 
         <form action="{{ route('admin.analytics-charts-custom-year') }}" action="GET">
             @csrf
-            <div class="flex items-center space-x-4">
-                <label for="" class="{{$setting->darkMode ? 'text-white' : ''}} flex w-20">Select Year:</label>
+            <div class="flex items-center space-x-1">
+                <label for="" class="{{$setting->darkMode ? 'text-white' : ''}} flex">Year:</label>
                 <select onchange="this.form.submit()" name="year"
                     class="block border border-gray-300 shadow-inner rounded">
 
@@ -131,22 +140,17 @@
 
 
 
-<section>
+<section class="">
     <div id="analytics-charts" class="flex justify-between space-x-2 p-4">
 
-        <div
+        <div id="transactionChartContainer"
             class="flex flex-col items-center w-full h-96 bg-gray-100 rounded {{ $setting->darkMode ? 'bg-gray-300' : 'bg-white border shadow-md'}}">
-            <div class="flex items-center w-full justify-between">
 
-                <div class="flex items-center space-x-1">
-
-                </div>
-            </div>
 
             <canvas id="transactionChart"></canvas>
         </div>
 
-        <div
+        <div id="myPieChartContainer"
             class="flex justify-center items-center w-full h-96 rounded {{ $setting->darkMode ? 'bg-gray-300' : 'bg-white border shadow-md' }}">
 
             <div>
@@ -221,7 +225,7 @@
                     padding: {
                         top: 20,    // Padding from top
                         right: 20,  // Padding from right
-                        bottom: 20, // Padding from bottom
+
                         left: 20    // Padding from left
                     }
                 },
@@ -334,7 +338,7 @@
 
     </div>
 
-    <div id="container-counts" class="flex p-2">
+    <div id="container-counts" class="flex px-2">
 
         @include('admin.partials.counts')
     </div>

@@ -4,7 +4,7 @@
     <div id="navbar" class="flex items-center justify-between p-4 shadow-md relative">
         <!-- App Name -->
         <div id="pageTitle" class="flex items-center space-x-2">
-            <span class="text-lg font-semibold">
+            <span class="text-xl font-semibold">
 
                 {{$page_title}}
 
@@ -50,11 +50,9 @@
 
                         #message-count {
                             display: fixed;
-                            top: -9px;
+                            top: -10px;
                             margin-bottom: 20px;
                         }
-
-
                     }
                 </style>
 
@@ -121,7 +119,6 @@
                             document.body.addEventListener('htmx:afterRequest', function () {
                                 hideLoader();
 
-
                             });
 
                         </script>
@@ -148,8 +145,6 @@
                         </div>
                     </div>
 
-
-
                     <div id="notification-list"
                         class="z-10 flex flex-col max-h-[500px] overflow-y-auto custom-scrollbar">
 
@@ -166,10 +161,7 @@
                     </div>
                 </div>
 
-
-
                 <!-- Messages Icon -->
-
 
                 <script>
                     function showMessagesLoader() {
@@ -187,8 +179,8 @@
                 </script>
                 <div id="messageSection" class="relative  {{$page_title == 'Messages' ? 'hidden' : ''}}"
                     id="inside-messages" title="Messages">
-                    <button onclick="showMessagesLoader()" hx-get="{{route('admin.contacts-refresh')}}"
-                        hx-swap="innerHTML" hx-target="#messages-dropdown" hx-trigger="click" id="messages-icon"
+                    <button hx-get="{{route('admin.contacts-refresh')}}" hx-swap="innerHTML"
+                        hx-target="#messages-dropdown" hx-trigger="click" id="messages-icon"
                         class="relative flex items-center hover:opacity-50 focus:outline-none">
                         <i class="fas fa-inbox fa-lg mt-1 text-blue-600"></i>
                         <span id="messageTitle" class="ml-2">Messages</span>
@@ -241,7 +233,7 @@
                                     alt="User Image">
 
                                 <i
-                                    class="fas fa-chevron-circle-down absolute bottom-0 right-0 transform translate-x-1 translate-y-1 text-gray-600"></i>
+                                    class="fas fa-chevron-circle-down fa-xs absolute bottom-2 right-0 transform translate-x-1 translate-y-1 text-gray-600"></i>
                             </div>
                         </div>
                     </button>

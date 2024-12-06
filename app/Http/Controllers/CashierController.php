@@ -174,6 +174,7 @@ class CashierController extends Controller
                 ->whereNot('status', 'completed')
                 ->whereNot('status', 'declined')
                 ->whereNot('status', 'canceled')
+                ->where('status', 'in progress')
                 ->get();
 
             $properties = PropertyReservation::whereIn('reservation_id', $reservations->pluck('id'))->get();

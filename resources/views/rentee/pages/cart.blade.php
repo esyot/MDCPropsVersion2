@@ -102,13 +102,17 @@
         </form>
     </section>
 
-    <!-- Empty Cart Modal -->
-    <div id="empty-cart-modal" class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 hidden">
-        <div class="p-4 bg-white space-y-2 rounded shadow-md">
-            <h1 class="text-xl text-center">No items selected!</h1>
-            <p class="text-center">Please select at least one item to proceed to checkout.</p>
-            <div class="flex justify-center">
-                <button onclick="closeModal()" class="px-4 py-2 bg-blue-500 text-white rounded">Close</button>
+
+    <div id="empty-cart-modal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg max-w-sm w-full p-6">
+            <h2 class="text-xl font-semibold text-red-600 mb-4">
+                <i class="fa-solid fa-triangle-exclamation"></i> Error
+            </h2>
+            <p class="text-gray-700 mb-4">Please select at least one property to proceed to checkout.</p>
+            <div class="flex justify-end">
+                <button class="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600"
+                    onclick="closeModal()">Close</button>
             </div>
         </div>
     </div>

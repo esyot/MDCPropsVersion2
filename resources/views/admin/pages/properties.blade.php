@@ -1,14 +1,40 @@
 @extends('admin.layouts.header')
 @section('content')
+
+<style>
+    @media(orientation:landscape) {
+        #add-property-btn-portrait {
+            display: none;
+        }
+
+    }
+
+    @media(orientation:portrait) {
+        #add-property-btn-landscape {
+            display: none;
+        }
+
+        #propeerty-search-bar {
+            width: 100%;
+        }
+
+    }
+</style>
 @if ($categoriesIsNull == false)
 
     <div id="items-header" class="p-2 z-30">
-        <div class="flex items-center space-x-1 justify-between">
+        <div class="flex items-center space-x-2 justify-between">
             <div class="flex items-center space-x-1">
                 @hasrole('superadmin|admin')
-                <button title="Add Item" onclick="document.getElementById('property-add-modal').classList.toggle('hidden')"
+                <button id="add-property-btn-portrait" title="Add Item"
+                    onclick="document.getElementById('property-add-modal').classList.toggle('hidden')"
                     class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 shadow-md rounded">
                     +
+                </button>
+                <button id="add-property-btn-landscape" title="Add Item"
+                    onclick="document.getElementById('property-add-modal').classList.toggle('hidden')"
+                    class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 shadow-md rounded">
+                    Add Property
                 </button>
                 @endhasrole
 
@@ -35,20 +61,17 @@
                     </select>
                 </form>
 
-
             </div>
 
-            <div>
-                <form hx-get="{{ route('admin.property-page-search', ['category_id' => $currentCategory])}}"
-                    hx-target="#properties" hx-swap="innerHTML" hx-trigger="input"
-                    class="flex w-[150px] items-center rounded-full bg-white p-2 space-x-1 shadow-inner">
+            <form id="propeerty-search-bar"
+                hx-get="{{ route('admin.property-page-search', ['category_id' => $currentCategory])}}"
+                hx-target="#properties" hx-swap="innerHTML" hx-trigger="input"
+                class="flex w-[150px] items-center rounded-full bg-white p-2 space-x-1 shadow-inner">
 
-                    <i class="fas fa-magnifying-glass fa-lg"></i>
-                    <input type="text" name="search_value" class="bg-transparent focus:outline-none"
-                        placeholder="Search items...">
-                </form>
-
-            </div>
+                <i class="fas fa-magnifying-glass fa-lg"></i>
+                <input type="text" name="search_value" class="bg-transparent focus:outline-none"
+                    placeholder="Search items...">
+            </form>
         </div>
     </div>
 

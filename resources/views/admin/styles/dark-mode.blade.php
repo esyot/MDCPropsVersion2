@@ -137,6 +137,11 @@
             background-color: #1d1d1d;
             color: #fff;
         }
+
+        #footer-portrait {
+            background-color: #1d1d1d;
+            color: #fff;
+        }
     </style>
 
 @else

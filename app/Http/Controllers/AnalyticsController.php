@@ -165,7 +165,6 @@ class AnalyticsController extends Controller
                 ->count();
             $propertiesCompletedCount = PropertyReservation::whereNotNull('returned_at')
                 ->whereYear('returned_at', $currentYear)
-                ->whereMonth('returned_at', 11)
                 ->count();
 
             // Initialize arrays for storing the counts

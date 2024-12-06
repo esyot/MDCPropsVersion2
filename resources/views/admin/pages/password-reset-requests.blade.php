@@ -113,7 +113,7 @@
                                     </div>
                                 </div>
 
-                                <div class="flex justify-end space-x-2 p-2 bg-gray-100 rounded-b">
+                                <div class="flex justify-end space-x-1 p-2 bg-gray-100 rounded-b">
                                     <button type="button"
                                         onclick="document.getElementById('password-reset-confirm-{{$request->id}}').classList.add('hidden')"
                                         class="font-medium px-4 py-2 border border-blue-300 text-blue-500 hover:opacity-50 text-gray-800 rounded">

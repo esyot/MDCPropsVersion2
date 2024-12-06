@@ -1,5 +1,5 @@
 @foreach ($reservations as $reservation)
-    <div class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
+    <div class="bg-white w-full border border-gray-200 rounded-lg shadow-md overflow-hidden">
         <div class="p-4">
             <h3 class="text-xl font-semibold text-gray-800">Tracking Code: {{ $reservation->tracking_code }}</h3>
             <h1 class="mt-2 text-gray-500">Rentee: {{$reservation->rentee->name}}.

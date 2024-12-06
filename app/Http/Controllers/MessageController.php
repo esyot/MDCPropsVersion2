@@ -502,7 +502,7 @@ class MessageController extends Controller
         $messages = Message::where('receiver_id', Auth::user()->id)->where('isReadByReceiver', false)->get();
 
         $unreadMessages = $messages->count();
-        $setting = Setting::findOrFail(1);
+        $setting = Setting::where('user_id', Auth::user()->id)->first();
 
         $users = User::whereNot('name', Auth::user()->id)->get();
 

@@ -233,6 +233,10 @@ class ReservationController extends Controller
                 $reservation->update([
                     'approvedByCashier_at' => now(),
                 ]);
+                Reservation::where('id', $reservation->reservation->id)
+                    ->update([
+                        'status' => 'approved'
+                    ]);
                 Notification::create([
                     'icon' => Auth::user()->img,
                     'user_id' => Auth::user()->id,

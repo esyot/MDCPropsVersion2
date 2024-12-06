@@ -2,7 +2,7 @@
     <div class="shadow-md">
 
         <header
-            class="flex justify-between py-4 w-full {{ $setting->darkMode ? 'bg-gray-500' : 'bg-blue-500' }}  items-center px-4 rounded-t-lg">
+            class="flex justify-between py-2 w-full {{ $setting->darkMode ? 'bg-gray-500' : 'bg-blue-500' }}  items-center px-4 rounded-t-lg">
             <span class="text-white text-2xl text-center font-bold"> {{$selectedMonth}}</span>
 
             <button title="Expand" onclick="calendarExpand()">
@@ -70,7 +70,7 @@
                             hx-get="{{ $hasRecord ? route('admin.calendar-day-view', ['date' => \Carbon\Carbon::parse($currentDate->format('Y-m') . '-' . $day)->format('Y-m-d'), 'category_id' => $currentCategory->id]) : '#' }}"
                             hx-target="#calendar-day-view-{{$day}}" hx-swap="innerHTML" hx-trigger="click"
                         title="Click to preview reserve properties" @endif
-                            class="{{ $hasRecord ? 'border bg-gray-100' : '' }} relative justify-between h-full hover:opacity-50 cursor-pointer flex flex-col items-center justify-center font-semibold overflow-hidden group">
+                            class="{{ $hasRecord ? 'border bg-gray-400 text-gray-100' : '' }} relative justify-between h-full hover:opacity-50 cursor-pointer flex flex-col items-center justify-center font-semibold overflow-hidden group">
                             <div class="w-full flex flex-col  relative">
                                 @foreach ($reservedProperties as $index => $property)
                                                 @php
@@ -78,7 +78,7 @@
                                                     $dateStart = \Carbon\Carbon::parse($property->date_start)->toIso8601String();
                                                 @endphp
 
-                                                <div class="w-full py-[3px]" data-date-start="{{ $dateStart }}" data-index="{{ $index }}">
+                                                <div class="w-full py-[1px]" data-date-start="{{ $dateStart }}" data-index="{{ $index }}">
 
                                                 </div>
                                 @endforeach
@@ -128,7 +128,7 @@
                             @if(!$hasRecord)
                                 <div title="Add a new reservation" onclick="toggleReservationForm({{$day}}, {{$setting->transition}})"
                                     class="absolute inset-0 flex items-center justify-center text-2xl font-bold text-white opacity-0 bg-gray-400 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ $setting->transition == true ? 'group-hover:opacity-100' : 'hover:opacity-100 transition-opacity duration-300 ease-in-out'}}">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ $setting->transition == true ? 'group-hover:opacity-100' : 'hover:opacity-100 transition-opacity duration-300 ease-in-out'}}">
                                     <h1 class="flex justify-center items-center text-4xl">+</h1>
                                 </div>
                             @endif

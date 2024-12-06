@@ -1,7 +1,7 @@
 @extends('admin.layouts.header')
 @section('content')
 
-<div id="dashboard" class="h-full w-full">
+<div id="dashboard" class="h-full= w-full">
 
     @if ($categoriesIsNull == false)
 

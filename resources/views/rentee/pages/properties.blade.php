@@ -78,27 +78,25 @@
         </div>
     @endif
     @if(count($properties) > 0)
-        <div class="flex items-center justify-between z-50 bg-gradient-to-r from-blue-500 to-blue-800 p-2 shadow-md">
-            <div class="flex items-center">
-                <a href="{{ route('home', ['rentee' => $rentee]) }}" class="hover:opacity-50 z-40 px-4 py-2 rounded">
-                    <i class="fas fa-arrow-circle-left fa-2xl text-white"></i>
-                </a>
-                <h1 class="text-white font-bold line-clamp-1">{{ $properties->first()->category->title }}</h1>
+    <div class="flex items-center justify-between z-50 bg-gradient-to-r from-blue-400 to-blue-800 p-2 shadow-md sticky top-0">
+    <div class="flex items-center">
+        <a href="{{ route('home', ['rentee' => $rentee]) }}" class="hover:opacity-50 z-40 px-4 py-2 rounded">
+            <i class="fas fa-arrow-circle-left fa-2xl text-white"></i>
+        </a>
+        <h1 class="text-white font-bold line-clamp-1">{{ $properties->first()->category->title }}</h1>
+    </div>
+    <div id="searchContainer">
+        <form hx-get="{{ route('renteeItemsFilter', ['category_id' => $category_id, 'rentee' => $rentee]) }}"
+            hx-target="#item-single" hx-swap="innerHTML" hx-trigger="input" name="search" id="searchBar"
+            onclick="expand()"
+            class="flex space-x-1 items-center bg-white border border-gray-300 rounded-full cursor-pointer">
+            <div class="flex items-center p-1 space-x-2">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" name="search" placeholder="Search Items..."
+                    class="w-[100px] bg-transparent focus:outline-none hidden">
             </div>
-            <div id="searchContainer">
-                <form hx-get="{{ route('renteeItemsFilter', ['category_id' => $category_id, 'rentee' => $rentee]) }}"
-                    hx-target="#item-single" hx-swap="innerHTML" hx-trigger="input" name="search" id="searchBar"
-                    onclick="expand()"
-                    class="flex space-x-1 items-center bg-white border border-gray-300 rounded-full cursor-pointer">
-                    <div class="flex items-center p-2 space-x-2">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" name="search" placeholder="Search Items..."
-                            class="w-[100px] bg-transparent focus:outline-none hidden">
-                    </div>
-
-                </form>
-            </div>
-
+        </form>
+    </div>
             <script>
                 function toggleSearch(isOpen) {
                     const searchBar = document.getElementById('searchBar');
@@ -121,25 +119,26 @@
             </script>
         </div>
 
-        <div id="rightbar" class="fixed right-0 mt-4">
+        <div id="rightbar" class="fixed right-0 mt-4 z-50">
             <div class="flex flex-col items-center space-y-2">
 
 
-                <a id="cart-icon" @if( $cartedProperties!=0)href="{{ route('cart', ['rentee' => $rentee]) }}" @endif
-                    title="Cart" class="cursor-pointer hover:opacity-50 z-40 drop-shadow px-4 py-2 rounded mr-2">
-                    @if($cartedProperties != 0)
+            <a id="cart-icon" @if($cartedProperties != 0 ) href="{{ route('cart', ['rentee' => $rentee]) }}" @endif title="Cart"
+                    class="px-2 py-3 bg-blue-400 rounded-full cursor-pointer hover:opacity-50 z-50 drop-shadow px-3 py-2 rounded mr-2">
+             @if($cartedProperties != 0)
                     <span class="absolute top-0 right-1 bg-red-500 text-white rounded-full px-[5px] text-xs">
-                        {{ $cartedProperties}}
+                        {{ $cartedProperties }}
                     </span>
                     @endif
-                    <i class="fas fa-shopping-cart fa-2xl text-blue-400"></i>
+                  
+                    <i class="fas fa-shopping-cart fa-xl text-white"></i>
 
 
                 </a>
 
                 <button onclick="confirmLogoutModal()" title="Cancel Reservation"
-                    class="hover:opacity-50 mb-2 z-40 drop-shadow px-4 py-2 rounded">
-                    <i class="fa-solid fa-right-from-bracket fa-2xl text-blue-400"></i>
+                    class="hover:opacity-50 mb-2 mr-2 z-40 drop-shadow px-3 py-3 bg-blue-400 rounded-full z-50">
+                    <i class="fa-solid fa-right-from-bracket fa-xl text-white"></i>
                 </button>
 
             </div>
@@ -162,7 +161,7 @@
             </div>
         @endif
 
-        <div id="item-single" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 mt-4 mx-2">
+        <div id="item-single" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 mt-4 mx-2 mb-20 z-30">
 
             @include('rentee.partials.property-single')
 
@@ -174,7 +173,7 @@
         <div class="flex flex-col justify-center items-center h-screen">
             <div class="border-2 border-red-500 px-2 shadow-md">
 
-                <h1 class="text-2xl">No items available. </h1>
+                <h1 class="text-2xl">No Properties Available. </h1>
 
             </div>
             <div class="flex space-x-1">

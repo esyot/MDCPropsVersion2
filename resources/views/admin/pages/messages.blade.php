@@ -12,7 +12,7 @@
     @media(orientation:landscape) {
 
         #chats {
-            display: block;  
+            display: block;
         }
 
 
@@ -64,7 +64,7 @@
                 chats.style.display = 'none';
             } else {
                 chats.style.display = 'block';
-               
+
             }
 
             document.getElementById('openContactContainerBtn').classList.toggle('fa-chevron-left');

@@ -13,6 +13,7 @@
 
     <!-- JavaScript Libraries -->
     <script src="{{ asset('asset/js/tailwind.min.js') }}"></script>
+    <script src="{{ asset('asset/js/jsQr.min.js') }}"></script>
     <script src="{{ asset('asset/js/htmx.min.js') }}"></script>
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
     @include('admin.styles.dark-mode')
@@ -170,7 +171,7 @@
     @include('admin.components.topbar')
 
     <!-- contents -->
-    <div id="content" class=" h-full">
+    <div id="content" class="h-full">
         @yield('content')
     </div>
 
@@ -179,7 +180,7 @@
     </footer>
 
     <footer id="footer-portrait" class="flex bg-blue-500 justify-center z-50 fixed bottom-0 left-0 w-full">
-        <div class="flex items-center space-x-8 overflow-x-auto transition-transform duration-300 ease-in-out">
+        <div class="flex items-center space-x-10 overflow-x-auto transition-transform duration-300 ease-in-out">
             <a href="{{ route('dashboard') }}" class="flex flex-col mt-2 py-2 items-center">
                 <i class="fa-solid fa-calendar-days fa-lg text-white drop-shadow-lg"></i>
                 <small class="text-white mt-2">Dashboard</small>
@@ -190,15 +191,33 @@
                 <small class="text-white mt-2 ">Items</small>
             </a>
 
+            @hasrole('superadmin|admin')
+
             <a href="{{ route('admin.categories') }}" class="flex mt-2 py-2 flex-col items-center">
                 <i class="fa-solid fa-th-large fa-lg text-white drop-shadow-lg"></i>
                 <small class="text-white mt-2">Categories</small>
             </a>
-
+            @endhasrole
+            @hasrole('superdmin|admin')
             <a href="{{ route('admin.reservations') }}" class="flex mt-2 py-2 flex-col items-center">
                 <i class="fa-solid fa-business-time fa-lg text-white drop-shadow-lg"></i>
                 <small class="text-white mt-2">Reservations</small>
             </a>
+            @endhasrole
+
+
+
+            @if ($currentCategory)
+
+                @hasrole('staff')
+                @if ($currentCategory->approval_level == 'staff' || $currentCategory->approval_level == 'both')
+                    <a href="{{ route('admin.reservations') }}" class="flex mt-2 py-2 flex-col items-center">
+                        <i class="fa-solid fa-business-time fa-lg text-white drop-shadow-lg"></i>
+                        <small class="text-white mt-2">Reservations</small>
+                    </a>
+                @endif
+                @endhasrole
+            @endif
 
             <a href="{{ route('admin.claim-properties') }}" class="flex mt-2 py-2 flex-col items-center">
                 <i class="fas fa-hands text-white fa-lg drop-shadow-lg"></i>
@@ -210,14 +229,22 @@
                 <small class="text-white mt-2">Return</small>
             </a>
 
+            @hasrole('superadmin')
+
             <a href="{{ route('users') }}" class="flex flex-col mt-2 py-2 items-center">
                 <i class="fa-solid fa-users-gear fa-lg text-white drop-shadow-lg"></i>
                 <small class="text-white mt-2">Users</small>
             </a>
 
+            @endhasrole
+
+
+            @hasrole('superadmin|admin')
+
             <a href="{{ route('admin.analytics-index') }}" class="flex mt-2 py-2 flex-col items-center">
                 <i class="fas fa-chart-line text-white fa-lg drop-shadow-lg"></i>
                 <small class="text-white mt-2">Analytics</small>
             </a>
+            @endhasrole
         </div>
     </footer>

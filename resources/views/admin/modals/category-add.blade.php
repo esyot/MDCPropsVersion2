@@ -2,8 +2,8 @@
     enctype="multipart/form-data">
     @csrf
     <div id="category-add-modal"
-        class="fixed flex inset-0 mx-2 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
-        <div id="category-add-content" class="bg-white shadow-md max-w-full rounded">
+        class="fixed flex inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
+        <div id="category-add-content" class="bg-white mx-2 shadow-md max-w-full rounded">
 
             <div class="flex justify-between p-2 items-center space-x-6">
                 <h1 class="px-2 text-xl font-bold">Add Category</h1>

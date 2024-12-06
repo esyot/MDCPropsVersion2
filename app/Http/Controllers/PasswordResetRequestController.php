@@ -117,7 +117,7 @@ class PasswordResetRequestController extends Controller
             return redirect()->route('loginPage')->with('success', 'Password reset request submitted successfully!');
 
         }
-        return redirect()->route('loginPage')->with('error', 'Email is not regisetered in the database!');
+        return redirect()->route('loginPage')->with('error', 'Email is not registered in the database!');
 
     }
 }
