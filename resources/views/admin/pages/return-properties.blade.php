@@ -43,7 +43,7 @@
         <div class="flex justify-end space-x-1">
             <button id="close-modal" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">Close</button>
             <button id="restart-camera" onclick="startCamera()"
-                class="mt-4 bg-blue-500 text-blue-100 px-4 py-2 rounded">Open Camera</button>
+                class="mt-4 bg-blue-500 text-blue-100 px-4 py-2 rounded">Start Scanning</button>
         </div>
     </div>
 </div>

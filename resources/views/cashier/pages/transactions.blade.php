@@ -1,8 +1,8 @@
 @extends('cashier.layouts.header')
 @section('content')
 
-<section class="m-2 bg-gray-100 rounded">
-    <table class="min-w-full bg-white border border-gray-300">
+<section class="w-full overflow-y-auto m-2 bg-gray-100 rounded">
+    <table class="bg-white border border-gray-300">
         <thead>
             <tr class="bg-gray-200">
                 <th class="p-2 text-left">Property Name</th>
