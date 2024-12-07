@@ -132,7 +132,8 @@
 
                     <h1 class="text-xl font-bold">Terms & Conditions</h1>
                     <p class="text-justify">By using this website, you agree to these Terms and Conditions. All listed
-                        properties are for rent only, with no ownership rights conveyed. Services are provided "as is"
+                        properties are for rent and borrow only, with no ownership rights conveyed. Services are
+                        provided "as is"
                         without guarantees, and we reserve the right to modify or discontinue any part of the site at
                         any time. You are responsible for accurate information and ensuring rented items are returned on
                         time and in the same condition. Any damage or costs related to rented properties are the
@@ -146,15 +147,8 @@
                         collection,
                         use, and processing of your personal information as described in our Privacy Policy. We will
                         take
-                        all reasonable steps to protect your personal data and ensure it is handled securely. For
-                        further
-                        details on how we collect, use, and safeguard your personal information, please review our
-                        Privacy
-                        Policy.
-
-                        This agreement is governed by the laws of the Philippines, and any disputes will be resolved in
-                        the
-                        appropriate courts located within the Philippines.</p>
+                        all reasonable steps to protect your personal data and ensure it is handled securely.
+                    </p>
                 </div>
                 <div class="flex justify-end p-2 bg-gray-100 rounded-b-lg">
                     <button type="button" onclick="updateTermsState()"

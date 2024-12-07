@@ -154,26 +154,44 @@ class ClaimPropertyController extends Controller
     public function reservedPropertiesToClaim($reservation_id)
     {
 
+        $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+        $categoryIds = $managedCategories->pluck('category_id');
+        $categories = Category::whereIn('id', $categoryIds)->get();
+        $currentCategory = $categories->first();
+        $category = $currentCategory->id;
 
-        $reservations = PropertyReservation::where('reservation_id', $reservation_id)->get();
+        $reservations = PropertyReservation::where('reservation_id', $reservation_id)
+            ->where('category_id', $currentCategory->id)
+            ->get();
 
         return view('admin.modals.reserved-properties-to-claim', compact(
             'reservations',
-            'reservation_id'
+            'reservation_id',
+            'category'
         ));
     }
 
-    public function reservedPropertiesClaimed($reservation_id)
+    public function reservedPropertiesClaimed($reservation_id, $category)
     {
 
-        $properties = PropertyReservation::where('reservation_id', $reservation_id)->update([
-            'claimed_at' => now()
-        ]);
+        $properties = PropertyReservation::where('reservation_id', $reservation_id)
+            ->where('category_id', $category)
+            ->update([
+                'claimed_at' => now()
+            ]);
 
         if ($properties) {
-            Reservation::find($reservation_id)->update([
-                'status' => 'occupied'
-            ]);
+
+            $allNotClaimedProperties = PropertyReservation::where('reservation_id', $reservation_id)
+                ->whereNull('claimed_at')->count();
+
+            if ($allNotClaimedProperties == 0) {
+                Reservation::find($reservation_id)->update([
+                    'status' => 'occupied'
+                ]);
+                return redirect()->route('admin.claim-properties')->with('success', 'Properties have been successfully claimed!');
+
+            }
 
             return redirect()->route('admin.claim-properties')->with('success', 'Properties have been successfully claimed!');
 

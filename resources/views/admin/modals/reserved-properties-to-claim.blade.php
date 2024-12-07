@@ -33,10 +33,12 @@
             Close
         </button>
         @if($reservation->claimed_at == null)
-            <a href="{{ route('admin.reserved-properties-claimed', ['reservation_id' => $reservation_id]) }}"
-                class="bg-blue-500 text-white px-4 py-2 hover:opacity-50 rounded">
-                Mark as claimed
-            </a>
+                <a href="{{ route('admin.reserved-properties-claimed', [
+                'reservation_id' => $reservation_id,
+                'category' => $category
+            ]) }}" class="bg-blue-500 text-white px-4 py-2 hover:opacity-50 rounded">
+                    Mark as claimed
+                </a>
         @endif
     </div>
 </div>

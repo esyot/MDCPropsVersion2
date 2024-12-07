@@ -156,26 +156,44 @@ class ReturnPropertyController extends Controller
     public function reservedPropertiesToReturn($reservation_id)
     {
 
-        $reservations = PropertyReservation::where('reservation_id', $reservation_id)->get();
+        $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
+        $categoryIds = $managedCategories->pluck('category_id');
+        $categories = Category::whereIn('id', $categoryIds)->get();
+        $currentCategory = $categories->first();
+        $category = $currentCategory->id;
+
+        $reservations = PropertyReservation::where('reservation_id', $reservation_id)
+            ->where('category_id', $category)
+            ->get();
 
         return view('admin.modals.reserved-properties-to-return', compact(
             'reservations',
-            'reservation_id'
+            'reservation_id',
+            'category'
         ));
     }
 
-    public function reservedPropertiesReturned($reservation_id)
+    public function reservedPropertiesReturned($reservation_id, $category)
     {
 
-        $reservations = PropertyReservation::where('reservation_id', $reservation_id)->update([
-            'returned_at' => now(),
-            'receivedBy_id' => Auth::user()->id,
-        ]);
+        $reservations = PropertyReservation::where('reservation_id', $reservation_id)
+            ->where('category_id', $category)
+            ->update([
+                'returned_at' => now(),
+                'receivedBy_id' => Auth::user()->id,
+            ]);
 
         if ($reservations) {
-            Reservation::find($reservation_id)->update([
-                'status' => 'completed'
-            ]);
+
+            $allNotReturnedProperties = PropertyReservation::where('reservation_id', $reservation_id)
+                ->whereNull('returned_at')->count();
+
+            if ($allNotReturnedProperties == 0) {
+                Reservation::find($reservation_id)->update([
+                    'status' => 'completed'
+                ]);
+            }
+
 
             return redirect()->route('admin.return-properties')->with('success', 'Properties has been successfully returned!');
 

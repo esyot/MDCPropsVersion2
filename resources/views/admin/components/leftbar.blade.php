@@ -86,6 +86,8 @@
                 @endif
                 @endhasrole
             @endif
+
+            @hasrole('staff')
             <a href="{{ route('admin.claim-properties') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
                 title="Claim Properties">
@@ -96,6 +98,7 @@
                 </section>
             </a>
 
+
             <a href="{{ route('admin.return-properties') }}"
                 class="flex items-center justify-center text-white hover:text-blue-300 transition duration-200 rounded-lg"
                 title="Return Properties">
@@ -105,6 +108,8 @@
                     <span class="pl-2 pr-[130px] text-sm hidden">Return</span>
                 </section>
             </a>
+            @endhasrole
+
 
             @hasrole('superadmin|admin')
             <a href="{{ route('users') }}"

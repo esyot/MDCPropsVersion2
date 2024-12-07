@@ -117,8 +117,6 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
     //Transaction Approval Routes
     Route::post('/admin/category-add', [CategoryController::class, 'create'])->name('admin.category-add');
-    Route::post('/admin/reservation-decline/{id}', action: [ReservationController::class, 'decline'])->name('admin.reservation-decline');
-    Route::get('/admin/reservation-pending-approve/{id}', [ReservationController::class, 'approve'])->name('admin.reservation-approve');
 
     //categories Update
     Route::get('/admin/categories', [CategoryController::class, 'index'])->name('admin.categories');
@@ -150,6 +148,10 @@ Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
 
 Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
 
+    //Reservation
+    Route::post('/admin/reservation-decline/{id}', action: [ReservationController::class, 'decline'])->name('admin.reservation-decline');
+    Route::get('/admin/reservation-pending-approve/{id}', [ReservationController::class, 'approve'])->name('admin.reservation-approve');
+
     //Reservations
     Route::get('/admin/reservations', [ReservationController::class, 'index'])->name('admin.reservations');
     Route::get('/admin/reservations-filter', [ReservationController::class, 'filter'])->name('admin.reservations-filter');
@@ -166,15 +168,15 @@ Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
     // Transactions Routes
     Route::post('/admin/reservation-add', [ReservationController::class, 'create'])->name('admin.reservation-add');
 
-    //Item Return Routes
+    //Reservation Return Routes
     Route::get('/admin/search-reservation-to-return', [ReturnPropertyController::class, 'searchReservationToReturn'])->name('admin.search-reservation-to-return');
-    Route::get('/admin/reseved-properties-returned/{reservation_id}', [ReturnPropertyController::class, 'reservedPropertiesReturned'])->name('admin.reserved-properties-returned');
+    Route::get('/admin/reseved-properties-returned/{reservation_id}/{category}', [ReturnPropertyController::class, 'reservedPropertiesReturned'])->name('admin.reserved-properties-returned');
     Route::get('/admin/reserved-properties-to-return/{reservation_id}', [ReturnPropertyController::class, 'reservedPropertiesToReturn'])->name('admin.reserved-properties-to-return');
     Route::get('/admin/return-properties', [ReturnPropertyController::class, 'index'])->name('admin.return-properties');
 
     //Reservation Claim Routes
     Route::get('/admin/search-reservation-to-claim', [ClaimPropertyController::class, 'searchReservationToClaim'])->name('admin.search-reservation-to-claim');
-    Route::get('/admin/reserved-properties-claimed/{reservation_id}', [ClaimPropertyController::class, 'reservedPropertiesClaimed'])->name('admin.reserved-properties-claimed');
+    Route::get('/admin/reserved-properties-claimed/{reservation_id}/{category}', [ClaimPropertyController::class, 'reservedPropertiesClaimed'])->name('admin.reserved-properties-claimed');
     Route::get('/admin/reserved-properties-to-claim/{reservation_id}', [ClaimPropertyController::class, 'reservedPropertiesToClaim'])->name('admin.reserved-properties-to-claim');
     Route::get('/admin/claim-properties', [ClaimPropertyController::class, 'index'])->name('admin.claim-properties');
 

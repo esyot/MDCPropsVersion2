@@ -67,6 +67,10 @@
                 <label for="category-field" class="block text-sm font-medium ">Categories:</label>
                 <select name="category" id="category-field"
                     class="block w-full py-2 px-4 border border-gray-300 rounded-md text-gray-700  focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    @if ($currentDateStart == 'all')
+                        <option value="all">All</option>
+                    @endif
+
                     @if($selectedCategory)
                         <option value="{{$selectedCategory->id}}">{{$selectedCategory->title}}</option>
                     @endif

@@ -219,6 +219,8 @@
                 @endhasrole
             @endif
 
+
+            @hasrole('staff')
             <a href="{{ route('admin.claim-properties') }}" class="flex mt-2 py-2 flex-col items-center">
                 <i class="fas fa-hands text-white fa-lg drop-shadow-lg"></i>
                 <small class="text-white mt-2">Claim</small>
@@ -228,6 +230,7 @@
                 <i class="fas fa-truck text-white fa-lg drop-shadow-lg"></i>
                 <small class="text-white mt-2">Return</small>
             </a>
+            @endhasrole
 
             @hasrole('superadmin')
 

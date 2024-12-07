@@ -33,10 +33,12 @@
             Close
         </button>
         @if($reservation->returned_at == null)
-            <a href="{{ route('admin.reserved-properties-returned', ['reservation_id' => $reservation_id]) }}"
-                class="bg-blue-500 text-white px-4 py-2 hover:opacity-50 rounded">
-                Mark as Returned
-            </a>
+                <a href="{{ route('admin.reserved-properties-returned', [
+                'reservation_id' => $reservation_id,
+                'category' => $category
+            ]) }}" class="bg-blue-500 text-white px-4 py-2 hover:opacity-50 rounded">
+                    Mark as Returned
+                </a>
         @endif
     </div>
 </div>

@@ -15,7 +15,7 @@
 <div id="modal-background-{{$date}}"
     class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-40">
     <div id="modal-content-{{$date}}"
-        class="bg-white mx-2 rounded shadow-md {{$setting->transition == true ? 'animation-open' : '' }}">
+        class="bg-white mx-2 rounded w-[600px] shadow-md {{$setting->transition == true ? 'animation-open' : '' }}">
         <div class="bg-blue-500 rounded-t py-1">
 
         </div>
@@ -56,34 +56,34 @@
                         <tr onclick="document.getElementById('single-preview-background-{{$date}}-{{$reservation->property->id}}').classList.toggle('hidden')"
                             title="Click to preview reservation" class="cursor-pointer hover:bg-gray-300 z-50">
 
-                            <td class="text-center">{{$reservation->property->name}}</td>
-                            <td class="text-center">
+                            <td class="text-sm text-center">{{$reservation->property->name}}</td>
+                            <td class="text-sm text-center">
                                 {{\Carbon\Carbon::parse($reservation->date_start)->format('F j, Y')}}
                                 {{\Carbon\Carbon::parse($reservation->time_start)->format('h:i A')}}
 
                             </td>
-                            <td class="text-center">
+                            <td class="text-sm text-center">
                                 {{\Carbon\Carbon::parse($reservation->date_end)->format('F j, Y')}}
                                 {{\Carbon\Carbon::parse($reservation->time_end)->format('h:i A')}}
                             </td>
-                            <td class="text-center">
-                                {{$reservation->reservation->reservation_type}}
+                            <td class="text-sm text-center">
+                                {{ucfirst($reservation->reservation->reservation_type)}}
                             </td>
-                            <td class="text-center">
+                            <td class="text-sm text-center">
                                 @if($reservation->approvedByAdmin_at == null && $reservation->declinedByAdmin_at == null && $reservation->canceledByRentee_at == null)
-                                    <span class="text-yellow-500">Pending Admin Approval</span>
+                                    <span class="text-sm text-yellow-500">Pending Admin Approval</span>
                                 @elseif($reservation->approvedByAdmin_at != null && $reservation->approvedByCashier_at == null)
-                                    <span class="text-orange-500">Pending Payment</span>
+                                    <span class="text-sm text-orange-500">Pending Payment</span>
                                 @elseif($reservation->canceledByRentee_at != null)
-                                    <span class="text-red-500">Canceled</span>
+                                    <span class="text-sm text-red-500">Canceled</span>
                                 @elseif($reservation->declinedByAdmin_at != null)
-                                    <span class="text-red-500">Declined By Admin</span>
+                                    <span class="text-sm text-red-500">Declined By Admin</span>
                                 @elseif($reservation->approvedByAdmin_at != null && $reservation->approvedByCashier_at != null && $reservation->claimed_at == null)
-                                    <span class="text-orange-500">Waiting to claim</span>
+                                    <span class="text-sm text-orange-500">Waiting to claim</span>
                                 @elseif($reservation->approvedByAdmin_at != null && $reservation->approvedByCashier_at != null && $reservation->claimed_at != null && $reservation->returned_at == null)
-                                    <span class="text-orange-500">Waiting to return</span>
+                                    <span class="text-sm text-orange-500">Waiting to return</span>
                                 @elseif($reservation->approvedByAdmin_at != null && $reservation->approvedByCashier_at != null && $reservation->claimed_at != null && $reservation->returned_at != null)
-                                    <span class="text-green-500">Completed</span>
+                                    <span class="text-sm text-green-500">Completed</span>
                                 @endif
                             </td>
 
