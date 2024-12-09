@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\ReservationController;
 use App\Models\Notification;
 use App\Models\ManagedCategory;
 use App\Models\Category;
@@ -10,22 +11,16 @@ use Auth;
 
 class NotificationController extends Controller
 {
-    public function isRead($id, $redirect_link, $role)
+    public function isRead(Request $request, $id, $redirect_link, $role, $requested_category)
     {
+
+
+
         $notification = Notification::find($id);
 
         if (!$notification) {
             return redirect()->back()->with('error', 'Notification not found.');
         }
-
-
-        if ($role == 'admin' && in_array(Auth::user()->id, $notification->isReadBy ?? [])) {
-            return redirect('/admin/' . $redirect_link);
-        } else if ($role == 'cashier' && in_array(Auth::user()->id, $notification->isReadBy ?? [])) {
-            return redirect('/cashier/' . $redirect_link);
-
-        }
-
 
         $isReadByOld = is_array($notification->isReadBy) ? $notification->isReadBy : [];
         $isReadBy = array_merge($isReadByOld, [Auth::user()->id]);
@@ -33,6 +28,26 @@ class NotificationController extends Controller
         $notification->update([
             'isReadBy' => $isReadBy,
         ]);
+
+        if ($requested_category != 'null' && $redirect_link == 'null' && $role == 'admin') {
+
+            $reservationController = new ReservationController();
+
+            $request->category = $requested_category;
+            $request->status = 'pending';
+
+            return $reservationController->filter($request);
+
+        } else if ($requested_category == 'null' && $role == 'admin' && in_array(Auth::user()->id, $notification->isReadBy ?? [])) {
+            return redirect('/admin/' . $redirect_link);
+
+        } else if ($role == 'cashier' && in_array(Auth::user()->id, $notification->isReadBy ?? [])) {
+            return redirect('/cashier/' . $redirect_link);
+
+        }
+
+
+
 
         if ($role == 'cashier') {
             return redirect('cashier/' . $redirect_link);

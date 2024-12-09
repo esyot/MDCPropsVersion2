@@ -36,18 +36,46 @@
 
 
         <div class="flex flex-col">
-            <a
-                href="{{ route('isRead', ['id' => $notification->id, 'redirect_link' => $notification->redirect_link, 'role' => 'admin']) }}">
-                <h1 class="text-xs font-bold">{{ $notification->title }}</h1>
-                <span class="text-sm">
-                    @if ($notification->user_id == Auth::user()->id && $notification->rentee_id == null)
-                        You
-                    @elseif($notification->rentee_id == null)
-                        {{$notification->user->name}}
-                    @endif
-                    {{ $notification->description }}<br> <small class="font-normal text-red-500">{{ $timeAgo }}</small>
-                </span>
-            </a>
+
+            @if ($notification->reservation_id != null && $notification->category_id != null)
+
+                <a href="{{ route('isRead', [
+                    'id' => $notification->id,
+                    'redirect_link' => 'null',
+                    'role' => 'admin',
+                    'requested_category' => $notification->category_id
+                ]) }}">
+                    <h1 class="text-xs font-bold">{{ $notification->title }}</h1>
+                    <span class="text-sm">
+                        @if ($notification->user_id == Auth::user()->id && $notification->rentee_id == null)
+                            You
+                        @elseif($notification->user_id != null)
+                            {{$notification->user->name}}
+
+                        @endif
+                        {{ $notification->description }}<br> <small class="font-normal text-red-500">{{ $timeAgo }}</small>
+                    </span>
+                </a>
+
+            @else
+                <a href="{{ route('isRead', [
+                    'id' => $notification->id,
+                    'redirect_link' => $notification->redirect_link,
+                    'role' => 'admin',
+                    'requested_category' => 'null'
+                ]) }}">
+                    <h1 class="text-xs font-bold">{{ $notification->title }}</h1>
+                    <span class="text-sm">
+                        @if ($notification->user_id == Auth::user()->id && $notification->rentee_id == null)
+                            You
+                        @elseif($notification->rentee_id == null)
+                            {{$notification->user->name}}
+                        @endif
+                        {{ $notification->description }}<br> <small class="font-normal text-red-500">{{ $timeAgo }}</small>
+                    </span>
+                </a>
+
+            @endif
         </div>
     </div>
 @endforeach

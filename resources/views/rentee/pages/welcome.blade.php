@@ -31,12 +31,15 @@
                 <div class="carousel-container relative">
                     <img src="{{ asset('asset/photos/tutorial/1.jpg') }}" alt="Image 1" class="carousel-img"
                         id="carouselImage">
+                    <div class="flex justify-center p-2">
+                        <button class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-500 rounded-full" id="nextBtn">
+                            Next
+                        </button>
+                    </div>
                 </div>
-                <button
-                    class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-800 text-white px-3.5 py-2 opacity-40 hover:opacity-100 rounded-full"
-                    id="nextBtn">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+
+
+
             </div>
         </div>
     </div>
@@ -44,7 +47,7 @@
     <script>
 
         document.addEventListener("DOMContentLoaded", function () {
-            const images = Array.from({ length: 17 }, (_, index) => `{{ asset('asset/photos/tutorial/') }}/${index + 1}.jpg`);
+            const images = Array.from({ length: 18 }, (_, index) => `{{ asset('asset/photos/tutorial/') }}/${index + 1}.jpg`);
 
             let currentIndex = 0;
 
@@ -59,7 +62,7 @@
 
                 openModalBtn.addEventListener("click", () => {
                     modal.classList.remove("hidden");
-                    document.getElementById('character-waving').classList.add('hidden');
+
                 });
             }
 
@@ -68,6 +71,8 @@
 
                 closeModalBtn.addEventListener("click", () => {
                     modal.classList.add("hidden");
+                    currentIndex = 2;
+
                 });
             }
 
@@ -79,8 +84,12 @@
                     carouselImage.src = images[currentIndex];
 
 
-                    if (currentIndex === 16) {
+                    if (currentIndex === 17) {
+                        currentIndex = 0;
+                        carouselImage.src = images[currentIndex];
                         modal.classList.add("hidden");
+
+
                     }
                 });
             }
@@ -104,46 +113,124 @@
         }
         clearData();
     </script>
-
     @if (request('reservation') != null)
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                var trackingCode = '{{ $reservation->tracking_code }}';
-                new QRious({
-                    element: document.getElementById('canvas'),
-                    value: trackingCode,
-                    size: 300
-                });
-            });
-        </script>
-
         <!-- QR Modal -->
         <div id="QR" class="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
-            <div class="w-[500px] bg-white rounded-lg shadow-lg p-4 z-10">
+            <div class="w-[500px] bg-white rounded-lg shadow-lg p-4 z-10 mx-2">
                 <h1 class="text-xl font-bold text-center">Reservation submitted successfully!</h1>
-                <div class="flex justify-center mt-4">
-                    <canvas id="canvas"></canvas>
-                </div>
-                <div class="text-center mt-3">
-                    <p>Tracking Code: <span class="font-bold">{{ $reservation->tracking_code }}</span></p>
+                <div id="content">
+                    <span class="flex justify-center mt-4">
+                        <canvas id="qrious-canvas"></canvas>
+                    </span>
+                    <div class="text-center mt-3">
+                        <p>Tracking Code: <span class="font-bold">{{ $reservation->tracking_code }}</span></p>
+                    </div>
+                    <div class="flex justify-center">
+                        <ul class="flex flex-col items-center" id="property-list">
+                            @foreach ($properties as $property)
+                                <li class="border px-2">Name: {{ $property->property->name }} qty: {{ $property->qty }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
                 <div class="flex justify-center mt-6">
-                    <p class="text-xs text-justify border border-red-500 p-3">
-                        <strong>Note:</strong> Save this QR code for tracking and payment.<br> Or click
+                    <p class="text-xs text-justify border border-red-500 p-3 text-center">
+                        <strong>Note:</strong> Please be reminded that this QR Code is very important; once you lose it, you
+                        will not be able to continue with your reservation.
+                        Save this QR code for tracking and payment or click
                         <a href="{{ route('tracking', ['search_val' => $reservation->tracking_code]) }}"
                             class="text-blue-500 hover:underline">here</a> to track your request.
                     </p>
                 </div>
-
-                <div class="flex justify-center mt-2">
-                    <button onclick="document.getElementById('QR').classList.add('hidden')"
+                <div class="flex justify-center mt-2 space-x-1">
+                    <button id="close-btn" onclick="document.getElementById('QR').classList.add('hidden')"
+                        class="px-4 py-2 border border-gray-300 text-gray-500 hover:opacity-50 rounded hidden">Close</button>
+                    <button id="download" onclick="document.getElementById('close-btn').classList.toggle('hidden')"
                         class="px-4 py-2 bg-blue-500 text-blue-100 hover:opacity-50 rounded">
-                        Done
+                        Download
                     </button>
                 </div>
             </div>
         </div>
+
+        <script>
+            var trackingCode = '{{ $reservation->tracking_code }}';
+            var qrCanvas = document.getElementById('qrious-canvas');
+
+            new QRious({
+                element: qrCanvas,
+                value: trackingCode,
+                size: 300
+            });
+
+            document.getElementById("download").addEventListener("click", function () {
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
+
+                // Set canvas dimensions to a perfect square and fill background with white color
+                canvas.width = 600;
+                canvas.height = 600;
+                ctx.fillStyle = "#fff";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Draw QR code image
+                var qrImg = qrCanvas.toDataURL("image/png");
+                var img = new Image();
+                img.src = qrImg;
+
+                img.onload = function () {
+                    ctx.drawImage(img, 150, 50);
+
+                    // Draw tracking code
+                    ctx.font = "20px Arial";
+                    ctx.fillStyle = "#000";
+                    ctx.textAlign = "center";
+                    ctx.fillText("Tracking Code: " + trackingCode, canvas.width / 2, 400);
+
+                    // Draw property details
+                    var properties = @json($properties);
+                    var yOffset = 430;
+                    properties.forEach(function (property, index) {
+                        ctx.fillText("Name: " + property.property.name + " qty: " + property.qty, canvas.width / 2, yOffset + (index * 30));
+                    });
+
+                    // Draw note
+                    ctx.font = "12px Arial";
+                    ctx.fillStyle = "#f00";
+                    var noteText = "Note: Please be reminded that this QR Code is very important; once you lose it, you will not be able to continue with your reservation. Save this QR code for tracking and payment.";
+                    wrapText(ctx, noteText, canvas.width / 2, yOffset + (properties.length * 30) + 20, 500, 16);
+
+                    // Create a link to download the image
+                    var link = document.createElement('a');
+                    link.href = canvas.toDataURL("image/jpeg");
+                    link.download = 'reservation_details.jpg';
+                    link.click();
+                };
+            });
+
+            function wrapText(context, text, x, y, maxWidth, lineHeight) {
+                var words = text.split(' ');
+                var line = '';
+
+                for (var n = 0; n < words.length; n++) {
+                    var testLine = line + words[n] + ' ';
+                    var metrics = context.measureText(testLine);
+                    var testWidth = metrics.width;
+
+                    if (testWidth > maxWidth && n > 0) {
+                        context.fillText(line, x, y);
+                        line = words[n] + ' ';
+                        y += lineHeight;
+                    } else {
+                        line = testLine;
+                    }
+                }
+
+                context.fillText(line, x, y);
+            }
+        </script>
     @endif
+
 
     <!-- Fixed tracking button -->
     <div class="flex fixed top-0 right-0 p-4 z-20">

@@ -18,6 +18,24 @@
     <link rel="icon" href="{{ asset('asset/logo/logo.png') }}" type="image/png">
     <title>Checkout</title>
 </head>
+<style>
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>
 
 <body class="bg-gray-100 h-screen">
 
@@ -126,19 +144,23 @@
 
         <div id="terms-and-conditions"
             class="flex fixed inset-0 justify-center items-center bg-gray-800 bg-opacity-50 z-50 hidden">
-            <div class="bg-white w-[500px] h-[80%] overflow-y-auto rounded shadow-md mx-2">
-                <div class="border-b-2 p-2">
+            <div class="bg-white w-[500px] rounded-md custom-scrollbar shadow-md mx-2">
+                <div class="border-b-2 p-2  h-[60%] overflow-y-auto">
 
 
                     <h1 class="text-xl font-bold">Terms & Conditions</h1>
                     <p class="text-justify">By using this website, you agree to these Terms and Conditions. All listed
-                        properties are for rent and borrow only, with no ownership rights conveyed. Services are
-                        provided "as is"
-                        without guarantees, and we reserve the right to modify or discontinue any part of the site at
-                        any time. You are responsible for accurate information and ensuring rented items are returned on
-                        time and in the same condition. Any damage or costs related to rented properties are the
-                        renter’s responsibility, and you agree to indemnify the website owner and its affiliates from
-                        any claims or losses arising from your use of the site.</p>
+                        Properties are for rent and borrowing only, with no ownership rights conveyed. Services are
+                        provided "as is." without guarantees, and we reserve the right to modify or discontinue any
+                        part of the site at any time.
+                        You are responsible for accurate information and ensuring rented items are returned on
+                        time, and in the same condition. Any damage or costs related to rented properties are the
+                        renter's responsibility. Reservations have an expiration date; once not
+                        paid or claimed on time, it will automatically cancel your reservation. and please be reminded
+                        that QR codes are very
+                        important; once you lose it, you will not be able to proceed with your reservation.
+
+                    </p>
                     <h1 class="text-xl font-bold mt-2">Privacy Notice</h1>
                     <p>
                         We value your privacy and are committed to protecting your personal data in accordance with the
@@ -149,13 +171,17 @@
                         take
                         all reasonable steps to protect your personal data and ensure it is handled securely.
                     </p>
+
                 </div>
-                <div class="flex justify-end p-2 bg-gray-100 rounded-b-lg">
+                <div class="p-2 flex justify-end">
                     <button type="button" onclick="updateTermsState()"
                         class="px-4 py-2 border border-gray-300 hover:opacity-50 shadow-md rounded">Done</button>
 
                 </div>
+
+
             </div>
+
         </div>
 
         <script>

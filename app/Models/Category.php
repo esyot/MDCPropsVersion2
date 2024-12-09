@@ -12,13 +12,20 @@ class Category extends Model
 
     protected $guarded = [];
 
-    public function items()
+    public function properties()
     {
-        return $this->hasMany(Item::class);
+        return $this->hasMany(Property::class);
     }
 
     public function pendings()
     {
         return $this->hasMany(Pending::class);
     }
+
+    public function managedCategory()
+    {
+        return $this->belongsTo(ManagedCategory::class);
+    }
+
+
 }

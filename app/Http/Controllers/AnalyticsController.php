@@ -331,10 +331,12 @@ class AnalyticsController extends Controller
         $rentees = Rentee::all();
 
 
-        $currentRentee = null;
+
         if ($request->rentee == null) {
             $request->rentee = 'all';
         }
+
+        $currentRentee = $request->rentee;
 
         $properties = Property::all();
 
@@ -348,12 +350,23 @@ class AnalyticsController extends Controller
         ]);
 
 
-        if ($request->rentee != 'all') {
-            $currentRentee = $rentees->first();
+        if ($request->rentee != 'all' && $request->rentee != null) {
+            $currentRentee = Rentee::where('id', $request->rentee)->first();
             $recordsQuery->whereHas('reservation', function ($query) use ($currentRentee) {
                 $query->where('rentee_id', $currentRentee->id);
             });
+        } else {
+            $currentRentee = $rentees->first();
+            $recordsQuery->whereHas('reservation', function ($query) use ($currentRentee) {
+
+            });
+
+            $request->rentee = 'all';
+
+            $currentRentee = null;
+
         }
+
         $selectedProperty = null;
 
 

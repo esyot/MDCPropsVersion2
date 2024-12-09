@@ -96,19 +96,23 @@ class ReservationController extends Controller
 
         } else if ($roles->contains('staff')) {
 
-            $category = Category::first();
-            $currentCategory = $category;
 
 
             $managedCategories = ManagedCategory::where('user_id', Auth::user()->id)->get();
             $categoryIds = $managedCategories->pluck('category_id')->toArray();
 
+            $allowedToStaff = Category::whereIn('id', $categoryIds)->get();
 
-            if (!in_array($currentCategory->approval_level, ['staff', 'both'])) {
-                return redirect()->route('unauthorize');
+            foreach ($allowedToStaff as $category) {
+                if ($category->approval_level == 'admin') {
+                    return redirect()->route('unauthorize');
+                }
             }
 
+
             $categories = Category::whereIn('id', $categoryIds)->get();
+
+            $currentCategory = $categories->first();
 
 
             $notifications = Notification::whereIn('category_id', $categoryIds)
@@ -142,6 +146,11 @@ class ReservationController extends Controller
             $categoriesIsNull = true;
 
         }
+
+
+        // dd($categories->toArray());
+
+
 
         $users = User::whereNot('name', Auth::user()->name)->get();
         return view('admin.pages.reservations', compact(

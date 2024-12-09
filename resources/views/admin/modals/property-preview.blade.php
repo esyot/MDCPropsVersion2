@@ -176,14 +176,11 @@
 
                             </div>
                         </div>
-
-
                         <div>
                             <label for="">Assigned Personel:</label>
-                            <input type="text" name="update_assigned_personel" value="{{$property->assigned_personel}}"
-                                class="block p-2 border border-gray-300 rounded">
+                            <input type="text" name="update_assigned_personel" value="{{$property->assigned_personel}}" class="block p-2 border border-gray-300 rounded"
+                                placeholder="Assigned personel" required>
                         </div>
-
 
                     </div>
                 </div>

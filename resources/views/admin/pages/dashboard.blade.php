@@ -83,4 +83,85 @@
     @endif
 
 </div>
+
+
+<script>
+    function calendarExpand() {
+        document.getElementById('calendar-header').classList.toggle('hidden');
+        document.getElementById('calendar-month').innerHTML = '';
+        document.getElementById('calendar-month').classList.toggle('hidden');
+        document.getElementById('calendar').classList.toggle('hidden');
+    }
+
+    let propertyCount = 1;
+
+    function insertProperty(day) {
+        // Increment the property count for the specific day
+        propertyCount++;
+
+        // Create the new property element
+        const newProperty = document.createElement('div');
+        newProperty.id = 'property-' + propertyCount; // Unique property ID
+
+        // Set the inner HTML with unique ids for each property
+        newProperty.innerHTML = `
+    <div id="property-selected-on-${day}-${propertyCount}" class="flex items-center space-x-4">
+        <div class="flex-1">
+            <div id="property-container-1" onclick="document.getElementById('propertiesListModal-${day}').classList.remove('hidden'); document.getElementById('field-no-${day}').value = ${propertyCount};"
+                class="flex items-center justify-between w-full p-2 border border-gray-300 cursor-pointer rounded">
+                <input type="text" title="Items" id="property-name-${day}-${propertyCount}" class="focus:outline-none cursor-pointer w-full" placeholder="Select a property" readonly required>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+        </div>
+        <div class="flex-1">
+            <div class="flex items-center space-x-2">
+                <input  type="number" placeholder="0" name="property-qty-${propertyCount}" id="property-qty-${day}-${propertyCount}" class="block p-2 border border-gray-300 rounded w-full">
+                <button title="Remove this property field" type="button" onclick="removePropertyField('${day}', '${propertyCount}')" class="hover:opacity-50">
+                    <i class="fa-solid fa-circle-xmark text-red-500"></i>
+                </button>
+            </div>
+        </div>
+        <input type="hidden" id="property-id-${day}-${propertyCount}">
+    </div>
+`;
+
+        let script = document.createElement('script');
+        script.textContent = `
+    document.getElementById('property-qty-${day}-${propertyCount}').addEventListener('input', function () {
+        let value = parseInt(document.getElementById('property-qty-${day}-${propertyCount}').value, 10);
+        if (value < document.getElementById('property-qty-${day}-${propertyCount}').min) {
+            document.getElementById('property-qty-${day}-${propertyCount}').value = document.getElementById('property-qty-${day}-${propertyCount}').min;
+        }
+        if (value > document.getElementById('property-qty-${day}-${propertyCount}').max) {
+            document.getElementById('property-qty-${day}-${propertyCount}').value = document.getElementById('property-qty-${day}-${propertyCount}').max;
+        }
+    });
+`;
+
+
+        newProperty.appendChild(script);
+
+
+
+        document.getElementById('properties-' + day).appendChild(newProperty);
+    }
+
+    function removePropertyField(day, count) {
+
+        const allValues = document.getElementById('all-selected-properties-on-' + day).value;
+        const propertyId = document.getElementById('property-id-' + day + '-' + count).value;
+
+        document.getElementById('property-selected-on-' + day + '-' + count).remove();
+
+        const textArray = allValues.split('');
+
+        textArray.splice(1, count - 1);
+
+        const newText = textArray.join('');
+
+        document.getElementById('all-selected-properties-on-' + day).value = newText;
+    }
+
+
+</script>
 @endsection

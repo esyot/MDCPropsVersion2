@@ -89,6 +89,7 @@ class RenteeReservationController extends Controller
                     'icon' => 'user.png',
                     'user_id' => 1,
                     'rentee_id' => $fetchedRentee->id,
+                    'category_id' => $property->category_id,
                     'title' => 'Added new reservation',
                     'description' => 'A rentee requested a new reservation, check it now.',
                     'redirect_link' => 'reservations',

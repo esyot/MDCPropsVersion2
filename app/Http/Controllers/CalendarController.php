@@ -23,13 +23,15 @@ class CalendarController extends Controller
             ->whereYear('date_start', $currentDate->format('Y'))
             ->get()
             ->flatMap(function ($reservation) {
-
+                // Create Carbon instances for the start and end dates
                 $startDate = Carbon::parse($reservation->date_start);
                 $endDate = Carbon::parse($reservation->date_end);
+
+                // Collect all dates between startDate and endDate (inclusive)
                 $dates = [];
                 while ($startDate->lte($endDate)) {
                     $dates[] = $startDate->format('Y-m-d');
-                    $startDate->addDay();
+                    $startDate->addDay(); // Move to the next day
                 }
 
                 return $dates;

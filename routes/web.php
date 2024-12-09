@@ -93,7 +93,7 @@ Route::middleware('auth')->group(function () {
 
     //Notifications
     Route::get('/admin/notification-list/{filter}', [NotificationController::class, 'notificationList'])->name('admin.notification-list');
-    Route::get('/admin/isRead/{id}/{redirect_link}/{role}', [NotificationController::class, 'isRead'])->name('isRead');
+    Route::get('/admin/isRead/{id}/{redirect_link}/{role}/{requested_category}', [NotificationController::class, 'isRead'])->name('isRead');
     Route::get('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
     Route::get('/notifications/delete-all', [NotificationController::class, 'deleteAll'])->name('notifications.delete-all');
 
@@ -143,16 +143,16 @@ Route::middleware(['auth', 'role:superadmin|admin'])->group(function () {
     Route::get('/admin/user-delete/{id}', [UserController::class, 'delete'])->name('admin.user-delete');
     Route::get('/admin/users-filter', [UserController::class, 'filter'])->name('admin.users-search');
 
+
+
 });
 
 
 Route::middleware(['auth', 'role:superadmin|admin|staff'])->group(function () {
 
-    //Reservation
+    //Reservations
     Route::post('/admin/reservation-decline/{id}', action: [ReservationController::class, 'decline'])->name('admin.reservation-decline');
     Route::get('/admin/reservation-pending-approve/{id}', [ReservationController::class, 'approve'])->name('admin.reservation-approve');
-
-    //Reservations
     Route::get('/admin/reservations', [ReservationController::class, 'index'])->name('admin.reservations');
     Route::get('/admin/reservations-filter', [ReservationController::class, 'filter'])->name('admin.reservations-filter');
 

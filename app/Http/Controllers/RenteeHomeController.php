@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Item;
 use App\Models\Property;
+use App\Models\PropertyReservation;
 use App\Models\Reservation;
 use App\Models\Transaction;
 use Carbon\Carbon;
@@ -50,13 +51,13 @@ class RenteeHomeController extends Controller
     public function welcome(Request $request)
     {
 
-        if ($request) {
+        if ($request->reservation) {
 
             $reservation = Reservation::find($request->reservation);
 
+            $properties = PropertyReservation::where('reservation_id', $reservation->id)->get();
 
-            return view('rentee.pages.welcome', compact('reservation'));
-
+            return view('rentee.pages.welcome', compact('reservation', 'properties'));
 
         }
 

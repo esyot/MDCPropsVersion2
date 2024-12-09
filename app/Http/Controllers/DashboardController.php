@@ -237,10 +237,23 @@ class DashboardController extends Controller
                 Auth::user()->id
             )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['superadmin', 'superadmin|admin', 'all'])->count();
 
-            $daysWithRecords = PropertyReservation::where('category_id', $category)
+            $daysWithRecords = PropertyReservation::where('category_id', $currentCategory->id)
                 ->whereYear('date_start', $currentDate->format('Y'))
                 ->get()
-                ->map(fn($transaction) => Carbon::parse($transaction->date_start)->format('Y-m-d'))
+                ->flatMap(function ($reservation) {
+                    // Create Carbon instances for the start and end dates
+                    $startDate = Carbon::parse($reservation->date_start);
+                    $endDate = Carbon::parse($reservation->date_end);
+
+                    // Collect all dates between startDate and endDate (inclusive)
+                    $dates = [];
+                    while ($startDate->lte($endDate)) {
+                        $dates[] = $startDate->format('Y-m-d');
+                        $startDate->addDay(); // Move to the next day
+                    }
+
+                    return $dates;
+                })
                 ->unique()
                 ->values()
                 ->toArray();
@@ -263,10 +276,23 @@ class DashboardController extends Controller
                 Auth::user()->id
             )->whereJsonDoesntContain('isDeletedBy', Auth::user()->id)->whereIn('for', ['admin', 'superadmin|admin', 'admin', 'all'])->count();
 
-            $daysWithRecords = PropertyReservation::where('category_id', $category)
+            $daysWithRecords = PropertyReservation::where('category_id', $currentCategory->id)
                 ->whereYear('date_start', $currentDate->format('Y'))
                 ->get()
-                ->map(fn($transaction) => Carbon::parse($transaction->date_start)->format('Y-m-d'))
+                ->flatMap(function ($reservation) {
+                    // Create Carbon instances for the start and end dates
+                    $startDate = Carbon::parse($reservation->date_start);
+                    $endDate = Carbon::parse($reservation->date_end);
+
+                    // Collect all dates between startDate and endDate (inclusive)
+                    $dates = [];
+                    while ($startDate->lte($endDate)) {
+                        $dates[] = $startDate->format('Y-m-d');
+                        $startDate->addDay(); // Move to the next day
+                    }
+
+                    return $dates;
+                })
                 ->unique()
                 ->values()
                 ->toArray();

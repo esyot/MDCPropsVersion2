@@ -187,7 +187,7 @@
                         <div class="flex flex-col border border-gray-300 p-2">
                             <p>Request {{$property->qty}} pc/s of <strong>{{ $property->property->name }}</strong>
                                 for this <strong>{{$formattedDateStart}} {{$formattedTimeStart}} </strong>to 
-                                <strong>{{$formattedDateStart}}
+                                <strong>{{$formattedDateEnd}}
                                     {{$formattedTimeEnd}}.</strong>
                             </p>
                             <div class="flex space-x-1">

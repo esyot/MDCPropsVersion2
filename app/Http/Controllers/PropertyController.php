@@ -324,7 +324,7 @@ class PropertyController extends Controller
         $property = Property::find($id);
 
         if (!$property) {
-            return redirect()->back()->with('error', 'Item not found!');
+            return redirect()->back()->with('error', 'Property not found!');
         }
 
         $currentCategoryFolder = $property->category->folder_name;
@@ -381,7 +381,7 @@ class PropertyController extends Controller
         }
 
 
-        return redirect()->back()->with('success', 'Item has been updated successfully!');
+        return redirect()->back()->with('success', 'Property has been updated successfully!');
     }
 
     public function search(Request $request, $day, $category_id)
