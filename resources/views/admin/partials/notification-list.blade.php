@@ -49,7 +49,7 @@
                     <span class="text-sm">
                         @if ($notification->user_id == Auth::user()->id && $notification->rentee_id == null)
                             You
-                        @elseif($notification->user_id != null)
+                        @elseif($notification->user_id != null && $notification->rentee_id == null)
                             {{$notification->user->name}}
 
                         @endif

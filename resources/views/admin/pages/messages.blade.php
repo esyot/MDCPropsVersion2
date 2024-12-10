@@ -91,7 +91,7 @@
             <div class="relative flex w-full h-full">
                 <div class="absolute inset-0 top-[17rem] flex items-center justify-center">
                     <img class="bg-blue-500 rounded-full p-2 flex w-[300px] opacity-10 drop-shadow-2xl"
-                        src="{{asset('asset/photos/logo.png')}}" alt="">
+                        src="{{asset('asset/logo/logo.png')}}" alt="">
                 </div>
             </div>
 

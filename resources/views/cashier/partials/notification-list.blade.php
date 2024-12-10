@@ -41,10 +41,19 @@
 
 
         <div class="flex flex-col">
-            <a
-                href="{{ route('isRead', ['id' => $notification->id, 'redirect_link' => $notification->redirect_link, 'role' => 'cashier']) }}">
+            <a href="{{ route('isRead', [
+            'id' => $notification->id,
+            'redirect_link' => $notification->redirect_link,
+            'role' => 'cashier',
+            'requested_category' => 'null'
+        ]) }}">
                 <h1 class="text-xs font-bold">{{ $notification->title }}</h1>
                 <span class="text-sm">
+                    @if ($notification->user_id == Auth::user()->id && $notification->rentee_id == null)
+                        You
+                    @elseif($notification->rentee_id == null)
+                        {{$notification->user->name}}
+                    @endif
                     {{ $notification->description }}<br> <small class="font-normal text-red-500">{{ $timeAgo }}</small>
                 </span>
             </a>

@@ -203,19 +203,31 @@ class MessageController extends Controller
     }
     public function messageReacted($id)
     {
-
         $message = Message::find($id);
 
-        if ($message->isReacted) {
-            $message->update(['isReacted' => false]);
-        } else {
+        if (!$message) {
+            return redirect()->back()->withErrors(['Message not found.']);
+        }
 
-            $message->update(['isReacted' => true]);
+        $reactedBy = is_array($message->reactedBy) ? $message->reactedBy : [];
+
+        if (in_array(Auth::user()->id, $reactedBy)) {
+            $reactedBy = array_filter($reactedBy, function ($userId) {
+                return $userId !== Auth::user()->id;
+            });
+            $reactedBy = array_values($reactedBy);
+        } else {
+            $reactedBy[] = Auth::user()->id;
         }
 
 
-        return redirect()->back()->with('success', 'added reaction');
+        $message->update([
+            'reactedBy' => $reactedBy,
+        ]);
+
+        return redirect()->back();
     }
+
 
 
 

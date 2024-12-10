@@ -384,6 +384,7 @@ class ReservationController extends Controller
             if ($request->status == 'pending') {
                 $reservations = PropertyReservation::where('category_id', $currentCategoryId)
                     ->where('approvedByAdmin_at', null)
+                    ->where('canceledByRentee_at', null)
                     ->where('declinedByAdmin_at', null)
                     ->orderBy('created_at', 'DESC')
                     ->get();

@@ -10,7 +10,6 @@
             <h1 id="title" class="text-2xl font-bold">Chats</h1>
         </div>
 
-
         <div class="flex">
 
             <div title="See all in messages">
@@ -40,10 +39,10 @@
             class="mr-8 focus:outline-none bg-transparent">
     </form>
 </div>
-<div class="p-2 overflow-y-auto custom-scrollbar">
+<div class="p-2 w-full overflow-y-auto custom-scrollbar">
 
     <ul id="contact-list" class="list-none">
-        @include('admin.partials.contact-list')
+        @include('cashier.partials.contact-list')
     </ul>
 
 

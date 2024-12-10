@@ -40,8 +40,8 @@
             <div>
                 <h1 class="text-2xl font-medium">Cancel Reservation</h1>
 
-                <p>This will erase your cart items and start a new
-                    transaction.</p>
+                <p>This will erase your carted properties and start a new
+                        reservation.</p>
 
             </div>
 

@@ -10,6 +10,7 @@ use App\Models\PropertyReservation;
 use App\Models\Reservation;
 use App\Models\Setting;
 use App\Models\Transaction;
+use App\Models\User;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -71,7 +72,19 @@ class CashierController extends Controller
 
 
         $setting = Setting::where('user_id', Auth::user()->id)->first();
-        return view('cashier.pages.index', compact('unreadNotifications', 'transactionMade', 'contacts', 'unreadMessages', 'setting', 'reservationsPending', 'notifications', 'page_title'));
+
+        $users = User::whereNot('id', Auth::user()->id)->get();
+        return view('cashier.pages.index', compact(
+            'unreadNotifications',
+            'transactionMade',
+            'contacts',
+            'unreadMessages',
+            'setting',
+            'reservationsPending',
+            'notifications',
+            'page_title',
+            'users'
+        ));
 
     }
 
@@ -139,6 +152,8 @@ class CashierController extends Controller
 
         $properties = PropertyReservation::whereIn('reservation_id', $reservations->pluck('id'))->get();
 
+        $users = User::whereNot('id', Auth::user()->id)->get();
+
         return view('cashier.pages.reservations', compact(
             'unreadNotifications',
             'unreadMessages',
@@ -147,7 +162,8 @@ class CashierController extends Controller
             'reservations',
             'properties',
             'setting',
-            'page_title'
+            'page_title',
+            'users'
         ));
     }
 

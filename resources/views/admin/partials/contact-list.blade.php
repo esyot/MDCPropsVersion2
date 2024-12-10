@@ -9,8 +9,8 @@
 
     <a href="{{ route('chatSelected', ['contact' => $contact->sender_id]) }}" class="flex ">
         <li
-            class="{{ $contact->isReadByReceiver == false && $isReceiver ? 'font-bold bg-gray-300 text-black' : '' }} hover:bg-gray-200  rounded-lg cursor-pointer duration-300 ">
-            <div class="flex items-center">
+            class="{{ $contact->isReadByReceiver == false && $isReceiver ? 'font-bold bg-gray-300 text-black' : '' }} w-full hover:bg-gray-200  rounded-lg cursor-pointer duration-300 ">
+            <div class="flex items-center w-full">
                 <div class="w-12 m-2">
                     <!-- Fixed size for the profile image -->
                     <img src="{{ asset('asset/photos/user.png') }}" alt="Profile Icon"
@@ -38,7 +38,7 @@
 
                     @if ($contact->isLoggedIn_at && \Carbon\Carbon::parse($contact->isLoggedIn_at)->gt(\Carbon\Carbon::parse($contact->isLoggedOut_at ?? '1970-01-01')))
                         <div id="active" title="Active now"
-                            class="text-green-500 text-[10px] hover:opacity-50 fa-solid fa-circle">
+                            class="text-green-500 text-[10px] mr-2 hover:opacity-50 fa-solid fa-circle">
                         </div>
                     @endif
                 </div>

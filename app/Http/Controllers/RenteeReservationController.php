@@ -88,6 +88,7 @@ class RenteeReservationController extends Controller
                 Notification::create([
                     'icon' => 'user.png',
                     'user_id' => 1,
+                    'reservation_id' => $reservation->id,
                     'rentee_id' => $fetchedRentee->id,
                     'category_id' => $property->category_id,
                     'title' => 'Added new reservation',

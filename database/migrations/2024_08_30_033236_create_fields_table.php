@@ -64,8 +64,7 @@ return new class extends Migration {
             $table->foreignId('receiver_id')->constrained('users')->onDelete('cascade');
             $table->text('content')->nullable(true)->default('like');
             $table->text('img')->nullable(true);
-            $table->boolean('isReactedBySender')->default(false);
-            $table->boolean('isReactedByReceiver')->default(false);
+            $table->json('reactedBy')->nullable(true);
             $table->boolean('isReadBySender')->default(false);
             $table->boolean('isReadByReceiver')->default(false);
             $table->string('type')->default('like');
