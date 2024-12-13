@@ -48,9 +48,12 @@
             <!-- Modal Header -->
             <div class="flex items-center justify-between p-4 border-b border-gray-300">
                 <h1 class="text-xl font-semibold text-gray-900">Property Preview</h1>
+
+                @hasrole('superadmin|admin')
                 <button onclick="document.getElementById('property-delete-{{$property->id}}').classList.toggle('hidden')" type="button" title="delete this property" class="hover:opacity-50">
                     <i class="fas fa-trash text-red-500"></i>
                 </button>
+                @endhasrole
             </div>
 
 
@@ -106,7 +109,9 @@
 
                         <div class="flex items-center space-x-1">
                             <input id="isAvailableForRentingCheckbox-{{$property->id}}" name="isAvailableForRenting"
-                                type="checkbox" {{$property->price ? 'checked' : ''}}>
+                                type="checkbox" {{$property->price ? 'checked' : ''}}
+                                {{ $roles->contains('staff') ? 'disabled' : '' }} 
+                                >
                             <span>
                                 Available for renting
                             </span>
@@ -179,7 +184,10 @@
                         <div>
                             <label for="">Assigned Personel:</label>
                             <input type="text" name="update_assigned_personel" value="{{$property->assigned_personel}}" class="block p-2 border border-gray-300 rounded"
-                                placeholder="Assigned personel" required>
+                                placeholder="Assigned personel" required
+                                {{ $roles->contains('staff') ? 'disabled' : '' }} 
+                                
+                                >
                         </div>
 
                     </div>

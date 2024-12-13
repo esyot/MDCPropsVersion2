@@ -67,7 +67,7 @@
                 <label for="category-field" class="block text-sm font-medium ">Categories:</label>
                 <select name="category" id="category-field"
                     class="block w-full py-2 px-4 border border-gray-300 rounded-md text-gray-700  focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    @if ($currentDateStart == 'all')
+                    @if ($selectedCategory == 'all')
                         <option value="all">All</option>
                     @endif
 
@@ -479,8 +479,8 @@
                     <th class="text-center">Category</th>
                     <th class="text-center">Property</th>
                     <th class="text-center">Destination</th>
-                    <th class="text-center">Date Rent Start</th>
-                    <th class="text-center">Date End Start</th>
+                    <th class="text-center">Date Start</th>
+                    <th class="text-center">Date End</th>
                     <th class="text-center">Status</th>
                     <th class="text-center">Action</th>
                 </tr>

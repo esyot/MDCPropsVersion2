@@ -143,7 +143,8 @@ class PropertyController extends Controller
             'category' => 'required|exists:categories,id',
             'per' => ['string'],
             'price' => ['nullable'],
-            'img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'assigned_personel' => ['string', 'nullable']
         ]);
 
         $existingProperty = Property::where('name', $request->name)->first();
@@ -168,6 +169,7 @@ class PropertyController extends Controller
         $property->category_id = $validatedData['category'];
         $property->img = $imageFileName;
         $property->qty = $validatedData['qty'];
+        $property->assigned_personel = $validatedData['assigned_personel'];
 
         if ($validatedData['price'] == null) {
             $property->price = null;
